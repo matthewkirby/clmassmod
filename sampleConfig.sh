@@ -1,0 +1,27 @@
+##########################
+# This defines the baseline configuration file to use with nfwfit.py
+##########################
+
+readermodule=readMXXL
+readerclass=MXXLSimReader
+
+nbootstraps=200
+
+profileModule=basicBinning
+profileBuilder=dumbequalbins
+
+profileCol=r_mpc
+profileMin=.5
+profileMax=3.0 
+
+ngals=50
+
+massconModule=basicMassCon
+massconRelation=constant
+concentration=4.0
+
+
+maskname=circlemask
+maskx=0.
+masky=0.
+maskrad=20.

@@ -4,6 +4,7 @@
 
 import numpy as np
 import binaryutils
+import nfwutils
 
 #######################
 
@@ -46,14 +47,14 @@ class MXXLBinary(object):
 
     def grid(self):
 
-        gridDelta = (self.upper_bound - self.lower_bound)/(self.npixels*nfwutils.globalcosmology.h*(1.+self.redshift))  # grid delta in angular mpc
+        gridDelta = (self.upper_bound - self.lower_bound)/(self.npixels*nfwutils.global_cosmology.h*(1.+self.redshift))  # grid delta in angular mpc
 
         X2,X1 = np.meshgrid(np.arange(self.npixels[1]), np.arange(self.npixels[0]))
         
-        deltaX1_mpc = self.lower_bound[0] + (X1 + 0.5)*gridDelta
-        deltaX2_mpc = self.lower_bound[1] + (X2 + 0.5)*gridDelta
+        deltaX1_mpc = self.lower_bound[0] + (X1 + 0.5)*gridDelta[0]
+        deltaX2_mpc = self.lower_bound[1] + (X2 + 0.5)*gridDelta[1]
 
-        dL = nfwutils.globalcosmology.angulardist(self.redshift)
+        dL = nfwutils.global_cosmology.angulardist(self.redshift)
 
         deltaX1_arcmin = (deltaX1_mpc / dL)*(180.*60/np.pi)
         deltaX2_arcmin = (deltaX2_mpc / dL)*(180.*60/np.pi)
@@ -69,18 +70,30 @@ class MXXLBinary(object):
 
 #################################
 
+class MXXLSimReader(object):
 
-
-class MXXLSim(object):
+    #########
 
     def getCosmology(self):
 
         return nfwutils.Cosmology(omega_m = 0.25, omega_l = 0.75, h=0.73)
 
-
     #########
 
     def load(self, filebase):
+
+        return MXXLSim(filebase)
+
+    
+###############################
+
+
+class MXXLSim(object):
+
+
+    #########
+
+    def __init__(self, filebase):
 
         # returns set of angle and mpc distances from the true center (flattened)
         # for each position, provide reduced shear g1 and g2, as well as z and beta for each source
@@ -100,9 +113,9 @@ class MXXLSim(object):
         self.delta_arcmin = [x.flatten() for x in self.delta_arcmin]
 
         self.redshifts = 2*np.ones_like(kappa.data).flatten()
-        self.beta_s = nfwutils.global_cosmology.beta_s(zcluster, [2.])*np.ones_like(redshifts)
+        self.beta_s = nfwutils.global_cosmology.beta_s([2.], self.zcluster)*np.ones_like(self.redshifts)
         
-        betas = nfwutils.global_cosmology.beta(zcluster, [2.])*np.ones_like(redshifts)
+        betas = nfwutils.global_cosmology.beta([2.], self.zcluster)*np.ones_like(self.redshifts)
 
         self.g1 = betas*gamma1.data.flatten() / (1-betas*kappa.data.flatten())
         self.g2 = betas*gamma2.data.flatten() / (1-betas*kappa.data.flatten())

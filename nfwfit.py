@@ -105,7 +105,7 @@ def applyMask(cat, config):
 
 def readSimCatalog(catalogname, simreader, config):
 
-    sim = simreader.load(catalogname, config)
+    sim = simreader.load(catalogname)
 
     r_arcmin = np.sqrt(sim.delta_arcmin[0]**2 + sim.delta_arcmin[1]**2)
     r_mpc = np.sqrt(sim.delta_mpc[0]**2 + sim.delta_mpc[1]**2)
@@ -154,8 +154,6 @@ def readConfiguration(configname):
 
 def buildObject(modulename, classname, *args, **kwds):
 
-    print args,kwds
-
     aModule = importlib.import_module(modulename)
     aClass = getattr(aModule, classname)
     anObject = aClass(*args, **kwds)
@@ -179,7 +177,7 @@ def buildFitter(config):
 
 def buildSimReader(config):
 
-    simreader = buildObject(config.readermodule, config.readerclass)
+   return buildObject(config.readermodule, config.readerclass)
 
     
         

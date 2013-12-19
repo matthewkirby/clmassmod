@@ -27,6 +27,7 @@ class ComovingDistMemoization(object):
         self.cosmology = cosmology
     def __call__(self, z):
 
+
         if z in self.memotable:
             return self.memotable[z]
 
