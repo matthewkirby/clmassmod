@@ -69,17 +69,18 @@ class MXXLBinary(object):
 
 #################################
 
-def getMXXLCosmology():
-
-    return cosmo = nfwutils.Cosmology(omega_m = 0.25, omega_l = 0.75, h=0.73)
-
-################################
 
 
 class MXXLSim(object):
 
-    def __init__(self, filebase):
+    def getCosmology(self):
 
+        return nfwutils.Cosmology(omega_m = 0.25, omega_l = 0.75, h=0.73)
+
+
+    #########
+
+    def load(self, filebase):
 
         # returns set of angle and mpc distances from the true center (flattened)
         # for each position, provide reduced shear g1 and g2, as well as z and beta for each source
@@ -95,13 +96,21 @@ class MXXLSim(object):
         self.zcluster = kappa.redshift
 
         self.delta_mpc, self.delta_arcmin = kappa.grid()
+        self.delta_mpc = [x.flatten() for x in self.delta_mpc]
+        self.delta_arcmin = [x.flatten() for x in self.delta_arcmin]
 
         self.redshifts = 2*np.ones_like(kappa.data).flatten()
-        self.betas = nfwutils.global_cosmology.beta(zcluster, [2.])*np.ones_like(redshifts)
+        self.beta_s = nfwutils.global_cosmology.beta_s(zcluster, [2.])*np.ones_like(redshifts)
+        
+        betas = nfwutils.global_cosmology.beta(zcluster, [2.])*np.ones_like(redshifts)
 
         self.g1 = betas*gamma1.data.flatten() / (1-betas*kappa.data.flatten())
         self.g2 = betas*gamma2.data.flatten() / (1-betas*kappa.data.flatten())
 
+
+
+        
+        
     
 
 
