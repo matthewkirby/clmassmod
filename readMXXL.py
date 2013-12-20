@@ -47,18 +47,17 @@ class MXXLBinary(object):
 
     def grid(self):
 
-        gridDelta = (self.upper_bound - self.lower_bound)/(60.*self.npixels)  # grid delta in arcmin
+        gridDelta = (self.upper_bound - self.lower_bound)/(self.npixels)  # grid delta in arcsec
 
         X2,X1 = np.meshgrid(np.arange(self.npixels[1]), np.arange(self.npixels[0]))
         
-        deltaX1_arcmin = self.lower_bound[0] + (X1 + 0.5)*gridDelta[0]
-        deltaX2_arcmin = self.lower_bound[1] + (X2 + 0.5)*gridDelta[1]
+        deltaX1_arcmin = (self.lower_bound[0] + (X1 + 0.5)*gridDelta[0])/60.
+        deltaX2_arcmin = (self.lower_bound[1] + (X2 + 0.5)*gridDelta[1])/60.
 
         dL = nfwutils.global_cosmology.angulardist(self.redshift)
 
         deltaX1_mpc = (deltaX1_arcmin * dL * np.pi)/(180.*60)
         deltaX2_mpc = (deltaX2_arcmin * dL * np.pi)/(180.*60)
-
         return (deltaX1_mpc, deltaX2_mpc), (deltaX1_arcmin, deltaX2_arcmin)
         
         

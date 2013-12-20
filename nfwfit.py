@@ -110,8 +110,8 @@ def readSimCatalog(catalogname, simreader, config):
     r_arcmin = np.sqrt(sim.delta_arcmin[0]**2 + sim.delta_arcmin[1]**2)
     r_mpc = np.sqrt(sim.delta_mpc[0]**2 + sim.delta_mpc[1]**2)
 
-    cosphi = sim.delta_arcmin[0]*(np.pi/(180*60.))
-    sinphi = sim.delta_arcmin[1]*(np.pi/(180*60.))
+    cosphi = sim.delta_mpc[0] / r_mpc
+    sinphi = sim.delta_mpc[1] / r_mpc
     
     sin2phi = 2.0*sinphi*cosphi
     cos2phi = 2.0*cosphi*cosphi-1.0
@@ -260,12 +260,15 @@ class NFWFitter(object):
 
         mass = []
         nfail = 0
+
+
         for i in range(config.nbootstraps):
 
-
-            curBootstrap = np.random.randint(0, len(catalog), size=len(catalog))
-
-            curCatalog = catalog.filter(curBootstrap)
+            if i == 0:
+                curCatalog = catalog
+            else:
+                curBootstrap = np.random.randint(0, len(catalog), size=len(catalog))
+                curCatalog = catalog.filter(curBootstrap)
 
             beta_s = np.mean(curCatalog['beta_s'])
             beta_s2 = np.mean(curCatalog['beta_s']**2)

@@ -5,7 +5,7 @@
 readermodule=readMXXL
 readerclass=MXXLSimReader
 
-nbootstraps=200
+nbootstraps=1
 
 profileModule=basicBinning
 profileBuilder=dumbequalbins
@@ -14,7 +14,7 @@ profileCol=r_mpc
 profileMin=.5
 profileMax=3.0 
 
-ngals=50
+ngals=200
 
 massconModule=basicMassCon
 massconRelation=constant
