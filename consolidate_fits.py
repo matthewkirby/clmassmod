@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 ############################
 
-import glob, h5py, h5pyutils, cPickle, sys, os
-import numpy as np, nfwutils
+import glob, cPickle, sys, os, re
+import numpy as np
+import nfwutils, readMXXL
 
 ###########################
 
-
-masspklfile=sys.argv[1]
+simdir=sys.argv[1]
 outdir=sys.argv[2]
 
 medians = []
@@ -15,20 +15,30 @@ sigma = []
 actuals = []
 redshift = []
 
+siminfo_filename = '{0}/siminfo.pkl'.format(simdir)
+
+siminfo = cPickle.load(open(siminfo_filename, 'rb'))
+
+redshift = siminfo['redshift']
+massmapping = siminfo['massmapping']
+
+haloid_pattern = re.compile('halo_cid(\d+)\.out')
+
+class WeirdException(Exception): pass
 
 for output in glob.glob('%s/*.out' % outdir):
 
     try:
 
-        adir, filebase = os.path.split(output)
-        fileroot, fileext = os.path.splitext(filebase)
+        filebase = os.path.basename(output)
+        
+        match = haloid_pattern.match(filebase)
 
-        simfile = '%s/%s.hdf5' % (simdir, fileroot)
+        haloid = int(match.group(1))
 
-        rawsim = h5py.File(simfile)
-        shearcat = h5pyutils.getShearCat(rawsim)
-        ra, dec, z, mass = h5pyutils.getClusterProperties(rawsim)
-        rawsim.close()
+        
+        actual_mass = massmapping[haloid][0]*1e10
+
 
         input = open(output)
         m200s, nfails = cPickle.load(input)
@@ -45,7 +55,7 @@ for output in glob.glob('%s/*.out' % outdir):
         medians.append(median)
         sigma.append(sym_std)
 
-        actuals.append(mass)
+        actuals.append(actual_mass)
         redshift.append(z)
 
     except:
