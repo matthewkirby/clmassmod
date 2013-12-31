@@ -73,6 +73,8 @@ for output in glob.glob('%s/*.out' % outdir):
 
 results = map(np.array, [medians, sigma, actuals, redshifts])
 
+print 'Consolidated {0} fits'.format(len(medians))
+
 
 
 cPickle.dump(results, open('%s/consolidated.pkl' % outdir, 'w'))

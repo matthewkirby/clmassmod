@@ -1,0 +1,2 @@
+massconModule=basicMassCon
+massconRelation=Duffy
