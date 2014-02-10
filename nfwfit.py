@@ -7,7 +7,7 @@
 
 import importlib, cPickle, sys, os
 import numpy as np
-import pyfits
+import astropy.io.fits as pyfits
 import nfwutils, bashreader, ldac
 import fitmodel, nfwmodeltools as tools
 
@@ -187,7 +187,7 @@ def buildSimReader(config):
         
 ########################
 
-class NFW_Model:
+class NFW_Model(object):
     def setData(self, beta_s, beta_s2, zcluster, massScale):
         
         self.beta_s = beta_s
@@ -234,7 +234,7 @@ class NFWFitter(object):
 
         self.profileBuilder = profileBuilder
 
-        if self.massconRelation is None:
+        if massconRelation is None:
             self.model = NFW_Model()
         else:
             self.model = NFW_MC_Model(massconRelation)
