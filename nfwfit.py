@@ -169,7 +169,10 @@ def buildFitter(config):
 
     profileBuilder = buildObject(config.profilemodule, config.profilebuilder, config)
 
-    massconRelation = buildObject(config.massconmodule, config.massconrelation, config)
+    try:
+        massconRelation = buildObject(config.massconmodule, config.massconrelation, config)
+    except AttributeError:
+        massconRelation = None
 
     fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation)
 
