@@ -154,6 +154,9 @@ def readConfiguration(configname):
 
 def buildObject(modulename, classname, *args, **kwds):
 
+    if modulename.lower() == 'none' or classname.lower() == 'none':
+        return None
+
     aModule = importlib.import_module(modulename)
     aClass = getattr(aModule, classname)
     anObject = aClass(*args, **kwds)
@@ -171,6 +174,7 @@ def buildFitter(config):
     fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation)
 
 
+
     return fitter
 
 ####
@@ -183,48 +187,63 @@ def buildSimReader(config):
         
 ########################
 
+class NFW_Model:
+    def setData(self, beta_s, beta_s2, zcluster, massScale):
+        
+        self.beta_s = beta_s
+        self.beta_s2 = beta_s2
+        self.zcluster = zcluster
+        self.massScale = massScale
+        self.overdensity = 200
 
-#####
+
+    def __call__(self, x, m200, c200):
+                
+        r_scale = nfwutils.rscaleConstM(m200*self.massScale, c200, self.zcluster, self.overdensity)
+        
+        nfw_shear_inf = tools.NFWShear(x, c200, r_scale, self.zcluster)
+        nfw_kappa_inf = tools.NFWKappa(x, c200, r_scale, self.zcluster)
+        
+        g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
+                
+        return g
+
+#######
+
+class NFW_MC_Model(NFW_Model):
+
+    def __init__(self, massconRelation):
+        self.massconRelation = massconRelation
+
+    def setData(self, beta_s, beta_s2, zcluster, massScale):
+
+        super(NFW_MC_Model, self).setData(beta_s, beta_s2, zcluster, massScale)
+
+
+    def __call__(self, x, m200):
+
+        c200 = self.massconRelation(m200*self.massScale, self.zcluster, self.overdensity)        
+
+        return super(NFW_MC_Model, self).__call__(x, m200, c200)
+
+###############################
 
 class NFWFitter(object):
 
     def __init__(self, profileBuilder, massconRelation):
 
         self.profileBuilder = profileBuilder
-        self.massconRelation = massconRelation
+
+        if self.massconRelation is None:
+            self.model = NFW_Model()
+        else:
+            self.model = NFW_MC_Model(massconRelation)
 
 
     ######
 
     def betaMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, guess = []):
 
-        ####
-
-        class NFWModel:
-            def __init__(self, beta_s, beta_s2, zcluster, massconRelation, massScale):
-
-                self.beta_s = beta_s
-                self.beta_s2 = beta_s2
-                self.zcluster = zcluster
-                self.massconRelation = massconRelation
-                self.massScale = massScale
-                self.overdensity = 200
-
-
-            def __call__(self, x, m200):
-                
-                concentration = self.massconRelation(m200*self.massScale, self.zcluster, self.overdensity)
-
-                r_scale = nfwutils.rscaleConstM(m200*self.massScale, concentration, self.zcluster, self.overdensity)
-                
-                nfw_shear_inf = tools.NFWShear(x, concentration, r_scale, self.zcluster)
-                nfw_kappa_inf = tools.NFWKappa(x, concentration, r_scale, self.zcluster)
-                
-                g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
-                
-                return g
-
-        ###
 
         massScale = 1e14
 
@@ -233,9 +252,9 @@ class NFWFitter(object):
 
         guess[0] = guess[0] / massScale
 
-        model = NFWModel(beta_s, beta_s2, zcluster, self.massconRelation, massScale)
+        self.model.setData(beta_s, beta_s2, zcluster, massScale)
 
-        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, model,
+        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
                                    guess = guess)
         fitter.m.limits = {'m200' : (1e13/massScale,1e16/massScale)}
         fitter.fit()
@@ -246,13 +265,6 @@ class NFWFitter(object):
 
         return m200
         
-
-
-
-
-
-        
-
 
     #######
 
