@@ -115,14 +115,33 @@ def summary2DMass(simdata, selection = None, axisrange=None):
     if selection is None:
         selection = np.ones_like(simdata['ratio']) == 1
     medians, sigmas, actuals, redshifts, ratio, logratio = [x[selection] for x in [simdata['medians'], simdata['sigmas'], simdata['actuals'], simdata['redshifts'], simdata['ratio'], simdata['logratio']]]
+
+    ngals = len(medians) / 6 
+    
+
     massbin = []
     ratiobin = []
     errup = []
     errdown = []
     median_err = []
     masssorted = np.argsort(actuals)
-    for i in range(0, len(actuals), 200):
-        maxtake = min(len(actuals), i+200)
+    sortedlog10actuals = np.log10(actuals)[masssorted]
+    
+    i=0
+    while i < len(actuals):
+
+        if len(actuals) - i < 10:
+            maxtake = len(actuals)
+        else:
+
+            maxtake = min(len(actuals), i+ngals)
+
+
+            binbound = sortedlog10actuals[i:maxtake] - sortedlog10actuals[i] < 0.2
+            maxtake = np.arange(maxtake)[binbound][-1] + i
+            
+
+
         massbin.append(np.median(np.log10(actuals[masssorted][i:maxtake])))
         localratios = np.sort(logratio[masssorted][i:maxtake])
         localMedian = localratios[int(0.5*len(localratios))]
@@ -132,6 +151,9 @@ def summary2DMass(simdata, selection = None, axisrange=None):
         errup.append(r68up)
         errdown.append(r68down)
         median_err.append(bootstrapMedianErr(localratios))
+
+        i = maxtake
+
 #    subplot(1,2,1)
 #    hexbin(np.log10(actuals), logratio, gridsize=50, bins='log', extent=axisrange)
 #    xlabel('True Mass (M200)')
@@ -167,7 +189,7 @@ def bootstrapMedianErr(aset, nboot=1000):
 
 # <codecell>
 
-def scatterSummary(simdata, selection):
+def scatterSummary(simdata, selection = None):
 
     if selection is None:
         selection = np.ones_like(simdata['ratio']) == 1
