@@ -191,12 +191,31 @@ def buildSimReader(config):
 ########################
 
 class NFW_Model(object):
-    def setData(self, beta_s, beta_s2, zcluster, massScale):
+
+    def __init__(self):
+
+        self.massScale = 1e14
+
+    def paramLimits(self):
+
+        return {'m200' : (1e13/self.massScale,1e16/self.massScale),
+                'c200' : (1., 20.)}
+
+    def guess(self):
+
+        guess = [10**(np.random.uniform(13, 16)),
+                 np.random.uniform(1., 20.)]
+
+        guess[0] = guess[0] / self.massScale
+
+        return guess
+
+
+    def setData(self, beta_s, beta_s2, zcluster):
         
         self.beta_s = beta_s
         self.beta_s2 = beta_s2
         self.zcluster = zcluster
-        self.massScale = massScale
         self.overdensity = 200
 
 
@@ -216,11 +235,22 @@ class NFW_Model(object):
 class NFW_MC_Model(NFW_Model):
 
     def __init__(self, massconRelation):
+
+        super(NFW_MC_Model, self).__init__()
         self.massconRelation = massconRelation
 
-    def setData(self, beta_s, beta_s2, zcluster, massScale):
+    def guess(self):
 
-        super(NFW_MC_Model, self).setData(beta_s, beta_s2, zcluster, massScale)
+        guess = [10**(np.random.uniform(13, 16))]
+
+        guess[0] = guess[0] / self.massScale
+
+        return guess
+
+
+    def paramLimits(self):
+
+        return {'m200' : (1e13/self.massScale,1e16/self.massScale)}
 
 
     def __call__(self, x, m200):
@@ -248,23 +278,19 @@ class NFWFitter(object):
     def betaMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, guess = []):
 
 
-        massScale = 1e14
-
         if guess == []:
-            guess = [10**(np.random.uniform(13, 16))]
+            guess = self.model.guess()
 
-        guess[0] = guess[0] / massScale
-
-        self.model.setData(beta_s, beta_s2, zcluster, massScale)
+        self.model.setData(beta_s, beta_s2, zcluster)
 
         fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
                                    guess = guess)
-        fitter.m.limits = {'m200' : (1e13/massScale,1e16/massScale)}
+        fitter.m.limits = self.model.paramLimits()
         fitter.fit()
         m200 = None
         if fitter.have_fit:
                        
-            m200 = float(fitter.par_vals['m200'])*massScale
+            m200 = float(fitter.par_vals['m200'])*self.model.massScale
 
         return m200
         
