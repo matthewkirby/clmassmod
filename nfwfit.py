@@ -287,19 +287,15 @@ class NFWFitter(object):
                                    guess = guess)
         fitter.m.limits = self.model.paramLimits()
         fitter.fit()
-        m200 = None
         if fitter.have_fit:
-                       
-            m200 = float(fitter.par_vals['m200'])*self.model.massScale
-
-        return m200
-        
+            return fitter.par_vals
+        return None
 
     #######
 
     def bootstrapFit(self, catalog, config):
 
-        mass = []
+        fitresults = []
         nfail = 0
 
 
@@ -318,17 +314,18 @@ class NFWFitter(object):
 
             clean = sigma_ghat > 0
 
-            m200 = self.betaMethod(r_mpc[clean], ghat[clean], sigma_ghat[clean],  beta_s, beta_s2, 
+            fitresult = self.betaMethod(r_mpc[clean], ghat[clean], sigma_ghat[clean],  beta_s, beta_s2, 
                                    catalog.hdu.header['ZLENS'])
 
-            if m200 is None or not np.isfinite(m200):
+            if fitresult is None or not np.isfinite(m200):
                 nfail += 1
             else:
-                mass.append(m200)
+                fitresults.append(fitresult)
+                
 
 
 
-        return np.array(mass), nfail
+        return fitresults, nfail
 
 
 
@@ -339,8 +336,7 @@ def savefit(bootstrap_vals, outputname):
 
     with open(outputname, 'wb') as output:
 
-        ### !!!!!!!!!!!!  Factor out h!
-        cPickle.dump(np.array(bootstrap_vals)*nfwutils.global_cosmology.h, output, -1)
+        cPickle.dump(bootstrap_vals, output, -1)
 
 
 ########################
