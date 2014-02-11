@@ -317,7 +317,7 @@ class NFWFitter(object):
             fitresult = self.betaMethod(r_mpc[clean], ghat[clean], sigma_ghat[clean],  beta_s, beta_s2, 
                                    catalog.hdu.header['ZLENS'])
 
-            if fitresult is None or not np.isfinite(m200):
+            if fitresult is None:
                 nfail += 1
             else:
                 fitresults.append(fitresult)
