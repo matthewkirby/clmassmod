@@ -107,18 +107,11 @@ def readSimCatalog(catalogname, simreader, config):
 
     sim = simreader.load(catalogname)
 
-    r_arcmin = np.sqrt(sim.delta_arcmin[0]**2 + sim.delta_arcmin[1]**2)
-    r_mpc = np.sqrt(sim.delta_mpc[0]**2 + sim.delta_mpc[1]**2)
-
-    cosphi = sim.delta_mpc[0] / r_mpc
-    sinphi = sim.delta_mpc[1] / r_mpc
-    
-    sin2phi = 2.0*sinphi*cosphi
-    cos2phi = 2.0*cosphi*cosphi-1.0
-    
 
     e1 = sim.g1
     e2 = sim.g2
+    cos2phi = sim.cos2phi
+    sin2phi = sim.sin2phi
 
     E = -(e1*cos2phi+e2*sin2phi)
 
