@@ -119,6 +119,8 @@ def readSimCatalog(catalogname, simreader, config):
     b2 = -e1
     B = -(b1*cos2phi+b2*sin2phi)
 
+    r_arcmin = sim.r_arcmin
+    r_mpc = sim.r_mpc
     redshifts = sim.redshifts
     beta_s = sim.beta_s
 

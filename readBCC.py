@@ -2,8 +2,9 @@
 # Reads in BCC files so that nfwfit.py can use them
 ######################
 
-import import h5py, h5pyutils
-
+import h5py, h5pyutils
+import nfwutils, clusterTools
+import numpy as np
 
 
 class BCCSimReader(object):
@@ -22,7 +23,7 @@ class BCCSim(object):
     def __init__(self, filename):
 
 
-        rawcat = h5py.File(catalogname, 'r')
+        rawcat = h5py.File(filename, 'r')
         shearcat = h5pyutils.getShearCat(rawcat)
 
         cluster_ra, cluster_dec, zlens, m200c = h5pyutils.getClusterProperties(rawcat)

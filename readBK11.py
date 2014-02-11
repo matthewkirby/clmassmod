@@ -3,7 +3,7 @@
 ######################
 
 import pyfits, ldac
-
+import nfwutils
 
 class BK11SimReader(object):
 
