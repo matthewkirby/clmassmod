@@ -1,6 +1,3 @@
-readermodule=readMXXL
-readerclass=MXXLSimReader
-
 nbootstraps=5
 
 profileModule=basicBinning
