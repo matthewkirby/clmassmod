@@ -47,15 +47,12 @@ queue {njobs}
     with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
         output.write(condorfile)
 
-        
 
-####################
+###################
 
-def setupLSF_BCC(configs, jobdir, jobname, simdir = '/nfs/slac/g/ki/ki02/dapple/bcc_clusters/recentered'):
+def setupLSF(configs, jobdir, jobname, simdir, simfiles):
 
     configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
-
-    simfiles = glob.glob('{0}/cluster_*.hdf5'.format(simdir))
 
     for simfile in simfiles:
 
@@ -64,6 +61,32 @@ def setupLSF_BCC(configs, jobdir, jobname, simdir = '/nfs/slac/g/ki/ki02/dapple/
                                     inputfiles = [simfile],
                                     workbase = '/scratch/')
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, jobparams['outbasename']))
+
+
+        
+
+####################
+
+def setupLSF_BCC(configs, jobdir, jobname):
+
+    simdir = '/nfs/slac/g/ki/ki02/dapple/bcc_clusters/recentered'
+
+    simfiles = glob.glob('{0}/cluster_*.hdf5'.format(simdir))
+
+    setupLSF(configs, jobdir, '{0}.bcc'.format(jobname), simdir, simfiles)
+
+###################
+
+def setupLSF_BK11(configs, jobdir, jobname, simdir):
+
+    for snap in 'snap124 snap141'.split():
+
+        simdir = '/nfs/slac/g/ki/ki02/dapple/beckersims/{0}/intlength400'.format(snap)
+
+        simfiles = glob.glob('{0}/haloid*.fit'.format(simdir))
+
+        setupLSF(configs, jobdir, '{0}.bk11.{1}'.format(jobname, snap), simdir, simfiles)
+
     
 
 
