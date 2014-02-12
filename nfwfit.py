@@ -309,13 +309,19 @@ class NFWFitter(object):
 
             clean = sigma_ghat > 0
 
-            fitresult = self.betaMethod(r_mpc[clean], ghat[clean], sigma_ghat[clean],  beta_s, beta_s2, 
-                                   catalog.hdu.header['ZLENS'])
+            try:
+                fitresult = self.betaMethod(r_mpc[clean], ghat[clean], sigma_ghat[clean],  beta_s, beta_s2, 
+                                            catalog.hdu.header['ZLENS'])
 
-            if fitresult is None:
+                
+
+                if fitresult is None:
+                    nfail += 1
+                else:
+                    fitresults.append(fitresult)
+
+            except ValueError:
                 nfail += 1
-            else:
-                fitresults.append(fitresult)
                 
 
 
