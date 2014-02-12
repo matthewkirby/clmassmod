@@ -5,7 +5,7 @@
 #####################
 
 
-import sys, os, json, argparse, glob
+import sys, os, json, argparse, glob, stat
 
 ####################
 
@@ -77,6 +77,7 @@ bsub -q medium -oo {logfile} ./multiconfig_nfwfit.py {jobfile}
         with open(lsffile, 'w') as output:
             output.write(lsfcommand)
 
+        os.chmod(lsffile, S_IRUSR | S_IWUSR | S_IXUSR)
         
 
 
