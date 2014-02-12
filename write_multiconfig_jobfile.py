@@ -77,7 +77,7 @@ bsub -q medium -oo {logfile} ./multiconfig_nfwfit.py {jobfile}
         with open(lsffile, 'w') as output:
             output.write(lsfcommand)
 
-        os.chmod(lsffile, S_IRUSR | S_IWUSR | S_IXUSR)
+        os.chmod(lsffile, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
         
 
 
