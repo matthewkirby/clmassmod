@@ -60,7 +60,24 @@ def setupLSF(configs, jobdir, jobname, simdir, simfiles):
                                     confignames = configfiles,
                                     inputfiles = [simfile],
                                     workbase = '/scratch/')
-        writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, jobparams['outbasename']))
+
+        jobid = '{1}.{2}'.format(jobname, jobparams['outbasename'])
+
+        jobfile = '{0}/{1}.job'.format(jobdir, jobid)
+        writeJobfile(jobparams, jobfile)
+
+        logfile = '{0}/{1}.log'.format(jobdir, jobid)
+
+        lsffile = '{0}/p300.{1}'.format(jobdir, jobid)
+        lsfcommand = '''#!/bin/bash
+bsub -q medium -oo {logfile} ./multiconfig_nfwfit.py {jobfile}
+
+'''.format(logfile = logfile, jobfile = jobfile)
+
+        with open(lsffile, 'w') as output:
+            output.write(lsfcommand)
+
+        
 
 
         
