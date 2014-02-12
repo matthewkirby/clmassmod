@@ -107,16 +107,16 @@ class MXXLSim(object):
 
         self.zcluster = kappa.redshift
 
-        delta_mpc, self.delta_arcmin = kappa.grid()
-        delta_mpc = [x.flatten() for x in self.delta_mpc]
-        delta_arcmin = [x.flatten() for x in self.delta_arcmin]
+        delta_mpc, delta_arcmin = kappa.grid()
+        delta_mpc = [x.flatten() for x in delta_mpc]
+        delta_arcmin = [x.flatten() for x in delta_arcmin]
 
-        r_arcmin = np.sqrt(sim.delta_arcmin[0]**2 + sim.delta_arcmin[1]**2)
-        r_mpc = np.sqrt(sim.delta_mpc[0]**2 + sim.delta_mpc[1]**2)
+        r_arcmin = np.sqrt(delta_arcmin[0]**2 + delta_arcmin[1]**2)
+        r_mpc = np.sqrt(delta_mpc[0]**2 + delta_mpc[1]**2)
 
 
-        cosphi = sim.delta_mpc[0] / r_mpc
-        sinphi = sim.delta_mpc[1] / r_mpc
+        cosphi = delta_mpc[0] / r_mpc
+        sinphi = delta_mpc[1] / r_mpc
     
         sin2phi = 2.0*sinphi*cosphi
         cos2phi = 2.0*cosphi*cosphi-1.0

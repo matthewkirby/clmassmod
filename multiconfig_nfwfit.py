@@ -27,7 +27,7 @@ def runMultiConfigs(jobparams):
                 shutil.copy(inputfile, workdir)
 
             inputbase = os.path.basename(inputname)
-            inputname = '{0}/{1}'.format(workdir, catname)
+            inputname = '{0}/{1}'.format(workdir, inputbase)
 
 
 
@@ -37,7 +37,7 @@ def runMultiConfigs(jobparams):
 
             outputname = '{0}/{1}'.format(outdir, outbasename)
 
-            nfwfit.runNFWFit(catname, configfile, outputname)
+            nfwfit.runNFWFit(inputname, configfile, outputname)
 
     finally:
 

@@ -5,7 +5,7 @@
 #####################
 
 
-import sys, os, json, argparse
+import sys, os, json, argparse, glob
 
 ####################
 
@@ -13,16 +13,20 @@ import sys, os, json, argparse
 
 ####################
 
-def createJobParams(catalogname, inputfiles, confignames, outputExt, workdir = None, stripCatExt = True):
+def createJobParams(catalogname, confignames, outputExt = '.out', workbase = None, stripCatExt = True):
 
-    
+    inputfiles = glob.glob('{0}*'.format(catalogname))
 
     catalogbase = os.path.basename(catalogname)
     if stripCatExt:
         catalogbase, ext = os.path.splitext(catalogbase)
 
+    workdir = None
+    if workbase is not None:
+        workdir = '{0}/{1}'.format(workbase, catalogbase)
 
-    jobparams = dir(inputfiles = inputfiles, workdir = workdir, 
+
+    jobparams = dict(inputfiles = inputfiles, workdir = workdir, 
                     catname = catalogname, outbasename = catalogbase, 
                     configurations = confignames)
 
@@ -46,4 +50,4 @@ def main(argv = sys.argv):
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('inputname'
+    parser.add_argument('inputname')
