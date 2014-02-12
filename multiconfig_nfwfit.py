@@ -8,11 +8,11 @@ import sys, json, os, shutil, glob
 import nfwfit
 
 
-def runMultiConfigs(jobparams):
+def runMultiConfigs(jobparams, jobname=''):
 
     inputfiles = jobparams['inputfiles']
-    workdir = jobparams['workdir']
-    doTransfer = workdir is not None
+    workbase = jobparams['workbase']
+    doTransfer = workbase is not None
 
     try:
 
@@ -20,13 +20,23 @@ def runMultiConfigs(jobparams):
         outbasename = jobparams['outbasename']
 
         if doTransfer:
+
+            inputbase = os.path.basename(inputname)
+
+            if jobname != '':
+                jobname = '-' + jobname
+
+            workdir = '{0}/{1}{2}'.format(workbase, inputbase, jobname)
+            print 'WORKDIR: ' + workdir
+
+
             if not os.path.exists(workdir):
-                os.makedirs(workdir)
+                os.mkdir(workdir)
 
             for inputfile in inputfiles:
                 shutil.copy(inputfile, workdir)
 
-            inputbase = os.path.basename(inputname)
+
             inputname = '{0}/{1}'.format(workdir, inputbase)
 
 
@@ -42,9 +52,8 @@ def runMultiConfigs(jobparams):
     finally:
 
         if doTransfer:
-            workfiles = glob.glob('{0}/*'.format(workdir))
-            for workfile in workfiles:
-                os.remove(workfile)
+
+            shutil.rmtree(workdir)
 
 ########
 

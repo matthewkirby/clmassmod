@@ -338,7 +338,6 @@ def savefit(bootstrap_vals, outputname):
 
 def runNFWFit(catalogname, configname, outputname):
 
-
     config = readConfiguration(configname)
 
     simreader = buildSimReader(config)

@@ -22,11 +22,9 @@ def createJobParams(catalogname, confignames, outputExt = '.out', workbase = Non
         catalogbase, ext = os.path.splitext(catalogbase)
 
     workdir = None
-    if workbase is not None:
-        workdir = '{0}/{1}'.format(workbase, catalogbase)
 
 
-    jobparams = dict(inputfiles = inputfiles, workdir = workdir, 
+    jobparams = dict(inputfiles = inputfiles, workbase = workbase, 
                     catname = catalogname, outbasename = catalogbase, 
                     configurations = confignames)
 
