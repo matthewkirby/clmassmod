@@ -25,7 +25,7 @@ def runMultiConfigs(jobparams, jobname=''):
 
             if jobname != '':
                 jobname = '-' + jobname
-
+                
             workdir = '{0}/{1}{2}'.format(workbase, inputbase, jobname)
             print 'WORKDIR: ' + workdir
 
@@ -60,7 +60,7 @@ def runMultiConfigs(jobparams, jobname=''):
 def loadJobfile(jobfile):
 
     with open(jobfile) as input:
-        jobparams = json.loads(input)
+        jobparams = json.load(input)
 
     return jobparams
     
