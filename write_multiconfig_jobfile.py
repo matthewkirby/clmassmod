@@ -13,17 +13,24 @@ import sys, os, json, argparse, glob
 
 ####################
 
-def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/snap41', toInclude = range(6300)):
-
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/home/dapple/braid1/mxxl/snap41', toInclude = range(6300)):
+    
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
 
+    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+
+    input_extensions = 'convergence_map shear_1_map shear_2_map'.split()
+
     for i, id in enumerate(toInclude):
 
-        configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+        catname = '{0}/halo_cid{1}'.format(simdir, id)
 
-        jobparams = createJobParams('{0}/halo_cid{1}'.format(simdir, id),
+        inputfiles = ['{0}.{1}'.format(catname, x) for x in input_extensions]
+        
+        jobparams = createJobParams(catname,
                                     configfiles,
+                                    inputfiles = inputfiles,
                                     workbase = './',
                                     stripCatExt = False)
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
@@ -48,9 +55,8 @@ queue {njobs}
 
 ####################
 
-def createJobParams(catalogname, confignames, outputExt = '.out', workbase = None, stripCatExt = True):
+def createJobParams(catalogname, confignames, inputfiles, outputExt = '.out', workbase = None, stripCatExt = True):
 
-    inputfiles = glob.glob('{0}*'.format(catalogname))
 
     catalogbase = os.path.basename(catalogname)
     if stripCatExt:
@@ -59,7 +65,7 @@ def createJobParams(catalogname, confignames, outputExt = '.out', workbase = Non
     workdir = None
 
 
-    jobparams = dict(inputfiles = inputfiles, workbase = workbase, 
+    jobparams = dict(inputfiles = inputfiles, outputExt = outputExt, workbase = workbase, 
                     catname = catalogname, outbasename = catalogbase, 
                     configurations = confignames)
 

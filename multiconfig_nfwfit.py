@@ -11,6 +11,7 @@ import nfwfit
 def runMultiConfigs(jobparams, jobname=''):
 
     inputfiles = jobparams['inputfiles']
+    outputExt = jobparams['outputExt']
     workbase = jobparams['workbase']
     doTransfer = workbase is not None
 
@@ -45,7 +46,7 @@ def runMultiConfigs(jobparams, jobname=''):
 
             outdir = os.path.dirname(configfile)
 
-            outputname = '{0}/{1}'.format(outdir, outbasename)
+            outputname = '{0}/{1}{2}'.format(outdir, outbasename, outputExt)
 
             nfwfit.runNFWFit(inputname, configfile, outputname)
 
