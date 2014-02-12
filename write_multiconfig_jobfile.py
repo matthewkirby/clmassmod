@@ -61,7 +61,7 @@ def setupLSF(configs, jobdir, jobname, simdir, simfiles):
                                     inputfiles = [simfile],
                                     workbase = '/scratch/')
 
-        jobid = '{1}.{2}'.format(jobname, jobparams['outbasename'])
+        jobid = '{0}.{1}'.format(jobname, jobparams['outbasename'])
 
         jobfile = '{0}/{1}.job'.format(jobdir, jobid)
         writeJobfile(jobparams, jobfile)
@@ -95,7 +95,7 @@ def setupLSF_BCC(configs, jobdir, jobname):
 
 ###################
 
-def setupLSF_BK11(configs, jobdir, jobname, simdir):
+def setupLSF_BK11(configs, jobdir, jobname):
 
     for snap in 'snap124 snap141'.split():
 
