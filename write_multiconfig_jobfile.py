@@ -49,7 +49,21 @@ queue {njobs}
 
         
 
-    
+####################
+
+def setupLSF_BCC(configs, jobdir, jobname, simdir = '/nfs/slac/g/ki/ki02/dapple/bcc_clusters/recentered'):
+
+    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+
+    simfiles = glob.glob('{0}/cluster_*.hdf5'.format(simdir))
+
+    for simfile in simfiles:
+
+        jobparams = createJobParams(catalogname = simfile,
+                                    confignames = configfiles,
+                                    inputfiles = [simfile],
+                                    workbase = '/scratch/')
+        writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, jobparams['outbasename']))
     
 
 
