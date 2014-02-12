@@ -5,4 +5,4 @@ syntax: glob
 *\#
 core*
 queue*
-
+.hgrc

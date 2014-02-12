@@ -1,0 +1,3 @@
+readermodule=readMXXL
+readerclass=MXXLSimReader
+
