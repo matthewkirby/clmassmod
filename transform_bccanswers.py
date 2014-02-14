@@ -4,7 +4,8 @@
 #######################
 
 import h5py, h5pyutils, sys, os, glob, cPickle
-import readtxtfile
+import astropy.io.fits as pyfits
+import readtxtfile, ldac
 
 #######################
 
@@ -26,7 +27,7 @@ for i, clusterfile in enumerate(clusterfiles):
     clusterstofind[clusterid] = None
 
 
-for halofile in glob.glob('/users/dapple/localdisk/halos/*.fit'):
+for halofile in glob.glob('/users/dapple/localdisk/bcc_rawcatalogs/halos/*.fit'):
     
     halocat = ldac.LDACCat(pyfits.open(halofile)[1])
 
@@ -34,15 +35,15 @@ for halofile in glob.glob('/users/dapple/localdisk/halos/*.fit'):
 
         if id in clusterstofind:
 
-            clusterinfo[id] = dict(m500 = cat['M500'][halo_index], 
-                                   m200 = cat['M200C'][halo_index],
-                                   concen = cat['R200'][halo_index]/cat['RS'][halo_index],
-                                   redshift = cat['Z'][halo_index])
+            clusterinfo[id] = dict(m500 = halocat['M500'][halo_index], 
+                                   m200 = halocat['M200'][halo_index],
+                                   concen = halocat['R200'][halo_index]/halocat['RS'][halo_index],
+                                   redshift = halocat['Z'][halo_index])
 
             del clusterstofind[id]
 
 
-assert(len(clusterstofind == 0))
+assert(len(clusterstofind) == 0)
 
 
 with open(outfile, 'wb') as output:
