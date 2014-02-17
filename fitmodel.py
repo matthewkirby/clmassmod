@@ -208,7 +208,7 @@ class FitModel:
         for key in lparams.keys():
             self.m.limits[key] = lparams[key]
 
-    def fit(self, printmode = 0):
+    def fit(self, printmode = 0, useSimplex=False):
         """
         Call migrad to fit the model to the data.
         Set printmode = 1 to monitor the progress of the fitting.
@@ -222,13 +222,19 @@ class FitModel:
 
         try :
 
-            self.m.migrad()
+            if useSimplex:
+                print 'SIMPLEX CALL'
+                self.m.simplex()
 
-            print "fval = %g, nfcn %d" % (self.m.fval, self.m.ncalls)
+            else:
 
-            self.m.migrad()
+                self.m.migrad()
 
-            print "fval = %g, nfcn %d" % (self.m.fval, self.m.ncalls)
+                print "fval = %g, nfcn %d" % (self.m.fval, self.m.ncalls)
+
+                self.m.migrad()
+
+                print "fval = %g, nfcn %d" % (self.m.fval, self.m.ncalls)
 
             print "Fit parameters : "
             print self.m.values

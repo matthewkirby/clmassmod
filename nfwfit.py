@@ -287,7 +287,9 @@ class NFWFitter(object):
 
     ######
 
-    def betaMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, guess = []):
+    def betaMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, 
+                   guess = [],
+                   useSimplex=False):
 
 
         if guess == []:
@@ -298,7 +300,7 @@ class NFWFitter(object):
         fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
                                    guess = guess)
         fitter.m.limits = self.model.paramLimits()
-        fitter.fit()
+        fitter.fit(useSimplex = useSimplex)
         if fitter.have_fit and (0.0001*fitter.m.tol*fitter.m.up > fitter.m.edm):
             
             return fitter.par_vals
@@ -323,7 +325,9 @@ class NFWFitter(object):
             except ValueError:
                 pass
 
-        return None
+        #one last try with the SIMPLEX algorithm
+        return self.betaMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, useSimplex=True)
+
 
     #####
             
