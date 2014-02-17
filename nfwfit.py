@@ -301,7 +301,7 @@ class NFWFitter(object):
         fitter.fit()
         if fitter.have_fit and (0.0001*fitter.m.tol*fitter.m.up > fitter.m.edm):
             
-            return fitter
+            return fitter.par_vals
         return None
 
 
@@ -318,7 +318,7 @@ class NFWFitter(object):
 
 
                 if fitresult is not None:
-                    return fitresult
+                    return fitresult.par_vals
 
             except ValueError:
                 pass
