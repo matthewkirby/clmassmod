@@ -318,7 +318,7 @@ class NFWFitter(object):
 
 
                 if fitresult is not None:
-                    return fitresult.par_vals
+                    return fitresult
 
             except ValueError:
                 pass
