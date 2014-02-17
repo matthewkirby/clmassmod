@@ -190,6 +190,7 @@ class NFW_Model(object):
     def __init__(self):
 
         self.massScale = 1e14
+        self.overdensity = 200
 
     def paramLimits(self):
 
@@ -211,7 +212,7 @@ class NFW_Model(object):
         self.beta_s = beta_s
         self.beta_s2 = beta_s2
         self.zcluster = zcluster
-        self.overdensity = 200
+
 
 
     def __call__(self, x, m200, c200):
@@ -270,6 +271,22 @@ class NFWFitter(object):
 
     ######
 
+    def prepData(self, curCatalog, config):
+        
+        beta_s = np.mean(curCatalog['beta_s'])
+        beta_s2 = np.mean(curCatalog['beta_s']**2)
+        
+        r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, config)
+
+        clean = sigma_ghat > 0
+
+        zlens = curCatalog.hdu.header['ZLENS']
+
+        return r_mpc[clean], ghat[clean], sigma_ghat[clean], beta_s, beta_s2, zlens
+
+
+    ######
+
     def betaMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, guess = []):
 
 
@@ -282,11 +299,34 @@ class NFWFitter(object):
                                    guess = guess)
         fitter.m.limits = self.model.paramLimits()
         fitter.fit()
-        if fitter.have_fit:
-            return fitter.par_vals
+        if fitter.have_fit and (0.0001*fitter.m.tol*fitter.m.up > fitter.m.edm):
+            
+            return fitter
         return None
 
+
     #######
+
+    def runUntilNotFail(self, catalog, config):
+
+        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog, config)
+
+        for i in range(config.nbootstraps):
+
+            try:
+                fitresult = self.betaMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
+
+
+                if fitresult is not None:
+                    return fitresult
+
+            except ValueError:
+                pass
+
+        return None
+
+    #####
+            
 
     def bootstrapFit(self, catalog, config):
 
@@ -302,16 +342,11 @@ class NFWFitter(object):
                 curBootstrap = np.random.randint(0, len(catalog), size=len(catalog))
                 curCatalog = catalog.filter(curBootstrap)
 
-            beta_s = np.mean(curCatalog['beta_s'])
-            beta_s2 = np.mean(curCatalog['beta_s']**2)
+            r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(curCatalog, config)
 
-            r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, config)
-
-            clean = sigma_ghat > 0
 
             try:
-                fitresult = self.betaMethod(r_mpc[clean], ghat[clean], sigma_ghat[clean],  beta_s, beta_s2, 
-                                            catalog.hdu.header['ZLENS'])
+                fitresult = self.betaMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
 
                 
 
@@ -354,9 +389,9 @@ def runNFWFit(catalogname, configname, outputname):
 
     fitter = buildFitter(config)
 
-    bootstrap_vals = fitter.bootstrapFit(catalog, config)
-
-    savefit(bootstrap_vals, outputname)
+    fitvals = fitter.runUntilNotFail(catalog, config)
+    
+    savefit(fitvals, outputname)
 
 ############################
 

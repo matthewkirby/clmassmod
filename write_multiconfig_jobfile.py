@@ -5,7 +5,7 @@
 #####################
 
 
-import sys, os, json, argparse, glob
+import sys, os, json, argparse, glob, stat
 
 ####################
 
@@ -47,9 +47,64 @@ queue {njobs}
     with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
         output.write(condorfile)
 
+
+###################
+
+def setupLSF(configs, jobdir, jobname, simdir, simfiles):
+
+    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+
+    for simfile in simfiles:
+
+        jobparams = createJobParams(catalogname = simfile,
+                                    confignames = configfiles,
+                                    inputfiles = [simfile],
+                                    workbase = '/scratch/')
+
+        jobid = '{0}.{1}'.format(jobname, jobparams['outbasename'])
+
+        jobfile = '{0}/{1}.job'.format(jobdir, jobid)
+        writeJobfile(jobparams, jobfile)
+
+        logfile = '{0}/{1}.log'.format(jobdir, jobid)
+
+        lsffile = '{0}/p300.{1}'.format(jobdir, jobid)
+        lsfcommand = '''#!/bin/bash
+bsub -q medium -oo {logfile} ./multiconfig_nfwfit.py {jobfile}
+
+'''.format(logfile = logfile, jobfile = jobfile)
+
+        with open(lsffile, 'w') as output:
+            output.write(lsfcommand)
+
+        os.chmod(lsffile, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
         
 
-    
+
+        
+
+####################
+
+def setupLSF_BCC(configs, jobdir, jobname):
+
+    simdir = '/nfs/slac/g/ki/ki02/dapple/bcc_clusters/recentered'
+
+    simfiles = glob.glob('{0}/cluster_*.hdf5'.format(simdir))
+
+    setupLSF(configs, jobdir, '{0}.bcc'.format(jobname), simdir, simfiles)
+
+###################
+
+def setupLSF_BK11(configs, jobdir, jobname):
+
+    for snap in 'snap124 snap141'.split():
+
+        simdir = '/nfs/slac/g/ki/ki02/dapple/beckersims/{0}/intlength400'.format(snap)
+
+        simfiles = glob.glob('{0}/haloid*.fit'.format(simdir))
+
+        setupLSF(configs, jobdir, '{0}.bk11.{1}'.format(jobname, snap), simdir, simfiles)
+
     
 
 
