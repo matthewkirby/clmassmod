@@ -190,6 +190,7 @@ class NFW_Model(object):
     def __init__(self):
 
         self.massScale = 1e14
+        self.overdensity = 200
 
     def paramLimits(self):
 
@@ -211,7 +212,7 @@ class NFW_Model(object):
         self.beta_s = beta_s
         self.beta_s2 = beta_s2
         self.zcluster = zcluster
-        self.overdensity = 200
+
 
 
     def __call__(self, x, m200, c200):

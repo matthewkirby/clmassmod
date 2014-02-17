@@ -3,7 +3,7 @@
 
 import glob, cPickle, sys, os, re
 import numpy as np
-import nfwutils, readMXXL
+import nfwutils, nfwfit
 
 ###########################
 
@@ -32,7 +32,7 @@ true_cs = np.zeros(nhalos)
 redshifts = np.zeros(nhalos)
 
 results = dict(ids = ids,
-                    measured_m200s = np.zeros(nhalos),
+                    measured_m200s = measured_m200s, 
                     measured_m500s = measured_m500s,
                     measured_cs = measured_cs,
                     measured_rs = measured_rs,
@@ -45,69 +45,76 @@ class WeirdException(Exception): pass
 
 
 #load up the environment for cosmology, and mc relation if used
-config = nfwfit.readCOnfiguration('{0}/config.sh'.format(outdir))
-simreader = buildSimReader(config)
+config = nfwfit.readConfiguration('{0}/config.sh'.format(outdir))
+simreader = nfwfit.buildSimReader(config)
 nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
-fitter = buildFitter(config)
+fitter = nfwfit.buildFitter(config)
 
 
 
 for i,output in enumerate(outputfiles):
 
+    filebase = os.path.basename(output)
+        
+    match = idpattern.match(filebase)
+
+    haloid = int(match.group(1))
+
     try:
-
-        filebase = os.path.basename(output)
-        
-        match = idpattern.match(filebase)
-
-        haloid = int(match.group(1))
-
         truth = answers[haloid]
+    except KeyError:
+        print 'Failure at {0}'.format(output)
+        raise
 
-        true_m200s[i] = truth['m200']
-        true_m500s[i] = truth['m500']
-        true_cs[i] = truth['concen']
-        redshifts[i] = truth['redshift']
+    true_m200s[i] = truth['m200']
+    true_m500s[i] = truth['m500']
+    true_cs[i] = truth['concen']
+    redshifts[i] = truth['redshift']
 
 
-        input = open(output)
-        fitresults, nfails = cPickle.load(input)
-        input.close()
 
-        if len(fitresults) == 0:
-            print 'All failed in {0}'.format(output)
-            continue
+    input = open(output)
+    fitresults, nfails = cPickle.load(input)
+    input.close()
 
-        #### sanity check to see if all bootstrap values are consistant
 
-        for key in fitresults[0].keys():
-            defaultval = fitresults[0][key]
-            for otherresults in fitresults[1:]:
-                if np.abs(defaultval - otherresults[key])/defaultval > 0.01:
-                    print '{0}: Var {1} is divergent'.format(output, key)
+    if len(fitresults) == 0:
+        print 'All failed in {0}'.format(output)
+        continue
 
-        ##########
+    #### sanity check to see if all bootstrap values are consistant
 
-        measured = fitresults[0]
-        measured_m200s[i] = measured['m200']*fitter.model.massScale
-        if 'c200' in measured:
-            measured_cs[i] = measured['c200']
-        else:
-            ## need to dig up the mc relation
-            measured_cs[i] = fitter.model.massconRelation(measured_m200s[i], 
-                                                          redshifts[i], 
-                                                          fitter.model.overdensity)
+    for key in fitresults[0].keys():
+        defaultval = fitresults[0][key]
+        for otherresults in fitresults[1:]:
+            discrep = np.abs(defaultval - otherresults[key])/defaultval
+            if discrep > 0.05:
+                print '{0}: Var {1} is divergent {2}'.format(output, key, discrep)
+                break
 
-        #####
-        #calculate m500
-        
-        measured_rs[i] = nfwutils.rscaleConstM(measured_m200s[i], measured_cs[i],redshifts[i],
-                                      fitter.model.overdensity)
-        measured_m500s[i] = nfwutils.Mdelta(measured_rs[i],
-                                            measured_cs[i],
-                                            redshifts[i],
-                                            500)
-        
+
+    ##########
+
+    measured = fitresults[0]
+    measured_m200s[i] = measured['m200']*fitter.model.massScale*nfwutils.global_cosmology.h
+    if 'c200' in measured:
+        measured_cs[i] = measured['c200']
+    else:
+        ## need to dig up the mc relation
+        measured_cs[i] = fitter.model.massconRelation(measured_m200s[i], 
+                                                      redshifts[i], 
+                                                      fitter.model.overdensity)
+
+    #####
+    #calculate m500
+
+    measured_rs[i] = nfwutils.rscaleConstM(measured_m200s[i], measured_cs[i],redshifts[i],
+                                  fitter.model.overdensity)
+    measured_m500s[i] = nfwutils.Mdelta(measured_rs[i],
+                                        measured_cs[i],
+                                        redshifts[i],
+                                        500)
+
 
 
 
