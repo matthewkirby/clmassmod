@@ -9,4 +9,4 @@ queue*
 testset/*
 set1/*
 fullrun/*
-
+resubfails/*
