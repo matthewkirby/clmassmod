@@ -1,0 +1,7 @@
+executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_singlecondorwrapper.sh
+universe = vanilla
+Error = RESUBDIR/halo.HALOID.stderr
+Output = RESUBDIR/halo.HALOID.stdout
+Log = RESUBDIR/halo.HALOID.batch.log
+Arguments = /vol/braid1/vol1/dapple/mxxl/snap41/halo_cidHALOID /vol/braid1/vol1/dapple/mxxl/snap41/CONFIG/config.sh /vol/braid1/vol1/dapple/mxxl/snap41/CONFIG/halo_cidHALOID.out
+queue

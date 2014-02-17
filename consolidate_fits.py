@@ -11,7 +11,9 @@ simtype=sys.argv[1]
 outdir=sys.argv[2]
 
 idpatterns = dict(mxxl = re.compile('halo_cid(\d+)\.out'),
-                  bcc = re.compile('cluster_(\d+)\.out'))
+                  bcc = re.compile('cluster_(\d+)\.out'),
+                  bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
+                  bk11snap124 = re.compile('haloid(\d+)_zLens.+'))
 
 idpattern = idpatterns[simtype]
 
@@ -50,6 +52,7 @@ simreader = nfwfit.buildSimReader(config)
 nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 fitter = nfwfit.buildFitter(config)
 
+configname = os.path.basename(outdir)
 
 
 for i,output in enumerate(outputfiles):
@@ -65,7 +68,7 @@ for i,output in enumerate(outputfiles):
     except KeyError:
         print 'Failure at {0}'.format(output)
         raise
-
+    
     true_m200s[i] = truth['m200']
     true_m500s[i] = truth['m500']
     true_cs[i] = truth['concen']
@@ -74,28 +77,15 @@ for i,output in enumerate(outputfiles):
 
 
     input = open(output)
-    fitresults, nfails = cPickle.load(input)
+    measured = cPickle.load(input)
     input.close()
 
 
-    if len(fitresults) == 0:
-        print 'All failed in {0}'.format(output)
+    if measured is None:
+        print 'Fail {0} {1}'.format(configname, haloid)
         continue
 
-    #### sanity check to see if all bootstrap values are consistant
 
-    for key in fitresults[0].keys():
-        defaultval = fitresults[0][key]
-        for otherresults in fitresults[1:]:
-            discrep = np.abs(defaultval - otherresults[key])/defaultval
-            if discrep > 0.05:
-                print '{0}: Var {1} is divergent {2}'.format(output, key, discrep)
-                break
-
-
-    ##########
-
-    measured = fitresults[0]
     measured_m200s[i] = measured['m200']*fitter.model.massScale*nfwutils.global_cosmology.h
     if 'c200' in measured:
         measured_cs[i] = measured['c200']
