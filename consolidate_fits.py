@@ -52,6 +52,7 @@ simreader = nfwfit.buildSimReader(config)
 nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 fitter = nfwfit.buildFitter(config)
 
+configname = os.path.basename(outdir)
 
 
 for i,output in enumerate(outputfiles):
@@ -81,7 +82,7 @@ for i,output in enumerate(outputfiles):
 
 
     if measured is None:
-        print 'All failed in {0}'.format(output)
+        print 'Fail {0} {1}'.format(configname, haloid)
         continue
 
 
