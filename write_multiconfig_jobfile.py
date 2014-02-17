@@ -70,7 +70,7 @@ def setupLSF(configs, jobdir, jobname, simdir, simfiles):
 
         lsffile = '{0}/p300.{1}'.format(jobdir, jobid)
         lsfcommand = '''#!/bin/bash
-bsub -q medium -oo {logfile} ./multiconfig_nfwfit.py {jobfile}
+bsub -q long -oo {logfile} ./multiconfig_nfwfit.py {jobfile}
 
 '''.format(logfile = logfile, jobfile = jobfile)
 
