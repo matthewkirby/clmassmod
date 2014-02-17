@@ -301,7 +301,7 @@ class NFWFitter(object):
                                    guess = guess)
         fitter.m.limits = self.model.paramLimits()
         fitter.fit(useSimplex = useSimplex)
-        if fitter.have_fit and (0.0001*fitter.m.tol*fitter.m.up > fitter.m.edm):
+        if fitter.have_fit:
             
             return fitter.par_vals
         return None
