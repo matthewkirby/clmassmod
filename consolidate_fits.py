@@ -67,7 +67,7 @@ for i,output in enumerate(outputfiles):
     except KeyError:
         print 'Failure at {0}'.format(output)
         raise
-
+    
     true_m200s[i] = truth['m200']
     true_m500s[i] = truth['m500']
     true_cs[i] = truth['concen']
@@ -76,7 +76,7 @@ for i,output in enumerate(outputfiles):
 
 
     input = open(output)
-    measured, nfails = cPickle.load(input)
+    measured = cPickle.load(input)
     input.close()
 
 
