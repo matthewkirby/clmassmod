@@ -74,28 +74,15 @@ for i,output in enumerate(outputfiles):
 
 
     input = open(output)
-    fitresults, nfails = cPickle.load(input)
+    measured, nfails = cPickle.load(input)
     input.close()
 
 
-    if len(fitresults) == 0:
+    if measured is None:
         print 'All failed in {0}'.format(output)
         continue
 
-    #### sanity check to see if all bootstrap values are consistant
 
-    for key in fitresults[0].keys():
-        defaultval = fitresults[0][key]
-        for otherresults in fitresults[1:]:
-            discrep = np.abs(defaultval - otherresults[key])/defaultval
-            if discrep > 0.05:
-                print '{0}: Var {1} is divergent {2}'.format(output, key, discrep)
-                break
-
-
-    ##########
-
-    measured = fitresults[0]
     measured_m200s[i] = measured['m200']*fitter.model.massScale*nfwutils.global_cosmology.h
     if 'c200' in measured:
         measured_cs[i] = measured['c200']
