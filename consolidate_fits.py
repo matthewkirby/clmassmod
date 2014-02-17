@@ -11,7 +11,9 @@ simtype=sys.argv[1]
 outdir=sys.argv[2]
 
 idpatterns = dict(mxxl = re.compile('halo_cid(\d+)\.out'),
-                  bcc = re.compile('cluster_(\d+)\.out'))
+                  bcc = re.compile('cluster_(\d+)\.out'),
+                  bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
+                  bk11snap124 = re.compile('haloid(\d+)_zLens.+'))
 
 idpattern = idpatterns[simtype]
 
