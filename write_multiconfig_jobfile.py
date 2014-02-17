@@ -140,8 +140,8 @@ def writeJobfile(jobparams, jobfile):
 ###################
 
 
-def main(argv = sys.argv):
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('inputname')
+#def main(argv = sys.argv):
+#
+#    parser = argparse.ArgumentParser()
+#
+#    parser.add_argument('inputname')
