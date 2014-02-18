@@ -12,8 +12,8 @@ mxxldir='/u/ki/dapple/nfs22/mxxl/snap41'
 simdirs = [bccsimdir, bk11snap141dir, bk11snap124dir, mxxldir]
 simnames = 'BCC BK11_z=0.25 BK11_z=0.5 MXXL_z=1.0'.split()
 
-subdirs='wtg_baseline_inner500kpc duffy'.split()
-subdirnames='c=4 Duffy08'.split()
+subdirs='cfree_r5 cfree_r6'.split()
+subdirnames='cfree_0p5-1p5 cfree_0p5-2p5'.split()
 
 data = {}
 
@@ -22,11 +22,7 @@ for simname, simdir in zip(simnames, simdirs):
     data[simname] = {}
     
     for subdir in subdirs:
-
-        if simname == 'BCC':
             
-            data[simname][subdir] = bbb.loadData('{0}/{1}/consolidated.pkl'.format(simdir, subdir), h=0.72)        
-        else:
             data[simname][subdir] = bbb.loadData('{0}/{1}/consolidated.pkl'.format(simdir, subdir))
 
 
