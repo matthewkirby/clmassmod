@@ -33,8 +33,8 @@ cat $fails | {
 
     while read fail config haloid; do
 
-	simbase=`echo $simtemplate | sed -e's/|HID|/$haloid/'`
-	simfile=$simdir/$simname.$simext
+	simbase=`echo $simtemplate | sed -e"s/|HID|/$haloid/"`
+	simfile=$simdir/$simbase.$simext
 
 	outdir=$simdir/$config
     
