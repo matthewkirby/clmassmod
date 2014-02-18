@@ -7,8 +7,9 @@ import nfwutils, nfwfit
 
 ###########################
 
-simtype=sys.argv[1]
-outdir=sys.argv[2]
+workdir=sys.argv[1]
+simtype=sys.argv[2]
+outdir=sys.argv[3]
 
 
 failfile = open('{0}/fails'.format(outdir), 'w')
@@ -20,7 +21,7 @@ idpatterns = dict(mxxl = re.compile('halo_cid(\d+)\.out'),
 
 idpattern = idpatterns[simtype]
 
-answers = cPickle.load(open('{0}_answers.pkl'.format(simtype), 'rb'))
+answers = cPickle.load(open('{0}/{1}_answers.pkl'.format(workdir, simtype), 'rb'))
 
 outputfiles = glob.glob('%s/*.out' % outdir)
 nhalos = len(outputfiles)

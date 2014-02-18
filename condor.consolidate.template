@@ -3,5 +3,5 @@ universe = vanilla
 Error = JOBDIR/consolidate.CONFIG.stderr
 Output = JOBDIR/consolidate.CONFIG.stdout
 Log = JOBDIR/consolidate.CONFIG.batch.log
-Arguments = mxxl /vol/braid1/vol1/dapple/mxxl/snap41/CONFIG
+Arguments = /vol/braid1/vol1/dapple/mxxl/mxxlsims mxxl /vol/braid1/vol1/dapple/mxxl/snap41/CONFIG
 queue
