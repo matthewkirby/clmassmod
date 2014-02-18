@@ -10,6 +10,9 @@ import nfwutils, nfwfit
 simtype=sys.argv[1]
 outdir=sys.argv[2]
 
+
+failfile = open('{0}/fails'.format(outdir), 'w')
+
 idpatterns = dict(mxxl = re.compile('halo_cid(\d+)\.out'),
                   bcc = re.compile('cluster_(\d+)\.out'),
                   bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
@@ -83,6 +86,7 @@ for i,output in enumerate(outputfiles):
 
     if measured is None:
         print 'Fail {0} {1}'.format(configname, haloid)
+        failfile.write('Fail {0} {1}\n'.format(configname, haloid))
         continue
 
 
@@ -113,5 +117,5 @@ for i,output in enumerate(outputfiles):
 
 cPickle.dump(results, open('%s/consolidated.pkl' % outdir, 'w'))
 
-    
+failfile.close()    
     
