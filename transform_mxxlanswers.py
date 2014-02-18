@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
             cid, sid, projid = curindexs
 
-            clusterinfo[cid] = dict(m500 = 0.,
+            clusterinfo[cid] = dict(m500 = halocat['Mass500_crit'][sid]*1e10,
                                     m200 = halocat['Mass200'][sid]*1e10,
                                     concen = 1./halocat['EinastoParameter_1'][sid],
                                     redshift = redshift)

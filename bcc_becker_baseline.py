@@ -32,25 +32,31 @@
 # <codecell>
 
 from pylab import *
-import cPickle, pyfits, ldac
+import cPickle, astropy.io.fits as pyfits, ldac
 from mpl_toolkits.mplot3d import Axes3D
 
 # <codecell>
 
-def loadData(simfile, h=None):
-    
-    medians, sigmas, actuals, redshifts = cPickle.load(open(simfile))
-    if h is None:
-        ratio = medians/actuals
-    else:
-        ratio = h*medians/actuals
+def loadData(simfile, h=None, useM200=True):
+
+    results = cPickle.load(open(simfile))
+
+
+    medians = results['measured_m200s']
+    actuals = results['true_m200s']
+
+
+
+
+    ratio = medians/actuals
+
     clean = medians > 0
     
     
     data = {'medians' : medians[clean],
-            'sigmas' : sigmas[clean],
+            'sigmas' : 0.01*np.ones_like(medians), 
             'actuals' : actuals[clean],
-            'redshifts' : redshifts[clean],
+            'redshifts' : results['redshifts'][clean],
             'ratio' : ratio[clean],
             'logratio' : np.log(ratio[clean])}
     
