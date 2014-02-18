@@ -21,7 +21,7 @@ elif [ $simtype == "bk11snap124" ]; then
     simtemplate='haloid|HID|_zLens0.49925070_intlength400'
     simext="fit"
 
-elif [$simtype == "bk11snap141" ]; then
+elif [ $simtype == "bk11snap141" ]; then
 
     simdir='/u/ki/dapple/nfs/beckersims/snap141/intlength400'
     simtemplate='haloid|HID|_zLens0.24533000_intlength400'
@@ -44,7 +44,7 @@ cat $fails | {
 	configfile=$outdir/config.sh
     
 	outfile=$outdir/$simbase.out
-	logfile=$outdir/$simbase.log
+	logfile=$jobdir/$simbase.log
     
 	jobfile=$jobdir/p300.$jobname
     
