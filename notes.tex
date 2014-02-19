@@ -1,0 +1,65 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{enumerate}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+\newcommand{\logfig}[2]{
+See figure~\ref{fig:#1}.
+\begin{figure}[!ht] 
+\includegraphics[width=0.9\textwidth]{#1} 
+\caption{#2} 
+\label{fig:#1} 
+\end{figure}
+}
+
+
+\begin{document}
+
+Notes related to mass profile simulations from Becker \& Kratsov.
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Log}
+
+\paragraph{15 July 2013}
+Lots of development work during the March period that was undocumented. 
+Basically, got running on Becker's simulations. 
+Oddly, though, I couldn't reproduce his results. 
+Not sure why, but it may be because I am only looking at the most massive halos while he was fitting biases to all halos.
+While there are many things that I can do to try to recover Matt's results, I don't know if I can.
+First step is to go back to my results, and just figure out what is going on.
+See section \ref{sec:diagnosis}.
+
+\paragraph{01 Jan 2013}
+Start of this work package. 
+First step is to clean up old code that I've been using in bonnpipeline and get it running with Will's simulated catalogs.
+
+\paragraph{06 Aug 2013}
+I've recieved from Jiayi in Munich a distribution of SZ - halo center offsets from a new set of hydro sims they've done. I'm going to explore the offset distributions and effects on an NFW halo in an ipython notebook called: simulated\_offsets.ipynb .
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Diagnosis}
+\label{sec:diagnosis}
+
+This section is dedicated to figuring out why I don't recover the same bias as Matt Becker does on his simulations.
+
+Here is my measured bias, using nominally the same fit as him (but fixing the concentration to the 3d value that he reports in the catalog headers).
+
+\logfig{recovered_bias}{The log ratio of measued mass versus actual mass, as a function of mass. The scatter appears to be lognormal-ish, and with a mean of $\approx1.15$, consistant over mass. This is basically the inverse of what Matt reports in his paper, and not what he reports in his test fits for Will. According to his email, the log ratio should be 0.98.}
+
+
+
+
+\end{document}
+
