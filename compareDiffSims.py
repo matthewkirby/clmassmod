@@ -9,11 +9,13 @@ bk11snap124dir='/u/ki/dapple/nfs/beckersims/snap124/intlength400'
 
 mxxldir='/u/ki/dapple/nfs22/mxxl/snap41'
 
-simdirs = [bccsimdir, bk11snap141dir, bk11snap124dir, mxxldir]
-simnames = 'BCC BK11_z=0.25 BK11_z=0.5 MXXL_z=1.0'.split()
+#simdirs = [bccsimdir, bk11snap141dir, bk11snap124dir, mxxldir]
+simdirs = [bccsimdir, bk11snap141dir, mxxldir]
+#simnames = 'BCC BK11_z=0.25 BK11_z=0.5 MXXL_z=1.0'.split()
+simnames = 'BCC BK11_z=0.5 MXXL_z=1.0'.split()
 
-subdirs='cfree_r5 cfree_r6'.split()
-subdirnames='cfree_0p5-1p5 cfree_0p5-2p5'.split()
+subdirs='c4_r5 cfree_r5'.split()
+subdirnames='c4_r5 cfree_r5'.split()
 
 data = {}
 
@@ -45,13 +47,13 @@ for subdirname, subdir in zip(subdirnames, subdirs):
 
         if simname == 'BCC':
 
-            zlow = simdat[subdir]['redshifts'] < 0.3
-            massbin, ratiobin, ratioerr = bbb.summary2DMass(simdat[subdir], selection = zlow)
-            fill_between(massbin, ratiobin + ratioerr, ratiobin - ratioerr, alpha=0.3, color = c[ccount], label='{0} z < 0.3'.format(simname))
-            patches.append(Rectangle((0, 0), 1, 1, fc=c[ccount], alpha=0.3))
-            labels.append('{0} z < 0.3'.format(simname))
-            ccount += 1
-
+#            zlow = simdat[subdir]['redshifts'] < 0.3
+#            massbin, ratiobin, ratioerr = bbb.summary2DMass(simdat[subdir], selection = zlow)
+#            fill_between(massbin, ratiobin + ratioerr, ratiobin - ratioerr, alpha=0.3, color = c[ccount], label='{0} z < 0.3'.format(simname))
+#            patches.append(Rectangle((0, 0), 1, 1, fc=c[ccount], alpha=0.3))
+#            labels.append('{0} z < 0.3'.format(simname))
+#            ccount += 1
+#
 
             zlow = np.logical_and(simdat[subdir]['redshifts'] > 0.36, simdat[subdir]['redshifts'] < 0.5)
             massbin, ratiobin, ratioerr = bbb.summary2DMass(simdat[subdir], selection = zlow)
