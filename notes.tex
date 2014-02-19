@@ -15,12 +15,41 @@ See figure~\ref{fig:#1}.
 \end{figure}
 }
 
+\title{Analysis Document: Weak Lensing Calibration with N-body Simulations}
+\date{Started ~Feb 2013}
+\author{Douglas Applegate}
+
 
 \begin{document}
 
-Notes related to mass profile simulations from Becker \& Kratsov.
+\maketitle
 
 \tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Project Description}
+
+The goal of this project is to measure and improve the systematic uncertainty from mass-profile modeling in weak lensing. In the Weighing the Giants analysis, we assumed an NFW density profile. Does that bias the mean mass of the sample? How well can we constrain that bias? Starting at that point, I am to answer some of the following questions:
+
+\begin{itemize}
+\item What is the bias when you fit an NFW halo? What is the optimal radial range to fit, in terms of bias, systematic uncertainty and statistical uncertainty?
+\item Is the NFW profile the best description? Do other profiles work better? Are there other ways to measure masses (eg Mass Aperture) that are better?
+\item How does this evolve with cluster mass, and with redshift? Are there other predictors?
+\item How do we best handle the mass-concentration relation?
+\item How do we best handle the prior on cluster mass?
+\item Are there differences in predictions from different simulations, and from different ways to simulate lensing?
+\end{itemize}
+
+The simulations may also give insights into more advanced topics, such as 
+\begin{itemize}
+\item Can we measure cluster concentrations?
+\item Can we measure cluster ellipticities, and over what radial range?
+\item If designing a survey from scratch, how should we do it?
+\end{itemize}
+
+There are currently three analysis efforts that these results feed into. The first is the Stanford Weighing the Giants work, with Steve, Adam, and Anja, working with wide field, ground-based observations from Subaru. Then there is the SPT efforts at low and high redshifts, with Tim and Joerg. The high-z work uses HST observations, whereas the low-z work uses Megacam @ Magellan. Finally, this work also feeds into the LSST effort.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -42,22 +71,136 @@ First step is to clean up old code that I've been using in bonnpipeline and get 
 \paragraph{06 Aug 2013}
 I've recieved from Jiayi in Munich a distribution of SZ - halo center offsets from a new set of hydro sims they've done. I'm going to explore the offset distributions and effects on an NFW halo in an ipython notebook called: simulated\_offsets.ipynb .
 
+\paragraph{19 Feb 2014}
+After a long gap in this notebook, I'm back to updating it and tracking my research investigations. Since I've last updated, I've added two new simulation sets, the BCC and the MXXL. I've implemented a uniform analysis, and have begun exploring different radial ranges, as well as differences between the two simulations. I've updated all sections of the notebook to try to capture these pieces.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Guide to Files \& Software}
+
+TODO: Fill in guide to software
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Diagnosis}
-\label{sec:diagnosis}
+\section{Available Simulations}
 
-This section is dedicated to figuring out why I don't recover the same bias as Matt Becker does on his simulations.
+I have access to 3 sets of simulations:
 
-Here is my measured bias, using nominally the same fit as him (but fixing the concentration to the 3d value that he reports in the catalog headers).
+\paragraph{BK11} : Cut-outs around massive halos at redshifts z=0.25 and z=0.5, used in Becker & Kravtsov 2011. Particles are extracted in a 20x20x400 comoving Mpc/h box around each cluster and are projected to form a 2-D mass map. From that, a shear signal is calculated, assuming sources are at z=1
 
-\logfig{recovered_bias}{The log ratio of measued mass versus actual mass, as a function of mass. The scatter appears to be lognormal-ish, and with a mean of $\approx1.15$, consistant over mass. This is basically the inverse of what Matt reports in his paper, and not what he reports in his test fits for Will. According to his email, the log ratio should be 0.98.}
+\paragraph{BCC} : A simulation of a large sky-area survey covering a continuous patch of sky. Three boxes of decreasing resolution are appended and are used to form a past light cone of the visible universe. The simulation ray-traces shear from each galaxy in the simulation to the observer at z=0. I have extracted galaxies centered around the lensed central position of each massive halo in the simulation. From Wechsler, Becker, and Buscha, priv comm.
 
+\paragraph{MXXL}: A large box where snapshots at particular redshifts are written to disk. I currently have only the z=1 snapshot. Sources are assumed to be at infinite distance (not infinite redshift). Shear is calculated by projecting masses to a plane in a box (of unknown size) around each massive cluster. I have 3 projections for each cluster.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Are the simulations consistant?}
+
+In the most basic test, do I recover the same bias as a function of mass from each simulation? There are a few reasons why I might not. 
+
+\begin{itemize}
+\item Each simulation probes a different redshift range, so I should be able to probe redshift evolution. Thankfully, the BCC bridges between the MXXL and BK11, while I will also hopefully receive additional snapshots from the MXXL. 
+\item Each simulation uses a slightly different cosmology. That may mean that the mass-concentration relations are different, which may again lead to different biases. 
+\item Each simulation is at different resolutions, so there could be resolution issues, especially near the cluster centers. 
+\item The BCC ray traces over a past light cone, whereas BK11 and the MXXL ignore LSS evolution and don't ray trace
+\item The density of points where the shear field is measured is different. Bahe+2012 shows that lower density surveys / noiser surveys average over / miss some substructure, leading to different bias results.
+\item There may be a bug in how I'm reading in one of the simulations. This was previously a problem with the BK11 simulations, where I first missed factors of h, and then there was ambiguity about at what redshift the lensing signal was calculated for.
+
+\subsection{Basic Analysis Approach}
+
+TODO: Fill in details here on how exactly I do my fits.
+
+The fit is encoded in nfwfit.py. 
+
+
+\subsection{Comparing Mass Bias vs Radial Range \& M-C Relation}
+
+I've run mass fits with three mass-concentration relations: c=4, the Duffy08 relation, and allowing c to be fit freely.
+
+I've run fits for 15 different radial ranges: 3 Inner radii {0.25, 0.5, 0.75 Mpc}, and 6 outer radii {0.5, 0.75, 1.0, 1.5, 2.5, 3.0}. The radial ranges are encoded as follows:
+
+\begin{itemize}
+\item 'r1' : '0.25 - 0.5 Mpc',
+\item 'r2' : '0.25 - 1.5 Mpc',
+\item 'r3' : '0.25 - 2.5 Mpc',
+\item 'r4' : '0.25 - 3.0 Mpc',
+\item 'r5' : '0.50 - 1.5 Mpc',
+\item 'r6' : '0.50 - 2.5 Mpc',
+\item 'r7' : '0.50 - 3.0 Mpc',
+\item 'r8' : '0.75 - 1.5 Mpc',
+\item 'r9' : '0.75 - 2.5 Mpc',
+\item 'r10' :'0.75 - 3.0 Mpc',
+\item 'r11' :'0.25 - 0.75 Mpc',
+\item 'r12' :'0.25 - 1.0 Mpc',
+\item 'r13' :'0.50 - 0.75 Mpc',
+\item 'r14' :'0.50 - 1.0 Mpc',
+\item 'r15' :'0.75 - 1.0 Mpc'
+\end{itemize}
+
+
+When I assume either c=4 or Duffy08, I see that the simulations produce different results. The slopes of bias vs mass change, as well as the absolute normalizations. The three simulations appear to respond differently as well. See figure~\ref{fig:comparing_r7_bias}. 
+
+\begin{figure}[!ht]
+\includegraphics[width=0.25\textwidth]{figures/c4_r7}
+\includegraphics[width=0.25\textwidth]{figures/duffy_r7}
+\includegraphics[widht=0.25\textwidth]{figures/cfree_r7}
+\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range.}
+\label{fig:comparing_r7_bias}
+\end{figure}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Collaborators, Acknowledgements, Debts}
+
+\subsection{Collaborators}
+
+Stanford
+\begin{itemize}
+\item Steve Allen
+\item Anja von der Linden
+\item Pat Kelly
+\item Adam Mantz
+\item Glenn Morris
+\end{itemize}
+
+Bonn
+\begin{itemize}
+\item Tim Schrabback
+\item Peter Schneider
+\end{itemize}
+
+SPT
+\begin{itemize}
+\item Brad Benson
+\item Joerg Dietrich
+\end{itemize}
+
+MXXL Simulations
+\begin{itemize}
+\item Stefan Hilbert
+\end{itemize}
+
+BCC Simulations
+\begin{itemize}
+\item Risa Wechsler
+\item Matt Becker
+\item Michael Buscha
+\end{itemize}
+
+BK11 Simulations
+\begin{itemize}
+\item Matt Becker
+\end{itemize}
 
 
 
