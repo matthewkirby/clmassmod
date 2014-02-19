@@ -14,8 +14,8 @@ simdirs = [bccsimdir, bk11snap141dir, mxxldir]
 #simnames = 'BCC BK11_z=0.25 BK11_z=0.5 MXXL_z=1.0'.split()
 simnames = 'BCC BK11_z=0.5 MXXL_z=1.0'.split()
 
-subdirs='c4_r5 cfree_r5'.split()
-subdirnames='c4_r5 cfree_r5'.split()
+subdirs='c4_r7 cfree_r7 duffy_r7'.split()
+subdirnames='c4_r7 cfree_r7 duffy_r7'.split()
 
 data = {}
 
