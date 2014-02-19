@@ -33,8 +33,8 @@ def applyMask(x_arcmin, y_arcmin, config):
     def circlemask(x=0, y=0, rad=1.):
         #arcmnutes
         
-        dX = cat['X_arcmin'] - x    #column is mislabelled
-        dY = cat['Y_arcmin'] - y
+        dX = x_arcmin - x
+        dY = y_arcmin - y
         
         return np.sqrt(dX**2 + dY**2) < rad
 
@@ -91,7 +91,7 @@ def applyMask(x_arcmin, y_arcmin, config):
 
     mask = maskcase[config.maskname]()
 
-    return cat.filter(mask)
+    return mask
             
 
 ########################
@@ -108,21 +108,24 @@ def applyDensityMask(x_arcmin, y_arcmin, config):
     delta_x = max_x - min_x
 
     max_y = np.max(y_arcmin)
-    min_y = np.max(y_arcmin)
+    min_y = np.min(y_arcmin)
     delta_y = max_y - min_y
 
-    area = delta-x*delta_y
+    area = delta_x*delta_y
 
     targetnumber = targetdensity*area
 
     availablenumber = len(x_arcmin)
 
-    if targetnumber > availablenumer:
+    if targetnumber > availablenumber:
         raise InsufficientGalaxiesException
 
     accept = float(targetnumber) / availablenumber
 
     randomthrow = np.random.random(len(x_arcmin))
+
+    selected = randomthrow < accept
+
 
     return randomthrow < accept
 
