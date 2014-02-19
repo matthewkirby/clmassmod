@@ -4,9 +4,9 @@ import nfwutils
 
 mxxldir='/users/dapple/astro/mxxlsims/mxxl_imperial/snap41'
 
-mcrs = 'c4 cfree duffy'.split()
-#radialranges = ['r{0}'.format(i) for i in '1 11 12 2 3 4 13 14 5 6 7 15 8 9 10'.split()]
-radialranges = ['r{0}'.format(i) for i in '1 11 12 2 13 14 5'.split()]
+mcrs = 'cfree'.split()
+radialranges = ['r{0}'.format(i) for i in '1 11 12 2 3 4 13 14 5 6 7 15 8 9 10'.split()]
+#radialranges = ['r{0}'.format(i) for i in '1 11 12 2 13 14 5'.split()]
 
 
 data = {}
@@ -69,15 +69,15 @@ for mcr in mcrs:
         simdat = data[mcr][radrange]
 
         if currad == 0:
-            linecount = 0
+            linecount = 2
             ccount = 5
 
-        if currad == 4:
+        if currad == 6:
             linecount = 1
             ccount = 4
 
         if currad == 11:
-            linecount = 2
+            linecount = 0
             ccount = 3
 
 
@@ -86,7 +86,9 @@ for mcr in mcrs:
 
         
         massbin, ratiobin, ratioerr = bbb.summary2DMass(simdat)
+        axhline(1.0, c='DimGray', linestyle='--')
         plot(massbin, ratiobin, color=c[ccount], linestyle=linestyle[linecount], label=radrange_trans[radrange])
+
         ccount -= 1
 
 
@@ -120,15 +122,15 @@ for mcr in mcrs:
         simdat = data[mcr][radrange]
 
         if currad == 0:
-            linecount = 0
+            linecount = 2
             ccount = 5
 
-        if currad == 4:
+        if currad == 6:
             linecount = 1
             ccount = 4
 
         if currad == 11:
-            linecount = 2
+            linecount = 0
             ccount = 3
 
             
