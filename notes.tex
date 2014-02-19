@@ -62,7 +62,7 @@ Oddly, though, I couldn't reproduce his results.
 Not sure why, but it may be because I am only looking at the most massive halos while he was fitting biases to all halos.
 While there are many things that I can do to try to recover Matt's results, I don't know if I can.
 First step is to go back to my results, and just figure out what is going on.
-See section \ref{sec:diagnosis}.
+
 
 \paragraph{01 Jan 2013}
 Start of this work package. 
@@ -89,7 +89,7 @@ TODO: Fill in guide to software
 
 I have access to 3 sets of simulations:
 
-\paragraph{BK11} : Cut-outs around massive halos at redshifts z=0.25 and z=0.5, used in Becker & Kravtsov 2011. Particles are extracted in a 20x20x400 comoving Mpc/h box around each cluster and are projected to form a 2-D mass map. From that, a shear signal is calculated, assuming sources are at z=1
+\paragraph{BK11} : Cut-outs around massive halos at redshifts z=0.25 and z=0.5, used in Becker \& Kravtsov 2011. Particles are extracted in a 20x20x400 comoving Mpc/h box around each cluster and are projected to form a 2-D mass map. From that, a shear signal is calculated, assuming sources are at z=1
 
 \paragraph{BCC} : A simulation of a large sky-area survey covering a continuous patch of sky. Three boxes of decreasing resolution are appended and are used to form a past light cone of the visible universe. The simulation ray-traces shear from each galaxy in the simulation to the observer at z=0. I have extracted galaxies centered around the lensed central position of each massive halo in the simulation. From Wechsler, Becker, and Buscha, priv comm.
 
@@ -98,7 +98,7 @@ I have access to 3 sets of simulations:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Are the simulations consistant?}
+\section{Are the simulations consistent?}
 
 In the most basic test, do I recover the same bias as a function of mass from each simulation? There are a few reasons why I might not. 
 
@@ -107,8 +107,9 @@ In the most basic test, do I recover the same bias as a function of mass from ea
 \item Each simulation uses a slightly different cosmology. That may mean that the mass-concentration relations are different, which may again lead to different biases. 
 \item Each simulation is at different resolutions, so there could be resolution issues, especially near the cluster centers. 
 \item The BCC ray traces over a past light cone, whereas BK11 and the MXXL ignore LSS evolution and don't ray trace
-\item The density of points where the shear field is measured is different. Bahe+2012 shows that lower density surveys / noiser surveys average over / miss some substructure, leading to different bias results.
+\item The density of points where the shear field is measured is different. Bahe+2012 shows that lower density surveys / noisier surveys average over / miss some substructure, leading to different bias results.
 \item There may be a bug in how I'm reading in one of the simulations. This was previously a problem with the BK11 simulations, where I first missed factors of h, and then there was ambiguity about at what redshift the lensing signal was calculated for.
+\end{itemize}
 
 \subsection{Basic Analysis Approach}
 
@@ -142,16 +143,25 @@ I've run fits for 15 different radial ranges: 3 Inner radii {0.25, 0.5, 0.75 Mpc
 \end{itemize}
 
 
-When I assume either c=4 or Duffy08, I see that the simulations produce different results. The slopes of bias vs mass change, as well as the absolute normalizations. The three simulations appear to respond differently as well. See figure~\ref{fig:comparing_r7_bias}. 
+When I assume either c=4 or Duffy08, I see that the simulations produce different results. The slopes of bias vs mass change, as well as the absolute normalizations. The three simulations appear to respond differently as well. See figure~\ref{fig:comparing_r7_bias}. The curves seem to shift some between simulations. But since I am refitting the same halos, I would expect that the shifts in each simulation are real. Only when I go to cfree are the BCC and MXXL seemingly consistent. BK11 is hanging out by itself for some reason, which I don't understand.
 
 \begin{figure}[!ht]
 \includegraphics[width=0.25\textwidth]{figures/c4_r7}
 \includegraphics[width=0.25\textwidth]{figures/duffy_r7}
-\includegraphics[widht=0.25\textwidth]{figures/cfree_r7}
-\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range.}
+\includegraphics[width=0.25\textwidth]{figures/cfree_r7}
+\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The fit range is 0.5 - 3.0 Mpc. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range.}
 \label{fig:comparing_r7_bias}
 \end{figure}
 
+The agreement between BCC and MXXL seems to be fit range dependent. The above fits covered a range of 0.5 - 3.0 Mpc. If we only look at the outer region for cfree, the fits are again good.
+
+\logfig{figures/cfree_r10}{Same as fig~\ref{fig:comparing_r7_bias}, except now only for cfree and 0.75-3Mpc.}
+
+However, if we look at the innermost fit region, 0.25-0.5 mpc, we can see that the two simulations are drastically different. BCC and BK11 show diving calibrations at the high mass end (0.2 for $10^{15}$ halos!?), but MXXL holds relatively steady up to the highest masses. 
+
+\logfig{figures/cfree_r1}{Same as fig~\ref{fig:figures/cfree_r10}, except for on a radically different scale.}
+
+Could this be a resolution effect? Or maybe how the shear signal is calculated, since we are getting close to the critical curves, though I would think if that was the case BK11 and MXXL would be more consistent. We also should only be seeing shears of $g\approx0.3$ at 250kpc for z=1 and $10^{15}$ solar masses.
 
 
 
