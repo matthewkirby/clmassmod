@@ -15,15 +15,15 @@ import fitmodel, nfwmodeltools as tools
 
 #######################
 
-def applyMask(cat, config):
+def applyMask(x_arcmin, y_arcmin, config):
 
     def squaremask(x=0,y=0,theta=0, sidelength = 1.):
         #x,y in arcminutes
 
         theta_rad = np.pi*theta/180.
         
-        dX = cat['X_arcmin'] - x   #column is mislabelled
-        dY = cat['Y_arcmin'] - y
+        dX = x_arcmin - x   
+        dY = y_arcmin - y
         
         rdX = np.cos(theta_rad)*dX - np.sin(theta_rad)*dY
         rdY = np.sin(theta_rad)*dX + np.cos(theta_rad)*dY
@@ -94,11 +94,38 @@ def applyMask(cat, config):
     return cat.filter(mask)
             
 
+########################
 
+class InsufficientGalaxiesException(Exception): pass
 
-    
+def applyDensityMask(x_arcmin, y_arcmin, config):
+    #assumes that the input catalog is rectalinear
 
-        
+    targetdensity = config.nperarcmin
+
+    max_x = np.max(x_arcmin)
+    min_x = np.min(x_arcmin)
+    delta_x = max_x - min_x
+
+    max_y = np.max(y_arcmin)
+    min_y = np.max(y_arcmin)
+    delta_y = max_y - min_y
+
+    area = delta-x*delta_y
+
+    targetnumber = targetdensity*area
+
+    availablenumber = len(x_arcmin)
+
+    if targetnumber > availablenumer:
+        raise InsufficientGalaxiesException
+
+    accept = float(targetnumber) / availablenumber
+
+    randomthrow = np.random.random(len(x_arcmin))
+
+    return randomthrow < accept
+
 
 
 ########################
@@ -119,17 +146,32 @@ def readSimCatalog(catalogname, simreader, config):
     b2 = -e1
     B = -(b1*cos2phi+b2*sin2phi)
 
+    if 'shapenoise' in config:
+        E = E + config.shapenoise*np.random.standard_normal(len(E))
+        B = B + config.shapenoise*np.random.standard_normal(len(B))
+
+
+    visiblemask = np.ones(len(E)) == 1.
+    if 'maskname' in config:
+        visiblemask = applyMask(sim.x_arcmin, sim.y_arcmin, config)
+
+    densitymask = np.ones(len(E)) == 1.
+    if 'nperarcmin' in config:
+        densitymask = applyDensityMask(sim.x_arcmin, sim.y_arcmin, config)
+
+    mask = np.logical_and(visiblemask, densitymask)
+
     r_arcmin = sim.r_arcmin
     r_mpc = sim.r_mpc
     redshifts = sim.redshifts
     beta_s = sim.beta_s
 
-    cols = [pyfits.Column(name = 'r_arcmin', format = 'E', array = r_arcmin),
-            pyfits.Column(name = 'r_mpc', format='E', array = r_mpc),
-            pyfits.Column(name = 'ghat', format='E', array = E),
-            pyfits.Column(name = 'gcross', format='E', array = B),
-            pyfits.Column(name = 'z', format='E', array = redshifts),
-            pyfits.Column(name = 'beta_s', format = 'E', array = beta_s)]
+    cols = [pyfits.Column(name = 'r_arcmin', format = 'E', array = r_arcmin[mask]),
+            pyfits.Column(name = 'r_mpc', format='E', array = r_mpc[mask]),
+            pyfits.Column(name = 'ghat', format='E', array = E[mask]),
+            pyfits.Column(name = 'gcross', format='E', array = B[mask]),
+            pyfits.Column(name = 'z', format='E', array = redshifts[mask]),
+            pyfits.Column(name = 'beta_s', format = 'E', array = beta_s[mask])]
     catalog = ldac.LDACCat(pyfits.new_table(pyfits.ColDefs(cols)))
     catalog.hdu.header.update('ZLENS', sim.zcluster)
 
