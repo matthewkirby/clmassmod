@@ -42,6 +42,8 @@ class BK11Sim(object):
         radii_arcmin = np.zeros((Ng, Ng))
         cosphi = np.zeros((Ng,Ng))
         sinphi = np.zeros((Ng,Ng))
+        x_arcmin = np.zeros((Ng,Ng))
+        y_arcmin = np.zeros((Ng,Ng))
 
         for i in range(Ng):
             for j in range(Ng):
@@ -49,6 +51,8 @@ class BK11Sim(object):
                 yr = (j + 0.5 - ycen)*da
                 r = np.sqrt(xr*xr + yr*yr)
                 radii_arcmin[i,j] = r
+                x_arcmin[i,j] = xr
+                y_arcmin[i,j] = yr
 
                 cosphi[i,j] = xr/r
                 sinphi[i,j] = yr/r
@@ -65,6 +69,9 @@ class BK11Sim(object):
 
         self.g1 = (gamma1/(1-kappa)).flatten()
         self.g2 = (gamma2/(1-kappa)).flatten()
+
+        self.x_arcmin = x_arcmin.flatten()
+        self.y_arcmin = y_arcmin.flatten()
 
         self.r_arcmin = radii_arcmin.flatten()
         self.r_mpc = (self.r_arcmin/60.)*(np.pi/180.)*nfwutils.global_cosmology.angulardist(clusterz)

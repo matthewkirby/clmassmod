@@ -31,8 +31,11 @@ class BCCSim(object):
         #REMOVE FOREGROUND AND CLUSTER CONTAMINATION (FOR NOW)
         shearcat = shearcat[shearcat['z'] > zlens + 0.1]
 
-
+        posangle = clusterTools.positionAngle(shearcat['ra'], shearcat['dec'], cluster_ra, cluster_dec) #radians
         r_arcmin = clusterTools.greatCircleDistance(shearcat['ra'], shearcat['dec'], cluster_ra, cluster_dec)*60
+
+        self.x_arcmin = r_arcmin*np.cos(posangle)
+        self.y_arcmin = r_arcmin*np.sin(posangle)
 
         dL = nfwutils.global_cosmology.angulardist(zlens)
 

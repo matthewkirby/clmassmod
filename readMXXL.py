@@ -121,6 +121,8 @@ class MXXLSim(object):
         sin2phi = 2.0*sinphi*cosphi
         cos2phi = 2.0*cosphi*cosphi-1.0
 
+        self.x_arcmin = delta_arcmin[0]
+        self.y_arcmin = delta_arcmin[1]
         self.r_mpc = r_mpc
         self.r_arcmin = r_arcmin
         self.cos2phi = cos2phi
