@@ -231,7 +231,7 @@ def buildFitter(config):
 
 def buildSimReader(config):
 
-   return buildObject(config.readermodule, config.readerclass)
+   return buildObject(config.readermodule, config.readerclass, config = config)
 
     
         

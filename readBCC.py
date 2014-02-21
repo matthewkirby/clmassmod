@@ -9,6 +9,11 @@ import numpy as np
 
 class BCCSimReader(object):
 
+    def __init__(self, *args, **keywords):
+
+        pass
+
+
     def getCosmology(self):
         return nfwutils.Cosmology(omega_m = 0.23, omega_l = 0.77, h=.72)
 

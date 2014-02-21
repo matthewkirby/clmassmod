@@ -8,6 +8,11 @@ import numpy as np
 
 class BK11SimReader(object):
 
+    def __init__(self, *args, **keywords):
+
+        pass
+
+
     def getCosmology(self):
         return nfwutils.Cosmology(omega_m = 0.27, omega_l = 0.73, h = 0.7)
 

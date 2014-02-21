@@ -71,6 +71,10 @@ class MXXLBinary(object):
 
 class MXXLSimReader(object):
 
+    def __init__(self, *args, **keywords):
+
+        pass
+
     #########
 
     def getCosmology(self):
