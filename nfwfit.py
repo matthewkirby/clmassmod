@@ -98,7 +98,7 @@ def applyMask(x_arcmin, y_arcmin, config):
 
 class InsufficientGalaxiesException(Exception): pass
 
-def applyDensityMask(x_arcmin, y_arcmin, config):
+def applyDensityMask(x_arcmin, y_arcmin, zcluster, config):
     #assumes that the input catalog is rectalinear
 
     targetdensity = config.nperarcmin
@@ -113,7 +113,14 @@ def applyDensityMask(x_arcmin, y_arcmin, config):
 
     area = delta_x*delta_y
 
-    targetnumber = targetdensity*area
+    if 'targetz' in config:
+        curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
+        newangdist = nfwutils.global_cosmology.angulardist(config.targetz)
+        ratio = curr_angdist/newangdist
+        newarea = area*ratio**2
+        targetnumber = targetdensity*newarea
+    else:
+        targetnumber = targetdensity*area
 
     availablenumber = len(x_arcmin)
 
@@ -160,7 +167,7 @@ def readSimCatalog(catalogname, simreader, config):
 
     densitymask = np.ones(len(E)) == 1.
     if 'nperarcmin' in config:
-        densitymask = applyDensityMask(sim.x_arcmin, sim.y_arcmin, config)
+        densitymask = applyDensityMask(sim.x_arcmin, sim.y_arcmin, sim.zcluster, config)
 
     mask = np.logical_and(visiblemask, densitymask)
 
