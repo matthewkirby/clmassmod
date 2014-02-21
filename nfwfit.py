@@ -113,13 +113,19 @@ def applyDensityMask(x_arcmin, y_arcmin, zcluster, config):
 
     area = delta_x*delta_y
 
-    if 'targetz' in config:
+    if targetdensity == -1:
+        #take all
+        targetnumber = len(x_arcmin)
+
+    elif 'targetz' in config:
+        #adjust for different redshift
         curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
         newangdist = nfwutils.global_cosmology.angulardist(config.targetz)
         ratio = curr_angdist/newangdist
         newarea = area*ratio**2
         targetnumber = targetdensity*newarea
     else:
+
         targetnumber = targetdensity*area
 
     availablenumber = len(x_arcmin)
