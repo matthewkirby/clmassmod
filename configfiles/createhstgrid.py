@@ -31,3 +31,15 @@ for i, z in enumerate(redshifts):
         output.write('nperarcmin={0}\n'.format(16))
         output.write('shapenoise={0}\n\n'.format(0.4))
 
+
+for i, z in enumerate(redshifts):
+
+    with open('hst_square_{0}.sh'.format(i), 'w') as output:
+
+        output.write('readermodule=readMXXL_HSTBeta\n')
+        output.write('readerclass=MXXLHSTSimReader\n')
+        output.write('maskname=squaremosaic\n')
+        output.write('targetz={0}\n'.format(z))
+        output.write('nperarcmin={0}\n'.format(16))
+        output.write('shapenoise={0}\n\n'.format(0.4))
+
