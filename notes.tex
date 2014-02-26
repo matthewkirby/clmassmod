@@ -85,6 +85,12 @@ Setting up simulations for two different experiments: understanding the noise an
 Looking at results from changing noise \& sampling density in MXXL and BCC. See section~\ref{sec:noisebias}.
 Also looking at predictions for noise and bias for proposed HST snapshot programs. See section~\ref{sec:hstproposal}.
 
+\paragraph{25 Feb 2014}
+Looked at the results for the HST mock-ups. There was a bug, in that I forgot to change the area accepted when I pretend clusters are at different redshifts. Rerunning that.
+
+\paragraph{26 Feb 2014}
+While I'm rerunning the HST stuff, I wanted to look at the posterior of a few individual clusters. See section~\ref{sec:noisebias_posteriors}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -312,6 +318,13 @@ The bias response from assuming an incorrect mass-concentration relation is cosm
 I've seen that the two simulations seem to agree when I fit for concentration, at large radii, but that breaks down some at the inner most radii. What if that difference is real, and caused by substructure? What if different cosmologies produce clusters with different amounts of substructure, which lead to different measured biases? 
 
 First, we need to make sure the analysis is robust against substructure and m-c relation. But at some level, \emph{the expected bias has to be cosmology dependent!}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{How does the posterior change as noise is added?}
+\label{sec:noisebias_posteriors}
+
+On Monday, I examined how the bias and scatter change as the noise levels change in the simulation. I noticed that the bias tends to increase with increasing noise. I think that is the effect of ``noise bias'', as in the posterior is becoming more skewed at high noise levels. I should be able to see that for individual halos. 
 
 
 
