@@ -10,3 +10,5 @@ testset/*
 set1/*
 fullrun/*
 resubfails/*
+run2/*
+resubrun2/*
