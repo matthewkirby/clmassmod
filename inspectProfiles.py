@@ -3,7 +3,7 @@
 ######################################
 
 import pylab, cPickle, numpy as np, glob, os
-import nfwfit_bcc, nfwmodeltools as tools, nfwutils
+import nfwfit, nfwmodeltools as tools, nfwutils, fitmodel
 import basicBinning
 
 ##########################
@@ -162,36 +162,80 @@ def stackResiduals(sims, outdir):
 ######################
 
 
-def plotChisqSurface(simfile, config, fig = None):  
-
-
-    catalog = nfwfit_bcc.readSimCatalog(simfile, config)
-
-    fitter = nfwfit_bcc.buildFitter(config)
-
-    fitdata = fitter.prepFit(catalog, config)
-
-    r_mpc, ghat, sigma_ghat, beta_s, ebta_s2, z_lens = fitdata
-
-    model = fitter.createNFWModel(beta_s, ebta_s2, z_lens, 1e14)
-
-    masses = np.arange(1e14, 1e15, 1e13)/1e14
-
-    chisqs = np.zeros_like(masses)
-
-    def chisq(m200):
-        g_pred = model(r_mpc, m200)
-        return  np.sum(((g_pred - ghat)/sigma_ghat)**2)
-
-    for i in range(len(masses)):
-        chisqs[i] = chisq(masses[i])
+def plotLogProbSurface(catalogname, configfile, fig = None, noiselevels=[0., 0.03, 0.07, 0.15]):  
 
     if fig is None:
         fig = pylab.figure()
-    ax = pylab.gca()
-    ax.plot(masses, chisqs)
 
-    return fig
+
+
+    config = nfwfit.readConfiguration(configfile)
+
+    simreader = nfwfit.buildSimReader(config)
+
+    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+
+    catalog = nfwfit.readSimCatalog(catalogname, simreader, config)
+
+    fitter = nfwfit.buildFitter(config)
+
+    r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = fitter.prepData(catalog, config)
+
+    print sigma_ghat
+
+    fitter.model.setData(beta_s, beta_s2, zlens)
+
+    guess = fitter.model.guess()
+
+    massgrid = np.arange(1e14, 1e15, 2.5e13)/fitter.model.massScale
+    masscenters = (massgrid[1:] + massgrid[:-1])/2.
+
+    for noise in noiselevels:
+
+        noisy_g = ghat + noise*np.random.standard_normal(len(ghat))
+        noisy_sigma = np.sqrt(sigma_ghat**2 + noise**2)
+
+
+        if len(guess) == 2:
+
+            concengrid = np.arange(1., 15., 0.25)
+            concencenters = (concengrid[1:] + concengrid[:-1])/2.
+
+            chisqgrid = np.zeros((len(masscenters), len(concencenters)))
+
+            for i in range(len(masscenters)):
+                for j in range(len(concencenters)):
+
+                    chisqgrid[i,j] = fitmodel.ChiSqStat(noisy_g, 
+                                                        noisy_sigma, 
+                                                        fitter.model(r_mpc, masscenters[i], concencenters[j]))
+
+            probgrid = np.exp(-0.5*(chisqgrid - np.max(chisqgrid)))
+            massprobgrid = np.sum(probgrid, axis=1) / np.sum(probgrid)
+            logprob = np.log(massprobgrid)
+
+
+
+        else:
+
+            chisqgrid = np.zeros(len(masscenters))
+
+            for i in range(len(massgrid)):
+
+                chisqgrid[i] = fitmodel.ChiSqStat(noisy_g, noisy_sigma, fitter.model(r_mpc, masscenters[i]))
+
+            logprob = -0.5*chisqgrid
+
+
+
+
+        ax = pylab.gca()
+        ax.plot(masscenters, np.exp(logprob - np.max(logprob)), label=noise)
+
+        print 'Max: {0}'.format(masscenters[np.argmax(logprob)])
+
+    pylab.legend()
+    return fig, massgrid, concengrid, chisqgrid, logprob
 
     
 
