@@ -15,7 +15,16 @@ import fitmodel, nfwmodeltools as tools
 
 #######################
 
-def applyMask(x_arcmin, y_arcmin, config):
+def applyMask(x_arcmin, y_arcmin, zcluster, config):
+
+    if 'targetz' in config:
+        #adjust for different redshift
+        curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
+        newangdist = nfwutils.global_cosmology.angulardist(config.targetz)
+        ratio = curr_angdist/newangdist
+        x_arcmin = x_arcmin*ratio
+        y_arcmin = y_arcmin*ratio
+
 
     def squaremask(x=0,y=0,theta=0, sidelength = 1.):
         #x,y in arcminutes
@@ -169,7 +178,7 @@ def readSimCatalog(catalogname, simreader, config):
 
     visiblemask = np.ones(len(E)) == 1.
     if 'maskname' in config:
-        visiblemask = applyMask(sim.x_arcmin, sim.y_arcmin, config)
+        visiblemask = applyMask(sim.x_arcmin, sim.y_arcmin, sim.zcluster, config)
 
     densitymask = np.ones(len(E)) == 1.
     if 'nperarcmin' in config:
