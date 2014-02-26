@@ -81,6 +81,10 @@ After a long gap in this notebook, I'm back to updating it and tracking my resea
 \paragraph{21 Feb 2014}
 Setting up simulations for two different experiments: understanding the noise and bias tradeoffs for the HST simulations, and understanding the effect of decreased sampling density and increased shape noise. Added configuration files, and utilities to generate configuration files. Modifications to nfwfit and associated software to deal with subsampling, shifting to different redshifts, and adding shape noise.
 
+\paragraph{24 Feb 2014}
+Looking at results from changing noise \& sampling density in MXXL and BCC. See section~\ref{sec:noisebias}.
+Also looking at predictions for noise and bias for proposed HST snapshot programs. See section~\ref{sec:hstproposal}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -216,6 +220,101 @@ There are some more general steps that I would like to do as well:
 \item Noise. I want to understand how the 2-parameter fit responds to noise. I could create perfect NFW halos and add shape noise to see how the best fit value changes. I also want to explore the 2D posterior surface for some of the clusters in MXXL, both relaxed and unrelaxed. Related, how does the posterior perform when I marginalize over it instead of using a point estimator?
 \item We may in the end use a 1-parameter fit, but since the M-C relation is cosmology dependent, I need to implement a cosmology dependent relation. How does that perform?
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{What are the effects of noise and sampling density on bias \& scatter?}
+\label{sec:noisebias}
+
+\subsection{Motivation}
+I'm doing nonlinear fits to noisy data, and taking point estimates of the posterior. We generally expect that doing that will produce biased results. It may also explain the differences between BCC, MXXL and BK11 simulations. While all three simulations are noise-free, shear fields are sampled at different densities, which may have an effect.
+
+\subsection{Set up}
+
+I have submitted runs on the MXXL and BCC with different densities. All of the following are galaxies(samples) per square arcminute.
+\begin{itemize}
+\item 0: Default density
+\item 1: 100 (MXXL only)
+\item 2: 20 (MXXL only)
+\item 3: 20
+\item 4: 7
+\item 5: 4  (MXXL only)
+\item 6: 1  (MXXL only)
+\end{itemize}
+
+I have used four different noise levels.
+\begin{itemize}
+\item 0: No noise
+\item 1: 0.16 shape noise on tangential shear
+\item 2: 0.33
+\item 3: 0.5
+\end{itemize}
+
+I ran with c4 and cfree MC relations using the standard nfwfit.py software. Comparisons were made using the script compareSampling.py, and with the logfile compareSampling.log.
+
+
+%%%%%%%%
+
+\subsection{Does MXXL and BCC agree when using the same sampling density?}
+
+We already know that the two simulations don't agree if c=4, so I will skip that.
+
+
+\begin{figure}
+\includegraphics[width=0.25\textwidth]{figures/density_cfree-r1}
+\includegraphics[width=0.25\textwidth]{figures/density_cfree-r5}
+\includegraphics[width=0.25\textwidth]{figures/density_cfree-r10}
+\caption{Bias measured from the BCC and MXXL simulations. No shape noise is added, but different sampling densities are used. Left, center, and right are using three different fit radii.}
+\label{fig:bcc_vs_mxxl_density}
+\end{figure}
+
+We can see the bias comparison in figure~\ref{fig:bcc_vs_mxxl_density}. The center and right panels, fitting and 0.5Mpc and above, show a clean story. I would argue that the simulations roughly agree in the mass range where they have overlapping statistics. The correspondance breaks down a bit in the center panel, but again, rough agreement. In the left panel, we can see that density is really important. With enough sample points, the bias is well behaved (solid red and green curves). But sample sparsely, and the bias jumps up. But the two simulations roughly agree.
+
+\begin{figure}
+\includegraphics[width=0.3\textwidth]{figures/density_cfree-r5_scatter}
+\includegraphics[width=0.3\textwidth]{figures/density_cfree-r10_scatter}
+\caption{Comparison of recovered scatters from the two simulations.}
+\label{fig:bcc_vs_mxxl_density_scatter}
+\end{figure}
+
+When it comes to the scatter, however, the two simulations do not agree. From figure~\ref{fig:bcc_vs_mxxl_density_scatter}, we see that the MXXL has a scatter of ~20\%, practically independent of sampling density. The BCC has a scatter of 30-40\%, with signs of mass dependence. Again, density does not appear to matter. 
+
+\textbf{Why does the scatter not change as the sampling density is reduced (until very low density)?}
+10x more noise, when the noise is non-existant, is still non-existant noise, no?
+
+\subsubsection{Is the large scatter in the BCC explained by redshift evolution?}
+
+\textbf{EVIDENCE FOR REDSHIFT-DEPENDENT EVOLUTION!}
+
+I broke down the BCC bias and scatter as a function of mass and redshiftin figure~\ref{fig:bcc_bias_redshift_evo}. This is only for the outer region. However, we see that there does appear to be evolution in the bias and scatter with redshift \emph{and} mass. However, the evolution in bias is < 10\%. I do not think that is enough to explain the extra scatter.
+
+\begin{figure}
+\includegraphics[width=0.3\textwidth]{figures/bcc_bias_redshift_evo_r10_n0_0}
+\caption{Evolution of BCC calibration as a function of mass and redshift (colored lines). Left: Bias, Right: Scatter. We do see some redshift evolution(!). It does not appear to be enough to explain the extra scatter in the BCC, but it is important include when trying to calculate the actual bias expected.}
+\label{fig:bcc_bias_redshift_evo}
+\end{figure}
+
+\textbf{Where is the extra scatter coming from?}
+
+\subsubsection{Sensitivity to Profile Assumptions}
+
+The bias response from assuming an incorrect mass-concentration relation is cosmology dependent \emph{and} radial dependent. In figure~\ref{fig:profile_sensitivity_range_cosmo}, the bias as a function of mass changes with both variables in a way much larger than the difference between different sampling levels.
+
+\begin{figure}
+\includegraphics[width=0.25\textwidth]{figures/density_cfree-r5}
+\includegraphics[width=0.25\textwidth]{figures/density_cfree-r10}\\
+\includegraphics[width=0.25\textwidth]{figures/density_c4-r5}
+\includegraphics[width=0.25\textwidth]{figures/density_c4-r10}
+\caption{A comparison of how the mass-dependent bias changes with cosmology, radial range, mass-concentration relation, and sampling density. Notice how freeing the concentration radically changes the bias, even for high noise simulations.}
+\end{figure}
+
+\subsection{To Consider: If bias depends on cosmology}
+
+I've seen that the two simulations seem to agree when I fit for concentration, at large radii, but that breaks down some at the inner most radii. What if that difference is real, and caused by substructure? What if different cosmologies produce clusters with different amounts of substructure, which lead to different measured biases? 
+
+First, we need to make sure the analysis is robust against substructure and m-c relation. But at some level, \emph{the expected bias has to be cosmology dependent!}
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

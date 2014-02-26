@@ -2,9 +2,9 @@
 
 for i in 0 1 2 3 4; do
 
-    for hst in mosaic single; do
+    for hst in mosaic single square; do
 
-	for mc in c4 cfree; do
+	for mc in c4 cfree duffy; do
 
 	    config=${mc}-hst_${hst}_${i}
 	    mkdir ../mxxl_imperial/snap41/$config
