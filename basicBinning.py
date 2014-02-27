@@ -95,7 +95,6 @@ class bootstrapfixedbins(object):
         self.profileCol = 'r_mpc'
 
         if config is not None:
-            self.ngals = config.ngals
             self.maxradii = config.profilemax
             self.minradii = config.profilemin
             self.binspacing = config.binspacing
