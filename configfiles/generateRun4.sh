@@ -13,7 +13,7 @@ for binning in equalbins50 equalbins200 logbins6 logbins12 logbins18 linearbins6
 		config=${mc}-${rrange}-${density}-${binning}
 		
 		mkdir ../mxxl_imperial/snap41/$config
-		cat $binning.sh ${mc}.sh $rrange.sh $density.sh  > ../mxxl_imperial/snap41/$config/config.sh
+		cat mxxl.sh $binning.sh ${mc}.sh $rrange.sh $density.sh  > ../mxxl_imperial/snap41/$config/config.sh
 
 	    echo $config >> ../run4
 
