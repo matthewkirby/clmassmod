@@ -10,13 +10,46 @@
 \newcommand{\logfig}[2]{
 See figure~\ref{fig:#1}.
 \begin{figure}[!ht] 
-\includegraphics[width=0.9\textwidth]{#1} 
+\includegraphics[width=0.8\textwidth]{#1} 
 \caption{#2} 
 \label{fig:#1} 
 \end{figure}
 }
 
 \bibliographystyle{aa_arxiv}
+
+\def\aj{AJ}%
+          % Astronomical Journal
+\def\araa{ARA\&A}%
+          % Annual Review of Astron and Astrophys
+\def\apj{ApJ}%
+          % Astrophysical Journal
+\def\apjl{ApJ}%
+          % Astrophysical Journal, Letters
+\def\apjs{ApJS}%
+          % Astrophysical Journal, Supplement
+\def\aap{A\&A}%
+          % Astronomy and Astrophysics
+\def\aapr{A\&A~Rev.}%
+          % Astronomy and Astrophysics Reviews
+\def\aaps{A\&AS}%
+          % Astronomy and Astrophysics, Supplement
+\def\jcap{JCAP}%
+          %Journal of Cosmology and Astroparticle Physics
+\def\mnras{MNRAS}%
+          % Monthly Notices of the RAS
+\def\nat{Nature}%
+          % Nature
+\def\pasj{PASJ}%
+          % Publications of the Astronomical Society of Japan
+\def\pasp{PASP}%
+          % Publications of the ASP
+\def\physrep{Phys.~Rep.}%
+          % Physics Reports
+\def\prd{Phys.~Rev.~D}
+          % Physical Review D
+\let\apjlett=\apjl
+
 
 \title{Analysis Document: Weak Lensing Calibration with N-body Simulations}
 \date{Started ~Feb 2013}
@@ -55,7 +88,11 @@ The simulations may also give insights into more advanced topics, such as
 There are currently three analysis efforts that these results feed into. The first is the Stanford Weighing the Giants work, with Steve, Adam, and Anja, working with wide field, ground-based observations from Subaru. Then there is the SPT efforts at low and high redshifts, with Tim and Joerg. The high-z work uses HST observations, whereas the low-z work uses Megacam @ Magellan. Finally, this work also feeds into the LSST effort.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
 
 \section{Log}
 
@@ -94,8 +131,15 @@ While I'm rerunning the HST stuff, I wanted to look at the posterior of a few in
 \paragraph{27 Feb 2014}
 Starting to set up a few more explorations: binning \& cosmology-dependent mass-concentration relation.
 
+\paragraph{28 Feb 2014}
+Attempting to catch up on my notes from this last week. Need to add info on noise effects(sec~\ref{sec:noisebias}) and the hst proposal (sec~\ref{sec:hstproposal}).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
 
 \section{Guide to Files \& Software}
 
@@ -103,7 +147,11 @@ TODO: Fill in guide to software
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
 
 \section{Available Simulations}
 
@@ -116,7 +164,11 @@ I have access to 3 sets of simulations:
 \paragraph{MXXL}: A large box where snapshots at particular redshifts are written to disk. I currently have only the z=1 snapshot. Sources are assumed to be at infinite distance (not infinite redshift). Shear is calculated by projecting masses to a plane in a box (of unknown size) around each massive cluster. I have 3 projections for each cluster.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
 
 \section{Are the simulations consistent?}
 
@@ -166,10 +218,10 @@ I've run fits for 15 different radial ranges: 3 Inner radii {0.25, 0.5, 0.75 Mpc
 
 When I assume either c=4 or Duffy08, I see that the simulations produce different results. The slopes of bias vs mass change, as well as the absolute normalizations. The three simulations appear to respond differently as well. See figure~\ref{fig:comparing_r7_bias}. The curves seem to shift some between simulations. But since I am refitting the same halos, I would expect that the shifts in each simulation are real. Only when I go to cfree are the BCC and MXXL seemingly consistent. BK11 is hanging out by itself for some reason, which I don't understand.
 
-\begin{figure}[!ht]
-\includegraphics[width=0.25\textwidth]{figures/c4_r7}
-\includegraphics[width=0.25\textwidth]{figures/duffy_r7}
-\includegraphics[width=0.25\textwidth]{figures/cfree_r7}
+\begin{figure} \centering[!ht]
+\includegraphics[width=0.3\textwidth]{figures/c4_r7}
+\includegraphics[width=0.3\textwidth]{figures/duffy_r7}
+\includegraphics[width=0.3\textwidth]{figures/cfree_r7}
 \caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The fit range is 0.5 - 3.0 Mpc. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range. Made with compareDiffSims.py}
 \label{fig:comparing_r7_bias}
 \end{figure}
@@ -200,7 +252,12 @@ This to me suggests a 2-pronged strategy. When we don't care about cosmology, fo
 \end{itemize}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+
 
 \section{Optimal Radial Ranges for NFW Profiles}
 
@@ -230,7 +287,12 @@ There are some more general steps that I would like to do as well:
 \item We may in the end use a 1-parameter fit, but since the M-C relation is cosmology dependent, I need to implement a cosmology dependent relation. How does that perform?
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
 \section{What are the effects of noise and sampling density on bias \& scatter?}
 \label{sec:noisebias}
 
@@ -268,19 +330,19 @@ I ran with c4 and cfree MC relations using the standard nfwfit.py software. Comp
 We already know that the two simulations don't agree if c=4, so I will skip that.
 
 
-\begin{figure}
-\includegraphics[width=0.25\textwidth]{figures/density_cfree-r1}
-\includegraphics[width=0.25\textwidth]{figures/density_cfree-r5}
-\includegraphics[width=0.25\textwidth]{figures/density_cfree-r10}
+\begin{figure} \centering
+\includegraphics[width=0.3\textwidth]{figures/density_cfree-r1}
+\includegraphics[width=0.3\textwidth]{figures/density_cfree-r5}
+\includegraphics[width=0.3\textwidth]{figures/density_cfree-r10}
 \caption{Bias measured from the BCC and MXXL simulations. No shape noise is added, but different sampling densities are used. Left, center, and right are using three different fit radii.}
 \label{fig:bcc_vs_mxxl_density}
 \end{figure}
 
 We can see the bias comparison in figure~\ref{fig:bcc_vs_mxxl_density}. The center and right panels, fitting and 0.5Mpc and above, show a clean story. I would argue that the simulations roughly agree in the mass range where they have overlapping statistics. The correspondance breaks down a bit in the center panel, but again, rough agreement. In the left panel, we can see that density is really important. With enough sample points, the bias is well behaved (solid red and green curves). But sample sparsely, and the bias jumps up. But the two simulations roughly agree.
 
-\begin{figure}
-\includegraphics[width=0.3\textwidth]{figures/density_cfree-r5_scatter}
-\includegraphics[width=0.3\textwidth]{figures/density_cfree-r10_scatter}
+\begin{figure} \centering
+\includegraphics[width=0.4\textwidth]{figures/density_cfree-r5_scatter}
+\includegraphics[width=0.4\textwidth]{figures/density_cfree-r10_scatter}
 \caption{Comparison of recovered scatters from the two simulations.}
 \label{fig:bcc_vs_mxxl_density_scatter}
 \end{figure}
@@ -296,8 +358,8 @@ When it comes to the scatter, however, the two simulations do not agree. From fi
 
 I broke down the BCC bias and scatter as a function of mass and redshiftin figure~\ref{fig:bcc_bias_redshift_evo}. This is only for the outer region. However, we see that there does appear to be evolution in the bias and scatter with redshift \emph{and} mass. However, the evolution in bias is < 10\%. I do not think that is enough to explain the extra scatter.
 
-\begin{figure}
-\includegraphics[width=0.3\textwidth]{figures/bcc_bias_redshift_evo_r10_n0_0}
+\begin{figure} \centering
+\includegraphics[width=0.8\textwidth]{figures/bcc_bias_redshift_evo_r10_n0_0}
 \caption{Evolution of BCC calibration as a function of mass and redshift (colored lines). Left: Bias, Right: Scatter. We do see some redshift evolution(!). It does not appear to be enough to explain the extra scatter in the BCC, but it is important include when trying to calculate the actual bias expected.}
 \label{fig:bcc_bias_redshift_evo}
 \end{figure}
@@ -308,13 +370,15 @@ I broke down the BCC bias and scatter as a function of mass and redshiftin figur
 
 The bias response from assuming an incorrect mass-concentration relation is cosmology dependent \emph{and} radial dependent. In figure~\ref{fig:profile_sensitivity_range_cosmo}, the bias as a function of mass changes with both variables in a way much larger than the difference between different sampling levels.
 
-\begin{figure}
-\includegraphics[width=0.25\textwidth]{figures/density_cfree-r5}
-\includegraphics[width=0.25\textwidth]{figures/density_cfree-r10}\\
-\includegraphics[width=0.25\textwidth]{figures/density_c4-r5}
-\includegraphics[width=0.25\textwidth]{figures/density_c4-r10}
+\begin{figure} \centering
+\includegraphics[width=0.4\textwidth]{figures/density_cfree-r5}
+\includegraphics[width=0.4\textwidth]{figures/density_cfree-r10}\\
+\includegraphics[width=0.4\textwidth]{figures/density_c4-r5}
+\includegraphics[width=0.4\textwidth]{figures/density_c4-r10}
 \caption{A comparison of how the mass-dependent bias changes with cosmology, radial range, mass-concentration relation, and sampling density. Notice how freeing the concentration radically changes the bias, even for high noise simulations.}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{To Consider: If bias depends on cosmology}
 
@@ -330,12 +394,69 @@ First, we need to make sure the analysis is robust against substructure and m-c 
 On Monday, I examined how the bias and scatter change as the noise levels change in the simulation. I noticed that the bias tends to increase with increasing noise. I think that is the effect of ``noise bias'', as in the posterior is becoming more skewed at high noise levels. I should be able to see that for individual halos. 
 
 code: inspectProfiles.py
-Logfile: logs/noisebias_probsurface.log
+Logfile: logs/noisebias\_probsurface.log
 
 Yeah, this is not working out so well. I think I'll need to table this until later.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{How does the bias \& scatter change as noise is added?}
+\label{sec:noisebias_bias}
+
+%%%%
+
+\subsubsection{Scatter at high densities}
+
+I'll start with 100 galaxies per sq arcminute. At the outer radii, this is a lot of samples even for noisy galaxies. The behavior of the scatter, however, has some odd radial dependence. See figure~\ref{fig:noisebias_highdensity_radrange}. The smaller fit range has noise that goes up uniformly. That to me suggests the noise is dominated by shape noise. At the outer radii, there are more galaxies included in the fit, so I guess shape noise is suppressed more. OK, not surprising then that the noise rises slower. However, the scatter develops a mass dependence. From the no noise case, we can see that the intrinsic LSS \& triaxial noise is not mass dependent. So maybe this is a signal strength effect, which gets swamped in the shape-noise dominated case at lower radii?
+
+Note that fitting for concentration increases noise, but not radically, except at low radii.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{figures/noise_cfree-r5-n1_3_scatter}
+\includegraphics[width=0.4\textwidth]{figures/noise_cfree-r10-n1_3_scatter}\\
+\includegraphics[width=0.4\textwidth]{figures/noise_c4-r5-n1_3_scatter}
+\includegraphics[width=0.4\textwidth]{figures/noise_c4-r10-n1_3_scatter}
+\caption{Shown are the measured scatters for 100 galaxies per sq arcminute at different levels of noise. Left column shows fits to 0.5-1.5mpc, whereas the right column shows 0.75 - 3mpc. Top row has concentration free in the fits, the bottom row restricts c=4. Fits to 0.5-1.5mpc behave as I would expect: add shape noise, and the measured scatter goes up. However, fits to 0.75-3mpc show a mass dependence to the noise. While noise goes up, it goes up faster for the low mass galaxies, and at a rate slower than the smaller fit range.}
+\label{fig:noisebias_highdensity_radrange}
+\end{figure}
+
+%%%%%
+
+\subsubsection{Bias at high densities}
+
+As was seen in \citet{bahe12}, added noise shifts the average bias up. However, at least at 100 galaxies per sq arcmin, the effect is not large, and is somewhat muddled. Also confusing is why the c-free fits to 0.5 - 1.5 mpc develops a mass-dependent bias. See Figure~\ref{fig:noisebias_highdensity_bias}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{figures/noise_cfree-r5-n1_3}
+\includegraphics[width=0.4\textwidth]{figures/noise_cfree-r10-n1_3}\\
+\includegraphics[width=0.4\textwidth]{figures/noise_c4-r5-n1_3}
+\includegraphics[width=0.4\textwidth]{figures/noise_c4-r10-n1_3}
+\caption{Same as fig~\ref{fig:noisebias_highdensity_radrange}, except now I show the bias. What is odd is the c-free fit to 0.5-1.5 mpc, and there is a mass-dependent bias. This was seen previously in multiple figures earlier in this section.}
+\label{fig:noisebias_highdensity_bias}
+\end{figure}
+
+%%%%%%%
+
+\subsubsection{Bias vs sampling for noisy galaxies}
+
+For the most dramatic example of how noise affects the bias, I turn to noisy galaxies, and change the sampling density at 0.75-3mpc. See figure~\ref{fig:noisebias_noisygals_sparsesampling}.
+
+\begin{figure}
+\includegraphics[width=0.4\textwidth]{figures/density_noise2_c4-r10}
+\includegraphics[width=0.4\textwidth]{figures/density_noise2_c4-r10_scatter}\\
+\includegraphics[width=0.4\textwidth]{figures/density_noise2_cfree-r10}
+\includegraphics[width=0.4\textwidth]{figures/density_noise2_cfree-r10_scatter}
+\caption{Plotted are simulations with increasing noise levels (fit at 0.75-3mpc). Top has c=4, bottom has c-free. The bias is similar at low noise, and seems to shift in similar ways, though the c=4 fit never shifts bias as much as c-free. Interestingly enough, the scatter does not increase dramatically at this radii when concentration is let free. This is in contrast to smaller radii. Obviously fitting for the concentration has an effect, as it changes the bias, but somehow it doesn't change the scatter.}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
 
 \section{What is the best mass to measure?}
 
@@ -352,8 +473,10 @@ I've contacted Aaron about the MXXL problem, but I am holding off contacing Matt
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
 
 \section{Collaborators, Acknowledgements, Debts}
 
