@@ -288,6 +288,7 @@ There are some more general steps that I would like to do as well:
 \end{itemize}
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -450,6 +451,74 @@ For the most dramatic example of how noise affects the bias, I turn to noisy gal
 \includegraphics[width=0.4\textwidth]{figures/density_noise2_cfree-r10_scatter}
 \caption{Plotted are simulations with increasing noise levels (fit at 0.75-3mpc). Top has c=4, bottom has c-free. The bias is similar at low noise, and seems to shift in similar ways, though the c=4 fit never shifts bias as much as c-free. Interestingly enough, the scatter does not increase dramatically at this radii when concentration is let free. This is in contrast to smaller radii. Obviously fitting for the concentration has an effect, as it changes the bias, but somehow it doesn't change the scatter.}
 \end{figure}
+
+Why does bias seems to increase in a mass independent way up to some noise point, after which lower mass clusters develop a steeper bias? The effects aren't as strong with c=4. But I suspect noise bias is at play here. The direction of the bias would suggest skewed posteriors, with tails to to low mass, and high probability density just above the correct mass. I will have to find a way to see that.
+
+%%%%%%%%%%%%%%%
+
+\subsection{Next Steps}
+
+I'd like to create perfect NFW halos, increase noise slowly, and inspect the posterior. That is probably the most clean way to investigate the effects of noise bias. However, what I'm concerned about is that the noise due to LSS \& substructure is not the same as shape noise, where noise is actually correlated between bins. I could imagine that correlated noise could induce difference effects. It would also be nice to model the amount of this correlated noise, so that I could include it in fits. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+\section{What is the best configuration for the HST Program?}
+\label{sec:hstproposal}
+
+
+\subsection{Motivation}
+There are a few different ways we could configure an HST program to observe high-redshift galaxy clusters. We can either take a single-pointing strategy, or some sort of mosaic. There are of course time limitions, and mosaicing will usually mean shallower exposures, with higher shape noise and lower galaxy density. The most effective strategy could also be redshift dependent, as the effective beta and sampling densities change.
+
+\subsection{Setup}
+I've used the MXXL to examine this question, by employing different instrument masks. I've introduced a few modifications so that I can approximate what happens when galaxy clusters are at different redshifts. This includes different source densities, different physical distances accepted into the analysis, and different effective betas. Modifications include a new reader class, readMXXL_HSTBeta.py. 
+
+I've used Tim's estimates of Beta, source density, and shape noise from the CANDELS fields. 
+
+From Tim, on 19 Feb. (Note, I clarified that Beta here is D_ls/D_s, not normalized to D_inf.:
+\begin{quote}
+Hi Doug,
+
+here are my CANDELS estimates for our new HST program with source density, betas and shape noise:
+
+
+After color cut (V-i<0.4 or V-z<0.45) and S/N cuts (Flux S/N>10):
+
+Source density: (for V-i cut only so far) 
+
+Single pointings: Ngal= 21/arcmin^2 (24<V<26.5) to r=110", probably for z>1 clusters
+Mosaics:          Ngal= 16/arcmin^2   (24<V<26)   to r=160"
+
+Shape noise:
+0.40 for both components together
+
+Beta:
+zl      beta
+0.65  0.43  
+0.70  0.40  
+0.75  0.38   
+0.80  0.36       
+0.85  0.34   
+0.90  0.32   
+0.95  0.30   
+1.00  0.28
+1.05  0.26
+1.10  0.24
+1.15  0.23
+1.20  0.21 
+1.25  0.195
+1.30  0.18
+
+This is a bit pessimistic given that it uses uniform and not optimal weight, but this can be seen as margin.
+
+Cheers, Tim
+\end{quote}
+
+
+
+
 
 
 

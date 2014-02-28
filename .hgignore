@@ -13,4 +13,10 @@ resubfails/*
 run2/*
 resubrun2/*
 run3/*
+run3a/*
 run4/*
+*.aux
+*.bbl
+*.blg
+*.toc
+
