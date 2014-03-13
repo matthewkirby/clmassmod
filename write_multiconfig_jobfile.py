@@ -13,7 +13,7 @@ import sys, os, json, argparse, glob, stat
 
 ####################
 
-def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/home/dapple/braid1/mxxl/snap41', toInclude = range(6300)):
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/snap41', toInclude = range(6300)):
     
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
@@ -35,7 +35,7 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/home/dapple/braid1/mxx
                                     stripCatExt = False)
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
 
-    condorfile = '''executable = /home/dapple/braid1/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
 universe = vanilla
 Error = {jobdir}/{jobname}.$(Process).stderr
 Output = {jobdir}/{jobname}.$(Process).stdout
