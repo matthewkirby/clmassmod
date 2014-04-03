@@ -39,6 +39,23 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
 
         return (np.abs(rdX) + np.abs(rdY)) <= (np.sqrt(2)*sidelength/2.)
 
+    def rectanglemask(x=0,y=0,theta=0, xlength=1., ylength=1.):
+
+        #x,y in arcminutes
+
+        theta_rad = np.pi*theta/180.
+        
+        dX = x_arcmin - x   
+        dY = y_arcmin - y
+        
+        rdX = np.cos(theta_rad)*dX - np.sin(theta_rad)*dY
+        rdY = np.sin(theta_rad)*dX + np.cos(theta_rad)*dY
+
+        return np.logical_and(np.abs(rdX) < xlength/2., np.abs(rdY) < ylength/2.)
+
+
+        
+
     def circlemask(x=0, y=0, rad=1.):
         #arcmnutes
         
@@ -59,6 +76,11 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
     offsetmosaic = lambda : np.logical_or(offsetpointing(), rotatedoffset())
 
     offset3 = lambda : np.logical_or(offsetmosaic(), acscentered())
+
+    pisco3 = lambda: np.logical_or(np.logical_or(rectanglemask(0,0,0,8,6), rectanglemask(0,7,0,6,8)), rectanglemask(0,-7,0,6,8))
+
+    pisco4 = lambda: np.logical_or(np.logical_or(rectanglemask(-5.5, 0, 0, 8, 6), rectanglemask(5.5, 0, 0, 8, 6)), 
+                                   np.logical_or(rectanglemask(0, 5.5, 0, 6, 8), rectanglemask(0, -5.5, 0,6, 8)))
 
     def randomoffset():
         posangle = np.random.uniform(0, 2*np.pi)
@@ -92,6 +114,8 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
                 'rotatedoffset' : rotatedoffset,
                 'offsetmosaic' : offsetmosaic,
                 'offset3' : offset3,
+                'pisco3' : pisco3,
+                'pisco4' : pisco4,
                 'randomoffset' : randomoffset,
                 'randomoffsetmosaic' : randomoffsetmosaic,
                 'centerandoffset' : centerandoffset,
