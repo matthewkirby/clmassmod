@@ -14,7 +14,9 @@ run2/*
 resubrun2/*
 run3/*
 run3a/*
+run3b/*
 run4/*
+sour/*
 *.aux
 *.bbl
 *.blg
