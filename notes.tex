@@ -135,6 +135,10 @@ Starting to set up a few more explorations: binning \& cosmology-dependent mass-
 Attempting to catch up on my notes from this last week. Need to add info on noise effects(sec~\ref{sec:noisebias}) and the hst proposal (sec~\ref{sec:hstproposal}).
 
 
+\paragraph{03 April 2014}
+Needed to figure out if I could get away with 3 or 4 pointings with PISCO. PISCo has a 6x8 arcminute field of view, so rather restricted. I worked out a 3 pointing and 2 fourpointing strategies. Looks like I need 4 pointings See sec~\ref{sec:piscoproposal}.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -473,23 +477,23 @@ I'd like to create perfect NFW halos, increase noise slowly, and inspect the pos
 There are a few different ways we could configure an HST program to observe high-redshift galaxy clusters. We can either take a single-pointing strategy, or some sort of mosaic. There are of course time limitions, and mosaicing will usually mean shallower exposures, with higher shape noise and lower galaxy density. The most effective strategy could also be redshift dependent, as the effective beta and sampling densities change.
 
 \subsection{Setup}
-I've used the MXXL to examine this question, by employing different instrument masks. I've introduced a few modifications so that I can approximate what happens when galaxy clusters are at different redshifts. This includes different source densities, different physical distances accepted into the analysis, and different effective betas. Modifications include a new reader class, readMXXL_HSTBeta.py. 
+I've used the MXXL to examine this question, by employing different instrument masks. I've introduced a few modifications so that I can approximate what happens when galaxy clusters are at different redshifts. This includes different source densities, different physical distances accepted into the analysis, and different effective betas. Modifications include a new reader class, readMXXL\_HSTBeta.py. 
 
 I've used Tim's estimates of Beta, source density, and shape noise from the CANDELS fields. 
 
-From Tim, on 19 Feb. (Note, I clarified that Beta here is D_ls/D_s, not normalized to D_inf.:
-\begin{quote}
+From Tim, on 19 Feb. (Note, I clarified that Beta here is $D_{ls}/D_s$, not normalized to $D_inf$.:
+\begin{quotation}
 Hi Doug,
 
 here are my CANDELS estimates for our new HST program with source density, betas and shape noise:
 
 
-After color cut (V-i<0.4 or V-z<0.45) and S/N cuts (Flux S/N>10):
+After color cut ($V-i<0.4$ or $V-z<0.45$) and S/N cuts (Flux $S/N>10$):
 
 Source density: (for V-i cut only so far) 
 
-Single pointings: Ngal= 21/arcmin^2 (24<V<26.5) to r=110", probably for z>1 clusters
-[3-pt] Mosaics:          Ngal= 16/arcmin^2   (24<V<26)   to r=160"
+Single pointings: Ngal= 21/arcmin$^2$ ($24<V<26.5$) to $r=110"$, probably for $z>1$ clusters
+[3-pt] Mosaics:          Ngal= 16/arcmin$^2$   ($24<V<26$)   to $r=160"$
 
 Shape noise:
 0.40 for both components together
@@ -514,10 +518,33 @@ zl      beta
 This is a bit pessimistic given that it uses uniform and not optimal weight, but this can be seen as margin.
 
 Cheers, Tim
-\end{quote}
+\end{quotation}
 
 I've set up my code to ``move'' clusters to redshifts 0.7, 0.8, 0.9, 1.0, and 1.1. I've also tested single pointings, 3-pt mosiacs, and 4-pt mosaics based on the existing program. I've assumed the source density for the 4-pointing mosaics to be ~21 galaxies per square arcminute.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+
+\section{How many pointings do I need with PISCO?}
+
+
+PISCO is a simultaneous imaging system being built at Harvard. It captures griz at the same time, so that each filter is seeing the same colors. This should mean that the colors are more accurate. Problem is, they only put one chip in it, with a field of view of 6x8'. It's kind of hard to probe out to 3Mpc with such a small chip, especially at the redshifts of MACS clusters ($0.3 < z 0.7$).
+
+I came up with 3 different ways I could mosaic. Using 3 pointings, I could probe out along one axis, kind of like -:-. The long axis is 22 arcminutes, but the short one is only 8 arcminutes. With four pointings, I could either form a square that was $14\times14$ arcminutes, with little stubs off two sides. Or, I could make a cross with a hole in the center. Figuring each pointing is offset from the center by 1.5 arcminute, I could probe 1.5 - 9.5 arcminutes.
+
+I set up each of these scenerios, plus a simple circular aperture with diameter 30 arcminute for comparison. While I'm not sure that the absolute scatters recorded are right, I'd think that the relative performance should be right. Figure~\ref{fig:piscoscatter} shows the relative performance. I'm a little surprised the circular aperature does less well at lower masses, but basically the 4 pointing strategy seems to work fine. Three pointings asymptotes to a higher scatter level, which should be avoided.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.65\textwidth]{figures/piscoproposal_scatter}
+\caption{Expected Scatter (according to MXXL) as a function of cluster mass, for measuring M200. Four pointing solutions perform better than 3 pointings. Neither 4 pointing solution is a clear winner. Note that at lower masses, the most luxurious solution, the reference circle mask ``subaru'' actually has more scatter. That might be because it allows the profile to be measured all the way to 3Mpc. Could be a useful insight. }
+\label{fig:piscoscatter}
+
+\end{figure}
 
 
 
