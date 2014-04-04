@@ -138,6 +138,9 @@ Attempting to catch up on my notes from this last week. Need to add info on nois
 \paragraph{03 April 2014}
 Needed to figure out if I could get away with 3 or 4 pointings with PISCO. PISCo has a 6x8 arcminute field of view, so rather restricted. I worked out a 3 pointing and 2 fourpointing strategies. Looks like I need 4 pointings See sec~\ref{sec:piscoproposal}.
 
+\paragraph{04 April 2014}
+Spend the afternoon thinking about what to do with the complex dependences on the bias. See sec~\ref{sec:outerfitrange} for thoughts and plans.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -281,6 +284,19 @@ Outer fit range seems to matter much more than inner fit range. You might expect
 
 The story with the scatter is much clearer. As I move the outer radial range to small values, the amount of scatter picks up. As soon as I move inside R200, the scatter blows up. Why is this? Smaller area, so subject to more LSS noise? More substructure in clusters?
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dealing with the Outer Fit Range}
+\label{sec:outerfitrange}
+
+Looking at figures \ref{fig:figures/cfree} and \ref{fig:figures/cfree_scater}, the outer fit range seems to control the bias. And for each choice, there is a different mass dependence, probably described by how $R_{\mathrm{vir}}$ passes through the fit range for the masses I'm considering. It seems silly that the bias is this sensitive to the fit range, when in many cases the fit range isn't even something that I can control.
+
+This bias comes from the fact that an NFW halo is a bad description of a cluster at distances beyond the virial radius. The NFW halo cuts off, and eventually a 2-halo term kicks in. Becker points this out in Fig 2 of his paper \citep{becker11}, and it goes along with other work by \citet{oguri_profiles} and \citet{tavio_profiles}, both of which propose suggested functional forms to model the density profile beyond the virial radius. Figure~4 in \citet{tavio_profiles} is particularly interesting, because he plots the rms scatter in the density profile as a function of radius. Above the virial radius, the rms scatter explodes from 20\% to 100\% by 2*$R_{\mathrm{vir}}$. Regardless of the functional form, this translates into a huge uncertainty in the shear profile of an individual cluster. So imagine if we included that theoretical uncertainty when fitting clusters? The fit would basically ignore any data above the virial radius, while self consistantly calculating the virial radius. That's exactly what the iterative method in \citet{becker11} tried to do, but without the iteration.
+
+I'd like to implement that, and see if I can get the fit range and mass dependencies of the biases to converge. That would greatly simplify the problem.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Next Steps}
 
 For the HST proposal (due to STSCI in April, but need it for proposal writing by 25 Feb 2014), I need to add shape noise, use a lower sampling density, and apply HST masks associated with our mosaicing programs. That way I can directly measure the expected scatter for different choices, which will affect how powerful the HST program will be. 
@@ -289,6 +305,7 @@ There are some more general steps that I would like to do as well:
 \begin{itemize}
 \item Noise. I want to understand how the 2-parameter fit responds to noise. I could create perfect NFW halos and add shape noise to see how the best fit value changes. I also want to explore the 2D posterior surface for some of the clusters in MXXL, both relaxed and unrelaxed. Related, how does the posterior perform when I marginalize over it instead of using a point estimator?
 \item We may in the end use a 1-parameter fit, but since the M-C relation is cosmology dependent, I need to implement a cosmology dependent relation. How does that perform?
+\item Does the bias simplify if I add a ton of extra uncertainty at radii beyond the virial radius?
 \end{itemize}
 
 
