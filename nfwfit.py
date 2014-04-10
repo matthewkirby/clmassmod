@@ -260,7 +260,7 @@ def buildFitter(config):
     except AttributeError:
         massconRelation = None
 
-    fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation)
+    fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation, config = config)
 
 
 
@@ -278,10 +278,11 @@ def buildSimReader(config):
 
 class NFW_Model(object):
 
-    def __init__(self):
+    def __init__(self, uncertainprofile = False):
 
         self.massScale = 1e14
         self.overdensity = 200
+        self.uncertainprofile = uncertainprofile
 
     def paramLimits(self):
 
@@ -314,16 +315,32 @@ class NFW_Model(object):
         nfw_kappa_inf = tools.NFWKappa(x, c200, r_scale, self.zcluster)
         
         g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
+
+        if self.uncertainprofile == False:
                 
-        return g
+            return g
+
+        else:
+
+            r200 = nfwutils.rdeltaConstM(m200, c200, self.zcluster, self.overdensity)
+
+            rrvir = x/r200
+
+            gerr = np.zeros_like(x)
+            intransition = np.logical_and(rrvir > 0.9, rrvir < 1.5)
+            gerr[intransition] = 0.5*rrvir[intransition]*g[intransition]
+            outside = rrvir >= 1.5
+            gerr[outside] = 5*g[outside]
+
+            return g, gerr
 
 #######
 
 class NFW_MC_Model(NFW_Model):
 
-    def __init__(self, massconRelation):
+    def __init__(self, massconRelation, uncertainprofile = False):
 
-        super(NFW_MC_Model, self).__init__()
+        super(NFW_MC_Model, self).__init__(uncertainprofile = uncertainprofile)
         self.massconRelation = massconRelation
 
     def guess(self):
@@ -348,16 +365,36 @@ class NFW_MC_Model(NFW_Model):
 
 ###############################
 
+def chisq(ydata, yerr, ymodel):
+
+    return fitmodel.ChiSqStat(ydata, yerr, ymodel)
+
+def chisq_uncertainprofile(ydata, yerr, ymodel, ymodelerr):
+    
+    return fitmodel.ChiSqStat(ydata, np.sqrt(yerr**2 + ymodelerr**2), ymodel)
+
+    
+
 class NFWFitter(object):
 
-    def __init__(self, profileBuilder, massconRelation):
+    def __init__(self, profileBuilder, massconRelation, config):
 
         self.profileBuilder = profileBuilder
 
-        if massconRelation is None:
-            self.model = NFW_Model()
+
+        if 'uncertainprofile' in config and config.uncertainprofile == 1:
+            uncertainprofile = True
+            self.statfunc = chisq_uncertainprofile
         else:
-            self.model = NFW_MC_Model(massconRelation)
+            uncertainprofile = False
+            self.statfunc = chisq
+
+        if massconRelation is None:
+            self.model = NFW_Model(uncertainprofile=uncertainprofile)
+        else:
+            self.model = NFW_MC_Model(massconRelation, uncertainprofile=uncertainprofile)
+
+        
 
 
     ######
@@ -368,6 +405,9 @@ class NFWFitter(object):
         beta_s2 = np.mean(curCatalog['beta_s']**2)
         
         r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, config)
+
+
+            
 
         clean = sigma_ghat > 0
 
