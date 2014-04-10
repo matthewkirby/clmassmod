@@ -139,7 +139,10 @@ Attempting to catch up on my notes from this last week. Need to add info on nois
 Needed to figure out if I could get away with 3 or 4 pointings with PISCO. PISCo has a 6x8 arcminute field of view, so rather restricted. I worked out a 3 pointing and 2 fourpointing strategies. Looks like I need 4 pointings See sec~\ref{sec:piscoproposal}.
 
 \paragraph{04 April 2014}
-Spend the afternoon thinking about what to do with the complex dependences on the bias. See sec~\ref{sec:outerfitrange} for thoughts and plans.
+Spend the afternoon thinking about what to do with the complex dependences on the bias. See sec~\ref{sec:outerfitrange} for thoughts and plans, and results.
+
+\paragraph{10 April 2014}
+Trying to play catch up, and think about the simulations again. I ran some tests on how bining affects results. See sec~\ref{sec:binningmethod}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -289,7 +292,7 @@ The story with the scatter is much clearer. As I move the outer radial range to 
 \subsection{Dealing with the Outer Fit Range}
 \label{sec:outerfitrange}
 
-Looking at figures \ref{fig:figures/cfree} and \ref{fig:figures/cfree_scater}, the outer fit range seems to control the bias. And for each choice, there is a different mass dependence, probably described by how $R_{\mathrm{vir}}$ passes through the fit range for the masses I'm considering. It seems silly that the bias is this sensitive to the fit range, when in many cases the fit range isn't even something that I can control.
+Looking at figures \ref{fig:figures/cfree} and \ref{fig:figures/cfree_scatter}, the outer fit range seems to control the bias. And for each choice, there is a different mass dependence, probably described by how $R_{\mathrm{vir}}$ passes through the fit range for the masses I'm considering. It seems silly that the bias is this sensitive to the fit range, when in many cases the fit range isn't even something that I can control.
 
 This bias comes from the fact that an NFW halo is a bad description of a cluster at distances beyond the virial radius. The NFW halo cuts off, and eventually a 2-halo term kicks in. Becker points this out in Fig 2 of his paper \citep{becker11}, and it goes along with other work by \citet{oguri_profiles} and \citet{tavio_profiles}, both of which propose suggested functional forms to model the density profile beyond the virial radius. Figure~4 in \citet{tavio_profiles} is particularly interesting, because he plots the rms scatter in the density profile as a function of radius. Above the virial radius, the rms scatter explodes from 20\% to 100\% by 2*$R_{\mathrm{vir}}$. Regardless of the functional form, this translates into a huge uncertainty in the shear profile of an individual cluster. So imagine if we included that theoretical uncertainty when fitting clusters? The fit would basically ignore any data above the virial radius, while self consistantly calculating the virial radius. That's exactly what the iterative method in \citet{becker11} tried to do, but without the iteration.
 
@@ -374,9 +377,7 @@ When it comes to the scatter, however, the two simulations do not agree. From fi
 \textbf{Why does the scatter not change as the sampling density is reduced (until very low density)?}
 10x more noise, when the noise is non-existant, is still non-existant noise, no?
 
-\subsubsection{Is the large scatter in the BCC explained by redshift evolution?}
-
-\textbf{EVIDENCE FOR REDSHIFT-DEPENDENT EVOLUTION!}
+\subsubsection{Redshift evolution in BCC bias}
 
 I broke down the BCC bias and scatter as a function of mass and redshiftin figure~\ref{fig:bcc_bias_redshift_evo}. This is only for the outer region. However, we see that there does appear to be evolution in the bias and scatter with redshift \emph{and} mass. However, the evolution in bias is < 10\%. I do not think that is enough to explain the extra scatter.
 
@@ -386,7 +387,11 @@ I broke down the BCC bias and scatter as a function of mass and redshiftin figur
 \label{fig:bcc_bias_redshift_evo}
 \end{figure}
 
-\textbf{Where is the extra scatter coming from?}
+\subsubsection{Explaining BCC vs MXXL scatter differences with integration length}
+
+Turns out Becker already thought about this in \citet{becker11}. MXXL only includes structure out to 200 Mpc $h^{-1}$, as did BK11. That captures all of the correlated scatter, and some but not all of the uncorrelated scatter. Becker used the calculation from \citet{hoekstra2003} to estimate how much extra noise comes from the rest of the LOS structure. For the lower-mass clusters in BK11 (Section 4.1 and Table 1), the extra LoS noise brings the scatter from $\approx22\%$ to $30\%$. The effect is much smaller for halos $M_{500} > 5\times10^{14}$, where only a few to 5\% points are added to the scatter.
+
+
 
 \subsubsection{Sensitivity to Profile Assumptions}
 
@@ -398,6 +403,7 @@ The bias response from assuming an incorrect mass-concentration relation is cosm
 \includegraphics[width=0.4\textwidth]{figures/density_c4-r5}
 \includegraphics[width=0.4\textwidth]{figures/density_c4-r10}
 \caption{A comparison of how the mass-dependent bias changes with cosmology, radial range, mass-concentration relation, and sampling density. Notice how freeing the concentration radically changes the bias, even for high noise simulations.}
+\label{fig:profile_sensitivity_range_cosmo}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -466,16 +472,57 @@ As was seen in \citet{bahe12}, added noise shifts the average bias up. However, 
 For the most dramatic example of how noise affects the bias, I turn to noisy galaxies, and change the sampling density at 0.75-3mpc. See figure~\ref{fig:noisebias_noisygals_sparsesampling}.
 
 \begin{figure}
+\centering
 \includegraphics[width=0.4\textwidth]{figures/density_noise2_c4-r10}
 \includegraphics[width=0.4\textwidth]{figures/density_noise2_c4-r10_scatter}\\
 \includegraphics[width=0.4\textwidth]{figures/density_noise2_cfree-r10}
 \includegraphics[width=0.4\textwidth]{figures/density_noise2_cfree-r10_scatter}
 \caption{Plotted are simulations with increasing noise levels (fit at 0.75-3mpc). Top has c=4, bottom has c-free. The bias is similar at low noise, and seems to shift in similar ways, though the c=4 fit never shifts bias as much as c-free. Interestingly enough, the scatter does not increase dramatically at this radii when concentration is let free. This is in contrast to smaller radii. Obviously fitting for the concentration has an effect, as it changes the bias, but somehow it doesn't change the scatter.}
+\label{fig:noisebias_noisygals_sparsesampling}
 \end{figure}
 
 Why does bias seems to increase in a mass independent way up to some noise point, after which lower mass clusters develop a steeper bias? The effects aren't as strong with c=4. But I suspect noise bias is at play here. The direction of the bias would suggest skewed posteriors, with tails to to low mass, and high probability density just above the correct mass. I will have to find a way to see that.
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Effects of Binning on Bias \& Scatter}
+\label{sec:binningmethod}
+
+When I fit to the innermost region, for example 0.25 Mpc - 0.5Mpc, we see some funky effects going on. Fig~\ref{fig:figures/cfree_r1} shows that MXXL and BCC disagree on the bias, and that BCC is a terribly negative bias in this inner fit range while MXXL does not. When we control for sampling density in Fig~\ref{fig:bcc_vs_mxxl_density}, we see that the MXXL bias moves to match the BCC bias. Could this simply be an artifact of how I bin the profiles? Currently I create radial bins with equal numbers of galaxies. At lower sampling densities, the inner most bin will stretch over a wider and wider radial range. Let us test that.
+
+Using the MXXL, I ran every combination of:
+
+\begin{itemize}
+\item MC Relation: c4, cfree
+\item Density: Full density, 7 galaxies/arcmin.
+\item Radial Range: r11 (0.25 - 0.75), r5 (0.5 - 1.5), r6 (0.5 - 2.5), r10 (0.75 - 3)
+\item Binning: Equal50, Equal200, Log6, Log12, Log18, Linear6, Linear12, Linear18
+\end{itemize}
+
+
+First, looking at large radial fits for fixed mass-concentration. Binning method appears to make a difference, however, the change in bias is roughly about 1 percentage-point. That's about half the difference of going from effectively infinite signal to 7 galaxies/arcmin. See fig~\ref{fig:density_binning_bias}. The story seems to be roughly the same for fits to 0.25 - 0.75, at for fits starting at 0.5 Mpc.
+
+Once we let the concentration free, things get slightly more interesting. The fits to 0.75 - 0.3 Mpc still seem to be well behaved, and in fact have a very similar bias to the c=4 fits. Basically, those fits are insensitive to the m-c relation. Fitting with cfree to 0.25 - 0.75 is different. With high source density the bias shifts, but is relatively insensitive to binning (6\% point spread). Once the source density drops to something reasonable, then different profiles just go nuts to different biases. Equal binning sinks to very negative biases, linear and log binning appears to have a positive bias. Can't quite make out a pattern in terms of number of bins.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{figures/density_binning_wtg}
+\includegraphics[width=0.45\textwidth]{figures/density_binning_wtg_cfree} \\
+\includegraphics[width=0.45\textwidth]{figures/density_binning_core}
+\includegraphics[width=0.45\textwidth]{figures/density_binning_core_cfree}\\
+\caption{Comparison of bias at different densities and with different binning styles. For fits at high radius, binning style matters less than density. For the core, binning does matter, but at low densities, everything is very sensitive.}
+\label{fig:density_binning_bias}
+\end{figure}
+
+
+Binning appears to have no effect on the scatter. Apparently these densities also have no effect on the scatter. 7 galaxies / arcmin must then still be high enough that intrinsic, correlated, and LoS structure is still the dominant noise source, at least for noise free shears.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \subsection{Next Steps}
 
@@ -547,6 +594,7 @@ I've set up my code to ``move'' clusters to redshifts 0.7, 0.8, 0.9, 1.0, and 1.
 
 
 \section{How many pointings do I need with PISCO?}
+\label{sec:piscoproposal}
 
 
 PISCO is a simultaneous imaging system being built at Harvard. It captures griz at the same time, so that each filter is seeing the same colors. This should mean that the colors are more accurate. Problem is, they only put one chip in it, with a field of view of 6x8'. It's kind of hard to probe out to 3Mpc with such a small chip, especially at the redshifts of MACS clusters ($0.3 < z 0.7$).
