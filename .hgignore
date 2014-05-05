@@ -17,6 +17,8 @@ run3a/*
 run3b/*
 run4/*
 sour/*
+piscosour/*
+mxxlstack/*
 *.aux
 *.bbl
 *.blg
