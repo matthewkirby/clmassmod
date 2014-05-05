@@ -16,7 +16,7 @@ massedges = np.array([0, 3.8e14, 4.2e14, 4.9e14, 5e15])
 concenedges = np.array([0, 0.2, 0.26, 0.38, 4.38, 10])
 
 
-def BCCresidual(binbase):
+def residual(binbase):
 
     mass, concen =  readtxtfile.readtxtfile('%s.dat' % binbase)[0]
 
@@ -38,7 +38,7 @@ def BCCresidual(binbase):
     pylab.axhline(1.0, c='k', linewidth=2)
     pylab.xlabel('Radius [Mpc]', fontsize=16)
     pylab.ylabel('g_meas / g_pred', fontsize=16)
-    pylab.title('MXXL Mass=%1.2fx10^14 Concen=%1.2f' % (mass/1e14, concen))
+    pylab.title('Redshift=%1.1f Mass=%1.2fx10^14 Concen=%1.2f' % (zlens, mass/1e14, concen))
 
     pylab.savefig('%s.png' % binbase)
 
@@ -54,7 +54,7 @@ def run(stackdir, simreader):
     figs = []
     for stackbase in stackbases:
         try:
-            figs.append(BCCresidual(stackbase))
+            figs.append(residual(stackbase))
         except ValueError:
             pass
                        
