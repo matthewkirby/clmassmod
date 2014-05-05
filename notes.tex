@@ -143,6 +143,7 @@ Spend the afternoon thinking about what to do with the complex dependences on th
 
 \paragraph{10 April 2014}
 Trying to play catch up, and think about the simulations again. I ran some tests on how bining affects results. See sec~\ref{sec:binningmethod}.
+Also started to implement a cosmology dependent m-c relation. See sec~\ref{sec:cosmo_dependent_mc}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -252,6 +253,15 @@ Could this be a resolution effect? Or maybe how the shear signal is calculated, 
 I think that the behavior of the fits against the different mass-concentration relations vs cfree suggests that the simulations have intrinsically different m-c relations. This is supported by the work of \citet{ludlow_mc}, which shows that even for $M_{200} = 10^{14}$ clusters, the mean concentration can vary by 20\% over the WMAP1-7 and Planck cosmologies. 
 
 This to me suggests a 2-pronged strategy. When we don't care about cosmology, for example, just talking about masses, then we can fix a mass-concentration relation (appropriate for that cosmology). However, for purposes of cosmological fits, we need to vary the m-c relation systematically over all clusters inline with the fit. That way we don't get hit by some ``systematic uncertainty'' by assuming an M-C relation, and we capture the covariance with cosmology.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Testing a Cosmology-Dependent Mass-Concentration Relation}
+\label{sec:cosmo_dependent_mc}
+
+On Becker's suggestion, I'm going to try out a cosmology-dependent MC relation. Since cosmology is for all fits, what I hope to see is a consistant bias between simulations AND a level of scatter comparable to fixing the mass-concentration relation. I'm going to use \citet{zhao_cosmodepmc}, since they provide an online calculator and code. For now, I'll just download tables corresponding to each cosmology that I need. I'll figure out later how to actually run their code on the fly, if it works. The calculator is at: \url{http://202.127.29.4/dhzhao/mandc.html}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subsection{Next Steps}
