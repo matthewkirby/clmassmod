@@ -107,7 +107,7 @@ class OnlineStatistics(object):
         catalog = ldac.LDACCat(pyfits.new_table(pyfits.ColDefs(cols)))
         catalog.hdu.header.update('ZLENS', self.meanzlens)
 
-        catalog.writeto(outfile)
+        catalog.saveas(outfile, clobber=True)
 
 
 
@@ -152,6 +152,69 @@ def stackCats(stackfile, configname, outfile):
 ############################
 
 def assignMXXLStacks(outdir, massedges = np.array([0, 3.8e14, 4.2e14, 4.9e14, 5e15]),
+              concenedges = np.array([0, 0.2, 0.26, 0.38, 4.38, 10])):
+
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+
+    with open('mxxl_answers.pkl', 'rb') as input:
+        answers = cPickle.load(input)
+
+    nclusters = len(answers)
+
+    masses = np.zeros(len(answers))
+    concens = np.zeros(len(answers))
+
+    halos = np.arange(nclusters)
+
+    for i in range(nclusters):
+
+        masses[i] = answers[i]['m200']
+        concens[i] = answers[i]['concen']
+
+    haloassignments = {}
+
+    
+    condorfile = open('%s/mxxlstack.submit' % outdir, 'w')
+    condorfile.write('executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/stack_condorwrapper.sh\n')
+    condorfile.write('universe = vanilla\n')
+    
+    for curmass_i in range(len(massedges)-1):
+        for curconcen_i in range(len(concenedges)-1):
+
+            massselect = np.logical_and(masses >= massedges[curmass_i],
+                                        masses < massedges[curmass_i+1])
+            concenselect = np.logical_and(concens >= concenedges[curconcen_i],
+                                          concens < concenedges[curconcen_i + 1])
+            binselect = np.logical_and(massselect, concenselect)
+            selected = halos[binselect]
+
+            with open('%s/mxxlstack_%d_%d.list' % (outdir, curmass_i, curconcen_i), 'w') as output:
+
+                for curhalo in selected:
+                    output.write('/vol/braid1/vol1/dapple/mxxl/snap41/halo_cid%d\n' % curhalo)
+
+            with open('%s/mxxlstack_%d_%d.dat' % (outdir, curmass_i, curconcen_i), 'w') as output:
+
+                output.write('# <Mass> <Concen>\n')
+                output.write('%f %f\n' % (np.mean(masses[binselect]), np.mean(concens[binselect])))
+
+            condorfile.write('Error = %s/consolidate.mxxlstack_%d_%d.stderr\n' % (outdir, curmass_i, curconcen_i))
+            condorfile.write('Output = %s/consolidate.mxxlstack_%d_%d.stdout\n' % (outdir, curmass_i, curconcen_i))
+            condorfile.write('Log = %s/consolidate.mxxlstack_%d_%d.batch.log\n' % (outdir, curmass_i, curconcen_i))
+            condorfile.write('Arguments = %s/mxxlstack_%d_%d.list /vol/braid1/vol1/dapple/mxxl/mxxlsims/stackconfig.sh %s/mxxlstack_%d_%d.cat\n' % (outdir, curmass_i, curconcen_i,
+                                                                                                                                                  outdir, curmass_i, curconcen_i))
+            condorfile.write('queue\n')
+
+
+
+    condorfile.close()
+                                                                                                                                                  
+            
+
+#############################
+
+def assignBCCStacks(outdir, massedges = np.array([0, 3.8e14, 4.2e14, 4.9e14, 5e15]),
               concenedges = np.array([0, 0.2, 0.26, 0.38, 4.38, 10])):
 
     if not os.path.exists(outdir):
