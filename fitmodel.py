@@ -163,7 +163,7 @@ class FitModel:
     xdata and ydata), with a fit statistic provided by StatFunc.
     """
     def __init__(self, xdata, ydata, yerr, model, 
-                 statfunc = ChiSqStat, guess = []):
+                 statfunc = ChiSqStat, guess = [], modelerr = False):
 
         self.xdata = numpy.array(xdata, dtype=numpy.float64)
         self.ydata = numpy.array(ydata, dtype=numpy.float64)
@@ -175,7 +175,7 @@ class FitModel:
 
         self.guess = guess
 
-        self.fcn = FCN(self.xdata, self.ydata, self.yerr, model, statfunc)
+        self.fcn = FCN(self.xdata, self.ydata, self.yerr, model, statfunc, modelerr)
 
         self.m = minuit.Minuit( self.fcn )
 
@@ -326,7 +326,7 @@ class FitModel:
 ####################################
 
     
-def FCN(x,y,yerr, model, statfunc):
+def FCN(x,y,yerr, model, statfunc, modelerr = False):
     """
     Calculates the fitting FCN for pyMinuit(2) given the data (xdata & ydata)
     and model (class Model, with a tuple of initial parameters, params),
@@ -346,7 +346,9 @@ def FCN(x,y,yerr, model, statfunc):
 
     paramstring = ','.join(params)
 
-    class_template = '''class fitclass(object):
+    if modelerr is False:
+
+        class_template = '''class fitclass(object):
     def __init__(self, x, y, yerr, model, statfunc):
         self.x = x
         self.y = y
@@ -357,6 +359,22 @@ def FCN(x,y,yerr, model, statfunc):
     def __call__(self, %s):
         return self.statfunc(self.y, self.yerr, self.model(self.x, %s))
 ''' % (paramstring, paramstring)
+
+    else:
+
+        class_template = '''class fitclass(object):
+    def __init__(self, x, y, yerr, model, statfunc):
+        self.x = x
+        self.y = y
+        self.yerr = yerr
+        self.model = model
+        self.statfunc = statfunc
+
+    def __call__(self, %s):
+        ypred, yprederr = self.model(self.x, %s)
+        return self.statfunc(self.y, self.yerr, ypred, yprederr)
+''' % (paramstring, paramstring)
+        
 
     
     exec class_template
