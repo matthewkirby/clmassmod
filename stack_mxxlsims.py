@@ -81,10 +81,10 @@ class OnlineStatistics(object):
                                                                              catmeanshear, 
                                                                              catvarianceshear)
 
-            self.meanbeta[curbin], junk = onlineStats(self.ndata[curbin], self.meanbeta[curbin], 0.,
+            self.meanbeta[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanbeta[curbin], 0.,
                                                       catndata, catmeanbeta, 0.)
 
-            self.meanbeta2[curbin], junk = onlineStats(self.ndata[curbin], self.meanbeta2[curbin], 0.,
+            self.meanbeta2[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanbeta2[curbin], 0.,
                                                       catndata, catmeanbeta2, 0.)
 
             
