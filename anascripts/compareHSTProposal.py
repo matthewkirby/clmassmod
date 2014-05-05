@@ -12,28 +12,28 @@ mxxldir='/users/dapple/astro/mxxlsims/mxxl_imperial/snap41'
 
 mcrs = 'c4 cfree'.split()
 redshifts = range(0, 5, 2)
-strategies = 'mosaic single'.split()
+strategies = 'mosaic deepmosaic cvzsquare'.split()
 
-#mxxldata = {}
-#
-#for mcr in mcrs:
-#
-#    if mcr not in mxxldata:
-#        mxxldata[mcr] = {}
-#
-#    for redshift in redshifts:
-#
-#        if redshift not in mxxldata[mcr]:
-#            mxxldata[mcr][redshift] = {}
-#
-#        for strategy in strategies:
-#
-#            simname = '{0}-hst_{1}_{2}'.format(mcr, strategy, redshift)
-#            mxxlfilename='{0}/{1}/consolidated.pkl'.format(mxxldir, simname)
-#
-#            mxxldata[mcr][redshift][strategy] = bbb.loadData(mxxlfilename)
-#
-#   
+mxxldata = {}
+
+for mcr in mcrs:
+
+    if mcr not in mxxldata:
+        mxxldata[mcr] = {}
+
+    for redshift in redshifts:
+
+        if redshift not in mxxldata[mcr]:
+            mxxldata[mcr][redshift] = {}
+
+        for strategy in strategies:
+
+            simname = '{0}-hst_{1}_{2}'.format(mcr, strategy, redshift)
+            mxxlfilename='{0}/{1}/consolidated.pkl'.format(mxxldir, simname)
+
+            mxxldata[mcr][redshift][strategy] = bbb.loadData(mxxlfilename)
+
+   
 
 
 c = 'r b m DodgerBlue g DarkSalmon'.split()

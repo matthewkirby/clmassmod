@@ -39,6 +39,23 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
 
         return (np.abs(rdX) + np.abs(rdY)) <= (np.sqrt(2)*sidelength/2.)
 
+    def rectanglemask(x=0,y=0,theta=0, xlength=1., ylength=1.):
+
+        #x,y in arcminutes
+
+        theta_rad = np.pi*theta/180.
+        
+        dX = x_arcmin - x   
+        dY = y_arcmin - y
+        
+        rdX = np.cos(theta_rad)*dX - np.sin(theta_rad)*dY
+        rdY = np.sin(theta_rad)*dX + np.cos(theta_rad)*dY
+
+        return np.logical_and(np.abs(rdX) < xlength/2., np.abs(rdY) < ylength/2.)
+
+
+        
+
     def circlemask(x=0, y=0, rad=1.):
         #arcmnutes
         
@@ -59,6 +76,11 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
     offsetmosaic = lambda : np.logical_or(offsetpointing(), rotatedoffset())
 
     offset3 = lambda : np.logical_or(offsetmosaic(), acscentered())
+
+    pisco3 = lambda: np.logical_or(np.logical_or(rectanglemask(0,0,0,8,6), rectanglemask(0,7,0,6,8)), rectanglemask(0,-7,0,6,8))
+
+    pisco4 = lambda: np.logical_or(np.logical_or(rectanglemask(-5.5, 0, 0, 8, 6), rectanglemask(5.5, 0, 0, 8, 6)), 
+                                   np.logical_or(rectanglemask(0, 5.5, 0, 6, 8), rectanglemask(0, -5.5, 0,6, 8)))
 
     def randomoffset():
         posangle = np.random.uniform(0, 2*np.pi)
@@ -92,6 +114,8 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
                 'rotatedoffset' : rotatedoffset,
                 'offsetmosaic' : offsetmosaic,
                 'offset3' : offset3,
+                'pisco3' : pisco3,
+                'pisco4' : pisco4,
                 'randomoffset' : randomoffset,
                 'randomoffsetmosaic' : randomoffsetmosaic,
                 'centerandoffset' : centerandoffset,
@@ -236,7 +260,7 @@ def buildFitter(config):
     except AttributeError:
         massconRelation = None
 
-    fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation)
+    fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation, config = config)
 
 
 
@@ -254,10 +278,11 @@ def buildSimReader(config):
 
 class NFW_Model(object):
 
-    def __init__(self):
+    def __init__(self, uncertainprofile = False):
 
         self.massScale = 1e14
         self.overdensity = 200
+        self.uncertainprofile = uncertainprofile
 
     def paramLimits(self):
 
@@ -290,16 +315,32 @@ class NFW_Model(object):
         nfw_kappa_inf = tools.NFWKappa(x, c200, r_scale, self.zcluster)
         
         g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
+
+        if self.uncertainprofile == False:
                 
-        return g
+            return g
+
+        else:
+
+            r200 = nfwutils.rdeltaConstM(m200, c200, self.zcluster, self.overdensity)
+
+            rrvir = x/r200
+
+            gerr = np.zeros_like(x)
+            intransition = np.logical_and(rrvir > 0.9, rrvir < 1.5)
+            gerr[intransition] = 0.5*rrvir[intransition]*g[intransition]
+            outside = rrvir >= 1.5
+            gerr[outside] = 5*g[outside]
+
+            return g, gerr
 
 #######
 
 class NFW_MC_Model(NFW_Model):
 
-    def __init__(self, massconRelation):
+    def __init__(self, massconRelation, uncertainprofile = False):
 
-        super(NFW_MC_Model, self).__init__()
+        super(NFW_MC_Model, self).__init__(uncertainprofile = uncertainprofile)
         self.massconRelation = massconRelation
 
     def guess(self):
@@ -324,16 +365,36 @@ class NFW_MC_Model(NFW_Model):
 
 ###############################
 
+def chisq(ydata, yerr, ymodel):
+
+    return fitmodel.ChiSqStat(ydata, yerr, ymodel)
+
+def chisq_uncertainprofile(ydata, yerr, ymodel, ymodelerr):
+    
+    return fitmodel.ChiSqStat(ydata, np.sqrt(yerr**2 + ymodelerr**2), ymodel)
+
+    
+
 class NFWFitter(object):
 
-    def __init__(self, profileBuilder, massconRelation):
+    def __init__(self, profileBuilder, massconRelation, config):
 
         self.profileBuilder = profileBuilder
 
-        if massconRelation is None:
-            self.model = NFW_Model()
+
+        if 'uncertainprofile' in config and config.uncertainprofile == 1:
+            uncertainprofile = True
+            self.statfunc = chisq_uncertainprofile
         else:
-            self.model = NFW_MC_Model(massconRelation)
+            uncertainprofile = False
+            self.statfunc = chisq
+
+        if massconRelation is None:
+            self.model = NFW_Model(uncertainprofile=uncertainprofile)
+        else:
+            self.model = NFW_MC_Model(massconRelation, uncertainprofile=uncertainprofile)
+
+        
 
 
     ######
@@ -344,6 +405,9 @@ class NFWFitter(object):
         beta_s2 = np.mean(curCatalog['beta_s']**2)
         
         r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, config)
+
+
+            
 
         clean = sigma_ghat > 0
 

@@ -15,7 +15,11 @@ resubrun2/*
 resubccrun2/*
 run3/*
 run3a/*
+run3b/*
 run4/*
+sour/*
+piscosour/*
+mxxlstack/*
 *.aux
 *.bbl
 *.blg

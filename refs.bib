@@ -50,6 +50,93 @@ to substructure within the virial radius.
   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Looks at simulations to investigate bias, scatter in lensing masses, with interesting other diversions to figure out the source
+
+@ARTICLE{becker11,
+   author = {{Becker}, M.~R. and {Kravtsov}, A.~V.},
+    title = "{On the Accuracy of Weak-lensing Cluster Mass Reconstructions}",
+  journal = {\apj},
+archivePrefix = "arXiv",
+   eprint = {1011.1681},
+ primaryClass = "astro-ph.CO",
+ keywords = {galaxies: clusters: general, gravitational lensing: weak},
+     year = 2011,
+    month = oct,
+   volume = 740,
+      eid = {25},
+    pages = {25},
+ abstract = "{We study the bias and scatter in mass measurements of galaxy clusters
+resulting from fitting a spherically symmetric Navarro, Frenk, {\amp}
+White model to the reduced tangential shear profile measured in
+weak-lensing (WL) observations. The reduced shear profiles are generated
+for {\ap}10$^{4}$ cluster-sized halos formed in a {$\Lambda$}CDM
+cosmological N-body simulation of a 1 h $^{-1}$ Gpc box. In
+agreement with previous studies, we find that the scatter in the WL
+masses derived using this fitting method has irreducible contributions
+from the triaxial shapes of cluster-sized halos and uncorrelated
+large-scale matter projections along the line of sight. Additionally, we
+find that correlated large-scale structure within several virial radii
+of clusters contributes a smaller, but nevertheless significant, amount
+to the scatter. The intrinsic scatter due to these physical sources is
+{\ap}20\% for massive clusters and can be as high as {\ap}30\% for
+group-sized systems. For current, ground-based observations, however,
+the total scatter should be dominated by shape noise from the background
+galaxies used to measure the shear. Importantly, we find that WL mass
+measurements can have a small, {\ap}5\%-10\%, but non-negligible amount of
+bias. Given that WL measurements of cluster masses are a powerful way to
+calibrate cluster mass-observable relations for precision cosmological
+constraints, we strongly emphasize that a robust calibration of the bias
+requires detailed simulations that include more observational effects
+than we consider here. Such a calibration exercise needs to be carried
+out for each specific WL mass estimation method, as the details of the
+method determine in part the expected scatter and bias. We present an
+iterative method for estimating mass M $_{500c }$ that can
+eliminate the bias for analyses of ground-based data.
+}",
+      doi = {10.1088/0004-637X/740/1/25},
+   adsurl = {http://adsabs.harvard.edu/abs/2011ApJ...740...25B},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Describes analytic calculations of how much noise is added by LoS, and how that noise is correlated across different radial bins
+
+@ARTICLE{hoekstra2003,
+   author = {{Hoekstra}, H.},
+    title = "{How well can we determine cluster mass profiles from weak lensing?}",
+  journal = {\mnras},
+   eprint = {astro-ph/0208351},
+ keywords = {gravitational lensing, galaxies: clusters: general},
+     year = 2003,
+    month = mar,
+   volume = 339,
+    pages = {1155-1162},
+ abstract = "{Weak gravitational lensing provides a direct way to study the mass
+distribution of clusters of galaxies at large radii. Unfortunately,
+large-scale structure along the line of sight also contributes to the
+lensing signal, and consequently affects the measurements. We quantify
+the effect of distant uncorrelated large-scale structure on the inferred
+mass profile of clusters as measured from weak lensing. We consider
+Navarro, Frenk {\amp} White profiles, and find that large-scale structure
+is a major source of uncertainty for most practical situations, when a
+model, with mass M$_{200}$ and concentration parameter c as free
+parameters, is fitted to the observations. We find that the best
+constraints are found for clusters at intermediate redshifts (z\~{} 0.3).
+For a cluster at z= 0.3, optimal results are obtained when the lensing
+signal is measured out to 10-15 arcmin. Measurements at larger radii do
+not improve the accuracy with which the profile can be determined,
+contrary to what is expected when the contribution from large-scale
+structure is ignored. The true uncertainties in M$_{200}$ and the
+concentration parameter c are \~{}2 times larger than when distant
+large-scale structure is not included in the error budget.
+}",
+      doi = {10.1046/j.1365-8711.2003.06264.x},
+   adsurl = {http://adsabs.harvard.edu/abs/2003MNRAS.339.1155H},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
 
 
 
@@ -70,6 +157,159 @@ archivePrefix = "arXiv",
      year = 2013,
     month = dec,
    adsurl = {http://adsabs.harvard.edu/abs/2013arXiv1312.0945L},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Suggests an analytic form to describe the shear profile (and density profile) beyond the virial radius
+
+@ARTICLE{oguri_profiles,
+   author = {{Oguri}, M. and {Hamana}, T.},
+    title = "{Detailed cluster lensing profiles at large radii and the impact on cluster weak lensing studies}",
+  journal = {\mnras},
+archivePrefix = "arXiv",
+   eprint = {1101.0650},
+ primaryClass = "astro-ph.CO",
+ keywords = {gravitational lensing: weak, galaxies: clusters: general, cosmology: theory, dark matter},
+     year = 2011,
+    month = jul,
+   volume = 414,
+    pages = {1851-1861},
+ abstract = "{Using a large set of ray tracing in N-body simulations, we examine
+lensing profiles around massive dark haloes in detail, with a particular
+emphasis on the profile at around the virial radii. We compare radial
+convergence profiles, which are measured accurately in the ray-tracing
+simulations by stacking many dark haloes, with our simple analytic model
+predictions. Our analytic models consist of a main halo, which is
+modelled by the Navarro-Frenk-White (NFW) density profile with three
+different forms of the truncation, plus the correlated matter (two-halo
+term) around the main halo. We find that the smoothly truncated NFW
+profile best reproduces the simulated lensing profiles, out to more than
+10 times the virial radius. We then use this analytic model to
+investigate potential biases in cluster weak lensing studies in which a
+single, untruncated NFW component is usually assumed in interpreting
+observed signals. We find that cluster masses, inferred by fitting
+reduced tangential shear profiles with the NFW profile, tend to be
+underestimated by {\tilde}5-10 per cent if fitting is performed out to
+{\tilde}10-30 arcmin. In contrast, the concentration parameter is
+overestimated typically by {\tilde}20 per cent for the same fitting
+range. We also investigate biases in computing the signal-to-noise ratio
+of weak lensing mass peaks, finding them to be {\lsim}4 per cent for
+significant mass peaks. In the appendices, we provide useful formulae
+for the smoothly truncated NFW profile.
+}",
+      doi = {10.1111/j.1365-2966.2011.18481.x},
+   adsurl = {http://adsabs.harvard.edu/abs/2011MNRAS.414.1851O},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+% Suggests a functional form to describe density profiles beyond the virial radius. Also includes a plot that there is an insane amount of variation in profiles of individual systems beyond the virial radius.
+
+@ARTICLE{tavio_profiles,
+   author = {{Tavio}, H. and {Cuesta}, A.~J. and {Prada}, F. and {Klypin}, A.~A. and 
+	{Sanchez-Conde}, M.~A.},
+    title = "{The dark outside: the density profile of dark matter haloes beyond the virial radius}",
+  journal = {ArXiv e-prints},
+archivePrefix = "arXiv",
+   eprint = {0807.3027},
+ keywords = {Astrophysics},
+     year = 2008,
+    month = jul,
+ abstract = "{We present an approximation for the average density profile of dark
+matter haloes in the LambdaCDM cosmological model, which is accurate to
+within 10--15\% even for large radial distances from 0.05R\_$\{$vir$\}$ up to
+10R\_$\{$vir$\}$ for halo masses ranging from 10\^{}$\{$11.5$\}$ to 10\^{}$\{$15.0$\}$
+h\^{}$\{$-1$\}$M\_$\{$Sun$\}$. We propose a modified form of the Navarro, Frenk {\amp}
+White (NFW) approximation: $\backslash$rho(r)=$\backslash$rho\_$\{$NFW$\}$(r)+ A (r/R\_$\{$vir$\}$)\^{}$\{$-1$\}$+B
+(1+r/R\_$\{$vir$\}$)\^{}$\{$-1$\}$. This generalized expression, which is applicable to
+the external regions of dark matter haloes, only very slightly affects
+the density in the inner regions of haloes. The strong correlation among
+the different parameters in the model allows us to describe the profile
+in terms of just one parameter: the virial mass. We integrate our
+density profile to derive the enclosed mass in a sphere of a given
+radius and compare it with the NFW results. We find that the NFW
+underestimates the enclosed mass by more than 50\% at 10R\_$\{$vir$\}$, whereas
+our model reproduces the results from numerical simulations to within 2\%
+accuracy even at this distance. We also use this new approximation to
+study the weak gravitational lensing and to obtain an analytic
+expression for the tangential shear. This allows us to quantify the
+contribution to the shear from the outer regions of the density profile.
+For the first time we calculate the difference between the tangential
+shear calculated via the NFW profile and the corresponding result when
+the external regions of haloes in cosmological simulations are taken
+into account. We find a 4\% difference for all the mass ranges under
+study.
+}",
+   adsurl = {http://adsabs.harvard.edu/abs/2008arXiv0807.3027T},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cosmo dependent M-C relations, based on accretion histories, just like Ludlow. But with available software!
+
+@ARTICLE{zhao_cosmodepmc,
+   author = {{Zhao}, D.~H. and {Jing}, Y.~P. and {Mo}, H.~J. and {B{\"o}rner}, G.
+	},
+    title = "{Accurate Universal Models for the Mass Accretion Histories and Concentrations of Dark Matter Halos}",
+  journal = {\apj},
+archivePrefix = "arXiv",
+   eprint = {0811.0828},
+ keywords = {cosmology: miscellaneous, galaxies: clusters: general, methods: numerical},
+     year = 2009,
+    month = dec,
+   volume = 707,
+    pages = {354-369},
+ abstract = "{A large amount of observations have constrained cosmological parameters
+and the initial density fluctuation spectrum to a very high accuracy.
+However, cosmological parameters change with time and the power index of
+the power spectrum dramatically varies with mass scale in the so-called
+concordance {$\Lambda$}CDM cosmology. Thus, any successful model for its
+structural evolution should work well simultaneously for various
+cosmological models and different power spectra. We use a large set of
+high-resolution N-body simulations of a variety of structure formation
+models (scale-free, standard CDM, open CDM, and {$\Lambda$}CDM) to study
+the mass accretion histories, the mass and redshift dependence of
+concentrations, and the concentration evolution histories of dark matter
+halos. We find that there is significant disagreement between the
+much-used empirical models in the literature and our simulations. Based
+on our simulation results, we find that the mass accretion rate of a
+halo is tightly correlated with a simple function of its mass, the
+redshift, parameters of the cosmology, and of the initial density
+fluctuation spectrum, which correctly disentangles the effects of all
+these factors and halo environments. We also find that the concentration
+of a halo is strongly correlated with the universe age when its
+progenitor on the mass accretion history first reaches 4\% of its current
+mass. According to these correlations, we develop new empirical models
+for both the mass accretion histories and the concentration evolution
+histories of dark matter halos, and the latter can also be used to
+predict the mass and redshift dependence of halo concentrations. These
+models are accurate and universal: the same set of model parameters
+works well for different cosmological models and for halos of different
+masses at different redshifts, and in the {$\Lambda$}CDM case the model
+predictions match the simulation results very well even though halo mass
+is traced to about 0.0005 times the final mass, when cosmological
+parameters and the power index of the initial density fluctuation
+spectrum have changed dramatically. Our model predictions also match the
+PINOCCHIO mass accretion histories very well, which are much independent
+of our numerical simulations and our definitions of halo merger trees.
+These models are also simple and easy to implement, making them very
+useful in modeling the growth and structure of dark matter halos. We
+provide appendices describing the step-by-step implementation of our
+models. A calculator which allows one to interactively generate data for
+any given cosmological model is provided on the Web, together with a
+user-friendly code to make the relevant calculations and some tables
+listing the expected concentration as a function of halo mass and
+redshift in several popular cosmological models. We explain why
+{$\Lambda$}CDM and open CDM halos on nearly all mass scales show two
+distinct phases in their mass growth histories. We discuss implications
+of the universal relations we find in connection to the formation of
+dark matter halos in the cosmic density field.
+}",
+      doi = {10.1088/0004-637X/707/1/354},
+   adsurl = {http://adsabs.harvard.edu/abs/2009ApJ...707..354Z},
   adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
