@@ -19,6 +19,7 @@ run4/*
 sour/*
 piscosour/*
 mxxlstack/*
+bccstack/*
 *.aux
 *.bbl
 *.blg
