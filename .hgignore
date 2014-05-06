@@ -21,6 +21,7 @@ sour/*
 piscosour/*
 mxxlstack/*
 bccstack/*
+bccstacks/*
 *.aux
 *.bbl
 *.blg
