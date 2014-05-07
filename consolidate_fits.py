@@ -124,7 +124,7 @@ def consolidateFits(workdir, simtype, outdir):
 
 
 
-if __main__ == '__name__':
+if __name__ == '__main__':
 
     workdir=sys.argv[1]
     simtype=sys.argv[2]
