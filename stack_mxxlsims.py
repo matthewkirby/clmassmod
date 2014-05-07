@@ -200,8 +200,8 @@ def stackCats(stackfile, configname, simtype, outfile):
 
 ############################
 
-def assignMXXLStacks(outdir, massedges = np.array([0, 3.8e14, 4.2e14, 4.9e14, 5e15]),
-              concenedges = np.array([0, 0.2, 0.26, 0.38, 4.38, 10])):
+def assignMXXLStacks(outdir, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16]),
+                    concenedges = np.array([0, 2.9, 3.7, 4.7, 10])):
 
     if not os.path.exists(outdir):
         os.mkdir(outdir)
