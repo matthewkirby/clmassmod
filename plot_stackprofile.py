@@ -35,9 +35,10 @@ def residual(binbase):
 
 
     fig = pylab.figure()
-    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred - 1, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), fmt='bo')
-#    pylab.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma'], fmt='rs')
-#    pylab.plot(cat['r_mpc'], gpred, 'g-')
+   # pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred - 1, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), fmt='bo')
+    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred - 1, cat['ghatdistrosigma']/(gpred), fmt='bo')
+    pylab.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma'], fmt='rs')
+    pylab.plot(cat['r_mpc'], gpred, 'g-')
     pylab.axhline(0.0, c='k', linewidth=2)
     pylab.xlabel('Radius [Mpc/h]', fontsize=16)
     pylab.ylabel('g_meas / g_pred', fontsize=16)

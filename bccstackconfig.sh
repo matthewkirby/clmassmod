@@ -7,7 +7,7 @@ profileCol=r_mpc
 profileModule=basicBinning
 profileBuilder=bootstrapfixedbins
 binspacing='log'
-nbins=50
+nbins=30
 
 
 
@@ -17,7 +17,7 @@ nbins=50
 massconModule=basicMassCon
 massconRelation=constant
 concentration=4.0
-profileMin=.1
+profileMin=.05
 profileMax=10.0 
 
 nperarcmin=-1

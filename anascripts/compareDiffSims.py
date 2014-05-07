@@ -11,11 +11,13 @@ bccsimdir='/u/ki/dapple/nfs/bcc_clusters/recentered'
 
 #simdirs = [bccsimdir, bk11snap141dir, bk11snap124dir, mxxldir]
 #simdirs = [bccsimdir, bk11snap141dir, mxxldir]
+simdirs = [bccsimdir]
 #simnames = 'BCC BK11_z=0.25 BK11_z=0.5 MXXL_z=1.0'.split()
 #simnames = 'BCC BK11_z=0.5 MXXL_z=1.0'.split()
+simnames = ['BCC']
 
-subdirs='c4_r1 cfree_r1 duffy_r1'.split()
-subdirnames='c4_r1 cfree_r1 duffy_r1'.split()
+subdirs='c4_r6 cfree_r6 duffy_r6'.split()
+subdirnames='c4_r6 cfree_r6 duffy_r6'.split()
 
 data = {}
 
@@ -46,15 +48,6 @@ for subdirname, subdir in zip(subdirnames, subdirs):
         simdat = data[simname]
 
         if simname == 'BCC':
-
-#            zlow = simdat[subdir]['redshifts'] < 0.3
-#            massbin, ratiobin, ratioerr = bbb.summary2DMass(simdat[subdir], selection = zlow)
-#            fill_between(massbin, ratiobin + ratioerr, ratiobin - ratioerr, alpha=0.3, color = c[ccount], label='{0} z < 0.3'.format(simname))
-#            patches.append(Rectangle((0, 0), 1, 1, fc=c[ccount], alpha=0.3))
-#            labels.append('{0} z < 0.3'.format(simname))
-#            ccount += 1
-#
-
 
 
             zlow = simdat[subdir]['redshifts'] < 0.36
