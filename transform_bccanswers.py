@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+\#!/usr/bin/env python
 #######################
 # This file compiles the truth tables for BCC clusters
 #######################

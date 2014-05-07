@@ -114,7 +114,7 @@ class OnlineStatistics(object):
 ############################
 
 
-def stackCats(stackfile, configname, outfile):
+def stackCats(stackfile, configname, answers, outfile):
 
     tostack = [x[0] for x in readtxtfile.readtxtfile(stackfile)]
 
