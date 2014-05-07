@@ -3,11 +3,21 @@
 # Take a list of catalogs, and compile mean profiles, standard deviations, and any other appropriate info
 #######################
 
-import os, sys, cPickle
+import os, sys, cPickle, re
 import numpy as np
 import nfwfit, readtxtfile, nfwutils
 import astropy.io.fits as pyfits, ldac
-import consolidate_fits
+import nfwmodeltools
+
+
+###################
+
+idpatterns = dict(mxxl = re.compile('halo_cid(\d+)'),
+                  bcc = re.compile('cluster_(\d+)\.hdf5'),
+                  bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
+                  bk11snap124 = re.compile('haloid(\d+)_zLens.+'))
+
+
 
 ###################
 
@@ -36,6 +46,9 @@ class OnlineStatistics(object):
         self.meanradii = np.zeros(self.nbins)
         self.meanshear = np.zeros(self.nbins)
         self.mom2shear = np.zeros(self.nbins)
+        self.meanbeta = np.zeros(self.nbins)
+        self.meanbeta2 = np.zeros(self.nbins)
+        self.meanzlens = 0.
         self.profileCol = 'r_mpc'
         self.shearCol = 'ghat'
 
@@ -56,13 +69,15 @@ class OnlineStatistics(object):
         concen = truth['concen']
         rscale = nfwutils.rscaleConstM(m200/nfwutils.global_cosmology.h, concen, zlens, 200)
 
-        gamma = nfwmodeltools.NFWShear(self.profileCol, concen, rscale, zlens)
-        kappa = nfwmodeltools.NFWKappa(self.profileCol, concen, rscale, zlens)
+        gamma = nfwmodeltools.NFWShear(catalog[self.profileCol], concen, rscale, zlens)
+        kappa = nfwmodeltools.NFWKappa(catalog[self.profileCol], concen, rscale, zlens)
 
-        gpred = cat['beta_s']*gamma / (1 - (cat['beta_s']*kappa))
+        gpred = catalog['beta_s']*gamma / (1 - (catalog['beta_s']*kappa))
 
                                        
-        g_resid = cat[self.shearCol] - gpred
+        g_resid = (catalog[self.shearCol] - gpred)/gpred
+
+        self.meanzlens, junk = calcOnlineStats(self.ncats, self.meanzlens, 0., 1., zlens, 0.)
 
         
         for curbin in range(self.nbins):
@@ -72,11 +87,16 @@ class OnlineStatistics(object):
                                                      catalog[self.profileCol] < maxtake)
             selected = catalog.filter(inbin)
 
+            if len(selected) == 0:
+                continue
+
             catndata = len(selected)
 
             catmeanradius = np.mean(selected[self.profileCol])
             catmeanshear = np.mean(g_resid[inbin])
             catvarianceshear = np.std(g_resid[inbin])**2
+            catmeanbeta = np.mean(selected['beta_s'])
+            catmeanbeta2 = np.mean(selected['beta_s']**2)
             
 
             self.meanradii[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanradii[curbin], 0.,
@@ -88,6 +108,13 @@ class OnlineStatistics(object):
                                                                              catndata, 
                                                                              catmeanshear, 
                                                                              catvarianceshear)
+
+            self.meanbeta[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanbeta[curbin], 0.,
+                                                       catndata, catmeanbeta, 0.)
+
+            self.meanbeta2[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanbeta2[curbin], 0.,
+                                                       catndata, catmeanbeta2, 0.)
+
 
 
             
@@ -104,8 +131,11 @@ class OnlineStatistics(object):
         cols = [pyfits.Column(name = 'r_mpc', format='E', array = self.meanradii),
                 pyfits.Column(name = 'ghat', format='E', array = self.meanshear),
                 pyfits.Column(name = 'ghatdistrosigma', format='E', array = np.sqrt(self.varianceshear)),
-                pyfits.Column(name = 'ndat', format='E', array = self.ndata)]
+                pyfits.Column(name = 'ndat', format='E', array = self.ndata),
+                pyfits.Column(name = 'beta_s', format='E', array = self.meanbeta),
+                pyfits.Column(name = 'beta_s2', format='E', array = self.meanbeta2)]
         catalog = ldac.LDACCat(pyfits.new_table(pyfits.ColDefs(cols)))
+        catalog.hdu.header.update('ZLENS', self.meanzlens)
         
 
         catalog.saveas(outfile, clobber=True)
@@ -115,7 +145,9 @@ class OnlineStatistics(object):
 ############################
 
 
-def stackCats(stackfile, configname, answerfile, outfile):
+def stackCats(stackfile, configname, simtype, outfile):
+
+    answerfile = '%s_answers.pkl' % simtype
 
     with open(answerfile, 'rb') as input:
         answers = cPickle.load(input)
@@ -142,10 +174,10 @@ def stackCats(stackfile, configname, answerfile, outfile):
 
     for catalogname in tostack:
 
-        filebase = os.path.basename(output)
+        filebase = os.path.basename(catalogname)
         
-        match = consolidate_fits.idpattern.match(filebase)
-        
+        match = idpatterns[simtype].match(filebase)
+
         haloid = int(match.group(1))
 
         try:

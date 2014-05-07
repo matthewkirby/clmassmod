@@ -2,7 +2,7 @@
 # Overplot the predicted NFW halo over the stack
 ##############################
 
-import pylab
+import pylab, matplotlib
 import nfwmodeltools
 import nfwutils
 import readtxtfile, glob
@@ -35,19 +35,199 @@ def residual(binbase):
 
 
     fig = pylab.figure()
-   # pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred - 1, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), fmt='bo')
-    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred - 1, cat['ghatdistrosigma']/(gpred), fmt='bo')
-    pylab.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma'], fmt='rs')
-    pylab.plot(cat['r_mpc'], gpred, 'g-')
+    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), fmt='bo')
+#    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
+
+#
+    ax = pylab.gca()
+    ax.set_xscale('log')
     pylab.axhline(0.0, c='k', linewidth=2)
     pylab.xlabel('Radius [Mpc/h]', fontsize=16)
-    pylab.ylabel('g_meas / g_pred', fontsize=16)
-    pylab.title('Redshift=%1.2f Mass=%1.2fx10^14 Concen=%1.2f' % (zlens, mass/1e14, concen))
+    pylab.ylabel('<g_meas - g_pred> / g_pred(<M>, <c>)', fontsize=16)
+
+    pylab.axis([0.05, 10, -.55, 0.35])
+
+
+#    ax2 = ax.twinx()
+#    pylab.plot(cat['r_mpc'], gpred, 'k--')
+#    ax2.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma']/np.sqrt(cat['ndat']), fmt='rs')
+#    ax2.set_ylabel('<g_meas - g_pred>', color='r', fontsize=16)
+#    ax2.set_ylim(-0.2, 0.1)
+#
+#    pylab.title('Redshift=%1.2f Mass=%1.2fx10^14 Concen=%1.2f' % (zlens, mass/1e14, concen))
+#
+    pylab.tight_layout()
 
     pylab.savefig('%s.png' % binbase)
 
     return fig
 
+############
+
+c = 'SlateGray r b m DodgerBlue g DarkSalmon'.split()
+
+def multibinresidual(binbase):
+
+    matplotlib.rcParams['figure.figsize'] = [16,16]
+
+
+    fig = pylab.figure()
+    curplot = 1
+    for curm in range(4):
+        for curc in range(4):
+            pylab.subplot(4,4,curplot)
+            colori = 0
+            for curz in range(3):
+                
+                mass, concen, redshift =  readtxtfile.readtxtfile('%s_%d_%d_%d.dat' % (binbase, curz, curm, curc))[0]
+
+                cat = ldac.openObjectFile('%s_%d_%d_%d.cat' % (binbase, curz, curm, curc))
+
+                zlens = cat.hdu.header['ZLENS']
+
+                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+
+
+                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+
+                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+
+
+#                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), 
+#                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
+                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
+
+            #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
+
+            #
+                ax = pylab.gca()
+                ax.set_xscale('log')
+                pylab.axhline(0.0, c='k', linewidth=2)
+                pylab.legend(loc='lower center', fontsize=10)
+
+
+
+#                pylab.axis([0.05, 10, -.55, 0.35])
+                pylab.axis([0.05, 10, -.10, 0.05])
+
+
+            #    ax2 = ax.twinx()
+            #    pylab.plot(cat['r_mpc'], gpred, 'k--')
+            #    ax2.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma']/np.sqrt(cat['ndat']), fmt='rs')
+            #    ax2.set_ylabel('<g_meas - g_pred>', color='r', fontsize=16)
+            #    ax2.set_ylim(-0.2, 0.1)
+            #
+            #
+            #
+
+                colori+= 1
+            pylab.title('M=%1.1fx10^14 C=%1.1f' % ( mass/1e14, concen))
+            curplot += 1
+
+            
+    for i in range(4):
+        pylab.subplot(4,4,13+i)
+        pylab.xlabel('Radius [Mpc/h]')
+        pylab.subplot(4,4,4*i+1)
+#        pylab.ylabel('<g_m-g_p>/g_p(<M>,<c>)')
+        pylab.ylabel('<g_m-g_p>')
+
+
+    pylab.tight_layout()
+
+#    pylab.savefig('%s_multibin_fracresid.png' % binbase)
+    pylab.savefig('%s_multibin_resid.png' % binbase)
+
+    return fig
+
+#######################################################
+
+def multibinresidualoverplot(binbase):
+
+    matplotlib.rcParams['figure.figsize'] = [16,6]
+
+
+    fig = pylab.figure()
+    curplot = 1
+    for curc in range(4):
+        pylab.subplot(1,4,curplot)
+        for curm in range(4):
+
+            colori = 0
+            for curz in range(3):
+                
+                mass, concen, redshift =  readtxtfile.readtxtfile('%s_%d_%d_%d.dat' % (binbase, curz, curm, curc))[0]
+
+                cat = ldac.openObjectFile('%s_%d_%d_%d.cat' % (binbase, curz, curm, curc))
+
+                zlens = cat.hdu.header['ZLENS']
+
+                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+
+
+                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+
+                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+
+
+#                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), 
+#                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
+                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
+
+            #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
+
+            #
+                ax = pylab.gca()
+                ax.set_xscale('log')
+                pylab.axhline(0.0, c='k', linewidth=2)
+
+
+
+
+#                pylab.axis([0.05, 10, -.55, 0.35])
+                pylab.axis([0.05, 10, -.10, 0.05])
+
+
+            #    ax2 = ax.twinx()
+            #    pylab.plot(cat['r_mpc'], gpred, 'k--')
+            #    ax2.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma']/np.sqrt(cat['ndat']), fmt='rs')
+            #    ax2.set_ylabel('<g_meas - g_pred>', color='r', fontsize=16)
+            #    ax2.set_ylim(-0.2, 0.1)
+            #
+            #
+            #
+
+                colori+= 1
+        pylab.title('C=%1.1f' % (concen))
+        curplot += 1
+
+            
+    for i in range(4):
+        pylab.subplot(1,4,i+1)
+        pylab.xlabel('Radius [Mpc/h]')
+    pylab.subplot(1,4,1)
+    pylab.ylabel('<g_m-g_p>')
+
+
+    pylab.tight_layout()
+
+    pylab.savefig('%s_multibin_resid_overplot.png' % binbase)
+
+
+    return fig
+
+
+
+
+#######################################################
     
 def run(stackdir):
 
