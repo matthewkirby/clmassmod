@@ -144,7 +144,7 @@ def stackCats(stackfile, configname, answerfile, outfile):
 
         filebase = os.path.basename(output)
         
-        match = idpattern.match(filebase)
+        match = consolidate_fits.idpattern.match(filebase)
         
         haloid = int(match.group(1))
 
