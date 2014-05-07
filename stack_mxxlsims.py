@@ -7,6 +7,7 @@ import os, sys, cPickle
 import numpy as np
 import nfwfit, readtxtfile, nfwutils
 import astropy.io.fits as pyfits, ldac
+import consolidate_fits
 
 ###################
 
@@ -35,9 +36,6 @@ class OnlineStatistics(object):
         self.meanradii = np.zeros(self.nbins)
         self.meanshear = np.zeros(self.nbins)
         self.mom2shear = np.zeros(self.nbins)
-        self.meanbeta = np.zeros(self.nbins)
-        self.meanbeta2 = np.zeros(self.nbins)
-        self.meanzlens = 0.
         self.profileCol = 'r_mpc'
         self.shearCol = 'ghat'
 
@@ -51,24 +49,34 @@ class OnlineStatistics(object):
     #########
 
 
-    def accumulate(self, catalog):
+    def accumulate(self, catalog, truth):
 
-        self.meanzlens, junk = calcOnlineStats(self.ncats, self.meanzlens, 0., 1., catalog.hdu.header['ZLENS'], 0.)
+        zlens = catalog.hdu.header['ZLENS']
+        m200 = truth['m200']
+        concen = truth['concen']
+        rscale = nfwutils.rscaleConstM(m200/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+        gamma = nfwmodeltools.NFWShear(self.profileCol, concen, rscale, zlens)
+        kappa = nfwmodeltools.NFWKappa(self.profileCol, concen, rscale, zlens)
+
+        gpred = cat['beta_s']*gamma / (1 - (cat['beta_s']*kappa))
+
+                                       
+        g_resid = cat[self.shearCol] - gpred
 
         
         for curbin in range(self.nbins):
             mintake = self.binedges[curbin]
             maxtake = self.binedges[curbin+1]
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
-                                                     catalog[self.profileCol] < maxtake))
+            inbin = np.logical_and(catalog[self.profileCol] >= mintake,
+                                                     catalog[self.profileCol] < maxtake)
+            selected = catalog.filter(inbin)
 
             catndata = len(selected)
 
             catmeanradius = np.mean(selected[self.profileCol])
-            catmeanshear = np.mean(selected[self.shearCol])
-            catvarianceshear = np.std(selected[self.shearCol])**2
-            catmeanbeta = np.mean(selected['beta_s'])
-            catmeanbeta2 = np.mean(selected['beta_s']**2)
+            catmeanshear = np.mean(g_resid[inbin])
+            catvarianceshear = np.std(g_resid[inbin])**2
             
 
             self.meanradii[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanradii[curbin], 0.,
@@ -81,11 +89,6 @@ class OnlineStatistics(object):
                                                                              catmeanshear, 
                                                                              catvarianceshear)
 
-            self.meanbeta[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanbeta[curbin], 0.,
-                                                      catndata, catmeanbeta, 0.)
-
-            self.meanbeta2[curbin], junk = calcOnlineStats(self.ndata[curbin], self.meanbeta2[curbin], 0.,
-                                                      catndata, catmeanbeta2, 0.)
 
             
 
@@ -101,11 +104,9 @@ class OnlineStatistics(object):
         cols = [pyfits.Column(name = 'r_mpc', format='E', array = self.meanradii),
                 pyfits.Column(name = 'ghat', format='E', array = self.meanshear),
                 pyfits.Column(name = 'ghatdistrosigma', format='E', array = np.sqrt(self.varianceshear)),
-                pyfits.Column(name = 'ndat', format='E', array = self.ndata),
-                pyfits.Column(name = 'beta_s', format = 'E', array = self.meanbeta),
-                pyfits.Column(name = 'beta_s2', format='E', array = self.meanbeta2)]
+                pyfits.Column(name = 'ndat', format='E', array = self.ndata)]
         catalog = ldac.LDACCat(pyfits.new_table(pyfits.ColDefs(cols)))
-        catalog.hdu.header.update('ZLENS', self.meanzlens)
+        
 
         catalog.saveas(outfile, clobber=True)
 
@@ -114,7 +115,10 @@ class OnlineStatistics(object):
 ############################
 
 
-def stackCats(stackfile, configname, answers, outfile):
+def stackCats(stackfile, configname, answerfile, outfile):
+
+    with open(answerfile, 'rb') as input:
+        answers = cPickle.load(input)
 
     tostack = [x[0] for x in readtxtfile.readtxtfile(stackfile)]
 
@@ -138,9 +142,22 @@ def stackCats(stackfile, configname, answers, outfile):
 
     for catalogname in tostack:
 
+        filebase = os.path.basename(output)
+        
+        match = idpattern.match(filebase)
+        
+        haloid = int(match.group(1))
+
+        try:
+            truth = answers[haloid]
+        except KeyError:
+            print 'Failure at {0}'.format(output)
+            raise
+
+
         catalog = nfwfit.readSimCatalog(catalogname, simreader, config)
 
-        stackedprofile.accumulate(catalog)
+        stackedprofile.accumulate(catalog, truth)
 
 
     stackedprofile.writeSimCat(outfile)
@@ -285,6 +302,7 @@ if __name__ == '__main__':
 
     stackfile = sys.argv[1]
     config = sys.argv[2]
-    outfile = sys.argv[3]
+    answerkey = sys.argv[3]
+    outfile = sys.argv[4]
 
-    stackCats(stackfile, config, outfile)
+    stackCats(stackfile, config, answerkey, outfile)
