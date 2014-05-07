@@ -35,15 +35,17 @@ def residual(binbase):
 
 
     fig = pylab.figure()
-    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), fmt='bo')
+#    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), fmt='bo')
 #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
+    pylab.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma']/np.sqrt(cat['ndat']), fmt='bo')
 
 #
     ax = pylab.gca()
     ax.set_xscale('log')
     pylab.axhline(0.0, c='k', linewidth=2)
     pylab.xlabel('Radius [Mpc/h]', fontsize=16)
-    pylab.ylabel('<g_meas - g_pred> / g_pred(<M>, <c>)', fontsize=16)
+    pylab.ylabel('<g_meas/g_pred> - 1)', fontsize=16)
+#    pylab.ylabel('<g_meas - g_pred>', fontsize=16)
 
     pylab.axis([0.05, 10, -.55, 0.35])
 
@@ -111,8 +113,8 @@ def multibinresidual(binbase):
 
 
 
-#                pylab.axis([0.05, 10, -.55, 0.35])
-                pylab.axis([0.05, 10, -.10, 0.05])
+                pylab.axis([0.05, 10, -.55, 0.35])
+#                pylab.axis([0.05, 10, -.10, 0.05])
 
 
             #    ax2 = ax.twinx()
@@ -134,7 +136,7 @@ def multibinresidual(binbase):
         pylab.xlabel('Radius [Mpc/h]')
         pylab.subplot(4,4,4*i+1)
 #        pylab.ylabel('<g_m-g_p>/g_p(<M>,<c>)')
-        pylab.ylabel('<g_m-g_p>')
+        pylab.ylabel('<g_m/g_p - 1>')
 
 
     pylab.tight_layout()
