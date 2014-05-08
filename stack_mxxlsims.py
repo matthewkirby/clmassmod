@@ -145,9 +145,11 @@ class OnlineStatistics(object):
 ############################
 
 
-def stackCats(stackfile, configname, simtype, outfile):
+def stackCats(stackfile, configname, answerfile, outfile):
 
-    answerfile = '%s_answers.pkl' % simtype
+    filebase = os.path.basename(answerfile)
+    match = re.match('(.+)_answers.pkl', answerfile)
+    simtype = match.group(1)
 
     with open(answerfile, 'rb') as input:
         answers = cPickle.load(input)
@@ -251,7 +253,7 @@ def assignMXXLStacks(outdir, massedges = np.array([0, 4.1e14, 5e15]),
             condorfile.write('Error = %s/consolidate.mxxlstack_%d_%d.stderr\n' % (outdir, curmass_i, curconcen_i))
             condorfile.write('Output = %s/consolidate.mxxlstack_%d_%d.stdout\n' % (outdir, curmass_i, curconcen_i))
             condorfile.write('Log = %s/consolidate.mxxlstack_%d_%d.batch.log\n' % (outdir, curmass_i, curconcen_i))
-            condorfile.write('Arguments = %s/mxxlstack_%d_%d.list /vol/braid1/vol1/dapple/mxxl/mxxlsims/stackconfig.sh %s/mxxlstack_%d_%d.cat\n' % (outdir, curmass_i, curconcen_i,
+            condorfile.write('Arguments = %s/mxxlstack_%d_%d.list /vol/braid1/vol1/dapple/mxxl/mxxlsims/stackconfig.sh /vol/braid1/vol1/dapple/mxxl/mxxlsims/mxxl_answers.pkl %s/mxxlstack_%d_%d.cat\n' % (outdir, curmass_i, curconcen_i,
                                                                                                                                                   outdir, curmass_i, curconcen_i))
             condorfile.write('queue\n')
 
