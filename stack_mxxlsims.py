@@ -261,6 +261,69 @@ def assignMXXLStacks(outdir, massedges = np.array([0, 4.1e14, 5e15]),
 
     condorfile.close()
                                                                                                                                                   
+
+#############################
+
+bkredshift = {124: '0.49925070',
+              141: '0.24533000'}
+
+
+def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16]),
+                    concenedges = np.array([0.0, 2.9, 3.7, 4.7, 10])):
+
+    for snap in [124, 141]:
+        
+        outdir = '%s_%d' % (outdirbase, snap)
+
+        if not os.path.exists(outdir):
+            os.mkdir(outdir)
+
+        with open('bk11snap%d_answers.pkl' % snap, 'rb') as input:
+            answers = cPickle.load(input)
+
+        nclusters = len(answers)
+
+        masses = np.zeros(len(answers))
+        concens = np.zeros(len(answers))
+
+        halos = np.array([x for x in answers.keys()])
+
+        for i in range(nclusters):
+
+            haloid = halos[i]
+
+            masses[i] = answers[haloid]['m200']
+            concens[i] = 1000*answers[haloid]['concen']
+            redshifts[i] = answers[haloid]['redshift']
+
+        haloassignments = {}
+
+        for curmass_i in range(len(massedges) - 1):
+
+            massselect = np.logical_and(masses >= massedges[curmass_i], masses < massedges[curmass_i +1])
+
+            for curconcen_i in range(len(concenedges) - 1):
+
+                concenselect = np.logical_and(concens >= concenedges[curconcen_i], concens < concenedges[curconcen_i+1])
+
+                inbin = np.logical_and(massselect, concenselect)
+
+
+                with open('%s/bk11stack_%d_%d.list' % (outdir, curmass_i, curconcen_i), 'w') as output:
+
+                    for curhalo in halos[inbin]:
+                        output.write('/u/ki/dapple/nfs/beckersims/snap%d/intlength400/haloid%d_zlens%s_intlength400.fit\n' % (snap, curhalo, bkredshift[snap]))
+
+                with open('%s/bk11stack_%d_%d.dat' % (outdir, curmass_i, curconcen_i), 'w') as output:
+
+                    output.write('# <Mass> <Concen> <redshift>\n')
+                    output.write('%f %f %f\n' % (np.mean(masses[inbin]), np.mean(concens[inbin]), np.mean(redshifts[inbin])))
+
+
+
+
+
+
             
 
 #############################
