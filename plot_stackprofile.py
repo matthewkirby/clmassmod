@@ -146,6 +146,9 @@ def multibinresidual(binbase):
 
     return fig
 
+######################################################
+
+
 #######################################################
 
 def multibinresidualoverplot(binbase):
@@ -230,6 +233,81 @@ def multibinresidualoverplot(binbase):
 
 
 #######################################################
+
+
+def MXXLmultibinresidualoverplot(binbase):
+
+    matplotlib.rcParams['figure.figsize'] = [16,4]
+
+
+    fig = pylab.figure()
+    curplot = 1
+    for curc in range(4):
+        pylab.subplot(1,4,curplot)
+
+        colori = 0
+        for curm in range(2):
+
+            try:
+                
+                mass, concen =  readtxtfile.readtxtfile('%s_%d_%d.dat' % (binbase, curm, curc))[0]
+
+                cat = ldac.openObjectFile('%s_%d_%d.cat' % (binbase, curm, curc))
+
+                zlens = cat.hdu.header['ZLENS']
+
+                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+
+
+                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+
+                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                                   linestyle='None', marker='o', color=c[colori], label='M=%1.1fx10^14' % (mass/1e14))
+
+                ax = pylab.gca()
+                ax.set_xscale('log')
+                pylab.axhline(0.0, c='k', linewidth=2)
+
+                pylab.axis([0.05, 10, -.55, 0.35])
+
+
+            except:
+                pass
+    
+
+
+            colori+= 1
+
+        pylab.title('C=%1.1f' % (concen))
+        curplot += 1
+
+            
+    for i in range(4):
+        pylab.subplot(1,4,i+1)
+        pylab.xlabel('Radius [Mpc/h]')
+        pylab.minorticks_on()
+    pylab.subplot(1,4,1)
+    pylab.ylabel('<g_m/g_p-1>')
+    pylab.subplot(1,4,4)
+    pylab.legend(loc='lower center')
+
+
+    pylab.tight_layout()
+
+    pylab.savefig('%s_multibin_resid_overplot.png' % binbase)
+
+
+    return fig
+
+
+
+
+#######################################################
+
     
 def run(stackdir):
 
