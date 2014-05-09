@@ -22,6 +22,8 @@ piscosour/*
 mxxlstack/*
 bccstack/*
 bccstacks/*
+mxxlstack_bccbins/*
+bcc_fracresidstacks/*
 *.aux
 *.bbl
 *.blg

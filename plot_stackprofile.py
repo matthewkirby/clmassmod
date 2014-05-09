@@ -151,16 +151,16 @@ def multibinresidual(binbase):
 
 #######################################################
 
-def multibinresidualoverplot(binbase):
+def multibinresidualoverplot(binbase, fig):
 
-    matplotlib.rcParams['figure.figsize'] = [16,6]
+    matplotlib.rcParams['figure.figsize'] = [16,8]
 
 
-    fig = pylab.figure()
+#    fig = pylab.figure()
     curplot = 1
     for curc in range(4):
-        pylab.subplot(1,4,curplot)
-        for curm in range(4):
+        pylab.subplot(2,4,curplot)
+        for curm in [3]:
 
             colori = 0
             for curz in range(3):
@@ -197,8 +197,8 @@ def multibinresidualoverplot(binbase):
 
 
 
-#                pylab.axis([0.05, 10, -.55, 0.35])
-                pylab.axis([0.05, 10, -.10, 0.05])
+                pylab.axis([0.05, 10, -.55, 0.35])
+#                pylab.axis([0.05, 10, -.10, 0.05])
 
 
             #    ax2 = ax.twinx()
@@ -216,15 +216,18 @@ def multibinresidualoverplot(binbase):
 
             
     for i in range(4):
-        pylab.subplot(1,4,i+1)
+        pylab.subplot(2,4,i+1)
         pylab.xlabel('Radius [Mpc/h]')
-    pylab.subplot(1,4,1)
-    pylab.ylabel('<g_m-g_p>')
+        pylab.text(0.25, 0.2, 'BCC Mass=%1.1fx10^14' % (mass/1e14))
+    pylab.subplot(2,4,1)
+    pylab.ylabel('<g_m/g_p-1>')
+    pylab.subplot(2,4,4)
+    pylab.legend(loc='lower right')
 
 
     pylab.tight_layout()
 
-    pylab.savefig('%s_multibin_resid_overplot.png' % binbase)
+#    pylab.savefig('%s_multibin_resid_overplot.png' % binbase)
 
 
     return fig
@@ -235,15 +238,15 @@ def multibinresidualoverplot(binbase):
 #######################################################
 
 
-def MXXLmultibinresidualoverplot(binbase):
+def MXXLmultibinresidualoverplot(binbase, fig):
 
-    matplotlib.rcParams['figure.figsize'] = [16,4]
+#    matplotlib.rcParams['figure.figsize'] = [16,4]
 
 
-    fig = pylab.figure()
-    curplot = 1
+#    fig = pylab.figure()
+    curplot = 5
     for curc in range(4):
-        pylab.subplot(1,4,curplot)
+        pylab.subplot(2,4,curplot)
 
         colori = 0
         for curm in range(2):
@@ -287,12 +290,13 @@ def MXXLmultibinresidualoverplot(binbase):
 
             
     for i in range(4):
-        pylab.subplot(1,4,i+1)
+        pylab.subplot(2,4,4+i+1)
         pylab.xlabel('Radius [Mpc/h]')
+        pylab.text(0.1, -0.2, 'MXXL')
         pylab.minorticks_on()
-    pylab.subplot(1,4,1)
+    pylab.subplot(2,4,5)
     pylab.ylabel('<g_m/g_p-1>')
-    pylab.subplot(1,4,4)
+    pylab.subplot(2,4,8)
     pylab.legend(loc='lower center')
 
 
