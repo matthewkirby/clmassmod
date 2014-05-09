@@ -23,6 +23,8 @@ mxxlstack/*
 bccstack/*
 bccstacks/*
 bcc_residstacks/*
+mxxlstack_bccbins/*
+bcc_fracresidstacks/*
 *.aux
 *.bbl
 *.blg

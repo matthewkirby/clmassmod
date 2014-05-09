@@ -148,7 +148,7 @@ class OnlineStatistics(object):
 def stackCats(stackfile, configname, answerfile, outfile):
 
     filebase = os.path.basename(answerfile)
-    match = re.match('(.+)_answers.pkl', answerfile)
+    match = re.match('(.+)_answers.pkl', filebase)
     simtype = match.group(1)
 
     with open(answerfile, 'rb') as input:
@@ -203,7 +203,7 @@ def stackCats(stackfile, configname, answerfile, outfile):
 ############################
 
 def assignMXXLStacks(outdir, massedges = np.array([0, 4.1e14, 5e15]),
-                    concenedges = np.array([0, 2.9, 3.7, 4.7, 10])):
+                    concenedges = np.array([1.5, 2.9, 3.7, 4.7, 10])):
 
     if not os.path.exists(outdir):
         os.mkdir(outdir)
