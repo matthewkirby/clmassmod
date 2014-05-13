@@ -75,7 +75,8 @@ class OnlineStatistics(object):
         gpred = catalog['beta_s']*gamma / (1 - (catalog['beta_s']*kappa))
 
                                        
-        g_resid = (catalog[self.shearCol] - gpred)/gpred
+#        g_resid = (catalog[self.shearCol] - gpred)/gpred
+        g_resid = catalog[self.shearCol]
 
         self.meanzlens, junk = calcOnlineStats(self.ncats, self.meanzlens, 0., 1., zlens, 0.)
 
