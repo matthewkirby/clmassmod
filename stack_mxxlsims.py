@@ -75,7 +75,8 @@ class OnlineStatistics(object):
         gpred = catalog['beta_s']*gamma / (1 - (catalog['beta_s']*kappa))
 
                                        
-        g_resid = (catalog[self.shearCol] - gpred)/gpred
+#        g_resid = (catalog[self.shearCol] - gpred)/gpred
+        g_resid = catalog[self.shearCol]
 
         self.meanzlens, junk = calcOnlineStats(self.ncats, self.meanzlens, 0., 1., zlens, 0.)
 
@@ -307,6 +308,8 @@ def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e1
                 concenselect = np.logical_and(concens >= concenedges[curconcen_i], concens < concenedges[curconcen_i+1])
 
                 inbin = np.logical_and(massselect, concenselect)
+
+                print curmass_i, curconcen_i, len(halos[inbin])
 
 
                 with open('%s/bk11stack_%d_%d.list' % (outdir, curmass_i, curconcen_i), 'w') as output:
