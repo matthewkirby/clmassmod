@@ -285,6 +285,7 @@ def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e1
 
         masses = np.zeros(len(answers))
         concens = np.zeros(len(answers))
+        redshifts = np.zeros(len(answers))
 
         halos = np.array([x for x in answers.keys()])
 
@@ -293,7 +294,7 @@ def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e1
             haloid = halos[i]
 
             masses[i] = answers[haloid]['m200']
-            concens[i] = 1000*answers[haloid]['concen']
+            concens[i] = answers[haloid]['concen']
             redshifts[i] = answers[haloid]['redshift']
 
         haloassignments = {}
@@ -308,11 +309,12 @@ def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e1
 
                 inbin = np.logical_and(massselect, concenselect)
 
-
+                print curmass_i, curconcen_i, len(halos[inbin])
+                
                 with open('%s/bk11stack_%d_%d.list' % (outdir, curmass_i, curconcen_i), 'w') as output:
 
                     for curhalo in halos[inbin]:
-                        output.write('/u/ki/dapple/nfs/beckersims/snap%d/intlength400/haloid%d_zlens%s_intlength400.fit\n' % (snap, curhalo, bkredshift[snap]))
+                        output.write('/u/ki/dapple/nfs/beckersims/snap%d/intlength400/haloid%d_zLens%s_intlength400.fit\n' % (snap, curhalo, bkredshift[snap]))
 
                 with open('%s/bk11stack_%d_%d.dat' % (outdir, curmass_i, curconcen_i), 'w') as output:
 

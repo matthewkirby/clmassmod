@@ -68,44 +68,27 @@ def residual(binbase):
 
 c = 'SlateGray r b m DodgerBlue g DarkSalmon'.split()
 
-def multibinresidual(binbase):
+def multibinresidual(binbase, fig = None):
 
     matplotlib.rcParams['figure.figsize'] = [16,16]
 
-
-    fig = pylab.figure()
+    if fig is None:
+        fig = pylab.figure()
     curplot = 1
     for curm in range(4):
         for curc in range(4):
             pylab.subplot(4,4,curplot)
             colori = 0
-            for curz in range(3):
+#            for curz in range(3):
+            for curz in [0]:
                 
                 mass, concen, redshift =  readtxtfile.readtxtfile('%s_%d_%d_%d.dat' % (binbase, curz, curm, curc))[0]
 
                 cat = ldac.openObjectFile('%s_%d_%d_%d.cat' % (binbase, curz, curm, curc))
 
-                zlens = cat.hdu.header['ZLENS']
+                pylab.errorbar(cat['r_mpc']*0.72, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                               linestyle='None', marker='o', color=c[colori], label='BCC z=%1.1f' % redshift)
 
-                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
-
-
-
-                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
-                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
-
-                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
-
-
-
-#                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), 
-#                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
-                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
-                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
-
-            #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
-
-            #
                 ax = pylab.gca()
                 ax.set_xscale('log')
                 pylab.axhline(0.0, c='k', linewidth=2)
@@ -117,14 +100,6 @@ def multibinresidual(binbase):
 #                pylab.axis([0.05, 10, -.10, 0.05])
 
 
-            #    ax2 = ax.twinx()
-            #    pylab.plot(cat['r_mpc'], gpred, 'k--')
-            #    ax2.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma']/np.sqrt(cat['ndat']), fmt='rs')
-            #    ax2.set_ylabel('<g_meas - g_pred>', color='r', fontsize=16)
-            #    ax2.set_ylim(-0.2, 0.1)
-            #
-            #
-            #
 
                 colori+= 1
             pylab.title('M=%1.1fx10^14 C=%1.1f' % ( mass/1e14, concen))
@@ -147,6 +122,62 @@ def multibinresidual(binbase):
     return fig
 
 ######################################################
+
+def BK11multibinresidual(dirbase):
+
+    matplotlib.rcParams['figure.figsize'] = [16,16]
+
+
+    fig = pylab.figure()
+    curplot = 1
+    for curm in range(4):
+        for curc in range(4):
+            pylab.subplot(4,4,curplot)
+            colori = 1
+
+            for snap in [124,141]:
+        
+                try:
+
+                    mass, concen, redshift =  readtxtfile.readtxtfile('%s_%d/bk11stack_%d_%d.dat' % (dirbase, snap, 
+                                                                                                     curm, curc))[0]
+
+                    cat = ldac.openObjectFile('%s_%d/bk11stack_%d_%d.cat' % (dirbase, snap, 
+                                                                             curm, curc))
+
+                    pylab.errorbar(cat['r_mpc']*0.7, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                                   linestyle='None', marker='o', color=c[colori], label='BK11 z=%1.1f' % redshift)
+                    ax = pylab.gca()
+                    ax.set_xscale('log')
+                    pylab.axhline(0.0, c='k', linewidth=2)
+#                    pylab.legend(loc='lower center', fontsize=10)
+
+#                    pylab.title('M=%1.1fx10^14 C=%1.1f' % ( mass/1e14, concen))
+
+                except:
+                    pass
+
+                colori+= 1
+
+            pylab.axis([0.05, 10, -.55, 0.35])
+            #pylab.axis([0.05, 10, -.10, 0.05])
+
+            curplot += 1
+
+            
+    for i in range(4):
+        pylab.subplot(4,4,13+i)
+        pylab.xlabel('Radius [Mpc/h]')
+        pylab.subplot(4,4,4*i+1)
+        pylab.ylabel('<g_m/g_p - 1>')
+
+
+    pylab.tight_layout()
+
+#    pylab.savefig('%s_multibin_fracresid.png' % dirbase)
+#    pylab.savefig('%s_multibin_resid.png' % binbase)
+
+    return fig
 
 
 #######################################################
