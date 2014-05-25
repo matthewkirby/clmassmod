@@ -136,7 +136,8 @@ def multibinresidual(binbase):
         pylab.xlabel('Radius [Mpc/h]')
         pylab.subplot(4,4,4*i+1)
 #        pylab.ylabel('<g_m-g_p>/g_p(<M>,<c>)')
-        pylab.ylabel('<g_m/g_p - 1>')
+#        pylab.ylabel('<g_m/g_p - 1>')
+
 
 
     pylab.tight_layout()
@@ -188,6 +189,8 @@ def multibinresidualoverplot(binbase, fig):
                                linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
 
             #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
+
+                pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'r-')
 
             #
                 ax = pylab.gca()
@@ -270,6 +273,8 @@ def MXXLmultibinresidualoverplot(binbase, fig):
 
                 pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
                                    linestyle='None', marker='o', color=c[colori], label='M=%1.1fx10^14' % (mass/1e14))
+
+                pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'k-', linewidth=2)
 
                 ax = pylab.gca()
                 ax.set_xscale('log')
