@@ -86,8 +86,23 @@ def multibinresidual(binbase, fig = None):
 
                 cat = ldac.openObjectFile('%s_%d_%d_%d.cat' % (binbase, curz, curm, curc))
 
+                zlens = cat.hdu.header['ZLENS']
+
+                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+
+
+                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+
+                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+
+
+
                 pylab.errorbar(cat['r_mpc']*0.72, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
                                linestyle='None', marker='o', color=c[colori], label='BCC z=%1.1f' % redshift)
+                pylab.plot(cat['r_mpc']*0.72, gpred, 'k-', linewidth=2)
 
                 ax = pylab.gca()
                 ax.set_xscale('log')
@@ -217,6 +232,8 @@ def multibinresidualoverplot(binbase, fig):
 #                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
                 pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
                                linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
+
+                pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'k-', linewidth=2)
 
             #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
 
