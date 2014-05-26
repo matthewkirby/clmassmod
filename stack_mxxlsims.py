@@ -12,7 +12,8 @@ import nfwmodeltools
 
 ###################
 
-idpatterns = dict(mxxl = re.compile('halo_cid(\d+)'),
+idpatterns = dict(mxxlsnap41 = re.compile('halo_cid(\d+)'),
+                  mxxlsnap54 = re.compile('halo_cid(\d+)'),
                   bcc = re.compile('cluster_(\d+)\.hdf5'),
                   bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
                   bk11snap124 = re.compile('haloid(\d+)_zLens.+'))
@@ -67,13 +68,13 @@ class OnlineStatistics(object):
         zlens = catalog.hdu.header['ZLENS']
         m200 = truth['m200']
         concen = truth['concen']
-        rscale = nfwutils.rscaleConstM(m200/nfwutils.global_cosmology.h, concen, zlens, 200)
-
-        gamma = nfwmodeltools.NFWShear(catalog[self.profileCol], concen, rscale, zlens)
-        kappa = nfwmodeltools.NFWKappa(catalog[self.profileCol], concen, rscale, zlens)
-
-        gpred = catalog['beta_s']*gamma / (1 - (catalog['beta_s']*kappa))
-
+#        rscale = nfwutils.rscaleConstM(m200/nfwutils.global_cosmology.h, concen, zlens, 200)
+#
+#        gamma = nfwmodeltools.NFWShear(catalog[self.profileCol], concen, rscale, zlens)
+#        kappa = nfwmodeltools.NFWKappa(catalog[self.profileCol], concen, rscale, zlens)
+#
+#        gpred = catalog['beta_s']*gamma / (1 - (catalog['beta_s']*kappa))
+#
                                        
 #        g_resid = (catalog[self.shearCol] - gpred)/gpred
         g_resid = catalog[self.shearCol]
@@ -203,64 +204,67 @@ def stackCats(stackfile, configname, answerfile, outfile):
 
 ############################
 
-def assignMXXLStacks(outdir, massedges = np.array([0, 4.1e14, 5e15]),
-                    concenedges = np.array([1.5, 2.9, 3.7, 4.7, 10])):
+def assignMXXLStacks(outdirbase, massedges = np.array([0, 4.1e14, 5e15])):
 
-    if not os.path.exists(outdir):
-        os.mkdir(outdir)
+    for snap in [41, 54]:
 
-    with open('mxxl_answers.pkl', 'rb') as input:
-        answers = cPickle.load(input)
+        outdir = '%s_%d' % (outdirbase, snap)
 
-    nclusters = len(answers)
+        if not os.path.exists(outdir):
+            os.mkdir(outdir)
 
-    masses = np.zeros(len(answers))
-    concens = np.zeros(len(answers))
+        with open('mxxlsnap%d_answers.pkl' % snap, 'rb') as input:
+            answers = cPickle.load(input)
 
-    halos = np.arange(nclusters)
+        nclusters = len(answers)
 
-    for i in range(nclusters):
+        masses = np.zeros(len(answers))
+        concens = np.zeros(len(answers))
 
-        masses[i] = answers[i]['m200']
-        concens[i] = answers[i]['concen']
+        halos = np.arange(nclusters)
 
-    haloassignments = {}
+        for i in range(nclusters):
 
-    
-    condorfile = open('%s/mxxlstack.submit' % outdir, 'w')
-    condorfile.write('executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/stack_condorwrapper.sh\n')
-    condorfile.write('universe = vanilla\n')
-    
-    for curmass_i in range(len(massedges)-1):
-        for curconcen_i in range(len(concenedges)-1):
+            masses[i] = answers[i]['m200']
+            concens[i] = answers[i]['concen']
+
+        haloassignments = {}
+
+
+        condorfile = open('%s/mxxlstack.submit' % outdir, 'w')
+        condorfile.write('executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/stack_condorwrapper.sh\n')
+        condorfile.write('universe = vanilla\n')
+
+        for curmass_i in range(len(massedges)-1):
 
             massselect = np.logical_and(masses >= massedges[curmass_i],
                                         masses < massedges[curmass_i+1])
-            concenselect = np.logical_and(concens >= concenedges[curconcen_i],
-                                          concens < concenedges[curconcen_i + 1])
-            binselect = np.logical_and(massselect, concenselect)
+
+            binselect = massselect
+
             selected = halos[binselect]
 
-            with open('%s/mxxlstack_%d_%d.list' % (outdir, curmass_i, curconcen_i), 'w') as output:
+            with open('%s/mxxlstack_%d.list' % (outdir, curmass_i), 'w') as output:
 
                 for curhalo in selected:
                     output.write('/vol/braid1/vol1/dapple/mxxl/snap41/halo_cid%d\n' % curhalo)
 
-            with open('%s/mxxlstack_%d_%d.dat' % (outdir, curmass_i, curconcen_i), 'w') as output:
+            with open('%s/mxxlstack_%d.dat' % (outdir, curmass_i), 'w') as output:
 
                 output.write('# <Mass> <Concen>\n')
                 output.write('%f %f\n' % (np.mean(masses[binselect]), np.mean(concens[binselect])))
 
-            condorfile.write('Error = %s/consolidate.mxxlstack_%d_%d.stderr\n' % (outdir, curmass_i, curconcen_i))
-            condorfile.write('Output = %s/consolidate.mxxlstack_%d_%d.stdout\n' % (outdir, curmass_i, curconcen_i))
-            condorfile.write('Log = %s/consolidate.mxxlstack_%d_%d.batch.log\n' % (outdir, curmass_i, curconcen_i))
-            condorfile.write('Arguments = %s/mxxlstack_%d_%d.list /vol/braid1/vol1/dapple/mxxl/mxxlsims/stackconfig.sh /vol/braid1/vol1/dapple/mxxl/mxxlsims/mxxl_answers.pkl %s/mxxlstack_%d_%d.cat\n' % (outdir, curmass_i, curconcen_i,
-                                                                                                                                                  outdir, curmass_i, curconcen_i))
+            condorfile.write('Error = %s/consolidate.mxxlstack_%d.stderr\n' % (outdir,  curmass_i))
+            condorfile.write('Output = %s/consolidate.mxxlstack_%d.stdout\n' % (outdir, curmass_i))
+            condorfile.write('Log = %s/consolidate.mxxlstack_%d.batch.log\n' % (outdir, curmass_i))
+            condorfile.write('Arguments = %s/mxxlstack_%d.list /vol/braid1/vol1/dapple/mxxl/mxxlsims/stackconfig.sh /vol/braid1/vol1/dapple/mxxl/mxxlsims/mxxlsnap%d_answers.pkl %s/mxxlstack_%d.cat\n' % (outdir, curmass_i,
+                                                                                                                                                                                                           snap,
+                                                                                                                                                                                                           outdir, curmass_i))
             condorfile.write('queue\n')
 
 
 
-    condorfile.close()
+        condorfile.close()
                                                                                                                                                   
 
 #############################
@@ -269,8 +273,7 @@ bkredshift = {124: '0.49925070',
               141: '0.24533000'}
 
 
-def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16]),
-                    concenedges = np.array([0.0, 2.9, 3.7, 4.7, 10])):
+def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16])):
 
     for snap in [124, 141]:
         
@@ -304,23 +307,18 @@ def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e1
 
             massselect = np.logical_and(masses >= massedges[curmass_i], masses < massedges[curmass_i +1])
 
-            for curconcen_i in range(len(concenedges) - 1):
+            inbin = massselect
 
-                concenselect = np.logical_and(concens >= concenedges[curconcen_i], concens < concenedges[curconcen_i+1])
 
-                inbin = np.logical_and(massselect, concenselect)
+            with open('%s/bk11stack_%d.list' % (outdir, curmass_i), 'w') as output:
 
-                print curmass_i, curconcen_i, len(halos[inbin])
-                
-                with open('%s/bk11stack_%d_%d.list' % (outdir, curmass_i, curconcen_i), 'w') as output:
+                for curhalo in halos[inbin]:
+                    output.write('/u/ki/dapple/nfs/beckersims/snap%d/intlength400/haloid%d_zLens%s_intlength400.fit\n' % (snap, curhalo, bkredshift[snap]))
 
-                    for curhalo in halos[inbin]:
-                        output.write('/u/ki/dapple/nfs/beckersims/snap%d/intlength400/haloid%d_zLens%s_intlength400.fit\n' % (snap, curhalo, bkredshift[snap]))
+            with open('%s/bk11stack_%d.dat' % (outdir, curmass_i), 'w') as output:
 
-                with open('%s/bk11stack_%d_%d.dat' % (outdir, curmass_i, curconcen_i), 'w') as output:
-
-                    output.write('# <Mass> <Concen> <redshift>\n')
-                    output.write('%f %f %f\n' % (np.mean(masses[inbin]), np.mean(concens[inbin]), np.mean(redshifts[inbin])))
+                output.write('# <Mass> <Concen> <redshift>\n')
+                output.write('%f %f %f\n' % (np.mean(masses[inbin]), np.mean(concens[inbin]), np.mean(redshifts[inbin])))
 
 
 
@@ -332,8 +330,7 @@ def assignBK11Stacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e1
 #############################
 
 def assignBCCStacks(outdir, redshiftedges = np.array([0., 0.4, 0.6, 1.0]),
-                    massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16]),
-                    concenedges = np.array([0, 2.9, 3.7, 4.7, 10])):
+                    massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16])):
 
     if not os.path.exists(outdir):
         os.mkdir(outdir)
@@ -354,7 +351,7 @@ def assignBCCStacks(outdir, redshiftedges = np.array([0., 0.4, 0.6, 1.0]),
         haloid = halos[i]
 
         masses[i] = answers[haloid]['m200']
-        concens[i] = 1000*answers[haloid]['concen']
+        concens[i] = answers[haloid]['concen']
         redshifts[i] = answers[haloid]['redshift']
 
     haloassignments = {}
@@ -367,23 +364,20 @@ def assignBCCStacks(outdir, redshiftedges = np.array([0., 0.4, 0.6, 1.0]),
 
             massselect = np.logical_and(masses >= massedges[curmass_i], masses < massedges[curmass_i +1])
 
-            for curconcen_i in range(len(concenedges) - 1):
 
-                concenselect = np.logical_and(concens >= concenedges[curconcen_i], concens < concenedges[curconcen_i+1])
-
-                inbin = np.logical_and(np.logical_and(redshiftselect, massselect), concenselect)
+            inbin = np.logical_and(redshiftselect, massselect)
                 
 
 
-                with open('%s/bccstack_%d_%s_%s.list' % (outdir, curz_i, curmass_i, curconcen_i), 'w') as output:
+            with open('%s/bccstack_%d_%s.list' % (outdir, curz_i, curmass_i), 'w') as output:
 
-                    for curhalo in halos[inbin]:
-                        output.write('/u/ki/dapple/nfs/bcc_clusters/recentered/cluster_%d.hdf5\n' % curhalo)
+                for curhalo in halos[inbin]:
+                    output.write('/u/ki/dapple/nfs/bcc_clusters/recentered/cluster_%d.hdf5\n' % curhalo)
 
-                with open('%s/bccstack_%d_%s_%s.dat' % (outdir, curz_i, curmass_i, curconcen_i), 'w') as output:
+            with open('%s/bccstack_%d_%s.dat' % (outdir, curz_i, curmass_i), 'w') as output:
 
-                    output.write('# <Mass> <Concen> <redshift>\n')
-                    output.write('%f %f %f\n' % (np.mean(masses[inbin]), np.mean(concens[inbin]), np.mean(redshifts[inbin])))
+                output.write('# <Mass> <Concen> <redshift>\n')
+                output.write('%f %f %f\n' % (np.mean(masses[inbin]), np.mean(concens[inbin]), np.mean(redshifts[inbin])))
 
 
 

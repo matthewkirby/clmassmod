@@ -141,6 +141,8 @@ def multibinresidual(binbase, fig = None):
 
 def BK11multibinresidual(dirbase):
 
+    setBK11()
+
     matplotlib.rcParams['figure.figsize'] = [16,16]
 
 
@@ -161,8 +163,35 @@ def BK11multibinresidual(dirbase):
                     cat = ldac.openObjectFile('%s_%d/bk11stack_%d_%d.cat' % (dirbase, snap, 
                                                                              curm, curc))
 
-                    pylab.errorbar(cat['r_mpc']*0.7, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
-                                   linestyle='None', marker='o', color=c[colori], label='BK11 z=%1.1f' % redshift)
+
+                    zlens = cat.hdu.header['ZLENS']
+
+                    rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+
+
+                    gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+                    kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+                    
+                    gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+                    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                                   linestyle='None', marker='o', color=c[colori], label='M=%1.1fx10^14' % (mass/1e14))
+                    
+                    pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'k-', linewidth=2)
+                    
+                    ax = pylab.gca()
+                    ax.set_xscale('log')
+                    pylab.axhline(0.0, c='k', linewidth=2)
+                    
+                    pylab.axis([0.05, 10, -0.03, 0.4])
+
+
+    
+
+
+
+
                     ax = pylab.gca()
                     ax.set_xscale('log')
                     pylab.axhline(0.0, c='k', linewidth=2)
@@ -174,9 +203,6 @@ def BK11multibinresidual(dirbase):
                     pass
 
                 colori+= 1
-
-            pylab.axis([0.05, 10, -.55, 0.35])
-            #pylab.axis([0.05, 10, -.10, 0.05])
 
             curplot += 1
 
@@ -190,7 +216,7 @@ def BK11multibinresidual(dirbase):
 
     pylab.tight_layout()
 
-#    pylab.savefig('%s_multibin_fracresid.png' % dirbase)
+    pylab.savefig('%s_multibin_shearprofile.png' % dirbase)
 #    pylab.savefig('%s_multibin_resid.png' % binbase)
 
     return fig
@@ -198,12 +224,17 @@ def BK11multibinresidual(dirbase):
 
 #######################################################
 
-def multibinresidualoverplot(binbase, fig):
-
-    matplotlib.rcParams['figure.figsize'] = [16,8]
+def multibinresidualoverplot(binbase, fig = None):
 
 
-#    fig = pylab.figure()
+    setBCC()
+
+    if fig is None:
+
+        matplotlib.rcParams['figure.figsize'] = [16,8]
+        fig = pylab.figure()
+
+
     curplot = 1
     for curc in range(4):
         pylab.subplot(2,4,curplot)
@@ -216,6 +247,28 @@ def multibinresidualoverplot(binbase, fig):
 
                 cat = ldac.openObjectFile('%s_%d_%d_%d.cat' % (binbase, curz, curm, curc))
 
+
+                zlens = cat.hdu.header['ZLENS']
+
+                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+
+
+
+                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+
+                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                                   linestyle='None', marker='o', color=c[colori], label='M=%1.1fx10^14' % (mass/1e14))
+
+                pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'k-', linewidth=2)
+
+                ax = pylab.gca()
+                ax.set_xscale('log')
+                pylab.axhline(0.0, c='k', linewidth=2)
+
+                pylab.axis([0.05, 10, -0.03, 0.4])
                 zlens = cat.hdu.header['ZLENS']
 
                 rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
@@ -247,19 +300,9 @@ def multibinresidualoverplot(binbase, fig):
 
 
 
-
-                pylab.axis([0.05, 10, -.55, 0.35])
-#                pylab.axis([0.05, 10, -.10, 0.05])
+                pylab.axis([0.05, 10, -0.03, 0.4])
 
 
-            #    ax2 = ax.twinx()
-            #    pylab.plot(cat['r_mpc'], gpred, 'k--')
-            #    ax2.errorbar(cat['r_mpc'], cat['ghat'], cat['ghatdistrosigma']/np.sqrt(cat['ndat']), fmt='rs')
-            #    ax2.set_ylabel('<g_meas - g_pred>', color='r', fontsize=16)
-            #    ax2.set_ylim(-0.2, 0.1)
-            #
-            #
-            #
 
                 colori+= 1
         pylab.title('C=%1.1f' % (concen))
@@ -273,7 +316,7 @@ def multibinresidualoverplot(binbase, fig):
     pylab.subplot(2,4,1)
     pylab.ylabel('<g_m/g_p-1>')
     pylab.subplot(2,4,4)
-    pylab.legend(loc='lower right')
+    pylab.legend(loc='upper right')
 
 
     pylab.tight_layout()
@@ -288,13 +331,31 @@ def multibinresidualoverplot(binbase, fig):
 
 #######################################################
 
+def setMXXL():
 
-def MXXLmultibinresidualoverplot(binbase, fig):
+    nfwutils.global_cosmology.set_cosmology(nfwutils.Cosmology(omega_m = 0.25, omega_l = 0.75, h=0.73))
 
-#    matplotlib.rcParams['figure.figsize'] = [16,4]
+def setBCC():
+
+    nfwutils.global_cosmology.set_cosmology(nfwutils.Cosmology(omega_m = 0.23, omega_l = 0.77, h=.72))
+
+def setBK11():
+
+    nfwutils.global_cosmology.set_cosmology(nfwutils.Cosmology(omega_m = 0.27, omega_l = 0.73, h = 0.7))
 
 
-#    fig = pylab.figure()
+#############################################################
+
+
+def MXXLmultibinresidualoverplot(binbase, fig = None):
+
+    setMXXL()
+
+    if fig is None:
+        matplotlib.rcParams['figure.figsize'] = [16,8]
+        fig = pylab.figure()
+
+
     curplot = 5
     for curc in range(4):
         pylab.subplot(2,4,curplot)
@@ -328,7 +389,7 @@ def MXXLmultibinresidualoverplot(binbase, fig):
                 ax.set_xscale('log')
                 pylab.axhline(0.0, c='k', linewidth=2)
 
-                pylab.axis([0.05, 10, -.55, 0.35])
+                pylab.axis([0.05, 10, -0.03, 0.4])
 
 
             except:
@@ -345,17 +406,17 @@ def MXXLmultibinresidualoverplot(binbase, fig):
     for i in range(4):
         pylab.subplot(2,4,4+i+1)
         pylab.xlabel('Radius [Mpc/h]')
-        pylab.text(0.1, -0.2, 'MXXL')
+        pylab.text(0.1, 0.03, 'MXXL')
         pylab.minorticks_on()
     pylab.subplot(2,4,5)
     pylab.ylabel('<g_m/g_p-1>')
     pylab.subplot(2,4,8)
-    pylab.legend(loc='lower center')
+    pylab.legend(loc='upper right')
 
 
     pylab.tight_layout()
 
-    pylab.savefig('%s_multibin_resid_overplot.png' % binbase)
+    pylab.savefig('%s_shearstack.png' % binbase)
 
 
     return fig
