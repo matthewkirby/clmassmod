@@ -6,6 +6,7 @@
 #######################
 
 import sys, binaryutils, readtxtfile, cPickle
+import astropy.io.ascii as asciireader
 
 ######################
 
@@ -32,34 +33,17 @@ def readMXXLBinary(filename):
 
 ########################
 
-def readHalosFile(filename):
-
-    data = readtxtfile.readtxtfile(filename)
-
-    params = 'Mass200	Radius200	Position_0	Position_1	Position_2	VirialRatio	CenterOfMassOffset	SubstructureFraction	EinastoParameter_0	EinastoParameter_1	EinastoParameter_2	HalfMassRadius	HalfMassFormationRedshift	SubhaloFileNumber	SubhaloFileOffset	EinastoMeanRhoR2	MeanRhorh	EinastoFormationRedshift'.split()
-
-    halocat = {}
-
-    for i, name in enumerate(params):
-
-        halocat[name] = data[:,i]
-
-    return halocat
-    
-
-######################
 
 if __name__ == '__main__':
 
-    outfile = sys.argv[1]
+    snapnum = int(sys.argv[1])
+    outfile = sys.argv[2]
 
-    siminfo = cPickle.load(open('mxxl_imperial/snap41/siminfo.pkl'))
-    massmapping = siminfo['massmapping']
-    redshift = siminfo['redshift']
+    redshift = readtxtfile.readtxtfile('mxxl_imperial/snap%d/redshift' % snapnum)[0,0]
 
-    halocat = readHalosFile('mxxl_imperial/snap41/halos_41.txt')
+    halocat = asciireader.read('mxxl_imperial/snap%d/halos_%d.txt' % (snapnum, snapnum))
 
-    idconversion = readtxtfile.readtxtfile('mxxl_imperial/snap41/idconversion')
+    idconversion = readtxtfile.readtxtfile('mxxl_imperial/snap%d/idconversion' % snapnum)
 
     clusterinfo = {}
 
@@ -68,12 +52,21 @@ if __name__ == '__main__':
 
             cid, sid, projid = curindexs
 
-            clusterinfo[cid] = dict(m500 = halocat['Mass500_crit'][sid]*1e10,
-                                    m200 = halocat['Mass200'][sid]*1e10,
-                                    concen = 1./halocat['EinastoParameter_1'][sid],
-                                    redshift = redshift)
+            try:
 
-            assert(clusterinfo[cid]['m200'] == (massmapping[cid][0]*1e10))
+                clusterinfo[cid] = dict(m500 = halocat['Mass500_crit'][sid]*1e10,
+                                        m200 = halocat['Mass200'][sid]*1e10,
+                                        concen = 1./halocat['EinastoParameter_1'][sid],
+                                        redshift = redshift)
+
+            except:
+
+                clusterinfo[cid] = dict(m500 = 0.,
+                                        m200 = halocat['Mass200'][sid]*1e10,
+                                        concen = 0.,
+                                        redshift = redshift)
+                
+
     except ValueError:
         print curindexs
 

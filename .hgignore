@@ -25,6 +25,7 @@ bccstacks/*
 bcc_residstacks/*
 mxxlstack_bccbins/*
 bcc_fracresidstacks/*
+mxxlstack_bccbins_shearprofile/*
 *.aux
 *.bbl
 *.blg
