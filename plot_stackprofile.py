@@ -68,6 +68,116 @@ def residual(binbase):
 
 c = 'SlateGray r b m DodgerBlue g DarkSalmon'.split()
 
+############
+
+def plotProfile(datfilebase, c, label, labelZ = True):
+
+    mass, concen, redshift =  readtxtfile.readtxtfile('%s.dat' % datfilebase)[0]
+
+    cat = ldac.openObjectFile('%s.cat' % datfilebase)
+    
+    zlens = cat.hdu.header['ZLENS']
+    rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
+    gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
+    kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
+    gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+            
+    if labelZ:
+        flabel='%s z=%1.2f' % (label, zlens)
+    else:
+        flabel =label
+
+    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+    linestyle='None', marker='o', color=c, label=flabel)
+    pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, marker='None', linestyle=':', color=c, linewidth=2)
+    
+####
+
+def multibinshear():
+
+    matplotlib.rcParams['figure.figsize'] = [16,4]
+
+    fig = pylab.figure()
+
+    curplot = 1
+    for curm in range(4):
+        
+        pylab.subplot(1,4,curplot)
+
+        colori = -1
+
+        #first plot bk11
+
+        setBK11()
+
+        for snap in [124,141]:
+
+            colori += 1
+
+            try:
+                plotProfile('bk11stack_massbins_shearprofile_%d/bk11stack_%d' % (snap, curm),
+                            c[colori], 'BK11')
+            except:
+                pass
+
+
+        # then bcc
+
+        for curz in range(3):
+
+            colori += 1
+
+            try:
+            plotProfile('bccstack_massbins_shearprofile/bccstack_%d_%d' % (curz, curm),
+                            c[colori], 'BCC')
+            except:
+                pass
+
+
+        # then mxxl
+
+        if curm == 3:
+
+            for snap in [54, 41]:
+
+                for mxxlmass, mxxllabel in enumerate('Low High'.split()):
+
+                    colori += 1
+
+                    try:
+                        plotProfile('mxxlstack_massbins_shearprofile_%d/mxxlstack_%d' % (snap, mxxlmass),
+                                    c[colori], 'MXXL-%s' % mxxllabel)
+                    except:
+                        pass
+
+
+
+        ax = pylab.gca()
+        ax.set_xscale('log')
+        pylab.axhline(0.0, c='k', linewidth=2)
+        pylab.axis([0.05, 10, -.03, 0.4])
+        pylab.xlabel('Radius [Mpc/h]')
+        
+
+        curplot += 1
+
+    pylab.subplot(1,4,1)
+    pylab.ylabel('shear')
+
+    pylab.subplot(1,4,4)
+    pylab.legend(loc='upper right')
+            
+        
+    pylab.tight_layout()
+
+
+    pylab.savefig('multibin_shear.png')
+
+    return fig
+
+######################################################
+
+
 def multibinresidual(binbase, fig = None):
 
     matplotlib.rcParams['figure.figsize'] = [16,16]

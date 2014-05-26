@@ -77,7 +77,7 @@ class OnlineStatistics(object):
 #
                                        
 #        g_resid = (catalog[self.shearCol] - gpred)/gpred
-        g_resid = catalog[self.shearCol]
+        g_resid = catalog[self.shearCol]/(catalog['beta']*nfwutils.global_cosmology.angulardist(zlens))
 
         self.meanzlens, junk = calcOnlineStats(self.ncats, self.meanzlens, 0., 1., zlens, 0.)
 
