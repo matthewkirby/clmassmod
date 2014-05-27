@@ -81,6 +81,10 @@ def plotProfile(datfilebase, c, label, labelZ = True):
     gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
     kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
     gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+
+
+
+    signalpred = gpred / (cat['beta_s']*nfwutils.global_cosmology.beta([1e6], zlens)*nfwutils.global_cosmology.angulardist(zlens))
             
     if labelZ:
         flabel='%s z=%1.2f' % (label, zlens)
@@ -89,13 +93,13 @@ def plotProfile(datfilebase, c, label, labelZ = True):
 
     pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
     linestyle='None', marker='o', color=c, label=flabel)
-    pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, marker='None', linestyle=':', color=c, linewidth=2)
+    pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, signalpred, marker='None', linestyle=':', color=c, linewidth=2)
     
 ####
 
 def multibinshear():
 
-    matplotlib.rcParams['figure.figsize'] = [16,4]
+    matplotlib.rcParams['figure.figsize'] = [32,8]
 
     fig = pylab.figure()
 
@@ -114,48 +118,53 @@ def multibinshear():
 
             colori += 1
 
-            try:
-                plotProfile('bk11stack_massbins_shearprofile_%d/bk11stack_%d' % (snap, curm),
-                            c[colori], 'BK11')
-            except:
-                pass
+ #           try:
+            plotProfile('bk11stack_massbins_shearprofile_%d/bk11stack_%d' % (snap, curm),
+                        c[colori], 'BK11')
+#            except:
+#                pass
 
 
         # then bcc
+
+        setBCC()
 
         for curz in range(3):
 
             colori += 1
 
-            try:
+ #           try:
             plotProfile('bccstack_massbins_shearprofile/bccstack_%d_%d' % (curz, curm),
-                            c[colori], 'BCC')
-            except:
-                pass
+                        c[colori], 'BCC')
+#            except:
+#                pass
 
 
         # then mxxl
 
+        setMXXL()
+
         if curm == 3:
 
-            for snap in [54, 41]:
+            for snap in [41]:
 
                 for mxxlmass, mxxllabel in enumerate('Low High'.split()):
 
                     colori += 1
 
-                    try:
-                        plotProfile('mxxlstack_massbins_shearprofile_%d/mxxlstack_%d' % (snap, mxxlmass),
+#                    try:
+                    plotProfile('mxxlstack_massbins_shearprofile_%d/mxxlstack_%d' % (snap, mxxlmass),
                                     c[colori], 'MXXL-%s' % mxxllabel)
-                    except:
-                        pass
+#                    except:
+#                        pass
 
 
 
         ax = pylab.gca()
         ax.set_xscale('log')
         pylab.axhline(0.0, c='k', linewidth=2)
-        pylab.axis([0.05, 10, -.03, 0.4])
+        pylab.axvline(0.2*0.7, c='g', linestyle='--')
+        pylab.axis([0.01, 10, 0., 0.0003])
         pylab.xlabel('Radius [Mpc/h]')
         
 
@@ -165,7 +174,7 @@ def multibinshear():
     pylab.ylabel('shear')
 
     pylab.subplot(1,4,4)
-    pylab.legend(loc='upper right')
+    pylab.legend(loc='upper right', fontsize=10)
             
         
     pylab.tight_layout()
