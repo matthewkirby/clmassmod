@@ -66,3 +66,6 @@ class Duffy(object):
             m200c = m / mRatio
         return A * (m200c / 2e12)**B * (1. + z)**C
 
+
+
+

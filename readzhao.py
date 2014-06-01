@@ -53,7 +53,7 @@ class MCFunction(object):
 
     ####
 
-    def __call__(self, z, m):
+    def __call__(self, m, z):
 
         return self.interpmc([[z, m/self.scaling]])
 
@@ -103,8 +103,22 @@ def readBK11():
     return mcrelation
     
 
-#######    
+####### 
+
+availableSims = dict(readBCC = readBCC, readBK11 = readBK11)
 
                             
+class ZhaoMC(object):
 
+    def __init__(self, config):
+
+        self.mcrelation = availableSims[config.readermodule]()
+
+    #####
+
+    def __call__(self, self, m, z):
+
+        # m in Msol / h
+
+        return self.mcrelation(m, z)
         
