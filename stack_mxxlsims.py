@@ -77,7 +77,7 @@ class OnlineStatistics(object):
 #
                                        
 #        g_resid = (catalog[self.shearCol] - gpred)/gpred
-        g_resid = catalog[self.shearCol]
+        g_resid = catalog[self.shearCol]/(catalog['beta_s']*nfwutils.global_cosmology.beta([1e6], zlens)*nfwutils.global_cosmology.angulardist(zlens))
 
         self.meanzlens, junk = calcOnlineStats(self.ncats, self.meanzlens, 0., 1., zlens, 0.)
 
@@ -202,9 +202,10 @@ def stackCats(stackfile, configname, answerfile, outfile):
     return stackedprofile
 
 
+
 ############################
 
-def assignMXXLStacks(outdirbase, massedges = np.array([0, 4.1e14, 5e15])):
+def assignMXXLStacks(outdirbase, massedges = np.array([0., 2.2e14, 2.6e14, 3.2e14, 1e16])):
 
     for snap in [41, 54]:
 
@@ -220,6 +221,8 @@ def assignMXXLStacks(outdirbase, massedges = np.array([0, 4.1e14, 5e15])):
 
         masses = np.zeros(len(answers))
         concens = np.zeros(len(answers))
+        redshifts = np.zeros(len(answers))
+                           
 
         halos = np.arange(nclusters)
 
@@ -227,6 +230,7 @@ def assignMXXLStacks(outdirbase, massedges = np.array([0, 4.1e14, 5e15])):
 
             masses[i] = answers[i]['m200']
             concens[i] = answers[i]['concen']
+            redshifts[i] = answers[i]['redshift']
 
         haloassignments = {}
 
@@ -247,12 +251,13 @@ def assignMXXLStacks(outdirbase, massedges = np.array([0, 4.1e14, 5e15])):
             with open('%s/mxxlstack_%d.list' % (outdir, curmass_i), 'w') as output:
 
                 for curhalo in selected:
-                    output.write('/vol/braid1/vol1/dapple/mxxl/snap41/halo_cid%d\n' % curhalo)
+                    output.write('/vol/braid1/vol1/dapple/mxxl/snap%d/halo_cid%d\n' % (snap, curhalo))
 
             with open('%s/mxxlstack_%d.dat' % (outdir, curmass_i), 'w') as output:
 
                 output.write('# <Mass> <Concen>\n')
-                output.write('%f %f\n' % (np.mean(masses[binselect]), np.mean(concens[binselect])))
+                output.write('%f %f %f\n' % (np.mean(masses[binselect]), np.mean(concens[binselect]),
+                                             np.mean(redshifts[binselect])))
 
             condorfile.write('Error = %s/consolidate.mxxlstack_%d.stderr\n' % (outdir,  curmass_i))
             condorfile.write('Output = %s/consolidate.mxxlstack_%d.stdout\n' % (outdir, curmass_i))
