@@ -37,31 +37,74 @@ def readZhao(filename):
 
     return cat
 
+#####
+
+__MASS_SCALING__ = 1e15
+
 
 ######
+
+class MCFunction(object):
+
+    def __init__(self, interpmc, scaling = __MASS_SCALING__):
+
+        self.interpmc = interpmc
+        self.scaling = scaling
+
+    ####
+
+    def __call__(self, z, m):
+
+        return self.interpmc([[z, m/self.scaling]])
+
+######
+
+
+def createInterp(zi, filenames, scaling = __MASS_SCALING__):
+
+    mcs = [readZhao(afile) for afile in filenames]
+
+    nzs = len(zi)
+    nmasses = len(mcs[0]['M200c'])
+
+
+    xvals = np.zeros((nzs*nmasses,2))
+    yvals = np.zeros(nzs*nmasses)
+
+    for i in range(nzs):
+        xvals[nmasses*i:nmasses*(i+1),0] = zi[i]
+        xvals[nmasses*i:nmasses*(i+1),1] = mcs[i]['M200c']/scaling
+        yvals[nmasses*i:nmasses*(i+1)] = mcs[i]['c200c']
+
+
+    interpmc = MCFunction(interp.LinearNDInterpolator(xvals,yvals), scaling)
+
+    return interpmc
+
+#######
+    
 
 def readBCC():
 
     zs = '00 10 20 25 50 75 100'.split()
     zi = [0.0, 0.1, 0.2, 0.25, 0.5, 0.75, 1.0]
-    mcs = [readzhao.readZhao('zhaodat/bcc_cosmo_mc_z%s.dat' % x) for x in zs]
-    xvals = np.zeros((7,47))
-    yvals = np.zeros(7*47)
+    mcrelation = createInterp(zi, ['zhaodat/bcc_cosmo_mc_z%s.dat' % x for x in zs])
 
-    for i in range(7):
-        xvals[47*i:47*(i+1),0] = zi[i]
-        xvals[47*i:47*(i+1),1] = mcs[i]['M200c']/1e15
-        yvals[47*i:47*(i+1)] = mcs[i]['c200c']
+    return mcrelation
 
+#######
 
-    interpmc = interp.LinearNDInterpolator(xvals,yvals)
+def readBK11():
 
-    return interpmc
+    zs = '25 05'.split()
+    zi = [0.25, 0.5]
+    mcrelation = createInterp(zi, ['zhaodat/bk11_cosmo_mc_z%s.dat' % x for x in zs])
 
-
+    return mcrelation
     
-    
-        
 
+#######    
+
+                            
 
         
