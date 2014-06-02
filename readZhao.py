@@ -2,6 +2,7 @@
 # Read in m-c relations from zhao
 #######################
 
+import os
 import numpy as np
 import scipy.interpolate as interp
 
@@ -12,6 +13,12 @@ import scipy.interpolate as interp
 #
 #        row >1: ziz,Miz,c,rhohiz,R,V,Ms,rhos,Rs,Vs,Miz_200c,c_200c,
 #                rhohiz_200c,Miz_200m,c_200m,rhohiz_200m,uniage_iz
+
+
+if os.environ.get('SRCLOC') is None:
+    datdir='./zhaodat'
+else:
+    datdir='%s/zhaodat' % os.environ.get('SRCLOC')
 
 
 
