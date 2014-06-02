@@ -359,7 +359,7 @@ class NFW_MC_Model(NFW_Model):
 
     def __call__(self, x, m200):
 
-        c200 = self.massconRelation(m200*self.massScale, self.zcluster, self.overdensity)        
+        c200 = self.massconRelation(m200*self.massScale*nfwutils.global_cosmology.h, self.zcluster, self.overdensity)        
 
         return super(NFW_MC_Model, self).__call__(x, m200, c200)
 

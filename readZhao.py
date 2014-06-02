@@ -109,7 +109,7 @@ def readMXXL():
 
     zs = '25 100'.split()
     zi = [0.2425, 0.99]
-    mcrelation = createInterp(zi, ['zhaodat/bk11_cosmo_mc_z%s.dat' % x for x in zs])
+    mcrelation = createInterp(zi, ['zhaodat/mxxl_cosmo_mc_z%s.dat' % x for x in zs])
 
     return mcrelation
 
@@ -127,7 +127,7 @@ class ZhaoMC(object):
 
     #####
 
-    def __call__(self, m, z):
+    def __call__(self, m, z, overdensity = None):
 
         # m in Msol / h
 
