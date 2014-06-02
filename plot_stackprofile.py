@@ -85,6 +85,8 @@ def plotProfile(datfilebase, c, label, labelZ = True):
 
 
     signalpred = gpred / (cat['beta_s']*nfwutils.global_cosmology.beta([1e6], zlens)*nfwutils.global_cosmology.angulardist(zlens))
+
+    print signalpred
             
     if labelZ:
         flabel='%s z=%1.2f' % (label, zlens)
@@ -96,7 +98,7 @@ def plotProfile(datfilebase, c, label, labelZ = True):
     pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, signalpred, marker='None', linestyle=':', color=c, linewidth=2)
     
 ####
-
+    
 def multibinshear():
 
     matplotlib.rcParams['figure.figsize'] = [32,8]
@@ -148,13 +150,11 @@ def multibinshear():
 
             for snap in [41]:
 
-                for mxxlmass, mxxllabel in enumerate('Low High'.split()):
-
                     colori += 1
 
 #                    try:
-                    plotProfile('mxxlstack_massbins_shearprofile_%d/mxxlstack_%d' % (snap, mxxlmass),
-                                    c[colori], 'MXXL-%s' % mxxllabel)
+                    plotProfile('mxxlstack_massbins_shearprofile_%d/mxxlstack_%d' % (snap, curm),
+                                    c[colori], 'MXXL')
 #                    except:
 #                        pass
 
@@ -378,8 +378,13 @@ def multibinresidualoverplot(binbase, fig = None):
 
                 gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
 
-                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
-                                   linestyle='None', marker='o', color=c[colori], label='M=%1.1fx10^14' % (mass/1e14))
+                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, 
+                               cat['ghat'], 
+                               cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
+                               linestyle='None', 
+                               marker='o', 
+                               color=c[colori], 
+                               label='z=%1.2f' % zlens)
 
                 pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'k-', linewidth=2)
 
@@ -388,38 +393,8 @@ def multibinresidualoverplot(binbase, fig = None):
                 pylab.axhline(0.0, c='k', linewidth=2)
 
                 pylab.axis([0.05, 10, -0.03, 0.4])
-                zlens = cat.hdu.header['ZLENS']
-
-                rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
 
 
-
-                gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
-                kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
-
-                gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
-
-
-
-#                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])*gpred), 
-#                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
-                pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
-                               linestyle='None', marker='o', color=c[colori], label='z=%1.1f' % redshift)
-
-                pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'k-', linewidth=2)
-
-            #    pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat']/gpred, cat['ghatdistrosigma']/(gpred), fmt='bo')
-
-                pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, gpred, 'r-')
-
-            #
-                ax = pylab.gca()
-                ax.set_xscale('log')
-                pylab.axhline(0.0, c='k', linewidth=2)
-
-
-
-                pylab.axis([0.05, 10, -0.03, 0.4])
 
 
 
