@@ -95,7 +95,7 @@ def readBCC():
 
     zs = '00 10 20 25 50 75 100'.split()
     zi = [0.0, 0.1, 0.2, 0.25, 0.5, 0.75, 1.0]
-    mcrelation = createInterp(zi, ['zhaodat/bcc_cosmo_mc_z%s.dat' % x for x in zs])
+    mcrelation = createInterp(zi, ['%s/bcc_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
 
     return mcrelation
 
@@ -105,7 +105,7 @@ def readBK11():
 
     zs = '25 05'.split()
     zi = [0.25, 0.5]
-    mcrelation = createInterp(zi, ['zhaodat/bk11_cosmo_mc_z%s.dat' % x for x in zs])
+    mcrelation = createInterp(zi, ['%s/bk11_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
 
     return mcrelation
     
@@ -116,7 +116,7 @@ def readMXXL():
 
     zs = '25 100'.split()
     zi = [0.2425, 0.99]
-    mcrelation = createInterp(zi, ['zhaodat/mxxl_cosmo_mc_z%s.dat' % x for x in zs])
+    mcrelation = createInterp(zi, ['%s/mxxl_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
 
     return mcrelation
 
