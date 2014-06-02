@@ -105,7 +105,18 @@ def readBK11():
 
 ####### 
 
-availableSims = dict(readBCC = readBCC, readBK11 = readBK11)
+def readMXXL():
+
+    zs = '25 100'.split()
+    zi = [0.2425, 0.99]
+    mcrelation = createInterp(zi, ['zhaodat/bk11_cosmo_mc_z%s.dat' % x for x in zs])
+
+    return mcrelation
+
+
+#######
+
+availableSims = dict(readBCC = readBCC, readBK11 = readBK11, readMXXL = readMXXL)
 
                             
 class ZhaoMC(object):
@@ -116,7 +127,7 @@ class ZhaoMC(object):
 
     #####
 
-    def __call__(self, self, m, z):
+    def __call__(self, m, z):
 
         # m in Msol / h
 
