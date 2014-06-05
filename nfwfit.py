@@ -10,7 +10,9 @@ import numpy as np
 import astropy.io.fits as pyfits
 import nfwutils, bashreader, ldac
 import fitmodel, nfwmodeltools as tools
-
+import varcontainer
+import pymc
+import pymc_mymcmc_adapter as pma
 
 
 #######################
@@ -251,16 +253,37 @@ def buildObject(modulename, classname, *args, **kwds):
     
 #####
 
-def buildFitter(config):
+def buildProfileBuilder(config):
 
-    profileBuilder = buildObject(config.profilemodule, config.profilebuilder, config)
+    return buildObject(config.profilemodule, config.profilebuilder, config)
+
+#####
+
+def buildModel(config):
+
 
     try:
         massconRelation = buildObject(config.massconmodule, config.massconrelation, config)
     except AttributeError:
         massconRelation = None
 
-    fitter = NFWFitter(profileBuilder = profileBuilder, massconRelation = massconRelation, config = config)
+    if massconRelation is None:
+        model = NFW_Model(config = config)
+    else:
+        model = NFW_MC_Model(massconRelation, config = config)
+
+    return model
+
+    
+
+def buildFitter(config):
+
+    profileBuilder = buildProfileBuilder(config)
+    model = buildModel(config)
+
+    
+
+    fitter = NFWFitter(profileBuilder = profileBuilder, model = model, config = config)
 
 
 
@@ -278,16 +301,21 @@ def buildSimReader(config):
 
 class NFW_Model(object):
 
-    def __init__(self, uncertainprofile = False):
+    def __init__(self, config = None):
 
         self.massScale = 1e14
         self.overdensity = 200
-        self.uncertainprofile = uncertainprofile
+        self.config = config
+
+        self.m200_low = 1e13
+        self.m200_high = 1e16
+        self.c200_low = 1.
+        self.c200_high = 20.
 
     def paramLimits(self):
 
-        return {'m200' : (1e13/self.massScale,1e16/self.massScale),
-                'c200' : (1., 20.)}
+        return {'m200' : (self.m200_low/self.massScale,self.m200_high/self.massScale),
+                'c200' : (self.c200_low, self.c200_high)}
 
     def guess(self):
 
@@ -307,6 +335,63 @@ class NFW_Model(object):
 
 
 
+    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster):
+
+        self.setData(beta_s, beta_s2, zcluster)
+
+        parts = {}
+        
+        if 'massprior' in self.config and self.config.massprior == 'linear':
+            parts['scaledm200'] = pymc.Uniform('m200', self.m200_low/self.massScale, self.m200_high/self.massScale)
+            
+            @pymc.deterministic(trace=True)
+            def m200(scaledm200 = parts['scaledm200']):
+                return self.massScale*scaledm200
+            parts['m200'] = m200
+
+        else:
+            parts['logM200'] = pymc.Uniform('logM200', np.log(self.m200_low), np.log(self.m200_high))
+            
+            @pymc.deterministic(trace=True)
+            def m200(logM200 = parts['logM200']):
+
+                return np.exp(logM200)
+            parts['m200'] = m200
+
+        parts['c200'] = pymc.Uniform('c200', self.c200_low, self.c200_high)
+
+        rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
+        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster) * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+
+        @pymc.observed
+        def data(value = 0.,
+                 r_mpc = r_mpc,
+                 ghat = ghat,
+                 sigma_ghat = ghat,
+                 beta_s = beta_s,
+                 beta_s2 = beta_s2,
+                 rho_c = rho_c,
+                 rho_c_over_sigma_c = rho_c_over_sigma_c,
+                 m200 = parts['m200'],
+                 c200 = parts['c200']):
+
+            
+            return tools.shearprofile_like(m200,
+                                          c200,
+                                          r_mpc,
+                                          ghat,
+                                          sigma_ghat,
+                                          beta_s,
+                                          beta_s2,
+                                          rho_c,
+                                          rho_c_over_sigma_c)
+
+        parts['data'] = data
+
+        return pymc.Model(parts)
+            
+
+
     def __call__(self, x, m200, c200):
                 
         r_scale = nfwutils.rscaleConstM(m200*self.massScale, c200, self.zcluster, self.overdensity)
@@ -316,31 +401,16 @@ class NFW_Model(object):
         
         g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
 
-        if self.uncertainprofile == False:
-                
-            return g
+        return g
 
-        else:
-
-            r200 = nfwutils.rdeltaConstM(m200, c200, self.zcluster, self.overdensity)
-
-            rrvir = x/r200
-
-            gerr = np.zeros_like(x)
-            intransition = np.logical_and(rrvir > 0.9, rrvir < 1.5)
-            gerr[intransition] = 0.5*rrvir[intransition]*g[intransition]
-            outside = rrvir >= 1.5
-            gerr[outside] = 5*g[outside]
-
-            return g, gerr
 
 #######
 
 class NFW_MC_Model(NFW_Model):
 
-    def __init__(self, massconRelation, uncertainprofile = False):
+    def __init__(self, massconRelation, config = None):
 
-        super(NFW_MC_Model, self).__init__(uncertainprofile = uncertainprofile)
+        super(NFW_MC_Model, self).__init__(config = config)
         self.massconRelation = massconRelation
 
     def guess(self):
@@ -354,7 +424,71 @@ class NFW_MC_Model(NFW_Model):
 
     def paramLimits(self):
 
-        return {'m200' : (1e13/self.massScale,1e16/self.massScale)}
+        limits = super(NFW_MC_Model, self).paramLimits()
+
+        return {'m200' : limits['m200']}
+
+    
+    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster):
+
+        self.setData(beta_s, beta_s2, zcluster)
+
+        parts = {}
+        
+        if 'massprior' in self.config and self.config.massprior == 'linear':
+            parts['scaledm200'] = pymc.Uniform('m200', self.m200_low/self.massScale, self.m200_high/self.massScale)
+            
+            @pymc.deterministic(trace=True)
+            def m200(scaledm200 = parts['scaledm200']):
+                return self.massScale*scaledm200
+            parts['m200'] = m200
+
+        else:
+            parts['logM200'] = pymc.Uniform('logM200', np.log(self.m200_low), np.log(self.m200_high))
+            
+            @pymc.deterministic(trace=True)
+            def m200(logM200 = parts['logM200']):
+
+                return np.exp(logM200)
+            parts['m200'] = m200
+
+        @pymc.deterministic
+        def c200(m200 = parts['m200'], zcluster = zcluster):
+
+            return self.massconRelation(m200*nfwutils.global_cosmology.h, self.zcluster, self.overdensity)        
+        parts['c200'] = c200
+
+
+        rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
+        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster) * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+
+        @pymc.observed
+        def data(value = 0.,
+                 r_mpc = r_mpc,
+                 ghat = ghat,
+                 sigma_ghat = ghat,
+                 beta_s = beta_s,
+                 beta_s2 = beta_s2,
+                 rho_c = rho_c,
+                 rho_c_over_sigma_c = rho_c_over_sigma_c,
+                 m200 = parts['m200'],
+                 c200 = parts['c200']):
+
+            
+            return tools.shearprofile_like(m200,
+                                          c200,
+                                          r_mpc,
+                                          ghat,
+                                          sigma_ghat,
+                                          beta_s,
+                                          beta_s2,
+                                          rho_c,
+                                          rho_c_over_sigma_c)
+
+        parts['data'] = data
+
+        return pymc.Model(parts)
+
 
 
     def __call__(self, x, m200):
@@ -365,49 +499,24 @@ class NFW_MC_Model(NFW_Model):
 
 ###############################
 
-def chisq(ydata, yerr, ymodel):
-
-    return fitmodel.ChiSqStat(ydata, yerr, ymodel)
-
-def chisq_uncertainprofile(ydata, yerr, ymodel, ymodelerr):
-    
-    return fitmodel.ChiSqStat(ydata, np.sqrt(yerr**2 + ymodelerr**2), ymodel)
-
-    
 
 class NFWFitter(object):
 
-    def __init__(self, profileBuilder, massconRelation, config):
+    def __init__(self, profileBuilder, model, config):
 
         self.profileBuilder = profileBuilder
-
-
-        if 'uncertainprofile' in config and config.uncertainprofile == 1:
-            uncertainprofile = True
-            self.statfunc = chisq_uncertainprofile
-        else:
-            uncertainprofile = False
-            self.statfunc = chisq
-
-        if massconRelation is None:
-            self.model = NFW_Model(uncertainprofile=uncertainprofile)
-        else:
-            self.model = NFW_MC_Model(massconRelation, uncertainprofile=uncertainprofile)
-
-        
+        self.model = model
+        self.config = config
 
 
     ######
 
-    def prepData(self, curCatalog, config):
+    def prepData(self, curCatalog):
         
         beta_s = np.mean(curCatalog['beta_s'])
         beta_s2 = np.mean(curCatalog['beta_s']**2)
         
-        r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, config)
-
-
-            
+        r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, self.config)
 
         clean = sigma_ghat > 0
 
@@ -418,7 +527,34 @@ class NFWFitter(object):
 
     ######
 
-    def betaMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, 
+    def explorePosterior(self, catalog):
+
+        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
+
+        mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
+
+        manager = varcontainer.VarContainer()
+        options = varcontainer.VarContainer()
+        manager.options = options
+        
+        options.singlecore = True
+        options.adapt_every = 100
+        options.adapt_after = 100
+        options.nsamples = 1000
+        if 'nsamples' in self.config:
+            options.nsamples = self.config.nsamples
+        manager.model = mcmc_model
+        
+        runner = pma.MyMCMemRunner()
+        runner.run(manager)
+        runner.finalize(manager)
+
+        return manager.chain
+        
+
+    ######
+
+    def minChisqMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, 
                    guess = [],
                    useSimplex=False):
 
@@ -447,7 +583,7 @@ class NFWFitter(object):
         for i in range(config.nbootstraps):
 
             try:
-                fitresult = self.betaMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
+                fitresult = self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
 
 
                 if fitresult is not None:
@@ -457,7 +593,7 @@ class NFWFitter(object):
                 pass
 
         #one last try with the SIMPLEX algorithm
-        return self.betaMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, useSimplex=True)
+        return self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, useSimplex=True)
 
 
     #####
@@ -481,7 +617,7 @@ class NFWFitter(object):
 
 
             try:
-                fitresult = self.betaMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
+                fitresult = self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
 
                 
 
@@ -524,7 +660,7 @@ def runNFWFit(catalogname, configname, outputname):
 
     fitter = buildFitter(config)
 
-    fitvals = fitter.runUntilNotFail(catalog, config)
+    fitvals = fitter.explorePosterior(catalog)
     
     savefit(fitvals, outputname)
 
