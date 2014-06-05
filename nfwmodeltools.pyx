@@ -3,7 +3,8 @@
 # of redshift and contamination effects
 ###########################
 # Compiling info: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /u/ki/dapple/include/python2.7/ -I /u/ki/dapple/lib/python2.7/site-packages/numpy/core/include/ -o nfwmodeltools.so nfwmodeltools.c voigt.c
-# Compiling at AIFA: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /usr/include/python2.7/ -I /usr/lib/python2.7/dist-packages/numpy/core/include/ -o nfwmodeltools.so nfwmodeltools.c voigt.c
+# Compiling at AIFA: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /users/dapple/anaconda/pkgs/numpy-1.7.1-py27_2/lib/python2.7/site-packages/numpy/core/include/ -I /users/dapple/anaconda/include/python2.7/ -o nfwmodeltools.so nfwmodeltools.c
+
 
 # cython: profile=False
 
@@ -11,14 +12,17 @@ import numpy as np
 cimport numpy as np
 cimport cython
 
+import scipy.optimize
+
 import nfwutils
 
 cdef extern from "math.h":
     double exp(double)
     double log(double)
+    double atanh(double)
+    double sqrt(double)
+    double atan(double)
 
-cdef extern from "voigt.h":
-    double voigt(double, double, double)
 
 
 ########################
@@ -45,276 +49,170 @@ cdef double deltaC(double c):
 ##############
 
 
-def NFWShear(r, c, rs, z, cosmology = nfwutils.global_cosmology):
-
-    D_lens = cosmology.angulardist(z)
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r, 
+              double concentration, 
+              double rs,
+              double rho_c_over_sigma_c):
     
-    rho_c_over_sigma_c = 1.5 * D_lens * cosmology.beta([1e6], z) * cosmology.hubble2(z) / cosmology.v_c**2
+    cdef double delta_c = deltaC(concentration)
+    cdef double amp = rs*delta_c*rho_c_over_sigma_c
+
+    cdef double x,a,b,c
+    cdef Py_ssize_t i, npos
+    npos = r.shape[0]
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] g = np.zeros(r.shape[0], dtype=np.float64)
+
+    for i from npos > i >= 0:
+        
+        x = r[i]/rs
+
+        if x < 1:
+            
+            a = atanh(sqrt((1-x)/(1+x)))
+            b = sqrt(1-x**2)
+            c = (x**2) - 1
     
-    delta_c = deltaC(c)
-    amp = rs*delta_c*rho_c_over_sigma_c
+            g[i] = 8*a/(b*x**2) + 4*log(x/2)/x**2 - 2/c + 4*a/(b*c)
 
-    x = (r/rs).astype(np.float64)
+        elif x > 1:
 
-    g = np.zeros(r.shape, dtype=np.float64)
-
-    xless = x[x < 1]
-    a = np.arctanh(np.sqrt((1-xless)/(1+xless)))
-    b = np.sqrt(1-xless**2)
-    c = (xless**2) - 1
+            a = atan(sqrt((x-1)/(1+x)))
+            b = sqrt(x**2-1)
     
-    g[x<1] = 8*a/(b*xless**2) + 4*np.log(xless/2)/xless**2 - 2/c + 4*a/(b*c)
+            g[i] = 8*a/(b*x**2) + 4*log(x/2)/x**2 - 2/b**2 + 4*a/b**3
 
-    xgre = x[x>1]
-    a = np.arctan(np.sqrt((xgre-1)/(1+xgre)))
-    b = np.sqrt(xgre**2-1)
-    
-    g[x>1] = 8*a/(b*xgre**2) + 4*np.log(xgre/2)/xgre**2 - 2/b**2 + 4*a/b**3
+        else:
 
-    g[x == 1] = 10./3 + 4*np.log(.5)
+            g[i] = 10./3 + 4*log(.5)
 
     return amp*g
 
 ###################
 
-def NFWKappa(r, c, rs, z, cosmology = nfwutils.global_cosmology):
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r, 
+              double concentration, 
+              double rs,
+              double rho_c_over_sigma_c):
 
-
-    D_lens = cosmology.angulardist(z)
     
-    rho_c_over_sigma_c = 1.5 * D_lens * cosmology.beta([1e6], z) * cosmology.hubble2(z) / cosmology.v_c**2
+    cdef double delta_c = deltaC(concentration)
+    cdef double amp = 2*rs*delta_c*rho_c_over_sigma_c
 
-  
-  
-    delta_c = deltaC(c)
-    amp = 2*rs*delta_c*rho_c_over_sigma_c
-  
-    x = (r/rs).astype(np.float64)
+    cdef Py_ssize_t i, npos
+    npos = r.shape[0]
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] kappa = np.zeros(npos, dtype=np.float64)
 
-    kappa = np.zeros(r.shape, dtype=np.float64)
+    cdef double x, a,b,c
+
+    for i from npos > i >= 0:
+
+        x = r[i]/rs
+
+        if x < 1:
+            
+            a = atanh(sqrt((1-x)/(1+x)))
+            b = sqrt(1-x**2)
+            c = 1./(x**2 - 1)
+            kappa[i] = c*(1 - 2.*a/b)
+
+        elif x > 1:
+            a = atan(sqrt((x-1)/(1+x)))
+            b = sqrt(x**2-1)
+            c = 1./(x**2 - 1)
+            kappa[i] = c*(1 - 2.*a/b)
+
+        else:
+            kappa[i] = 1./3.
+
+    return kappa*amp
+
+
+###############################
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def rdelta2rs(double rdelta, 
+              double c, 
+              double delta):
+
+    cdef double delta_c = deltaC(c)
     
-    xless = x[x<1]
-    a = np.arctanh(np.sqrt((1-xless)/(1+xless)))
-    b = np.sqrt(1-xless**2)
-    c = 1./(xless**2 - 1)
-    kappa[x<1] = c*(1 - 2.*a/b)
+    # x = r_delta / rs
+    def f(x):
+        
+        return 3*delta_c*(log(1+x) - (x/(1+x)))/x**3 - delta
+
     
-    xgre = x[x>1]
-    a = np.arctan(np.sqrt((xgre-1)/(1+xgre)))
-    b = np.sqrt(xgre**2-1)
-    c = 1./(xgre**2 - 1)
-    kappa[x>1] = c*(1 - 2.*a/b)
-    
-    kappa[x == 1] = 1./3.;
+    x0 = scipy.optimize.brenth(f, 0.1, 20)
+
+    cdef double rs = rdelta / x0
+
+    return rs
+
+#####################
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def rscaleConstM(double mdelta,
+                 double c,
+                 double rho_c, 
+                 double delta):
+
+    cdef double rdelta = (3*mdelta/(4*delta*np.pi*rho_c))**(1./3.)
+
+    cdef double rs = rdelta2rs(rdelta, c, delta)
+
+    return rs
 
 
-    return kappa*amp;
+#######################
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def massInsideR(double rs, 
+                double c, 
+                double R, 
+                double rho_c):
+
+    cdef double x = R/rs
+    cdef double delta_c = deltaC(c)
+
+    cdef double massInsideR = (log(1+x) - (x/(1+x)))*4*np.pi*delta_c*rho_c*rs**3
+
+
+    return massInsideR
+
 
 
 ######################
 # ML Reconstruction Tools
 ######################
 
-
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def dumbnormal_like(double r_scale, 
-                    np.ndarray[DTYPE_T, ndim=1, mode='c'] r_mpc not None, 
-                    np.ndarray[DTYPE_T, ndim=1, mode='c'] ghats not None, 
-                    np.ndarray[DTYPE_T, ndim=1, mode='c'] betas not None, 
-                    np.ndarray[DTYPE_T, ndim=2, mode='c'] pdz not None, 
-                    double shape_sigma, 
-                    double concentration, 
-                    double zcluster):
-
-
-    cdef Py_ssize_t nobjs = pdz.shape[0]
-    cdef Py_ssize_t npdz = pdz.shape[1]
-
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf = NFWShear(r_mpc, concentration, r_scale, zcluster)
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf = NFWKappa(r_mpc, concentration, r_scale, zcluster)
-
-    cdef double delta = 0.
-    cdef double curPDZ = 0.
-    cdef double beta = 0.
-    cdef Py_ssize_t i, j
-    cdef DTYPE_T galProb = 0.
-    cdef DTYPE_T logprob = 0.
-
-    for i from nobjs > i >= 0:
-
-        galProb = 0.
-        for j from npdz > j >= 0:
-
-            curPDZ = pdz[i,j]
-            if curPDZ > 1e-6:
-
-                beta = betas[j]
-
-                delta = ghats[i] - (beta*gamma_inf[i] / (1 - beta*kappa_inf[i]))
-
-                galProb = galProb + curPDZ*exp(-.5*(delta/shape_sigma)**2)
-
-        logprob = logprob + log(galProb)
-
-
-
-        
-    return logprob
-
-
-
-#########################################
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-def voigt_like(double r_scale, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] r_mpc not None, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] ghats not None, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] betas not None, 
-               np.ndarray[DTYPE_T, ndim=2, mode='c'] pdz not None, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] shapedistro_samples not None,
-               double concentration, 
-               double zcluster):
-
-    cdef Py_ssize_t nobjs = pdz.shape[0]
-    cdef Py_ssize_t npdz = pdz.shape[1]
-
-    cdef Py_ssize_t nshapesamples = shapedistro_samples.shape[1]
-
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf = NFWShear(r_mpc, concentration, r_scale, zcluster)
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf = NFWKappa(r_mpc, concentration, r_scale, zcluster)
-
-    cdef double m = 0.
-    cdef double c = 0.
-    cdef double sigma = 0.
-    cdef double gamma = 0.
-    cdef double delta = 0.
-    cdef double curPDZ = 0.
-    cdef double beta = 0.
-    cdef double g = 0.
-
-    cdef Py_ssize_t i, j, s
-    cdef DTYPE_T galProb = 0.
-    cdef DTYPE_T logProb = 0.
-
-        
-    m = shapedistro_samples[0]
-    c = shapedistro_samples[1]
-    sigma = shapedistro_samples[2]
-    gamma = shapedistro_samples[3]
-
-    for i from nobjs > i >= 0:
-
-        galProb = 0.
-        for j from npdz > j >= 0:
-
-            curPDZ = pdz[i,j]
-            if curPDZ > 1e-6:
-
-                beta = betas[j]
-
-                g = (beta*gamma_inf[i] / (1 - beta*kappa_inf[i]))
-
-
-                delta = ghats[i] - (1+m)*g - c
-
-                galProb = galProb + curPDZ*voigt(delta, sigma, gamma)
-
-
-
-
-        logProb = logProb + log(galProb)
-
-        
-    return logProb
-
-
-
-
-###########################################################################
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-def bentvoigt_like(double r_scale, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] r_mpc not None, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] ghats not None, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] betas not None, 
-               np.ndarray[DTYPE_T, ndim=2, mode='c'] pdz not None, 
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] m not None,
-               np.ndarray[DTYPE_T, ndim=1, mode='c'] c not None,
-               double sigma,
-               double gamma,
-               double concentration, 
-               double zcluster):
-
-    cdef Py_ssize_t nobjs = pdz.shape[0]
-    cdef Py_ssize_t npdz = pdz.shape[1]
-
-
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf = NFWShear(r_mpc, concentration, r_scale, zcluster)
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf = NFWKappa(r_mpc, concentration, r_scale, zcluster)
-
-    cdef double delta = 0.
-    cdef double curPDZ = 0.
-    cdef double beta = 0.
-    cdef double g = 0.
-
-    cdef Py_ssize_t i, j, s
-    cdef DTYPE_T galProb = 0.
-    cdef DTYPE_T logProb = 0.
-
-        
-    for i from nobjs > i >= 0:
-
-        galProb = 0.
-        for j from npdz > j >= 0:
-
-            curPDZ = pdz[i,j]
-            if curPDZ > 1e-6:
-
-                beta = betas[j]
-
-                g = (beta*gamma_inf[i] / (1 - beta*kappa_inf[i]))
-
-
-                delta = ghats[i] - (1+m[i])*g - c[i]
-
-                galProb = galProb + curPDZ*voigt(delta, sigma, gamma)
-
-
-
-
-        logProb = logProb + log(galProb)
-
-        
-    return logProb
-
-
-#############################################################
-
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
-def bentcolorcut_like(np.ndarray[DTYPE_T, ndim=1, mode='c'] bin_r_mpc not None, 
-                      double r_scale, 
-                      np.ndarray[DTYPE_T, ndim=1, mode='c'] ghats not None, 
-                      np.ndarray[DTYPE_T, ndim=1, mode='c'] bin_sigma not None,
-                      double concentration,
-                      double zcluster,
+def shearprofile_like(double m200,
+                      double c200,
+                      np.ndarray[np.double_t, ndim=1, mode='c'] bin_r_mpc not None,
+                      np.ndarray[np.double_t, ndim=1, mode='c'] bin_shear not None,
+                      np.ndarray[np.double_t, ndim=1, mode='c'] bin_shearerr not None,
                       double avebeta,
                       double avebeta2,
-                      np.ndarray[DTYPE_T, ndim=1, mode='c'] bin_contamboost not None):
+                      double rho_c,
+                      double rho_c_over_sigma_c):
 
 
 
 
-    cdef Py_ssize_t nobjs = ghats.shape[0]
+    cdef double rscale = rscaleConstM(m200, c200,rho_c, 200)
+
     cdef Py_ssize_t nbins = bin_r_mpc.shape[0]
 
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf = NFWShear(bin_r_mpc, concentration, r_scale, zcluster)
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf = NFWKappa(bin_r_mpc, concentration, r_scale, zcluster)
+    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf = NFWShear(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
+    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf = NFWKappa(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
 
 
     cdef int curbin = 0
@@ -326,23 +224,22 @@ def bentcolorcut_like(np.ndarray[DTYPE_T, ndim=1, mode='c'] bin_r_mpc not None,
     cdef Py_ssize_t i, j, s
     cdef DTYPE_T logProb = 0.
 
+    cdef double betaratio = avebeta2/avebeta
+
         
     #calculate logprob
     for i from nbins > i >= 0:
-
-        gtilde = bin_contamboost[i] * ghats[i] 
        
-        modelg = (avebeta*gamma_inf[i] / (1 - (avebeta2/avebeta)*kappa_inf[i]))
+        modelg = (avebeta*gamma_inf[i] / (1 - betaratio*kappa_inf[i]))
 
-        delta = gtilde - modelg
+        delta = bin_shear[i] - modelg
 
-        modsig = bin_sigma[i]*bin_contamboost[i]
+        modsig = bin_shearerr[i]
 
-        logProb = logProb -.5*(delta/modsig)**2  - logsqrt2pi - np.log(bin_sigma[i])
+        logProb = logProb -.5*(delta/modsig)**2  - logsqrt2pi - log(modsig)
 
         
     return logProb
-
-
-
-
+    
+    
+                      

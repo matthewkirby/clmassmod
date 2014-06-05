@@ -22,6 +22,8 @@ class CompositeParameter(mymc.Parameter):
 
         self.width = width*np.abs(self())
 
+        print self.name, self.width
+
     def get_value(self):
         return self.masterobj.value[self.index]
 
@@ -41,6 +43,8 @@ class WrapperParameter(mymc.Parameter):
         self.name = self.masterobj.__name__
 
         self.width = width*np.abs(self())
+
+        print self.name, self.width
 
     def get_value(self):
         return self.masterobj.value
