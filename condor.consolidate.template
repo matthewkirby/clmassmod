@@ -1,7 +1,7 @@
 executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/consolidate_condorwrapper.sh
 universe = vanilla
-Error = JOBDIR/consolidate.CONFIG.stderr
-Output = JOBDIR/consolidate.CONFIG.stdout
-Log = JOBDIR/consolidate.CONFIG.batch.log
-Arguments = /vol/braid1/vol1/dapple/mxxl/mxxlsims mxxl /vol/braid1/vol1/dapple/mxxl/snap41/CONFIG
+Error = JOBDIR/consolidateSNAP.CONFIG.stderr
+Output = JOBDIR/consolidateSNAP.CONFIG.stdout
+Log = JOBDIR/consolidateSNAP.CONFIG.batch.log
+Arguments = /vol/braid1/vol1/dapple/mxxl/mxxlsims mxxlsnapSNAP /vol/braid1/vol1/dapple/mxxl/snapSNAP/CONFIG
 queue
