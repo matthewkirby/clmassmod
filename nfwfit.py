@@ -286,7 +286,7 @@ class NFW_Model(object):
 
     def paramLimits(self):
 
-        return {'m200' : (1e13/self.massScale,1e16/self.massScale),
+        return {'m200' : (1e13/self.massScale,5e15/self.massScale),
                 'c200' : (1., 20.)}
 
     def guess(self):
@@ -354,7 +354,7 @@ class NFW_MC_Model(NFW_Model):
 
     def paramLimits(self):
 
-        return {'m200' : (1e13/self.massScale,1e16/self.massScale)}
+        return {'m200' : (1e13/self.massScale,5e15/self.massScale)}
 
 
     def __call__(self, x, m200):
