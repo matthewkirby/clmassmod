@@ -5,5 +5,5 @@ export PATH=/home/dapple/anaconda/bin:/home/dapple/bin:/vol/software/software/as
 export LD_LIBRARY_PATH=/home/dapple/lib
 export SRCLOC=/vol/braid1/vol1/dapple/mxxl/mxxlsims
 #export PYTHONPATH=/home/dapple/braid1/mxxl/mxxlsims:/home/dapple/lib/python2.7/site-packages
-python /home/dapple/braid1/mxxl/mxxlsims/multiconfig_nfwfit.py $@
+python /home/dapple/braid1/mxxl/oldmxxl/multiconfig_nfwfit.py $@
 
