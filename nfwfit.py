@@ -309,8 +309,8 @@ class NFW_Model(object):
 
         self.m200_low = 1e13
         self.m200_high = 1e16
-        self.c200_low = 1.
-        self.c200_high = 20.
+        self.c200_low = 1.1
+        self.c200_high = 19.9
 
     def paramLimits(self):
 
@@ -332,6 +332,8 @@ class NFW_Model(object):
         self.beta_s = beta_s
         self.beta_s2 = beta_s2
         self.zcluster = zcluster
+        self.rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+
 
 
 
@@ -375,16 +377,19 @@ class NFW_Model(object):
                  m200 = parts['m200'],
                  c200 = parts['c200']):
 
+
             
             return tools.shearprofile_like(m200,
-                                          c200,
-                                          r_mpc,
-                                          ghat,
-                                          sigma_ghat,
-                                          beta_s,
-                                          beta_s2,
-                                          rho_c,
-                                          rho_c_over_sigma_c)
+                                           c200,
+                                           r_mpc,
+                                           ghat,
+                                           sigma_ghat,
+                                           beta_s,
+                                           beta_s2,
+                                           rho_c,
+                                           rho_c_over_sigma_c)
+
+
 
         parts['data'] = data
 
@@ -393,11 +398,12 @@ class NFW_Model(object):
 
 
     def __call__(self, x, m200, c200):
-                
+
+
         r_scale = nfwutils.rscaleConstM(m200*self.massScale, c200, self.zcluster, self.overdensity)
         
-        nfw_shear_inf = tools.NFWShear(x, c200, r_scale, self.zcluster)
-        nfw_kappa_inf = tools.NFWKappa(x, c200, r_scale, self.zcluster)
+        nfw_shear_inf = tools.NFWShear(x, c200, r_scale, self.rho_c_over_sigma_c)
+        nfw_kappa_inf = tools.NFWKappa(x, c200, r_scale, self.rho_c_over_sigma_c)
         
         g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
 
@@ -454,13 +460,20 @@ class NFW_MC_Model(NFW_Model):
 
         @pymc.deterministic
         def c200(m200 = parts['m200'], zcluster = zcluster):
-
+            
             return self.massconRelation(m200*nfwutils.global_cosmology.h, self.zcluster, self.overdensity)        
         parts['c200'] = c200
 
+        @pymc.potential
+        def c200pot(c200 = parts['c200']):
+            if not np.isfinite(c200):
+                raise pymc.ZeroProbability
+            return 0.
+        parts['c200pot'] = c200pot
 
-        rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
-        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster) * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+
+        rho_c = np.float64(nfwutils.global_cosmology.rho_crit(zcluster))
+        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
         @pymc.observed
         def data(value = 0.,
@@ -473,6 +486,24 @@ class NFW_MC_Model(NFW_Model):
                  rho_c_over_sigma_c = rho_c_over_sigma_c,
                  m200 = parts['m200'],
                  c200 = parts['c200']):
+
+            beta_s = beta_s.astype(np.float64)
+            beta_s2 = beta_s.astype(np.float64)
+
+
+
+
+            print
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!'
+            print m200, type(m200)
+            print c200, type(c200), 
+            print beta_s, type(beta_s), 
+            print beta_s2, type(beta_s2), 
+            print rho_c, type(rho_c), 
+            print rho_c_over_sigma_c, type(rho_c_over_sigma_c)
+            print
+
+
 
             
             return tools.shearprofile_like(m200,
@@ -569,8 +600,10 @@ class NFWFitter(object):
         fitter.m.limits = self.model.paramLimits()
         fitter.fit(useSimplex = useSimplex)
         if fitter.have_fit:
+
+            uncert = fitter.uncert()
             
-            return fitter.par_vals
+            return fitter.par_vals, fitter.par_err
         return None
 
 
