@@ -145,6 +145,10 @@ Spend the afternoon thinking about what to do with the complex dependences on th
 Trying to play catch up, and think about the simulations again. I ran some tests on how bining affects results. See sec~\ref{sec:binningmethod}.
 Also started to implement a cosmology dependent m-c relation. See sec~\ref{sec:cosmo_dependent_mc}.
 
+\paragraph{9 July 2014}
+Fell off the bandwagon again. Updates on what's going on in the BCC in section~\ref{sec:bcc_smoothing}.
+Updates on comparing three sets of sims in section~\ref{sec:consistancy}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -201,6 +205,15 @@ TODO: Fill in details here on how exactly I do my fits.
 The fit is encoded in nfwfit.py. 
 
 
+\subsection{Smoothing in the BCC}
+\label{sec:bcc_smoothing}
+
+\logfig{figures/shearprofilecomp.png}{A comparison of stacked shear profiles in each of the simulations. Data points show the stacked shear profiles, while dotted lines show the predicted NFW for the average mass and average concentration of the sample. (Note that the best comparison model is not $<M>$ and $<c>$.) Notice how the BCC simulations roll over towards zero shear at low radius. This is apparently a smoothing effect, and renders the BCC profiles inaccurate inside 750kpc.}
+
+As of this time (May 2014), I cannot use BCC as a reliable indicator of bias for profiles probing ranges inside 750kpc.
+Matt Becker should be working on a solution to this.
+
+
 \subsection{Comparing Mass Bias vs Radial Range \& M-C Relation}
 \label{sec:consistant_bias_mcrelation}
 
@@ -233,7 +246,7 @@ When I assume either c=4 or Duffy08, I see that the simulations produce differen
 \includegraphics[width=0.3\textwidth]{figures/c4_r7}
 \includegraphics[width=0.3\textwidth]{figures/duffy_r7}
 \includegraphics[width=0.3\textwidth]{figures/cfree_r7}
-\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The fit range is 0.5 - 3.0 Mpc. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range. Made with compareDiffSims.py}
+\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The fit range is 0.5 - 3.0 Mpc. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range. Note from sec~\ref{sec:bcc_smothing}, I don't expect the BCC lines to be accurate here. Made with compareDiffSims.py}
 \label{fig:comparing_r7_bias}
 \end{figure}
 
@@ -245,7 +258,7 @@ However, if we look at the innermost fit region, 0.25-0.5 mpc, we can see that t
 
 \logfig{figures/cfree_r1}{Same as fig~\ref{fig:figures/cfree_r10}, except for on a radically different scale.}
 
-Could this be a resolution effect? Or maybe how the shear signal is calculated, since we are getting close to the critical curves, though I would think if that was the case BK11 and MXXL would be more consistent. We also should only be seeing shears of $g\approx0.3$ at 250kpc for z=1 and $10^{15}$ solar masses.
+This is apparently a resolution effect (see sec~\ref{sec:bcc_smoothing}. 
 
 
 \subsection{Role of Mass-Concentration Relation}
@@ -259,17 +272,59 @@ This to me suggests a 2-pronged strategy. When we don't care about cosmology, fo
 \subsection{Testing a Cosmology-Dependent Mass-Concentration Relation}
 \label{sec:cosmo_dependent_mc}
 
-On Becker's suggestion, I'm going to try out a cosmology-dependent MC relation. Since cosmology is for all fits, what I hope to see is a consistant bias between simulations AND a level of scatter comparable to fixing the mass-concentration relation. I'm going to use \citet{zhao_cosmodepmc}, since they provide an online calculator and code. For now, I'll just download tables corresponding to each cosmology that I need. I'll figure out later how to actually run their code on the fly, if it works. The calculator is at: \url{http://202.127.29.4/dhzhao/mandc.html}.
+On Becker's suggestion, I tried out the Zhao08 model for cosmology dependent m-c relations, from \citet{zhao_cosmodepmc}, since they provide an online calculator and code. A calculator is at: \url{http://202.127.29.4/dhzhao/mandc.html}. In short, this more complicated M-C relation did not bring agreement as well as I had hoped.
+
+\begin{figure} \centering
+\includegraphics[width=0.4\textwidth]{figures/zhaomc_z25.png}
+\includegraphics[width=0.4\textwidth]{figures/zhaomc_z10.png}
+\caption{Median bias measured from the BCC, MXXL, and BK11 simulations using the Zhao M-C relation at left: $z=0.25$ and right: $z\approx 1.0$. Agreement is not disheartening, but is not signficiantly improved, either.}
+\label{fig:zhamoc}
+
+\end{figure}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Next Steps}
+\subsection{Agreement Between Simulations with Free Concentration}
+\label{sec:consistancy}
+
+\begin{figure} \centering
+\includegraphics[width=0.6\textwidth]{figures/cfree_z25.png} \\
+\includegraphics[width=0.6\textwidth]{figures/cfree_z5.png} \\
+\includegraphics[width=0.6\textwidth]{figures/cfree_z10.png}
+\caption{Median bias with concentration free, for fit range 750kpc - 3Mpc. Simulations seem to show good agreement.}
+\end{figure}
+
+So at least where we expect the simulations to agree, their median bias seems to agree. 
+That's positive.
+However, why is BK11 mildly higher than BCC and MXXL?
+
+
+\begin{figure}\centering
+  \includegraphics[width=0.4\textwidth]{figures/lowz_logscatter.png}
+  \includegraphics[width=0.4\textwidth]{figures/lowz_logscatter_cdf.png}
+\caption{Scatter in recovered masses versus true masses. First, the scatter in the BCC is much larger since only that simulation measures the full LoS noise. Second, MXXL and BK11 seem to agree in their distribution at the low scatter, but the BK11 has slightly more up scatter. A KS test says that this is significant at $p=0.0024$, for $D=0.081$. However, maybe this is just the fact that BK11 has twice the LoS integration as MXXL? }
+\end{figure}
+
+This points towards a possibly scary conclusion. Can we not know the bias without folding in the full LoS scatter? But...the BCC settles back to the MXXL value! So maybe its not so bad anyway? Or is there something different about the LoS scatter in BK11?
+
+Also, what causes the tail to high overestimates? This was seen and clearly measured by Matt in BK11. But he doesn't discuss a cause.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Next Tasks}
 
 \begin{itemize}
-\item I want to stack cluster shear profiles (grouping by mass, redshift, and concentration), and see if I can visually see differences at low redshifts. Maybe I should stack residuals? That might confirm my suspicion that there is some sort of different treatment or resolution effect afflicting cluster cores in BCC and BK11.
-\item I should implement the Ludlow prescription for cosmology-dependent m-c relations. I should then check to see if I get a consistant bias across all three simulations/cosmologies. That would confirm my suspicion about how to treat the m-c relation, while being robust to non-consenus parameter values.
+\item Inspect clusters that are in the highly skewed tail. Is there anything characteristic about their shear profiles?
+\item Download and analysize BK11 simulations with only 200Mpc integration length. Is the scatter distribution consistant with the MXXL?
+\item Can I recover the scatter in Bk11 and BCC by convolving the measured MXXL scatter with an appropriate function?
 \end{itemize}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

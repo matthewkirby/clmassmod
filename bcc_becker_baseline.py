@@ -122,7 +122,7 @@ def summary2DMass(simdata, selection = None, axisrange=None):
         selection = np.ones_like(simdata['ratio']) == 1
     medians, sigmas, actuals, redshifts, ratio, logratio = [x[selection] for x in [simdata['medians'], simdata['sigmas'], simdata['actuals'], simdata['redshifts'], simdata['ratio'], simdata['logratio']]]
 
-    ngals = len(medians) / 6 
+    ngals = int(len(medians) / 5. )
 #    ngals = 600
     
 
@@ -147,7 +147,7 @@ def summary2DMass(simdata, selection = None, axisrange=None):
         
 
             binbound = sortedlog10actuals[i:maxtake] - sortedlog10actuals[i] < 0.2
-            maxtake = np.arange(maxtake)[binbound][-1] + i
+            maxtake = np.arange(maxtake)[binbound][-1] + 1 + i
             
 
 
