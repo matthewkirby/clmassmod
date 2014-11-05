@@ -149,6 +149,9 @@ Also started to implement a cosmology dependent m-c relation. See sec~\ref{sec:c
 Fell off the bandwagon again. Updates on what's going on in the BCC in section~\ref{sec:bcc_smoothing}.
 Updates on comparing three sets of sims in section~\ref{sec:consistancy}.
 
+\paragraph{5 Nov 2014}
+Haven't worked on the simulation effort in quite a long time. Time to pick up the pieces again. The interim period was spent trying to get my collaborators to get me info on the simulations: Matt Becker owes me updated BCC simulations that aren't overly smoothed, Stephen Hilbert owes me mass profiles for MXXL, and Salman Habib owes me any simulations. The immediate task is to figure out how to get an answer for Joerg's and Tim's papers, pronto. What do they need, and how to supply it? Thoughts and musing in sec~\ref{sec:spt_immediateneeds}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -696,6 +699,25 @@ To start, I'd like to remake the above plots with M500 instead of M200. However:
 \end{itemize}
 
 I've contacted Aaron about the MXXL problem, but I am holding off contacing Matt about the BCC issue until I am ready to show him some preliminary results.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+\section{Immediate needs for SPT: Megacam-19 and HST-14}
+\label{sec:spt_immediateneeds}
+
+I need to get an answer for Tim and Joerg by the end of November of this month. The problem is still to figure out what exactly do they need from the simulations? How complicated do the predictions need to be?
+
+What makes this hard to answer is that I don't think a constant offset number is going to be sufficient. The masses will be immediately plugged in to a scaling relation code, which will need the detailed relationship between true mass and lensing signal. The prior that will be assumed for the true mass is also going to change.
+
+I think the minimum starting point has got to be measuring $P(g | m_{\mathrm{lens}})$. From that distribution, I can compute any needed summary info (without rerunning the pipeline), and I can apply any prior that I need. The domain for $m_{\mathrm{lens}|}$ has to be as unrestricted as possible, as the possible interpretations and priors will change, ie so that I can test allowing for negative mass, or different mass priors, etc.
+
+That means I should get the mcmc sampling code running. Then I need to adjust the prior and make it improper. From there, I can run on all the simulations that I have, and then look at the posteriors and construct a model that describes all the data. Once I have the sampling from the likelihood, everything else should simply just be a reweighting of those chains.
+
 
 
 
