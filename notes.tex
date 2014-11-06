@@ -719,6 +719,11 @@ I think the minimum starting point has got to be measuring $P(g | m_{\mathrm{len
 That means I should get the mcmc sampling code running. Then I need to adjust the prior and make it improper. From there, I can run on all the simulations that I have, and then look at the posteriors and construct a model that describes all the data. Once I have the sampling from the likelihood, everything else should simply just be a reweighting of those chains.
 
 
+Looking at the state of nfwfit.py, it looks like an MCMC sampling is already set up. However, the mass prior is restricted to be within a finite range. On the plus side, the concentration is independently sampled from the mass, so I should be able to immediate mimic a free concentration fit, and not worry about what the concentration should be for a negative mass.
+
+The bigger problem with negative mass are the conversion functions between mass and scale radius. Let's inspect the posteriors with the standard 10^[13,16] prior, and see if any of the clusters get close to hitting the prior boundaries. That will tell us a lot right there.
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
