@@ -9,7 +9,7 @@ import importlib, cPickle, sys, os
 import numpy as np
 import astropy.io.fits as pyfits
 import nfwutils, bashreader, ldac
-import fitmodel, nfwmodeltools as tools
+import nfwmodeltools as tools
 import varcontainer
 import pymc
 import pymc_mymcmc_adapter as pma
@@ -223,8 +223,8 @@ def readSimCatalog(catalogname, simreader, config):
             pyfits.Column(name = 'gcross', format='E', array = B[mask]),
             pyfits.Column(name = 'z', format='E', array = redshifts[mask]),
             pyfits.Column(name = 'beta_s', format = 'E', array = beta_s[mask])]
-    catalog = ldac.LDACCat(pyfits.new_table(pyfits.ColDefs(cols)))
-    catalog.hdu.header.update('ZLENS', sim.zcluster)
+    catalog = ldac.LDACCat(pyfits.BinTableHDU.from_columns(pyfits.ColDefs(cols)))
+    catalog.hdu.header['ZLENS'] = sim.zcluster
 
 
     return catalog
@@ -513,10 +513,10 @@ class NFWFitter(object):
 
     def prepData(self, curCatalog):
         
-        beta_s = np.mean(curCatalog['beta_s'])
-        beta_s2 = np.mean(curCatalog['beta_s']**2)
+        beta_s = np.mean(curCatalog['beta_s'], dtype=np.float64)
+        beta_s2 = np.mean(curCatalog['beta_s']**2, dtype=np.float64)
         
-        r_mpc, ghat, sigma_ghat = self.profileBuilder(curCatalog, self.config)
+        r_mpc, ghat, sigma_ghat = [x.astype(np.float64) for x in self.profileBuilder(curCatalog, self.config)]
 
         clean = sigma_ghat > 0
 
