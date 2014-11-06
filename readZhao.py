@@ -53,12 +53,36 @@ __MASS_SCALING__ = 1e15
 
 class MCFunction(object):
 
-    def __init__(self, interpmc, scaling = __MASS_SCALING__):
+    def __init__(self, zi, filenames, scaling = __MASS_SCALING__):
 
-        self.interpmc = interpmc
         self.scaling = scaling
+        self.interpmc = self.createInterp(zi, filenames)
 
     ####
+
+    def createInterp(self, zi, filenames):
+    
+        mcs = [readZhao(afile) for afile in filenames]
+        
+        nzs = len(zi)
+        nmasses = len(mcs[0]['M200c'])
+
+
+        xvals = np.zeros((nzs*nmasses,2))
+        yvals = np.zeros(nzs*nmasses)
+        
+        for i in range(nzs):
+            xvals[nmasses*i:nmasses*(i+1),0] = zi[i]
+            xvals[nmasses*i:nmasses*(i+1),1] = mcs[i]['M200c']/self.scaling
+            yvals[nmasses*i:nmasses*(i+1)] = mcs[i]['c200c']
+
+
+        return interp.LinearNDInterpolator(xvals,yvals)
+
+
+
+
+    ###
 
     def __call__(self, m, z):
 
@@ -66,36 +90,43 @@ class MCFunction(object):
 
 ######
 
-
-def createInterp(zi, filenames, scaling = __MASS_SCALING__):
-
-    mcs = [readZhao(afile) for afile in filenames]
-
-    nzs = len(zi)
-    nmasses = len(mcs[0]['M200c'])
+class MCSnapZFunction(object):
 
 
-    xvals = np.zeros((nzs*nmasses,2))
-    yvals = np.zeros(nzs*nmasses)
+    def __init__(self, zi, filenames, scaling = __MASS_SCALING__):
 
-    for i in range(nzs):
-        xvals[nmasses*i:nmasses*(i+1),0] = zi[i]
-        xvals[nmasses*i:nmasses*(i+1),1] = mcs[i]['M200c']/scaling
-        yvals[nmasses*i:nmasses*(i+1)] = mcs[i]['c200c']
+        self.zi = np.array(zi)
+        self.scaling = scaling
+        self.interpmcs = [self.createInterp(afile) for afile in filenames]
 
 
-    interpmc = MCFunction(interp.LinearNDInterpolator(xvals,yvals), scaling)
 
-    return interpmc
+    ####
+
+    def createInterp(self, afile):
+
+        mc = readZhao(afile)
+        return interp.interp1d(mc['M200c']/self.scaling, mc['c200c'], bounds_error=False)
+
+    ####
+
+    def __call__(self, m, z):
+
+        deltaz = np.abs(self.zi - z)
+        select = np.arange(len(self.zi))[deltaz == np.min(deltaz)]
+
+        return self.interpmcs[select](m/self.scaling)
+
 
 #######
+
     
 
 def readBCC():
 
     zs = '00 10 20 25 50 75 100'.split()
     zi = [0.0, 0.1, 0.2, 0.25, 0.5, 0.75, 1.0]
-    mcrelation = createInterp(zi, ['%s/bcc_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
+    mcrelation = MCFunction(zi, ['%s/bcc_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
 
     return mcrelation
 
@@ -105,7 +136,7 @@ def readBK11():
 
     zs = '25 05'.split()
     zi = [0.25, 0.5]
-    mcrelation = createInterp(zi, ['%s/bk11_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
+    mcrelation = MCSnapZFunction(zi, ['%s/bk11_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
 
     return mcrelation
     
@@ -116,7 +147,7 @@ def readMXXL():
 
     zs = '25 100'.split()
     zi = [0.2425, 0.99]
-    mcrelation = createInterp(zi, ['%s/mxxl_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
+    mcrelation = MCSnapZFunction(zi, ['%s/mxxl_cosmo_mc_z%s.dat' % (datdir,x) for x in zs])
 
     return mcrelation
 

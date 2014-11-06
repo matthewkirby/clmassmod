@@ -291,7 +291,7 @@ class FitModel:
                 error = (self.m.merrors[key, -nsigma], 
                          self.m.merrors[key,  nsigma])
 
-            except minuit.MinuitError :
+            except (minuit.MinuitError, ValueError) :
 
                 print "Caught MinuitError: Minos failed. using Hesse error."
                 print "Only really valid for a well behaved fitting FCN !"

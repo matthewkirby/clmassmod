@@ -122,11 +122,13 @@ def summary2DMass(simdata, selection = None, axisrange=None):
         selection = np.ones_like(simdata['ratio']) == 1
     medians, sigmas, actuals, redshifts, ratio, logratio = [x[selection] for x in [simdata['medians'], simdata['sigmas'], simdata['actuals'], simdata['redshifts'], simdata['ratio'], simdata['logratio']]]
 
-#    ngals = len(medians) / 6 
-    ngals = 600
+    ngals = int(len(medians) / 5. )
+#    ngals = 600
     
 
     massbin = []
+    mass_low = []
+    mass_high = []
     ratiobin = []
     errup = []
     errdown = []
@@ -137,19 +139,21 @@ def summary2DMass(simdata, selection = None, axisrange=None):
     i=0
     while i < len(actuals):
 
-#        if len(actuals) - i < 10:
-#            maxtake = len(actuals)
-#        else:
-#
-        maxtake = min(len(actuals), i+ngals)
-            
+        if len(actuals) - i < 75:
+            maxtake = len(actuals)
+        else:
 
-#            binbound = sortedlog10actuals[i:maxtake] - sortedlog10actuals[i] < 0.2
-#            maxtake = np.arange(maxtake)[binbound][-1] + i
-#            
+            maxtake = min(len(actuals), i+ngals)
+        
+
+            binbound = sortedlog10actuals[i:maxtake] - sortedlog10actuals[i] < 0.2
+            maxtake = np.arange(maxtake)[binbound][-1] + 1 + i
+            
 
 
         massbin.append(np.median(np.log10(actuals[masssorted][i:maxtake])))
+        mass_low.append(np.min(np.log10(actuals[masssorted][i:maxtake])))
+        mass_high.append(np.max(np.log10(actuals[masssorted][i:maxtake])))
         localratios = np.sort(logratio[masssorted][i:maxtake])
         localMedian = localratios[int(0.5*len(localratios))]
         r68up = localratios[int(0.84*len(localratios))] - localMedian
@@ -161,6 +165,14 @@ def summary2DMass(simdata, selection = None, axisrange=None):
 
         i = maxtake
 
+    massbin = np.array(massbin)
+    mass_low = np.array(mass_low)
+    mass_high = np.array(mass_high)
+    massedge = np.zeros((2,len(massbin)))
+    massedge[1,:] = mass_high - massbin
+    massedge[0,:] = massbin - mass_low
+    
+
 #    subplot(1,2,1)
 #    hexbin(np.log10(actuals), logratio, gridsize=50, bins='log', extent=axisrange)
 #    xlabel('True Mass (M200)')
@@ -170,7 +182,7 @@ def summary2DMass(simdata, selection = None, axisrange=None):
 #    subplot(1,2,2)
 #    plot(massbin, np.exp(np.array(ratiobin)))
 
-    return massbin, np.exp(ratiobin), median_err
+    return massbin, massedge, np.exp(ratiobin), median_err
 #
 # <codecell>
 
@@ -214,6 +226,7 @@ def scatterSummary(simdata, selection = None):
     masssorted = np.argsort(actuals)
     for i in range(0, len(actuals), 600):
         maxtake = min(len(actuals), i+200)
+        print i, i+600, maxtake
         massbin.append(np.median(np.log10(actuals[masssorted][i:maxtake])))
         massbin_min.append(np.min(np.log10(actuals[masssorted][i:maxtake])))
         massbin_max.append(np.max(np.log10(actuals[masssorted][i:maxtake])))
