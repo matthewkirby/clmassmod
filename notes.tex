@@ -707,6 +707,61 @@ I've contacted Aaron about the MXXL problem, but I am holding off contacing Matt
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage \newpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Understanding Maximum Likelihood Fits and Bootstrapping}
+
+There is a lot of confusion about how to interpret maximum likelihood fits, bootstraping, and probability distributions.
+I've added to the confusion.
+So this is my attempt to straighten it out.
+
+Let's start with Bayes Theorem.
+
+\begin{equation}
+P(\alpha|\vec y) \propto P(\vec y|\alpha)P(\alpha)
+\end{equation}
+
+Simple enough. When we do maximum likelihood, we ignore the prior.
+Mathematically, that means $P(\alpha) = \mathrm{constant}$.
+
+But what if we are not interested in $\alpha$, but instead $\beta = f(\alpha)$?
+Bayes Rule give the same thing:
+
+\begin{equation}
+P(\beta|\vec y) \propto P(\vec y|\beta)P(\beta)
+\end{equation}
+
+Looking for the MLE is again equivalent to $P(\beta) = \mathrm{constant}$.
+Since we are still looking at the same probability distribution, $\^ \beta$ that maximizes $P(\beta|\vec y)$ where $P(\veta) = \mathrm{constant}$, we have $\^\beta = f(\^\alpha)$ for $\alpha$ that maximized $P(\vec y|\alpha)$. 
+
+But here's the paradax.
+Imagine that we've mapped out $P(\alpha|\vec y) \ propto P(\vec y|\alpha)$, with $P(\alpha) = \mathrm{constant}$.
+We can calculate $P(\beta|\vec y)$ from that distribution.
+
+\begin{equation}
+P(\beta|\vec y) = P(\alpha|\vec y)\frac{d\alpha}{d\beta}
+\end{equation}
+
+If $\beta = f(\alpha)$ is not linear, then $\frac{d\alpha}{d\beta} = f(\beta)$.
+Substituting then, we have:
+
+\begin{equation}
+P(\beta|\vec y) = P(\alpha|\vec y)f(\beta) = P(\vec y|\alpha)f(\beta) = P(\vec y|\beta)P(\beta)
+\end{equation}
+
+This implies that in this case, we have $P(\beta) = \frac{d\alpha}{d\beta} = f(\beta)$.
+That means this second $P(\beta|\vec y)$ is not identical to before, when we assumed $P(\beta) = \mathrm{constant}$.
+Therefore, the MAP for $\beta$ is not $\^ \beta$.
+
+Now, how do we interpret bootstrapping the MLE?
+We obtain a bunch of samples of the MLE of $P(\vec y|\beta) = P(\vec y|\alpha)$ via bootstrapping.
+What probability distribution to they correspond to?
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Immediate needs for SPT: Megacam-19 and HST-14}
 \label{sec:spt_immediateneeds}
 
@@ -721,9 +776,93 @@ That means I should get the mcmc sampling code running. Then I need to adjust th
 
 Looking at the state of nfwfit.py, it looks like an MCMC sampling is already set up. However, the mass prior is restricted to be within a finite range. On the plus side, the concentration is independently sampled from the mass, so I should be able to immediate mimic a free concentration fit, and not worry about what the concentration should be for a negative mass.
 
-The bigger problem with negative mass are the conversion functions between mass and scale radius. Let's inspect the posteriors with the standard 10^[13,16] prior, and see if any of the clusters get close to hitting the prior boundaries. That will tell us a lot right there.
+The bigger problem with negative mass are the conversion functions between mass and scale radius. Let's inspect the posteriors with the standard $10^{[13,16]}$ prior, and see if any of the clusters get close to hitting the prior boundaries. That will tell us a lot right there.
 
 
+------
+
+
+If I want to use the MCMC samples that I'm producing now for the current sample, I will need a way to summarize the information. I need to understand how I'm supposed to reqeight the samples so that I can recover a maximum likelihood  search.
+
+Also, I need to understand what exactly do I need for Tim's and Joerg's papers. 
+
+For Tim:
+  - His paper is just going to be masses. So having some sort of average correction, or a mass dependent correction should be OK.
+
+For Joerg:
+  - His paper is feeding right into a scaling relations code. That code has P(M_lens | M_true) in it. 
+
+
+Can I not just use what I already have?
+  - I need to calculate M500 masses, so that is one thing that is different.
+  - I need to make sure that their fits are run like my fits.
+  - I need to understand how much of a noise dependence there is.
+
+I have this old plot floating around from when I previously looked at noise dependence.
+The results in that plot look rather scary, where there seems to be a big dependence on the prior.
+In this case, it was simply a bounds prior.
+Can I repeat that?
+
+
+
+
+Looking at perfect NFW halos, and then plotting mfit / mtrue vs mtrue. The noise gets larger at lower masses, as to be expected, as noise is constant and signal is decreasing.
+What is interesting is that the bias is more negative as we go to lower masses. 
+This seems to be driven by a population of points that are hitting the prior boundary.
+
+When I expand the boundary, to allow for masses to float down to 1e10, and higher, then down to a true mass of 2e14 I see that the bias is even lower. But at the lowest masses (< 2 e14), then I see that the bias switches directions and rises drastically.
+This is despite a large population on thge lower boundary wall, and is instead a population that is scattering up.
+
+
+I've now modified the code to fit a negative mass, by always taking the absolute value of the mass, and if negative, manually inserting a negative sign in front of the shear. In this case, and with a wide prior, the bias pretty much goes away!
+
+So how do we best describe the noise?
+If I plot the recovered distribution on a mass vs mass plot, I see an approximately equal amount of scatter. Though at the higher masses the scatter has a wider sigma than at lower masses!
+This is best seen with a delta (not ratio) vs mass plot.
+
+
+Just did a quick gaussian error propagation for M200 masses. $\sigma_M^2 = (\frac{dM}{dg})^2\sigma_g^2$. If we assume that we are just fitting the amplitude and not the shape, then $\frac{dr_s}{dg} = \mathrm{constant}$ and $\frac{dM}{dr_s} \propto r_s^2$, at least for $c=4$ models. Since there's a fixed noise in the shear profile, we expect the error to increase for higher masses, but the relative error will decrease!
+
+But fine, this is all due to the noise in the shear profile, and not intrinsic noise. That should be captured from the uncertainties in the shear profile. But it also testifies to the fact that there is an intermediate stage object that COULD be negative in the analysis. 
+
+
+Just checked what $\frac{dg}{dr_s}$ looks like. It is not a linear function of $r_s$. So there is no natural way to run this fit that is linear. So why is using no explicit prior an unbiased way to fit the masses?
+
+Pumped up the errors in the shear profile to g $\pm1$, and I'm still not seeing any sign of nonlinearlity in the maxlike solution. Why not!? 
+How does this change if I also fit for the concentration?
+
+If you look at the quantity $\frac{d\gamma}{dr_s} = Kg(x)(1 - \frac{d\ln g}{d\ln x})$. So that would imply that the derivative 
+
+Maybe it is roughly linear because I'm using the outer fit range. What happens if I use a more full radial range?
+
+
+So I've now looked at the scatter and bias for a range of noise levels using a $c=4$ fit and using the innermost fit range, where I would expect nonlinear effects to be the highest. It still requires extremeley high noise levels to see any sort of biasing, and even then it seems to only kick in at the highest masses. So that would suggest that the extra contributions to the likelihood should be low.
+
+One diagnostic of how bad things should be should be looking at the 2nd and 3rd derivates of the log posterior. If the ratio of the 3rd order Taylor expansion to the 2nd order taylor expansion along the 1-sigma boundary is large, I would expect to see noise bias issues.
+
+
+I've now run noise bias tests for c constant and c free. With c constant, there just is not much of any noise bias to see, reflecting how the fit is nearly linear. However, with c free, the MLE estimate for mass is seriously biased upwards. Note that for cfree, it looks like the code adopts the Duffy M-C relation to generate the halos. The bias is proportionally much larger for light halos than massive halos. That supports the noise bias calculations from the last few days.
+
+If we go back to the case where we limit the fit, then the will clearly be biases. The MLE will be pushed against the boundaries for some clusters, and when it is averaged, there will be a problem.
+
+
+The reality of the situation, however, is that we will not use the MLE estimates. Or, if the posteriors are Gaussian when allowing for negative ``mass'', we could use that parameterization, with negative means.
+
+The relevant question: How does handling the probability distribtions properly work? Sub-parts: In the c-free case, what does the probability distro for mass look like, after marginalizing out concentration? Is it Gaussian, is that MLE biased?
+
+Even for low noise, the low mass case is not linear in either log or linear mass spacing. So if we want to fit for concentration, then we cannot use a Gaussian approximation. Problems are only worse at high noise.
+
+Next question: How much noiser are the fits when we have cfree over c fixed? How many clusters do we need to beat down the extra noise to be below the systematic uncertainty of the m-c relations?
+
+I started looking at this question. For fits to high radii, freeing the concentration does not seem to make much of a difference, probably because the concentration doesn't have a big effect. I need to rigorously quantify this, and check how things change as I go in to lower radii.
+
+I also want to verify that the P(M_lens) that I produce from the marginalization process are accurate. The first way that comes to mind is to take all clusters with the same true mass and add their logprobs. I'm running that now, but that might not be definitive. The input to the test does not match the prior, and therefore I would not expect the test to return something sensible. I probably need to set up a CDF test.
+
+Indeed, it appears that the multiplied probability is biased high by about 1e14. 
+
+This is kind of strange. I ran a test with a prior. I generated masses uniform-log 14-16. I then measured the posterior for that range as well (hard prior boundaries). The CDF test shows a bias, towards underestimating the masses. Most of the problems are at the end points. 
+
+Well, maybe this isn't a surprise. I fit for the concentration with a flat prior, but the clusters were all c=4. That could distort things. Let me check that.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

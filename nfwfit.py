@@ -307,8 +307,8 @@ class NFW_Model(object):
         self.overdensity = 200
         self.config = config
 
-        self.m200_low = 1e13
-        self.m200_high = 1e16
+        self.m200_low = -1e18
+        self.m200_high = 1e18
         self.c200_low = 1.1
         self.c200_high = 19.9
 
@@ -319,7 +319,7 @@ class NFW_Model(object):
 
     def guess(self):
 
-        guess = [10**(np.random.uniform(13, 16)),
+        guess = [10**(np.random.uniform(14, 16)),
                  np.random.uniform(1., 20.)]
 
         guess[0] = guess[0] / self.massScale
@@ -399,11 +399,22 @@ class NFW_Model(object):
 
     def __call__(self, x, m200, c200):
 
+        if m200 == 0.:
+            return np.zeros_like(x)
 
+        isNegative=m200 < 0
+        if isNegative:
+            m200 = np.abs(m200)
+
+            
         r_scale = nfwutils.rscaleConstM(m200*self.massScale, c200, self.zcluster, self.overdensity)
+    
         
         nfw_shear_inf = tools.NFWShear(x, c200, r_scale, self.rho_c_over_sigma_c)
         nfw_kappa_inf = tools.NFWKappa(x, c200, r_scale, self.rho_c_over_sigma_c)
+
+        if isNegative:
+            nfw_shear_inf = -nfw_shear_inf
         
         g = self.beta_s*nfw_shear_inf / (1 - ((self.beta_s2/self.beta_s)*nfw_kappa_inf) )
 
@@ -421,7 +432,7 @@ class NFW_MC_Model(NFW_Model):
 
     def guess(self):
 
-        guess = [10**(np.random.uniform(13, 16))]
+        guess = [10**(np.random.uniform(14, 16))]
 
         guess[0] = guess[0] / self.massScale
 
