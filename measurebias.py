@@ -9,10 +9,10 @@
 import cPickle, glob, os, re, sys
 import numpy as np
 import pymc
-import stats
+import measurebiastools
 import varcontainer
 import pymc_mymcmc_adapter as pma
-from multiprocessing import Pool
+
 
 #####################
 
@@ -22,7 +22,7 @@ __samples__ = 150
 
 __logmass_scale__ = np.log(1e14)
 
-pool = Pool(__NPROCS__)
+
 
 
 ####################
@@ -62,14 +62,6 @@ def loadClusterData(answerfile, chaindir):
 
     
 
-####################
-
-def LogSum2DGaussianWrapper(args):
-
-    return stats.LogSum2DGaussian(xs = args['cluster_like_samples'],
-                                      mu = args['cluster_mean'],
-                                      invcovar = args['cluster_invcovar'],
-                                      sqrtdetcovar = args['cluster_detcovar'])
 
 ###################
 
@@ -112,30 +104,14 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
                    bin_log_c200_scatter = parts['bin_log_c200_scatter'],
                    bin_mc_covar = parts['bin_mc_covar']):
 
-        nbins = len(bin_c200s)
-        nclusters = len(clusters)
+        return measurebiastools.clusterlikelihood(clusters,
+                                                  bin_assignment,
+                                                  bin_logmassratios,
+                                                  bin_c200s,
+                                                  bin_log_mass_scatter,
+                                                  bin_log_c200_scatter,
+                                                  bin_mc_covar)
 
-        bin_mass_scatter = [np.exp(x) for x in bin_log_mass_scatter]
-        bin_c200_scatter = [np.exp(x) for x in bin_log_c200_scatter]
-
-        bin_covars = [np.array([[bin_mass_scatter[i]**2, bin_mc_covar[i]*bin_mass_scatter[i]*bin_c200_scatter[i]],
-                                [bin_mc_covar[i]*bin_mass_scatter[i]*bin_c200_scatter[i], bin_c200_scatter[i]**2]]) \
-                          for i in range(nbins)]
-
-        bin_invcovars = [np.linalg.inv(bin_covars[i]) for i in range(nbins)]
-        bin_sqrtdetcovars = [np.sqrt(np.linalg.det(bin_covars[i])) for i in range(nbins)]
-
-        arglist= [dict(cluster_like_samples = clusters[i]['like_samples'],
-                       cluster_mean = np.array([bin_logmassratios[bin_assignment[i]] + clusters[i]['log_mtrue'],
-                                                np.log(bin_c200s[bin_assignment[i]])]),
-                       cluster_invcovar = bin_invcovars[bin_assignment[i]],
-                       cluster_detcovar = bin_sqrtdetcovars[bin_assignment[i]]) \
-                      for i in range(nclusters)]
-
-        cluster_logprobs = np.array(pool.map(LogSum2DGaussianWrapper,arglist))
-#        cluster_logprobs = np.array(map(LogSumMultiDGaussianWrapper,arglist))
-
-        return np.sum(cluster_logprobs)
     parts['clusterlikelihood'] = clusterlikelihood
 
     return pymc.Model(parts)
