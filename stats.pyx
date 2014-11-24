@@ -66,6 +66,33 @@ def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,
 
 #####################
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def LogSum2DGaussian(np.ndarray[np.double_t, ndim=2, mode='c'] xs,
+                     np.ndarray[np.double_t, ndim=1, mode='c'] mu,
+                     np.ndarray[np.double_t, ndim=2, mode='c'] invcovar,
+                     double sqrtdetcovar):
+
+    cdef Py_ssize_t i, nmax, ndim
+
+    nmax = xs.shape[0]
+
+    cdef double pipow = twopi
+    cdef double delta1, delta2
+    cdef double sum = 0.
+    cdef double chisq = 0.
+
+    for i from nmax > i >= 0:
+        delta1 = xs[i,0] - mu[0]
+        delta2 = xs[i,1] - mu[1]
+        chisq = invcovar[0,0]*delta1*delta1 + invcovar[1,1]*delta2*delta2 + (invcovar[0,1] + invcovar[1,0])*delta1*delta2
+        sum += exp(-0.5*chisq)/(pipow*sqrtdetcovar)
+
+    return log(sum)
+
+    
+
+#####################
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
