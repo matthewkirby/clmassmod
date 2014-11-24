@@ -307,8 +307,8 @@ class NFW_Model(object):
         self.overdensity = 200
         self.config = config
 
-        self.m200_low = 1e13
-        self.m200_high = 1e16
+        self.m200_low = 1e10
+        self.m200_high = 1e17
         self.c200_low = 1.1
         self.c200_high = 19.9
 
@@ -369,7 +369,7 @@ class NFW_Model(object):
         def data(value = 0.,
                  r_mpc = r_mpc,
                  ghat = ghat,
-                 sigma_ghat = ghat,
+                 sigma_ghat = sigma_ghat,
                  beta_s = beta_s,
                  beta_s2 = beta_s2,
                  rho_c = rho_c,
@@ -377,17 +377,23 @@ class NFW_Model(object):
                  m200 = parts['m200'],
                  c200 = parts['c200']):
 
-
+            try:
             
-            return tools.shearprofile_like(m200,
-                                           c200,
-                                           r_mpc,
-                                           ghat,
-                                           sigma_ghat,
-                                           beta_s,
-                                           beta_s2,
-                                           rho_c,
-                                           rho_c_over_sigma_c)
+                logp= tools.shearprofile_like(m200,
+                                              c200,
+                                              r_mpc,
+                                              ghat,
+                                              sigma_ghat,
+                                              beta_s,
+                                              beta_s2,
+                                              rho_c,
+                                              rho_c_over_sigma_c)
+
+                return logp
+
+            except (ValueError, ZeroDivisionError):
+                
+                raise pymc.ZeroProbability
 
 
 
@@ -492,16 +498,6 @@ class NFW_MC_Model(NFW_Model):
 
 
 
-
-            print
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print m200, type(m200)
-            print c200, type(c200), 
-            print beta_s, type(beta_s), 
-            print beta_s2, type(beta_s2), 
-            print rho_c, type(rho_c), 
-            print rho_c_over_sigma_c, type(rho_c_over_sigma_c)
-            print
 
 
 
