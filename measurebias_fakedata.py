@@ -5,6 +5,7 @@
 
 import numpy as np
 import scipy.stats
+import cPickle
 
 nclusters = 2000
 
@@ -20,9 +21,11 @@ means = np.column_stack([np.log(true_massbias) + true_logmasses, true_logconcens
 covar = np.array([[true_massscatter**2, true_mc_cov*true_massscatter*true_concen_scatter],
                   [true_mc_cov*true_massscatter*true_concen_scatter, true_concen_scatter**2]])
 
-deltas = scipy.stats.rvs(cov = covar, size=nclusters)
+deltas = scipy.stats.multivariate_normal.rvs(cov = covar, size=nclusters)
 
 ml_estimate = means + deltas
+
+answers = {}
 
 for i in range(nclusters):
 
@@ -33,8 +36,14 @@ for i in range(nclusters):
                 c200 = np.exp(concen_samples),
                 m200 = np.exp(mass_samples))
 
+    answers['halo_%d' % i] = dict('m200' = np.exp(true_logmasses[i]))
+
     with open('measurebias_fakedata/halo_%d.out' % i, 'wb') as output:
         cPickle.dump(data, output)
+
+
+with open('measurebias_fakedata_answers.pkl', 'wb') as output:
+    cPickle.dump(answers, output)
 
 
 

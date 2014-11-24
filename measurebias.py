@@ -47,6 +47,12 @@ def loadClusterData(answerfile, chaindir):
         cluster['like_samples'] = np.column_stack([chain['logM200'] - np.log(__mass_scale__),
                                                    chain['c200']])
 
+        #priors used in chain sample had flat linear c200 prior, log m200 priors
+        #and our model is in logc200
+        cluster['weights'] = 1./chain['c200']
+        cluster['weights'] = cluster['weights'] / np.sum(cluster['weights'])
+
+
         clusters.append(cluster)
 
     return clusters
@@ -119,7 +125,7 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logpsace(np.log
 
         arglist= [dict(cluster_like_samples = clusters[i]['like_samples'],
                        cluster_mean = np.array([bin_logmassratios[bin_assignment[i]] + clusters[i]['log_mtrue'],
-                                                bin_c200s[bin_assignment[i]]]),
+                                                np.log(bin_c200s[bin_assignment[i]])]),
                        cluster_invcovar = bin_invcovars[bin_assignment[i]],
                        cluster_detcovar = bin_sqrtdetcovars[bin_assignment[i]]) \
                       for i in range(nclusters)]
