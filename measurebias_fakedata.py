@@ -29,16 +29,16 @@ answers = {}
 
 for i in range(nclusters):
 
-    mass_samples = ml_estimate[i,0] + 0.2*np.random.standard_normal(size=2000)
-    concen_samples = ml_estimate[i,1] + 0.2*np.random.standard_normal(size=2000)
+    mass_samples = ml_estimate[i,0] + 0.2*np.random.standard_normal(size=250)
+    concen_samples = ml_estimate[i,1] + 0.2*np.random.standard_normal(size=250)
 
     data = dict(logM200 = mass_samples,
                 c200 = np.exp(concen_samples),
                 m200 = np.exp(mass_samples))
 
-    answers['halo_%d' % i] = dict('m200' = np.exp(true_logmasses[i]))
+    answers['halo_%d' % i] = dict(m200 = np.exp(true_logmasses[i]))
 
-    with open('measurebias_fakedata/halo_%d.out' % i, 'wb') as output:
+    with open('../measurebias_fakedata/halo_%d.out' % i, 'wb') as output:
         cPickle.dump(data, output)
 
 

@@ -10,13 +10,15 @@ import cPickle, glob, os, re, sys
 import numpy as np
 import pymc
 import stats
+import varcontainer
+import pymc_mymcmc_adapter as pma
 from multiprocessing import Pool
 
 #####################
 
-__NPROCS__ = 8
+__NPROCS__ = 4
 __singlecore__ = True
-__samples__ = 1000
+__samples__ = 150
 
 __logmass_scale__ = np.log(1e14)
 
@@ -37,14 +39,14 @@ def loadClusterData(answerfile, chaindir):
         base = os.path.basename(chainfile)
         root, ext = os.path.splitext(base)
         
-        log_mtrue = np.log(answers[root]['m200']) - np.log(__mass_scale__)
+        log_mtrue = np.log(answers[root]['m200']) - __logmass_scale__
 
         with open(chainfile, 'rb') as chaindat:
             chain = cPickle.load(chaindat)
 
         cluster['id'] = root
         cluster['log_mtrue'] = log_mtrue
-        cluster['like_samples'] = np.column_stack([chain['logM200'] - np.log(__mass_scale__),
+        cluster['like_samples'] = np.column_stack([chain['logM200'] - __logmass_scale__,
                                                    chain['c200']])
 
         #priors used in chain sample had flat linear c200 prior, log m200 priors
@@ -62,16 +64,16 @@ def loadClusterData(answerfile, chaindir):
 
 ####################
 
-def LogSumMultiDGaussianWrapper(args):
+def LogSum2DGaussianWrapper(args):
 
-    return stats.LogSumMultiDGaussian(xs = args['cluster_like_samples'],
+    return stats.LogSum2DGaussian(xs = args['cluster_like_samples'],
                                       mu = args['cluster_mean'],
                                       invcovar = args['cluster_invcovar'],
                                       sqrtdetcovar = args['cluster_detcovar'])
 
 ###################
 
-def createMassBinModel(clusters, parts = None, massbinedges = np.logpsace(np.log10(1e14), np.log10(5e15), 10)):
+def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log10(1e14), np.log10(5e15), 10)):
     #constant spaced log mass bins
 
     if parts is None:
@@ -85,19 +87,19 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logpsace(np.log
     parts['bin_c200s'] = np.empty(nbins, dtype=object)
     parts['bin_log_mass_scatter'] = np.empty(nbins, dtype=object)
     parts['bin_log_c200_scatter'] = np.empty(nbins, dtype=object)
-    parts['bin_log_mc_covar'] = np.empty(nbins, dtype=object)
+    parts['bin_mc_covar'] = np.empty(nbins, dtype=object)
     for i in range(nbins):
-        parts['bin_logmassratios'][i] = pymc.Uninformative('bin_logmassratio_%d' % i)
+        parts['bin_logmassratios'][i] = pymc.Uninformative('bin_logmassratio_%d' % i, value = np.random.uniform(np.log(0.1), np.log(10.)))
         parts['bin_c200s'][i]= pymc.Uniform('bin_c200_%d' % i, 1.1, 19.9)
-        parts['bin_log_mass_scatter'] = np.Uniform('bin_log_mass_scatter_%d' % i, np.log(1e-4), np.log(1.))
-        parts['bin_log_c200_scatter'] = np.Uniform('bin_log_c200_scatter_%d' % i, np.log(1e-4), np.log(1.))
-        parts['bin_mc_covar'] = np.Uniform('bin_mc_covar_%d' % i, -1., 1.)
+        parts['bin_log_mass_scatter'][i] = pymc.Uniform('bin_log_mass_scatter_%d' % i, np.log(0.05), np.log(1.))
+        parts['bin_log_c200_scatter'][i] = pymc.Uniform('bin_log_c200_scatter_%d' % i, np.log(0.05), np.log(1.))
+        parts['bin_mc_covar'][i] = pymc.Uniform('bin_mc_covar_%d' % i, -1., 1.)
 
 
-    parts['bin_assignment'] = np.zeros(len(clusters))
-    m_trues = np.array([cluster['m_true'] for cluster in clusters])
+    parts['bin_assignment'] = np.zeros(len(clusters), dtype=np.int_)
+    m_trues = np.exp(np.array([cluster['log_mtrue'] for cluster in clusters]))
     for i in range(nbins):
-        selection = np.logical_and(massbinedges[i] <= m_trues, mtrues < massbinedges[i])
+        selection = np.logical_and(massbinedges[i] <= m_trues, m_trues < massbinedges[i])
         parts['bin_assignment'][selection] = i
 
     @pymc.observed
@@ -113,8 +115,8 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logpsace(np.log
         nbins = len(bin_c200s)
         nclusters = len(clusters)
 
-        bin_mass_scatter = np.exp(bin_log_mass_scatter)
-        bin_c200_scatter = np.exp(bin_log_c200_scatter)
+        bin_mass_scatter = [np.exp(x) for x in bin_log_mass_scatter]
+        bin_c200_scatter = [np.exp(x) for x in bin_log_c200_scatter]
 
         bin_covars = [np.array([[bin_mass_scatter[i]**2, bin_mc_covar[i]*bin_mass_scatter[i]*bin_c200_scatter[i]],
                                 [bin_mc_covar[i]*bin_mass_scatter[i]*bin_c200_scatter[i], bin_c200_scatter[i]**2]]) \
@@ -130,7 +132,8 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logpsace(np.log
                        cluster_detcovar = bin_sqrtdetcovars[bin_assignment[i]]) \
                       for i in range(nclusters)]
 
-        cluster_logprobs = np.array(pool.map(LogSumMultiDGaussianWrapper,arglist))
+        cluster_logprobs = np.array(pool.map(LogSum2DGaussianWrapper,arglist))
+#        cluster_logprobs = np.array(map(LogSumMultiDGaussianWrapper,arglist))
 
         return np.sum(cluster_logprobs)
     parts['clusterlikelihood'] = clusterlikelihood
@@ -169,8 +172,14 @@ def runSampler(model, outfile):
 def main(answerfile, chaindir, outfile):
 
     clusters = loadClusterData(answerfile, chaindir)
-
-    model = createmassBinModel(clusters)
+    
+    model = None
+    for i in range(10):
+        try:
+            model = createMassBinModel(clusters)
+            break
+        except pymc.ZeroProbability:
+            continue
 
     runSampler(model, outfile)
 

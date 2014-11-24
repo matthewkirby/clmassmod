@@ -2,11 +2,12 @@
 # Common statistics functions that need to run quickly
 #######################
 # Compiling info: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /u/ki/dapple/include/python2.7/ -I /u/ki/dapple/lib/python2.7/site-packages/numpy/core/include/ -o stats.so stats.c
+#AIfA: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /users/dapple/anaconda/include/python2.7/ -I /users/dapple/anaconda/lib/python2.7/site-packages/numpy/core/include/ -o stats.so stats.c
 
 
 ########################
 
-# cython: profile=False
+# cython: profile=True
 
 import numpy as np
 cimport numpy as np
@@ -17,9 +18,10 @@ cdef extern from "math.h":
     double exp(double)
     double log(double)
     double sqrt(double)
+    double pow(double, double)
 
-sqrt2pi = sqrt(2*np.pi)
-twopi = 2*np.pi
+cdef double sqrt2pi = sqrt(2*np.pi)
+cdef double twopi = 2*np.pi
 
 #########################
 
@@ -66,24 +68,24 @@ def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def LogSumMultiDGaussian(np.ndarray(np.double_t, ndim=2, mode='c'] xs,
-                         np.ndarray(np.double_t, ndim=1, mode='c'] mu,
-                         np.ndarray(np.double_t, ndim=2, mode='c'] invcovar,
-                         double sqrtdetcovar):
+def LogSum2DGaussian(np.ndarray[np.double_t, ndim=2, mode='c'] xs,
+                     np.ndarray[np.double_t, ndim=1, mode='c'] mu,
+                     np.ndarray[np.double_t, ndim=2, mode='c'] invcovar,
+                     double sqrtdetcovar):
 
     cdef Py_ssize_t i, nmax, ndim
 
     nmax = xs.shape[0]
-    ndim = xs.shape[1]
 
-    cdef pipow = sqrt2pi**ndim
-    cdef np.ndarray(np.double_t, ndim=1, mode='c'] delta = np.zeros(2)
+    cdef double pipow = twopi
+    cdef double delta1, delta2
     cdef double sum = 0.
     cdef double chisq = 0.
 
     for i from nmax > i >= 0:
-        delta[:] = xs[i] - mu
-        chisq = np.dot(delta, np.dot(invcovar, delta))
+        delta1 = xs[i,0] - mu[0]
+        delta2 = xs[i,1] - mu[1]
+        chisq = invcovar[0,0]*delta1*delta1 + invcovar[1,1]*delta2*delta2 + (invcovar[0,1] + invcovar[1,0])*delta1*delta2
         sum += exp(-0.5*chisq)/(pipow*sqrtdetcovar)
 
     return log(sum)
