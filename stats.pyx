@@ -82,9 +82,9 @@ def LogSumMultiDGaussian(np.ndarray(np.double_t, ndim=2, mode='c'] xs,
     cdef double chisq = 0.
 
     for i from nmax > i >= 0:
-        delta = xs[i] - mu
+        delta[:] = xs[i] - mu
         chisq = np.dot(delta, np.dot(invcovar, delta))
-        sum += exp(-0.5*()/(pipow*sqrtdetcovar)
+        sum += exp(-0.5*chisq)/(pipow*sqrtdetcovar)
 
     return log(sum)
 
