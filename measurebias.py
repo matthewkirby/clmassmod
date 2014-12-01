@@ -16,13 +16,13 @@ from multiprocessing import Pool
 
 #####################
 
-__NPROCS__ = 8
-__singlecore__ = False
-__samples__ = 25000
+__NPROCS__ = 4
+__singlecore__ = True
+__samples__ = 50
 
 __logmass_scale__ = np.log(1e14)
 
-#pool = Pool(__NPROCS__)
+
 
 
 ####################
@@ -65,8 +65,12 @@ def loadClusterData(answerfile, chaindir):
 ####################
 
 
+
+
 def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log10(1e14), np.log10(5e15), 10)):
     #constant spaced log mass bins
+
+    massbinedges = np.log(massbinedges) - __logmass_scale__ #bring mass bins onto normalized scale
 
     if parts is None:
         parts = {}
@@ -88,11 +92,14 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
         parts['bin_mc_covar'][i] = pymc.Uniform('bin_mc_covar_%d' % i, -1., 1., value=np.random.uniform(0.2, 0.5))
 
 
-    parts['bin_assignment'] = -1*np.ones(len(clusters), dtype=np.int_)
-    m_trues = np.exp(np.array([cluster['log_mtrue'] for cluster in clusters]))
+    bin_assignment = -1*np.ones(len(clusters), dtype=np.int_)
+    log_m_trues = np.array([cluster['log_mtrue'] for cluster in clusters])
     for i in range(nbins):
-        selection = np.logical_and(massbinedges[i] <= m_trues, m_trues < massbinedges[i])
-        parts['bin_assignment'][selection] = i
+        selection = np.logical_and(massbinedges[i] <= log_m_trues, log_m_trues < massbinedges[i+1])
+        bin_assignment[selection] = i
+    parts['bin_assignment'] = bin_assignment
+
+
 
     parts['clusters'] = [clusters[i] for i in range(len(clusters)) if parts['bin_assignment'][i] != -1]
     parts['bin_assignment'] = parts['bin_assignment'][parts['bin_assignment'] != -1]
@@ -179,5 +186,11 @@ def main(answerfile, chaindir, outfile):
 
 if __name__ == '__main__':
 
+    pool = Pool(__NPROCS__)
+
     answerfile, chaindir, outfile = sys.argv[1:]
     main(answerfile, chaindir, outfile)
+    
+
+    pool.close()
+    pool.join()
