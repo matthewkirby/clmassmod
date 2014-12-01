@@ -3,6 +3,7 @@
 \usepackage{fullpage}
 \usepackage{enumerate}
 \usepackage{natbib}
+\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{ifthen}
@@ -151,6 +152,9 @@ Updates on comparing three sets of sims in section~\ref{sec:consistancy}.
 
 \paragraph{5 Nov 2014}
 Haven't worked on the simulation effort in quite a long time. Time to pick up the pieces again. The interim period was spent trying to get my collaborators to get me info on the simulations: Matt Becker owes me updated BCC simulations that aren't overly smoothed, Stephen Hilbert owes me mass profiles for MXXL, and Salman Habib owes me any simulations. The immediate task is to figure out how to get an answer for Joerg's and Tim's papers, pronto. What do they need, and how to supply it? Thoughts and musing in sec~\ref{sec:spt_immediateneeds}.
+
+\paragraph{26 Nov 2014}
+There is a lot of rambling in section~\ref{sec:spt_immediateneeds}. I also started writing up some of my results from the perfect NFW halo investigations in that section. I will need to make some plots and seperate off that section into something comprehensible. I have now also started writing up my formulism for how I am going to infer the bias in the likelihood in section~\ref{sec:bias_framework}. The model is coded up, but I still need to debug it. Results to be added later.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -732,7 +736,7 @@ P(\beta|\vec y) \propto P(\vec y|\beta)P(\beta)
 \end{equation}
 
 Looking for the MLE is again equivalent to $P(\beta) = \mathrm{constant}$.
-Since we are still looking at the same probability distribution, $\^ \beta$ that maximizes $P(\beta|\vec y)$ where $P(\veta) = \mathrm{constant}$, we have $\^\beta = f(\^\alpha)$ for $\alpha$ that maximized $P(\vec y|\alpha)$. 
+Since we are still looking at the same probability distribution, $\hat \beta$ that maximizes $P(\beta|\vec y)$ where $P(\beta) = \mathrm{constant}$, we have $\hat\beta = f(\hat\alpha)$ for $\alpha$ that maximized $P(\vec y|\alpha)$. 
 
 But here's the paradax.
 Imagine that we've mapped out $P(\alpha|\vec y) \ propto P(\vec y|\alpha)$, with $P(\alpha) = \mathrm{constant}$.
@@ -751,7 +755,7 @@ P(\beta|\vec y) = P(\alpha|\vec y)f(\beta) = P(\vec y|\alpha)f(\beta) = P(\vec y
 
 This implies that in this case, we have $P(\beta) = \frac{d\alpha}{d\beta} = f(\beta)$.
 That means this second $P(\beta|\vec y)$ is not identical to before, when we assumed $P(\beta) = \mathrm{constant}$.
-Therefore, the MAP for $\beta$ is not $\^ \beta$.
+Therefore, the MAP for $\beta$ is not $\hat \beta$.
 
 Now, how do we interpret bootstrapping the MLE?
 We obtain a bunch of samples of the MLE of $P(\vec y|\beta) = P(\vec y|\alpha)$ via bootstrapping.
@@ -794,7 +798,7 @@ For Tim:
   - His paper is just going to be masses. So having some sort of average correction, or a mass dependent correction should be OK.
 
 For Joerg:
-  - His paper is feeding right into a scaling relations code. That code has P(M_lens | M_true) in it. 
+  - His paper is feeding right into a scaling relations code. That code has $P(M_{lens} | M_{true})$ in it. 
 
 
 Can I not just use what I already have?
@@ -860,13 +864,58 @@ Next question: How much noiser are the fits when we have cfree over c fixed? How
 
 I started looking at this question. For fits to high radii, freeing the concentration does not seem to make much of a difference, probably because the concentration doesn't have a big effect. I need to rigorously quantify this, and check how things change as I go in to lower radii.
 
-I also want to verify that the P(M_lens) that I produce from the marginalization process are accurate. The first way that comes to mind is to take all clusters with the same true mass and add their logprobs. I'm running that now, but that might not be definitive. The input to the test does not match the prior, and therefore I would not expect the test to return something sensible. I probably need to set up a CDF test.
+I also want to verify that the $P(M_{lens})$ that I produce from the marginalization process are accurate. The first way that comes to mind is to take all clusters with the same true mass and add their logprobs. I'm running that now, but that might not be definitive. The input to the test does not match the prior, and therefore I would not expect the test to return something sensible. I probably need to set up a CDF test.
 
 Indeed, it appears that the multiplied probability is biased high by about 1e14. 
 
 This is kind of strange. I ran a test with a prior. I generated masses uniform-log 14-16. I then measured the posterior for that range as well (hard prior boundaries). The CDF test shows a bias, towards underestimating the masses. Most of the problems are at the end points. 
 
 Well, maybe this isn't a surprise. I fit for the concentration with a flat prior, but the clusters were all c=4. That could distort things. Let me check that.
+
+
+\subsection{Fitting for bias \& Importance Sampling}
+\label{sec:bias_framework}
+
+Here are my notes from writing up how I'm planning to use the likelihood fits. Math as best as I can make it.
+
+Definition of symbols: $\vec\alpha$ describes how I measure the bias and intrinsic scatter in weak lensing masses. $\vec\beta$ describe the true, 3D mass concentration relation. $M_t$ is the true mass, $M_l$ is the weak lensing mass, $c_l$ is the weak lensing ``effective'' concentration, ie, what weak lensing sees on the sky. $g$ is the shear profile.
+
+I want to infer $P(\vec\alpha|M_t, c_t, g)$, ie what is the bias and scatter in lensing masses, given the true 3D parameters and the observed shear profile. The mass-concentration relation is marginalized over.
+
+Rearranging terms by repeated aplication of Bayes Rule/Conditional Probability, I get:
+
+\begin{equation}
+P(\vec\alpha|M_t, c_t, g) = P(g|M_t,c_t,\vec\alpha)P(\vec\alpha)\frac{P(M_t,c_t)}{P(M_t,c_t,g)}
+\end{equation}
+
+Since $M_t$, $c_t$, and g are given, we can take the prior probabilies $P(g)$, $P(M_t)$, and $P(c_t)$ as constants that we can ignore. To connect the true quantitites with the shear profile, we introduce and marginalize out the inferred lensing quantities $M_l$ and $c_l$.
+
+\begin{equation}
+P(g|M_t,c_t,\vec\alpha)P(\vec\alpha) = P(\vec\alpha)\int_{\forall M_l, c_l} P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)dM_ldc_l
+\label{eq:marginalization}
+\end{equation}
+
+This is written for one cluster. I will suppress the generalization for many clusters. Ahead of time, we have already MCMC sampled the likelihood for one cluster. 
+
+\begin{equation}
+P(M_l,c_l|g)^{\prime} = P(g|M_l,c_l)P(M_l,c_l)^{\prime}
+\end{equation}
+
+It is important to notice that the prior distriubtion used to sample the likelihood for an individual cluster can generally have \emph{no relation} to the prior probabilities in the problem that we actually want to solve. We want to evaluate the function from equation~\ref{eq:marginalization} with a Monte Carlo method. Specifically, we want to use the likelihood chains that we have already drawn for the individual cluster.
+
+\begin{align}
+\int_{\forall M_l, c_l} P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)dM_ldc_l \\
+  = \int_{\forall M_l, c_l} \frac{P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(M_l,c_l|g)^{\prime}}P(M_l,c_l|g)^{\prime}dM_ldc_l \\
+  = \frac{1}{n}\sum\limits_{M_l^{\prime},c_l^{\prime}}\frac{P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(M_l,c_l|g)^{\prime}} \\
+  = \frac{1}{n}\sum\limits_{M_l^{\prime},c_l^{\prime}}\frac{P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(g|M_l,c_l)P(M_l,c_l)^{\prime}} \\
+  = \frac{1}{n}\sum\limits_{M_l^{\prime},c_l^{\prime}}\frac{P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(M_l,c_l)^{\prime}} \\
+\end{align}
+
+In the above equations, we are turning the integration over all $M_l$ and $c_l$ into a summation over samples via Monte Carlo integration. However, we are pulling from the primed distribution, so we need to multiply and divide by it first. That's the importance sampling bit: each sample is weighted by the ratio of the probability distributoon we care about over the probability distribution we sampled from. However, the shear profile likelihood is evaluated in each, and therefore cancels. The remaining weight is simply the prior that we assumed when we sampled $M_l$ and $c_l$ for each cluster. 
+
+Here it is important to pay attention to which variable we are actually integrating over. Are we integrating over $M_l$ and $c_l$ or $\log M_l$ and $\log c_l$. The weight can be ignored if the variable we are integrating in had a uniform prior when we were sampling each individual prior.
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
