@@ -183,6 +183,8 @@ class MyMCRunner(object):
         if not options.singlecore:
             parallel = MPI.COMM_WORLD
             manager.mpi_rank = MPI.COMM_WORLD.Get_rank()
+            print 'Rank: ', manager.mpi_rank
+            print 'World Size: ', MPI.COMM_WORLD.Get_size()
         else:
             parallel = None
             manager.mpi_rank = 0
