@@ -23,7 +23,7 @@ __samples__ = 50
 __logmass_scale__ = np.log(1e14)
 
 
-
+pool = None
 
 ####################
 
@@ -104,6 +104,20 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
     parts['clusters'] = [clusters[i] for i in range(len(clusters)) if parts['bin_assignment'][i] != -1]
     parts['bin_assignment'] = parts['bin_assignment'][parts['bin_assignment'] != -1]
 
+
+    ####################
+    #MP SUPPORT
+
+    datashare = measurebiashelper.datashare
+    datashare.setup(len(parts['clusters']), len(parts['clusters'][0]['like_samples']))
+    for i, cluster in enumerate(parts['clusters']):
+        datashare.setLikeSamples(i, cluster['like_samples'])
+
+    pool = Pool(__NPROCS__)
+
+    #####################
+    
+
     @pymc.observed
     def clusterlikelihood(value = 0.,
                    clusters = parts['clusters'],
@@ -124,15 +138,17 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
         bin_invcovars = [np.linalg.inv(bin_covars[i]) for i in range(nbins)]
         bin_sqrtdetcovars = [np.sqrt(np.linalg.det(bin_covars[i])) for i in range(nbins)]
 
-        arglist= [dict(cluster_like_samples = clusters[i]['like_samples'],
-                       cluster_mean = np.array([bin_logmassratios[bin_assignment[i]] + clusters[i]['log_mtrue'],
-                                                np.log(bin_c200s[bin_assignment[i]])]),
-                       cluster_invcovar = bin_invcovars[bin_assignment[i]],
-                       cluster_detcovar = bin_sqrtdetcovars[bin_assignment[i]]) \
-                      for i in range(nclusters)]
+        datashare = measurebiashelper.datashare
 
-#        cluster_logprobs = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
-        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
+        for i in range(nclusters):
+            datashare.setMean(i, np.array([bin_logmassratios[bin_assignment[i]] + clusters[i]['log_mtrue'],
+                                                np.log(bin_c200s[bin_assignment[i]])]))
+            datashare.setInvCovar(i, bin_invcovars[bin_assignment[i]])
+            datashare.setSqrtDetCovar(i, bin_sqrtdetcovars[bin_assignment[i]])
+
+
+        cluster_logprobs = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper,range(nclusters)))
+#        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,range(nclusters)))
 
         return np.sum(cluster_logprobs)
     parts['clusterlikelihood'] = clusterlikelihood
@@ -182,15 +198,19 @@ def main(answerfile, chaindir, outfile):
 
     runSampler(model, outfile)
 
+    if pool is not None:
+        pool.close()
+        pool.join()
+        pool = None
+
+
 ##########################
 
 if __name__ == '__main__':
 
-    pool = Pool(__NPROCS__)
+
 
     answerfile, chaindir, outfile = sys.argv[1:]
     main(answerfile, chaindir, outfile)
     
 
-    pool.close()
-    pool.join()
