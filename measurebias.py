@@ -98,23 +98,24 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
         selection = np.logical_and(massbinedges[i] <= log_m_trues, log_m_trues < massbinedges[i+1])
         bin_assignment[selection] = i
     parts['bin_assignment'] = bin_assignment
-
-
+    
+    
 
     parts['clusters'] = [clusters[i] for i in range(len(clusters)) if parts['bin_assignment'][i] != -1]
     parts['bin_assignment'] = parts['bin_assignment'][parts['bin_assignment'] != -1]
+    parts['clusters_inbin'] = [np.arange(len(parts['clusters']))[parts['bin_assignment'] == i] for i in range(nbins)]
+    
 
     measurebiashelper.datastore.log_mtrues = [cluster['log_mtrue'] for cluster in parts['clusters']]
     measurebiashelper.datastore.logmass_samples = [cluster['logmass_samples'] for cluster in parts['clusters']]
     measurebiashelper.datastore.logc200_samples = [cluster['logc200_samples'] for cluster in parts['clusters']]
     measurebiashelper.datastore.weights = [cluster['weights'] for cluster in parts['clusters']]
     measurebiashelper.datastore.bin_assignments = parts['bin_assignment']
+    measurebiashelper.datastore.clusters_inbin = parts['clusters_inbin']
 
 
     @pymc.observed
     def clusterlikelihood(value = 0.,
-                   clusters = parts['clusters'],
-                   bin_assignment = parts['bin_assignment'],
                    bin_logmassratios = parts['bin_logmassratios'],
                    bin_c200s = parts['bin_c200s'],
                    bin_mass_scatter = parts['bin_mass_scatter'],
@@ -122,25 +123,23 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
                    bin_mc_covar = parts['bin_mc_covar']):
 
         nbins = len(bin_c200s)
-        nclusters = len(clusters)
 
-        bin_covars = [np.array([[bin_mass_scatter[i]**2, bin_mc_covar[i]*bin_mass_scatter[i]*bin_c200_scatter[i]],
-                                [bin_mc_covar[i]*bin_mass_scatter[i]*bin_c200_scatter[i], bin_c200_scatter[i]**2]]) \
-                          for i in range(nbins)]
+        args = [dict(number = i,
+                     logmassratio = bin_logmassratios[i],
+                     c200 = bin_c200s[i],
+                     mass_scatter = bin_mass_scatter[i],
+                     c200_scatter = bin_c200_scatter[i],
+                     mc_covar = bin_mc_covar[i]) for i in range(nbins)]
 
-        bin_invcovars = [np.linalg.inv(bin_covars[i]) for i in range(nbins)]
-        bin_invsqrtdetcovars = [1./np.sqrt(np.linalg.det(bin_covars[i])) for i in range(nbins)]
+        cluster_logprob_partialsums = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,
+                                         args))
 
-        measurebiashelper.datastore.bin_ratios = bin_logmassratios
-        measurebiashelper.datastore.bin_logc200s = [np.log(x) for x in bin_c200s]
-        measurebiashelper.datastore.invcovars = bin_invcovars
-        measurebiashelper.datastore.invsqrtdetcovars = bin_invsqrtdetcovars
 
 
 #        cluster_logprobs = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
-        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,range(nclusters)))
+#        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,range(nclusters)))
 
-        return np.sum(cluster_logprobs)
+        return np.sum(cluster_logprob_partialsums)
     parts['clusterlikelihood'] = clusterlikelihood
 
     return pymc.Model(parts)
