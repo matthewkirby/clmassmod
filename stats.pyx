@@ -22,6 +22,7 @@ cdef extern from "math.h":
 
 cdef double sqrt2pi = sqrt(2*np.pi)
 cdef double twopi = 2*np.pi
+cdef double invtwopi = 1./2*np.pi
 
 #########################
 
@@ -68,26 +69,34 @@ def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def LogSum2DGaussian(np.ndarray[np.double_t, ndim=2, mode='c'] xs,
+def LogSum2DGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] samples0,
+                     np.ndarray[np.double_t, ndim=1, mode='c'] samples1,
                      np.ndarray[np.double_t, ndim=1, mode='c'] weights,
-                     np.ndarray[np.double_t, ndim=1, mode='c'] mu,
+                     double mu0,
+                     double mu1,
                      np.ndarray[np.double_t, ndim=2, mode='c'] invcovar,
-                     double sqrtdetcovar):
+                     double invsqrtdetcovar):
 
     cdef Py_ssize_t i, nmax, ndim
 
-    nmax = xs.shape[0]
+    nmax = samples0.shape[0]
 
-    cdef double pipow = twopi
+    cdef double norm = invtwopi*invsqrtdetcovar
     cdef double delta1, delta2
     cdef double sum = 0.
     cdef double chisq = 0.
 
+    cdef double invcovar00, invcovar11, invcovar01
+    invcovar00 = invcovar[0,0]
+    invcovar11 = invcovar[1,1]
+    invcovar01 = invcovar[0,1]
+
+
     for i from nmax > i >= 0:
-        delta1 = xs[i,0] - mu[0]
-        delta2 = xs[i,1] - mu[1]
-        chisq = invcovar[0,0]*delta1*delta1 + invcovar[1,1]*delta2*delta2 + (invcovar[0,1] + invcovar[1,0])*delta1*delta2
-        sum += weights[i]*exp(-0.5*chisq)/(pipow*sqrtdetcovar)
+        delta1 = samples0[i] - mu0
+        delta2 = samples1[i] - mu1
+        chisq = invcovar00*delta1*delta1 + invcovar11*delta2*delta2 + 2*invcovar01*delta1*delta2
+        sum += weights[i]*exp(-0.5*chisq)*norm
 
     return log(sum)
 

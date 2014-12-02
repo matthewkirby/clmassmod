@@ -46,8 +46,8 @@ def loadClusterData(answerfile, chaindir):
 
         cluster['id'] = root
         cluster['log_mtrue'] = log_mtrue
-        cluster['like_samples'] = np.column_stack([chain['logM200'] - __logmass_scale__,
-                                                   np.log(chain['c200'])])
+        cluster['logmass_samples'] = chain['logM200'] - __logmass_scale__
+        cluster['logc200_samples'] = np.log(chain['c200'])
 
         #priors used in chain sample had flat linear c200 prior, log m200 priors
         #and our model is in logc200
@@ -105,7 +105,8 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
     parts['bin_assignment'] = parts['bin_assignment'][parts['bin_assignment'] != -1]
 
     measurebiashelper.datastore.log_mtrues = [cluster['log_mtrue'] for cluster in parts['clusters']]
-    measurebiashelper.datastore.like_samples = [cluster['like_samples'] for cluster in parts['clusters']]
+    measurebiashelper.datastore.logmass_samples = [cluster['logmass_samples'] for cluster in parts['clusters']]
+    measurebiashelper.datastore.logc200_samples = [cluster['logc200_samples'] for cluster in parts['clusters']]
     measurebiashelper.datastore.weights = [cluster['weights'] for cluster in parts['clusters']]
     measurebiashelper.datastore.bin_assignments = parts['bin_assignment']
 
@@ -128,12 +129,12 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
                           for i in range(nbins)]
 
         bin_invcovars = [np.linalg.inv(bin_covars[i]) for i in range(nbins)]
-        bin_sqrtdetcovars = [np.sqrt(np.linalg.det(bin_covars[i])) for i in range(nbins)]
+        bin_invsqrtdetcovars = [1./np.sqrt(np.linalg.det(bin_covars[i])) for i in range(nbins)]
 
         measurebiashelper.datastore.bin_ratios = bin_logmassratios
         measurebiashelper.datastore.bin_logc200s = [np.log(x) for x in bin_c200s]
         measurebiashelper.datastore.invcovars = bin_invcovars
-        measurebiashelper.datastore.sqrtdetcovars = bin_sqrtdetcovars
+        measurebiashelper.datastore.invsqrtdetcovars = bin_invsqrtdetcovars
 
 
 #        cluster_logprobs = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
