@@ -18,9 +18,12 @@ from multiprocessing import Pool
 
 __NPROCS__ = 4
 __singlecore__ = True
-__samples__ = 50
+__samples__ = 500
 
 __logmass_scale__ = np.log(1e14)
+
+
+pool = None
 
 
 
@@ -113,6 +116,9 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
     measurebiashelper.datastore.bin_assignments = parts['bin_assignment']
     measurebiashelper.datastore.clusters_inbin = parts['clusters_inbin']
 
+    ##pool support
+    pool = Pool(__NPROCS__)
+
 
     @pymc.observed
     def clusterlikelihood(value = 0.,
@@ -131,13 +137,11 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
                      c200_scatter = bin_c200_scatter[i],
                      mc_covar = bin_mc_covar[i]) for i in range(nbins)]
 
-        cluster_logprob_partialsums = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,
-                                         args))
+#        cluster_logprob_partialsums = np.array(map(measurebiashelper.LogSum2DGaussianWrapper, args))
+        cluster_logprob_partialsums = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper, args))
 
 
 
-#        cluster_logprobs = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
-#        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,range(nclusters)))
 
         return np.sum(cluster_logprob_partialsums)
     parts['clusterlikelihood'] = clusterlikelihood
@@ -191,11 +195,10 @@ def main(answerfile, chaindir, outfile):
 
 if __name__ == '__main__':
 
-#    pool = Pool(__NPROCS__)
-
     answerfile, chaindir, outfile = sys.argv[1:]
     main(answerfile, chaindir, outfile)
     
 
-#    pool.close()
-#    pool.join()
+    if pool is not None:
+        pool.close()
+        pool.join()
