@@ -47,7 +47,7 @@ def loadClusterData(answerfile, chaindir):
         cluster['id'] = root
         cluster['log_mtrue'] = log_mtrue
         cluster['like_samples'] = np.column_stack([chain['logM200'] - __logmass_scale__,
-                                                   chain['c200']])
+                                                   np.log(chain['c200'])])
 
         #priors used in chain sample had flat linear c200 prior, log m200 priors
         #and our model is in logc200
@@ -104,6 +104,12 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
     parts['clusters'] = [clusters[i] for i in range(len(clusters)) if parts['bin_assignment'][i] != -1]
     parts['bin_assignment'] = parts['bin_assignment'][parts['bin_assignment'] != -1]
 
+    measurebiashelper.datastore.log_mtrues = [cluster['log_mtrue'] for cluster in parts['clusters']]
+    measurebiashelper.datastore.like_samples = [cluster['like_samples'] for cluster in parts['clusters']]
+    measurebiashelper.datastore.weights = [cluster['weights'] for cluster in parts['clusters']]
+    measurebiashelper.datastore.bin_assignments = parts['bin_assignment']
+
+
     @pymc.observed
     def clusterlikelihood(value = 0.,
                    clusters = parts['clusters'],
@@ -124,15 +130,14 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
         bin_invcovars = [np.linalg.inv(bin_covars[i]) for i in range(nbins)]
         bin_sqrtdetcovars = [np.sqrt(np.linalg.det(bin_covars[i])) for i in range(nbins)]
 
-        arglist= [dict(cluster_like_samples = clusters[i]['like_samples'],
-                       cluster_mean = np.array([bin_logmassratios[bin_assignment[i]] + clusters[i]['log_mtrue'],
-                                                np.log(bin_c200s[bin_assignment[i]])]),
-                       cluster_invcovar = bin_invcovars[bin_assignment[i]],
-                       cluster_detcovar = bin_sqrtdetcovars[bin_assignment[i]]) \
-                      for i in range(nclusters)]
+        measurebiashelper.datastore.bin_ratios = bin_logmassratios
+        measurebiashelper.datastore.bin_logc200s = [np.log(x) for x in bin_c200s]
+        measurebiashelper.datastore.invcovars = bin_invcovars
+        measurebiashelper.datastore.sqrtdetcovars = bin_sqrtdetcovars
+
 
 #        cluster_logprobs = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
-        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,arglist))
+        cluster_logprobs = np.array(map(measurebiashelper.LogSum2DGaussianWrapper,range(nclusters)))
 
         return np.sum(cluster_logprobs)
     parts['clusterlikelihood'] = clusterlikelihood
@@ -186,11 +191,11 @@ def main(answerfile, chaindir, outfile):
 
 if __name__ == '__main__':
 
-    pool = Pool(__NPROCS__)
+#    pool = Pool(__NPROCS__)
 
     answerfile, chaindir, outfile = sys.argv[1:]
     main(answerfile, chaindir, outfile)
     
 
-    pool.close()
-    pool.join()
+#    pool.close()
+#    pool.join()
