@@ -17,8 +17,8 @@ from multiprocessing import Pool
 #####################
 
 __NPROCS__ = 4
-__singlecore__ = True
-__samples__ = 500
+__singlecore__ = False
+__samples__ = 20000
 
 __logmass_scale__ = np.log(1e14)
 
