@@ -13,6 +13,43 @@ import sys, os, json, argparse, glob, stat
 
 ####################
 
+def setupCondor_MB(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/measurebias_fakedata/highsn'):
+    
+    if not os.path.exists(jobdir):
+        os.mkdir(jobdir)
+
+    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+
+    simfiles = glob.glob('{0}/halo_*.info'.format(simdir))
+
+    for i, halofile in enumerate(simfiles):
+
+        catname = halofile
+
+        inputfiles = [halofile]
+        
+        jobparams = createJobParams(catname,
+                                    configfiles,
+                                    inputfiles = inputfiles,
+                                    workbase = './',
+                                    stripCatExt = False)
+        writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
+
+    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+universe = vanilla
+Error = {jobdir}/{jobname}.$(Process).stderr
+Output = {jobdir}/{jobname}.$(Process).stdout
+Log = {jobdir}/{jobname}.$(Process).batch.log
+Arguments = {jobdir}/{jobname}.$(Process).job
+queue {njobs}
+'''.format(jobdir = jobdir, jobname = jobname, njobs = len(simfiles))
+
+    with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
+        output.write(condorfile)
+
+
+#########################################################
+
 def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/snap41'):
     
     if not os.path.exists(jobdir):

@@ -307,8 +307,8 @@ class NFW_Model(object):
         self.overdensity = 200
         self.config = config
 
-        self.m200_low = -1e18
-        self.m200_high = 1e18
+        self.m200_low = 1e10
+        self.m200_high = 1e17
         self.c200_low = 1.1
         self.c200_high = 19.9
 
