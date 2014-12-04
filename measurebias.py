@@ -33,6 +33,13 @@ pool = None
 def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
     # loads M-C Chains for individual clusters
 
+    #shortcut if the consolidation happened already
+    clustersfile = '%s/clusters.pkl' % chaindir
+    if os.path.exists(clustersfile):
+        with open(clustersfile, 'rb') as input:
+            clusters = cPickle.load(clustersfile)
+        return clusters
+
     with open(answerfile, 'rb') as input:
         answers = cPickle.load(input)
 
@@ -170,6 +177,7 @@ def runSampler(model, outfile):
     options.adapt_every = 100
     options.adapt_after = 200
     options.outputFile = outfile
+    options.restore = True
     options.nsamples = __samples__
     manager.model = model
 
