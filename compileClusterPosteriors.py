@@ -1,4 +1,4 @@
-#/usr/bin/env python
+#!/usr/bin/env python
 ######################
 # Utility that burns and thins individual cluster posteriors, and compiles them into one file
 ######################
