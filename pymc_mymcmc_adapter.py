@@ -10,6 +10,8 @@ try:
 except ImportError:
     pass
 import pymc, mymc
+import cPickle, os
+import load_chains
 
 
 ###############################
@@ -197,10 +199,30 @@ class MyMCRunner(object):
 
         updater = mymc.MultiDimRotationUpdater(space, step, options.adapt_every, options.adapt_after, parallel = parallel)
 
+        bitsfile = '%s.bits.%d' % (options.outputFile, manager.mpi_rank)
+        chainfile = '%s.chain.%d' % (options.outputFile, manager.mpi_rank)
+
+        writeHeader = True
+        if options.restore is True:
+            
+            #  load previous proposal distribution
+            if os.path.exists(bitsfile):
+                with open(bitsfile, 'rb') as input:
+                    updater.restoreBits(cPickle.load(input))
+
+            ## initialize chain to last sampled value
+            if os.path.exists(chainfile):
+                writeHeader = False
+                chain = load_chains.loadChains([chainfile])
+                for param in space:
+                    param.value = chain[param.name][0,-1]
+                    
+        
+
         manager.engine = mymc.Engine([updater], trace)
 
-        manager.chainfile = open('%s.chain.%d' % (options.outputFile, manager.mpi_rank), 'w')
-        manager.textout = mymc.headerTextBackend(manager.chainfile, trace)
+        manager.chainfile = open(chainfile, 'a')
+        manager.textout = mymc.headerTextBackend(manager.chainfile, trace, writeHeader=writeHeader)
 
         manager.chain = mymc.dictBackend()
 
@@ -210,7 +232,8 @@ class MyMCRunner(object):
 
         manager.engine(options.nsamples, None, backends)
                                      
-                    
+        with open(bitsfile, 'wb') as output:
+            cPickle.dump(updater.saveBits(), output)
 
 
     ############

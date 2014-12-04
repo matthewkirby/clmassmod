@@ -30,7 +30,7 @@ pool = None
 
 ####################
 
-def loadClusterData(answerfile, chaindir):
+def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
     # loads M-C Chains for individual clusters
 
     with open(answerfile, 'rb') as input:
@@ -49,8 +49,8 @@ def loadClusterData(answerfile, chaindir):
         with open(chainfile, 'rb') as chaindat:
             chain = cPickle.load(chaindat)
 
-        logM200samples = np.hstack(chain['logM200'])[5000::10]
-        logC200samples = np.log(np.hstack(chain['c200'])[5000::10])
+        logM200samples = np.hstack(chain['logM200'])[burn::thin]
+        logC200samples = np.log(np.hstack(chain['c200'])[burn::thin])
 
         cluster['id'] = root
         cluster['log_mtrue'] = log_mtrue
