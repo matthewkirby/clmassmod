@@ -18,7 +18,7 @@ from multiprocessing import Pool
 
 __NPROCS__ = 4
 __singlecore__ = False
-__samples__ = 30000
+__samples__ = 100000
 
 __logmass_scale__ = np.log(1e14)
 
@@ -37,7 +37,7 @@ def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
     clustersfile = '%s/clusters.pkl' % chaindir
     if os.path.exists(clustersfile):
         with open(clustersfile, 'rb') as input:
-            clusters = cPickle.load(clustersfile)
+            clusters = cPickle.load(input)
         return clusters
 
     with open(answerfile, 'rb') as input:
@@ -56,7 +56,7 @@ def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
         with open(chainfile, 'rb') as chaindat:
             chain = cPickle.load(chaindat)
 
-        logM200samples = np.hstack(chain['logM200'])[burn::thin]
+            logM200samples = np.hstack(chain['logM200'])[burn::thin]
         logC200samples = np.log(np.hstack(chain['c200'])[burn::thin])
 
         cluster['id'] = root
@@ -201,6 +201,10 @@ def main(answerfile, chaindir, outfile):
             break
         except pymc.ZeroProbability:
             continue
+
+    if model is None:
+        print 'Cannot Initialize'
+        sys.exit(1)
 
     runSampler(model, outfile)
 
