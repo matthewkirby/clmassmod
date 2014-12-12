@@ -13,25 +13,29 @@ import sys, os, json, argparse, glob, stat
 
 ####################
 
-def setupCondor(configs, jobdir, jobname, simdir, simfiles, input_extensions): 
+def setupCondor_MB(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/measurebias_fakedata/highsn'):
     
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
 
     configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
 
-    for i, simfile in enumerate(simfiles):
+    simfiles = glob.glob('{0}/halo_*.info'.format(simdir))
 
-        inputfiles = ['{0}{1}'.format(simfile, x) for x in input_extensions]
+    for i, halofile in enumerate(simfiles):
+
+        catname = halofile
+
+        inputfiles = [halofile]
         
-        jobparams = createJobParams(simfile,
+        jobparams = createJobParams(catname,
                                     configfiles,
                                     inputfiles = inputfiles,
                                     workbase = './',
                                     stripCatExt = False)
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
 
-    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/oldmxxl/nfwfit_condorwrapper.sh
+    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
 universe = vanilla
 Error = {jobdir}/{jobname}.$(Process).stderr
 Output = {jobdir}/{jobname}.$(Process).stdout
@@ -44,23 +48,47 @@ queue {njobs}
         output.write(condorfile)
 
 
+#########################################################
 
-####################
-
-def setupCondor_MXXL(configs, jobdir, jobname, simdir):
-
-    simdirbase = '/vol/braid1/vol1/dapple/mxxl'
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/snap41'):
     
-    input_extensions = '.convergence_map .shear_1_map .shear_2_map'.split()
+    if not os.path.exists(jobdir):
+        os.mkdir(jobdir)
 
+    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
 
-    for i, snap in enumerate('snap54 snap41'.split()):
+    input_extensions = 'convergence_map shear_1_map shear_2_map'.split()
+    for i, simfile in enumerate(simfiles):
 
-        simdir = '{0}/mxxl{1}'.format(simdirbase, snap)
+    simfiles = glob.glob('{0}/halo_*.convergence_map'.format(simdir))
+        
+    for i, halofile in enumerate(simfiles):
 
-        simfiles = [os.path.splitext(x)[0] for x in glob.glob('{0}/halo_*convergence_map'.format(simdir))]
+        basename = os.path.basename(halofile)
+        root, ext = os.path.splitext(basename)
 
-        setupCondor(configs, jobdir, '{0}.mxxl.{1}'.format(jobname, snap), simdir, simfiles, input_extensions)
+        catname = '{0}/{1}'.format(simdir, root)
+
+        inputfiles = ['{0}.{1}'.format(catname, x) for x in input_extensions]
+        
+        jobparams = createJobParams(catname,
+                                    configfiles,
+                                    inputfiles = inputfiles,
+                                    workbase = './',
+                                    stripCatExt = False)
+        writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
+
+    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+universe = vanilla
+Error = {jobdir}/{jobname}.$(Process).stderr
+Output = {jobdir}/{jobname}.$(Process).stdout
+Log = {jobdir}/{jobname}.$(Process).batch.log
+Arguments = {jobdir}/{jobname}.$(Process).job
+queue {njobs}
+'''.format(jobdir = jobdir, jobname = jobname, njobs = len(simfiles))
+
+    with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
+        output.write(condorfile)
 
 
 ###################

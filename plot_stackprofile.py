@@ -78,15 +78,21 @@ def plotProfile(datfilebase, c, label, labelZ = True):
     
     zlens = cat.hdu.header['ZLENS']
     rscale = nfwutils.rscaleConstM(mass/nfwutils.global_cosmology.h, concen, zlens, 200)
-    gamma = nfwmodeltools.NFWShear(cat['r_mpc'], concen, rscale, zlens)
-    kappa = nfwmodeltools.NFWKappa(cat['r_mpc'], concen, rscale, zlens)
-    gpred = cat['beta_s']*gamma / (1 - (cat['beta_s2']*kappa/cat['beta_s']))
+    r_mpc = np.ascontiguousarray(cat['r_mpc'], dtype='<d')
+
+    clean = r_mpc > 0.05
+
+    rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zlens) * nfwutils.global_cosmology.beta([1e6], zlens)[0] * nfwutils.global_cosmology.hubble2(zlens) / nfwutils.global_cosmology.v_c**2
+
+    gamma = nfwmodeltools.NFWShear(r_mpc[clean], concen, rscale, rho_c_over_sigma_c)
+    kappa = nfwmodeltools.NFWKappa(r_mpc[clean], concen, rscale,rho_c_over_sigma_c)
+    gpred = cat['beta_s'][clean]*gamma / (1 - (cat['beta_s2'][clean]*kappa/cat['beta_s'][clean]))
 
 
 
-    signalpred = gpred / (cat['beta_s']*nfwutils.global_cosmology.beta([1e6], zlens)*nfwutils.global_cosmology.angulardist(zlens))
+    signalpred = gpred / (cat['beta_s'][clean]*nfwutils.global_cosmology.beta([1e6], zlens)*nfwutils.global_cosmology.angulardist(zlens))
 
-    print signalpred
+#    print signalpred
             
     if labelZ:
         flabel='%s z=%1.2f' % (label, zlens)
@@ -95,9 +101,83 @@ def plotProfile(datfilebase, c, label, labelZ = True):
 
     pylab.errorbar(cat['r_mpc']*nfwutils.global_cosmology.h, cat['ghat'], cat['ghatdistrosigma']/(np.sqrt(cat['ndat'])), 
     linestyle='None', marker='o', color=c, label=flabel)
-    pylab.plot(cat['r_mpc']*nfwutils.global_cosmology.h, signalpred, marker='None', linestyle=':', color=c, linewidth=2)
+    pylab.plot(cat['r_mpc'][clean]*nfwutils.global_cosmology.h, signalpred, marker='None', linestyle=':', color=c, linewidth=2)
     
 ####
+
+def plotonebinshear():
+
+    matplotlib.rcParams['figure.figsize'] = [8,6]
+
+    fig = pylab.figure()
+
+
+    colori = -1
+    curm = 3
+
+    #first plot bk11
+    
+    setBK11()
+
+    for snap in [124,141]:
+
+        colori += 1
+
+
+        plotProfile('../rundirs/bk11stack_massbins_shearprofile_%d/bk11stack_%d' % (snap, curm),
+                    c[colori], 'BK11')
+
+    # then bcc
+
+    setBCC()
+
+    for curz in range(3):
+
+        colori += 1
+
+        
+        plotProfile('../rundirs/bccstack_massbins_shearprofile/bccstack_%d_%d' % (curz, curm),
+                        c[colori], 'BCC')
+
+    # then mxxl
+
+    setMXXL()
+
+    if curm == 3:
+
+        for snap in [41]:
+
+            colori += 1
+
+
+            plotProfile('../rundirs/mxxlstack_massbins_shearprofile_%d/mxxlstack_%d' % (snap, curm),
+                                    c[colori], 'MXXL')
+
+
+
+    ax = pylab.gca()
+    ax.set_xscale('log')
+    pylab.axhline(0.0, c='k', linewidth=2)
+    pylab.axvline(0.2*0.7, c='g', linestyle='--')
+    pylab.axis([0.01, 10, 0., 0.0003])
+    pylab.xlabel('Radius [Mpc/h]', fontsize=20)
+
+
+
+    pylab.ylabel('Scaled Shear', fontsize=20)
+
+    pylab.legend(loc='upper right', fontsize=10)
+            
+        
+    pylab.tight_layout()
+
+
+    pylab.savefig('onebin_shear.png')
+
+    return fig
+
+
+###
     
 def multibinshear():
 

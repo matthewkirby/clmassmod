@@ -46,24 +46,28 @@ class Duffy(object):
         A = 5.71
         B = -0.084
         C = -0.47
+
+        if overdensity != 200:
         # Get a first estimate of the concentration to convert to M200crit
-        c0 = A * (m / 2e12)**B * (1. + z)**C
-        delta200c = overdensity / 200.
-        minval = 0.2
-        maxval = 5.
-        ratio = minval + np.arange(n) / n * (maxval - minval)
-        res = self.ratioResid(ratio, c0, delta200c)
-        rRatio = ratio[(res**2).argmin()]
-        mRatio = delta200c * rRatio**3
-        m200c = m / mRatio
-        # Convert input to M200c using the updated concentration
-        nIter = 2
-        for i in range(nIter):
-            c = A * (m200c / 2e12)**B * (1. + z)**C
-            res = self.ratioResid(ratio, c, delta200c)
+            c0 = A * (m / 2e12)**B * (1. + z)**C
+            delta200c = overdensity / 200.
+            minval = 0.2
+            maxval = 5.
+            ratio = minval + np.arange(n) / n * (maxval - minval)
+            res = self.ratioResid(ratio, c0, delta200c)
             rRatio = ratio[(res**2).argmin()]
             mRatio = delta200c * rRatio**3
             m200c = m / mRatio
+            # Convert input to M200c using the updated concentration
+            nIter = 2
+            for i in range(nIter):
+                c = A * (m200c / 2e12)**B * (1. + z)**C
+                res = self.ratioResid(ratio, c, delta200c)
+                rRatio = ratio[(res**2).argmin()]
+                mRatio = delta200c * rRatio**3
+                m200c = m / mRatio
+        else:
+            m200c = m
         return A * (m200c / 2e12)**B * (1. + z)**C
 
 
