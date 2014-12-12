@@ -3,6 +3,7 @@
 \usepackage{fullpage}
 \usepackage{enumerate}
 \usepackage{natbib}
+\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{ifthen}
@@ -145,6 +146,16 @@ Spend the afternoon thinking about what to do with the complex dependences on th
 Trying to play catch up, and think about the simulations again. I ran some tests on how bining affects results. See sec~\ref{sec:binningmethod}.
 Also started to implement a cosmology dependent m-c relation. See sec~\ref{sec:cosmo_dependent_mc}.
 
+\paragraph{9 July 2014}
+Fell off the bandwagon again. Updates on what's going on in the BCC in section~\ref{sec:bcc_smoothing}.
+Updates on comparing three sets of sims in section~\ref{sec:consistancy}.
+
+\paragraph{5 Nov 2014}
+Haven't worked on the simulation effort in quite a long time. Time to pick up the pieces again. The interim period was spent trying to get my collaborators to get me info on the simulations: Matt Becker owes me updated BCC simulations that aren't overly smoothed, Stephen Hilbert owes me mass profiles for MXXL, and Salman Habib owes me any simulations. The immediate task is to figure out how to get an answer for Joerg's and Tim's papers, pronto. What do they need, and how to supply it? Thoughts and musing in sec~\ref{sec:spt_immediateneeds}.
+
+\paragraph{26 Nov 2014}
+There is a lot of rambling in section~\ref{sec:spt_immediateneeds}. I also started writing up some of my results from the perfect NFW halo investigations in that section. I will need to make some plots and seperate off that section into something comprehensible. I have now also started writing up my formulism for how I am going to infer the bias in the likelihood in section~\ref{sec:bias_framework}. The model is coded up, but I still need to debug it. Results to be added later.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -201,6 +212,15 @@ TODO: Fill in details here on how exactly I do my fits.
 The fit is encoded in nfwfit.py. 
 
 
+\subsection{Smoothing in the BCC}
+\label{sec:bcc_smoothing}
+
+\logfig{figures/shearprofilecomp.png}{A comparison of stacked shear profiles in each of the simulations. Data points show the stacked shear profiles, while dotted lines show the predicted NFW for the average mass and average concentration of the sample. (Note that the best comparison model is not $<M>$ and $<c>$.) Notice how the BCC simulations roll over towards zero shear at low radius. This is apparently a smoothing effect, and renders the BCC profiles inaccurate inside 750kpc.}
+
+As of this time (May 2014), I cannot use BCC as a reliable indicator of bias for profiles probing ranges inside 750kpc.
+Matt Becker should be working on a solution to this.
+
+
 \subsection{Comparing Mass Bias vs Radial Range \& M-C Relation}
 \label{sec:consistant_bias_mcrelation}
 
@@ -233,7 +253,7 @@ When I assume either c=4 or Duffy08, I see that the simulations produce differen
 \includegraphics[width=0.3\textwidth]{figures/c4_r7}
 \includegraphics[width=0.3\textwidth]{figures/duffy_r7}
 \includegraphics[width=0.3\textwidth]{figures/cfree_r7}
-\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The fit range is 0.5 - 3.0 Mpc. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range. Made with compareDiffSims.py}
+\caption{Plot of bias versus mass. Left: Assuming c=4, Center: Assuming Duffy08, and Right: C is a free parameter. The fit range is 0.5 - 3.0 Mpc. The width of each colored band represents the $1\sigma$ uncertainty in the median bias for each mass bin. Bins are adaptively created to balance signal-to-noise with exploring the mass range. Note from sec~\ref{sec:bcc_smothing}, I don't expect the BCC lines to be accurate here. Made with compareDiffSims.py}
 \label{fig:comparing_r7_bias}
 \end{figure}
 
@@ -245,7 +265,7 @@ However, if we look at the innermost fit region, 0.25-0.5 mpc, we can see that t
 
 \logfig{figures/cfree_r1}{Same as fig~\ref{fig:figures/cfree_r10}, except for on a radically different scale.}
 
-Could this be a resolution effect? Or maybe how the shear signal is calculated, since we are getting close to the critical curves, though I would think if that was the case BK11 and MXXL would be more consistent. We also should only be seeing shears of $g\approx0.3$ at 250kpc for z=1 and $10^{15}$ solar masses.
+This is apparently a resolution effect (see sec~\ref{sec:bcc_smoothing}. 
 
 
 \subsection{Role of Mass-Concentration Relation}
@@ -259,17 +279,59 @@ This to me suggests a 2-pronged strategy. When we don't care about cosmology, fo
 \subsection{Testing a Cosmology-Dependent Mass-Concentration Relation}
 \label{sec:cosmo_dependent_mc}
 
-On Becker's suggestion, I'm going to try out a cosmology-dependent MC relation. Since cosmology is for all fits, what I hope to see is a consistant bias between simulations AND a level of scatter comparable to fixing the mass-concentration relation. I'm going to use \citet{zhao_cosmodepmc}, since they provide an online calculator and code. For now, I'll just download tables corresponding to each cosmology that I need. I'll figure out later how to actually run their code on the fly, if it works. The calculator is at: \url{http://202.127.29.4/dhzhao/mandc.html}.
+On Becker's suggestion, I tried out the Zhao08 model for cosmology dependent m-c relations, from \citet{zhao_cosmodepmc}, since they provide an online calculator and code. A calculator is at: \url{http://202.127.29.4/dhzhao/mandc.html}. In short, this more complicated M-C relation did not bring agreement as well as I had hoped.
+
+\begin{figure} \centering
+\includegraphics[width=0.4\textwidth]{figures/zhaomc_z25.png}
+\includegraphics[width=0.4\textwidth]{figures/zhaomc_z10.png}
+\caption{Median bias measured from the BCC, MXXL, and BK11 simulations using the Zhao M-C relation at left: $z=0.25$ and right: $z\approx 1.0$. Agreement is not disheartening, but is not signficiantly improved, either.}
+\label{fig:zhamoc}
+
+\end{figure}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Next Steps}
+\subsection{Agreement Between Simulations with Free Concentration}
+\label{sec:consistancy}
+
+\begin{figure} \centering
+\includegraphics[width=0.6\textwidth]{figures/cfree_z25.png} \\
+\includegraphics[width=0.6\textwidth]{figures/cfree_z5.png} \\
+\includegraphics[width=0.6\textwidth]{figures/cfree_z10.png}
+\caption{Median bias with concentration free, for fit range 750kpc - 3Mpc. Simulations seem to show good agreement.}
+\end{figure}
+
+So at least where we expect the simulations to agree, their median bias seems to agree. 
+That's positive.
+However, why is BK11 mildly higher than BCC and MXXL?
+
+
+\begin{figure}\centering
+  \includegraphics[width=0.4\textwidth]{figures/lowz_logscatter.png}
+  \includegraphics[width=0.4\textwidth]{figures/lowz_logscatter_cdf.png}
+\caption{Scatter in recovered masses versus true masses. First, the scatter in the BCC is much larger since only that simulation measures the full LoS noise. Second, MXXL and BK11 seem to agree in their distribution at the low scatter, but the BK11 has slightly more up scatter. A KS test says that this is significant at $p=0.0024$, for $D=0.081$. However, maybe this is just the fact that BK11 has twice the LoS integration as MXXL? }
+\end{figure}
+
+This points towards a possibly scary conclusion. Can we not know the bias without folding in the full LoS scatter? But...the BCC settles back to the MXXL value! So maybe its not so bad anyway? Or is there something different about the LoS scatter in BK11?
+
+Also, what causes the tail to high overestimates? This was seen and clearly measured by Matt in BK11. But he doesn't discuss a cause.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Next Tasks}
 
 \begin{itemize}
-\item I want to stack cluster shear profiles (grouping by mass, redshift, and concentration), and see if I can visually see differences at low redshifts. Maybe I should stack residuals? That might confirm my suspicion that there is some sort of different treatment or resolution effect afflicting cluster cores in BCC and BK11.
-\item I should implement the Ludlow prescription for cosmology-dependent m-c relations. I should then check to see if I get a consistant bias across all three simulations/cosmologies. That would confirm my suspicion about how to treat the m-c relation, while being robust to non-consenus parameter values.
+\item Inspect clusters that are in the highly skewed tail. Is there anything characteristic about their shear profiles?
+\item Download and analysize BK11 simulations with only 200Mpc integration length. Is the scatter distribution consistant with the MXXL?
+\item Can I recover the scatter in Bk11 and BCC by convolving the measured MXXL scatter with an appropriate function?
 \end{itemize}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -641,6 +703,218 @@ To start, I'd like to remake the above plots with M500 instead of M200. However:
 \end{itemize}
 
 I've contacted Aaron about the MXXL problem, but I am holding off contacing Matt about the BCC issue until I am ready to show him some preliminary results.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Understanding Maximum Likelihood Fits and Bootstrapping}
+
+There is a lot of confusion about how to interpret maximum likelihood fits, bootstraping, and probability distributions.
+I've added to the confusion.
+So this is my attempt to straighten it out.
+
+Let's start with Bayes Theorem.
+
+\begin{equation}
+P(\alpha|\vec y) \propto P(\vec y|\alpha)P(\alpha)
+\end{equation}
+
+Simple enough. When we do maximum likelihood, we ignore the prior.
+Mathematically, that means $P(\alpha) = \mathrm{constant}$.
+
+But what if we are not interested in $\alpha$, but instead $\beta = f(\alpha)$?
+Bayes Rule give the same thing:
+
+\begin{equation}
+P(\beta|\vec y) \propto P(\vec y|\beta)P(\beta)
+\end{equation}
+
+Looking for the MLE is again equivalent to $P(\beta) = \mathrm{constant}$.
+Since we are still looking at the same probability distribution, $\hat \beta$ that maximizes $P(\beta|\vec y)$ where $P(\beta) = \mathrm{constant}$, we have $\hat\beta = f(\hat\alpha)$ for $\alpha$ that maximized $P(\vec y|\alpha)$. 
+
+But here's the paradax.
+Imagine that we've mapped out $P(\alpha|\vec y) \ propto P(\vec y|\alpha)$, with $P(\alpha) = \mathrm{constant}$.
+We can calculate $P(\beta|\vec y)$ from that distribution.
+
+\begin{equation}
+P(\beta|\vec y) = P(\alpha|\vec y)\frac{d\alpha}{d\beta}
+\end{equation}
+
+If $\beta = f(\alpha)$ is not linear, then $\frac{d\alpha}{d\beta} = f(\beta)$.
+Substituting then, we have:
+
+\begin{equation}
+P(\beta|\vec y) = P(\alpha|\vec y)f(\beta) = P(\vec y|\alpha)f(\beta) = P(\vec y|\beta)P(\beta)
+\end{equation}
+
+This implies that in this case, we have $P(\beta) = \frac{d\alpha}{d\beta} = f(\beta)$.
+That means this second $P(\beta|\vec y)$ is not identical to before, when we assumed $P(\beta) = \mathrm{constant}$.
+Therefore, the MAP for $\beta$ is not $\hat \beta$.
+
+Now, how do we interpret bootstrapping the MLE?
+We obtain a bunch of samples of the MLE of $P(\vec y|\beta) = P(\vec y|\alpha)$ via bootstrapping.
+What probability distribution to they correspond to?
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Immediate needs for SPT: Megacam-19 and HST-14}
+\label{sec:spt_immediateneeds}
+
+I need to get an answer for Tim and Joerg by the end of November of this month. The problem is still to figure out what exactly do they need from the simulations? How complicated do the predictions need to be?
+
+What makes this hard to answer is that I don't think a constant offset number is going to be sufficient. The masses will be immediately plugged in to a scaling relation code, which will need the detailed relationship between true mass and lensing signal. The prior that will be assumed for the true mass is also going to change.
+
+I think the minimum starting point has got to be measuring $P(g | m_{\mathrm{lens}})$. From that distribution, I can compute any needed summary info (without rerunning the pipeline), and I can apply any prior that I need. The domain for $m_{\mathrm{lens}|}$ has to be as unrestricted as possible, as the possible interpretations and priors will change, ie so that I can test allowing for negative mass, or different mass priors, etc.
+
+That means I should get the mcmc sampling code running. Then I need to adjust the prior and make it improper. From there, I can run on all the simulations that I have, and then look at the posteriors and construct a model that describes all the data. Once I have the sampling from the likelihood, everything else should simply just be a reweighting of those chains.
+
+
+Looking at the state of nfwfit.py, it looks like an MCMC sampling is already set up. However, the mass prior is restricted to be within a finite range. On the plus side, the concentration is independently sampled from the mass, so I should be able to immediate mimic a free concentration fit, and not worry about what the concentration should be for a negative mass.
+
+The bigger problem with negative mass are the conversion functions between mass and scale radius. Let's inspect the posteriors with the standard $10^{[13,16]}$ prior, and see if any of the clusters get close to hitting the prior boundaries. That will tell us a lot right there.
+
+What do I need to run? MCMC, log prior, cfree, 20k samples, fit ranges, noise \& density levels.
+
+Then, miscentering with the same...
+
+
+------
+
+
+If I want to use the MCMC samples that I'm producing now for the current sample, I will need a way to summarize the information. I need to understand how I'm supposed to reqeight the samples so that I can recover a maximum likelihood  search.
+
+Also, I need to understand what exactly do I need for Tim's and Joerg's papers. 
+
+For Tim:
+  - His paper is just going to be masses. So having some sort of average correction, or a mass dependent correction should be OK.
+
+For Joerg:
+  - His paper is feeding right into a scaling relations code. That code has $P(M_{lens} | M_{true})$ in it. 
+
+
+Can I not just use what I already have?
+  - I need to calculate M500 masses, so that is one thing that is different.
+  - I need to make sure that their fits are run like my fits.
+  - I need to understand how much of a noise dependence there is.
+
+I have this old plot floating around from when I previously looked at noise dependence.
+The results in that plot look rather scary, where there seems to be a big dependence on the prior.
+In this case, it was simply a bounds prior.
+Can I repeat that?
+
+
+
+
+Looking at perfect NFW halos, and then plotting mfit / mtrue vs mtrue. The noise gets larger at lower masses, as to be expected, as noise is constant and signal is decreasing.
+What is interesting is that the bias is more negative as we go to lower masses. 
+This seems to be driven by a population of points that are hitting the prior boundary.
+
+When I expand the boundary, to allow for masses to float down to 1e10, and higher, then down to a true mass of 2e14 I see that the bias is even lower. But at the lowest masses (< 2 e14), then I see that the bias switches directions and rises drastically.
+This is despite a large population on thge lower boundary wall, and is instead a population that is scattering up.
+
+
+I've now modified the code to fit a negative mass, by always taking the absolute value of the mass, and if negative, manually inserting a negative sign in front of the shear. In this case, and with a wide prior, the bias pretty much goes away!
+
+So how do we best describe the noise?
+If I plot the recovered distribution on a mass vs mass plot, I see an approximately equal amount of scatter. Though at the higher masses the scatter has a wider sigma than at lower masses!
+This is best seen with a delta (not ratio) vs mass plot.
+
+
+Just did a quick gaussian error propagation for M200 masses. $\sigma_M^2 = (\frac{dM}{dg})^2\sigma_g^2$. If we assume that we are just fitting the amplitude and not the shape, then $\frac{dr_s}{dg} = \mathrm{constant}$ and $\frac{dM}{dr_s} \propto r_s^2$, at least for $c=4$ models. Since there's a fixed noise in the shear profile, we expect the error to increase for higher masses, but the relative error will decrease!
+
+But fine, this is all due to the noise in the shear profile, and not intrinsic noise. That should be captured from the uncertainties in the shear profile. But it also testifies to the fact that there is an intermediate stage object that COULD be negative in the analysis. 
+
+
+Just checked what $\frac{dg}{dr_s}$ looks like. It is not a linear function of $r_s$. So there is no natural way to run this fit that is linear. So why is using no explicit prior an unbiased way to fit the masses?
+
+Pumped up the errors in the shear profile to g $\pm1$, and I'm still not seeing any sign of nonlinearlity in the maxlike solution. Why not!? 
+How does this change if I also fit for the concentration?
+
+If you look at the quantity $\frac{d\gamma}{dr_s} = Kg(x)(1 - \frac{d\ln g}{d\ln x})$. So that would imply that the derivative 
+
+Maybe it is roughly linear because I'm using the outer fit range. What happens if I use a more full radial range?
+
+
+So I've now looked at the scatter and bias for a range of noise levels using a $c=4$ fit and using the innermost fit range, where I would expect nonlinear effects to be the highest. It still requires extremeley high noise levels to see any sort of biasing, and even then it seems to only kick in at the highest masses. So that would suggest that the extra contributions to the likelihood should be low.
+
+One diagnostic of how bad things should be should be looking at the 2nd and 3rd derivates of the log posterior. If the ratio of the 3rd order Taylor expansion to the 2nd order taylor expansion along the 1-sigma boundary is large, I would expect to see noise bias issues.
+
+
+I've now run noise bias tests for c constant and c free. With c constant, there just is not much of any noise bias to see, reflecting how the fit is nearly linear. However, with c free, the MLE estimate for mass is seriously biased upwards. Note that for cfree, it looks like the code adopts the Duffy M-C relation to generate the halos. The bias is proportionally much larger for light halos than massive halos. That supports the noise bias calculations from the last few days.
+
+If we go back to the case where we limit the fit, then the will clearly be biases. The MLE will be pushed against the boundaries for some clusters, and when it is averaged, there will be a problem.
+
+
+The reality of the situation, however, is that we will not use the MLE estimates. Or, if the posteriors are Gaussian when allowing for negative ``mass'', we could use that parameterization, with negative means.
+
+The relevant question: How does handling the probability distribtions properly work? Sub-parts: In the c-free case, what does the probability distro for mass look like, after marginalizing out concentration? Is it Gaussian, is that MLE biased?
+
+Even for low noise, the low mass case is not linear in either log or linear mass spacing. So if we want to fit for concentration, then we cannot use a Gaussian approximation. Problems are only worse at high noise.
+
+Next question: How much noiser are the fits when we have cfree over c fixed? How many clusters do we need to beat down the extra noise to be below the systematic uncertainty of the m-c relations?
+
+I started looking at this question. For fits to high radii, freeing the concentration does not seem to make much of a difference, probably because the concentration doesn't have a big effect. I need to rigorously quantify this, and check how things change as I go in to lower radii.
+
+I also want to verify that the $P(M_{lens})$ that I produce from the marginalization process are accurate. The first way that comes to mind is to take all clusters with the same true mass and add their logprobs. I'm running that now, but that might not be definitive. The input to the test does not match the prior, and therefore I would not expect the test to return something sensible. I probably need to set up a CDF test.
+
+Indeed, it appears that the multiplied probability is biased high by about 1e14. 
+
+This is kind of strange. I ran a test with a prior. I generated masses uniform-log 14-16. I then measured the posterior for that range as well (hard prior boundaries). The CDF test shows a bias, towards underestimating the masses. Most of the problems are at the end points. 
+
+Well, maybe this isn't a surprise. I fit for the concentration with a flat prior, but the clusters were all c=4. That could distort things. Let me check that.
+
+
+\subsection{Fitting for bias \& Importance Sampling}
+\label{sec:bias_framework}
+
+Here are my notes from writing up how I'm planning to use the likelihood fits. Math as best as I can make it.
+
+Definition of symbols: $\vec\alpha$ describes how I measure the bias and intrinsic scatter in weak lensing masses. $\vec\beta$ describe the true, 3D mass concentration relation. $M_t$ is the true mass, $M_l$ is the weak lensing mass, $c_l$ is the weak lensing ``effective'' concentration, ie, what weak lensing sees on the sky. $g$ is the shear profile.
+
+I want to infer $P(\vec\alpha|M_t, c_t, g)$, ie what is the bias and scatter in lensing masses, given the true 3D parameters and the observed shear profile. The mass-concentration relation is marginalized over.
+
+Rearranging terms by repeated aplication of Bayes Rule/Conditional Probability, I get:
+
+\begin{equation}
+P(\vec\alpha|M_t, c_t, g) = P(g|M_t,c_t,\vec\alpha)P(\vec\alpha)\frac{P(M_t,c_t)}{P(M_t,c_t,g)}
+\end{equation}
+
+Since $M_t$, $c_t$, and g are given, we can take the prior probabilies $P(g)$, $P(M_t)$, and $P(c_t)$ as constants that we can ignore. To connect the true quantitites with the shear profile, we introduce and marginalize out the inferred lensing quantities $M_l$ and $c_l$.
+
+\begin{equation}
+P(g|M_t,c_t,\vec\alpha)P(\vec\alpha) = P(\vec\alpha)\int_{\forall M_l, c_l} P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)dM_ldc_l
+\label{eq:marginalization}
+\end{equation}
+
+This is written for one cluster. I will suppress the generalization for many clusters. Ahead of time, we have already MCMC sampled the likelihood for one cluster. 
+
+\begin{equation}
+P(M_l,c_l|g)^{\prime} = P(g|M_l,c_l)P(M_l,c_l)^{\prime}
+\end{equation}
+
+It is important to notice that the prior distriubtion used to sample the likelihood for an individual cluster can generally have \emph{no relation} to the prior probabilities in the problem that we actually want to solve. We want to evaluate the function from equation~\ref{eq:marginalization} with a Monte Carlo method. Specifically, we want to use the likelihood chains that we have already drawn for the individual cluster.
+
+\begin{align}
+\int_{\forall M_l, c_l} P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)dM_ldc_l \\
+  = \int_{\forall M_l, c_l} \frac{P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(M_l,c_l|g)^{\prime}}P(M_l,c_l|g)^{\prime}dM_ldc_l \\
+  = \frac{1}{n}\sum\limits_{M_l^{\prime},c_l^{\prime}}\frac{P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(M_l,c_l|g)^{\prime}} \\
+  = \frac{1}{n}\sum\limits_{M_l^{\prime},c_l^{\prime}}\frac{P(g|M_l,c_l)P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(g|M_l,c_l)P(M_l,c_l)^{\prime}} \\
+  = \frac{1}{n}\sum\limits_{M_l^{\prime},c_l^{\prime}}\frac{P(M_l,c_l|M_t,c_t,\vec\alpha)}{P(M_l,c_l)^{\prime}} \\
+\end{align}
+
+In the above equations, we are turning the integration over all $M_l$ and $c_l$ into a summation over samples via Monte Carlo integration. However, we are pulling from the primed distribution, so we need to multiply and divide by it first. That's the importance sampling bit: each sample is weighted by the ratio of the probability distributoon we care about over the probability distribution we sampled from. However, the shear profile likelihood is evaluated in each, and therefore cancels. The remaining weight is simply the prior that we assumed when we sampled $M_l$ and $c_l$ for each cluster. 
+
+Here it is important to pay attention to which variable we are actually integrating over. Are we integrating over $M_l$ and $c_l$ or $\log M_l$ and $\log c_l$. The weight can be ignored if the variable we are integrating in had a uniform prior when we were sampling each individual prior.
+
 
 
 
