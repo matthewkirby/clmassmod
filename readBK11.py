@@ -2,7 +2,7 @@
 # Reads in BK11 files so that nfwfit.py can use them
 ######################
 
-import pyfits, ldac
+import astropy.io.fits as pyfits, ldac
 import nfwutils
 import numpy as np
 
@@ -63,10 +63,10 @@ class BK11Sim(object):
                 sinphi[i,j] = yr/r
 
 
-        A00 = sim['A00'].reshape(gridsize, -1)
-        A11 = sim['A11'].reshape(gridsize, -1)
-        A10 = sim['A10'].reshape(gridsize, -1)
-        A01 = sim['A01'].reshape(gridsize, -1)
+        A00 = sim['A00'][0]
+        A11 = sim['A11'][0]
+        A10 = sim['A10'][0]
+        A01 = sim['A01'][0]
 
         kappa = 0.5*(2- A00 - A11)
         gamma1 = 0.5*(A11 - A00)
