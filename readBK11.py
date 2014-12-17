@@ -89,4 +89,8 @@ class BK11Sim(object):
         self.redshifts = np.ones(len(self.r_mpc))*float(sim['ZSOURCE'])
         self.beta_s = nfwutils.global_cosmology.beta_s(self.redshifts, clusterz)
 
+        self.m500 = sim['M500C']
+        self.m200 = sim['M200C']
+        self.c200 = sim['C200C']
+
 

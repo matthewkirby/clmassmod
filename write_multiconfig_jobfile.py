@@ -57,7 +57,7 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple
 
     configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
 
-    input_extensions = 'convergence_map shear_1_map shear_2_map'.split()
+    input_extensions = 'convergence_map shear_1_map shear_2_map answer'.split()
     for i, simfile in enumerate(simfiles):
 
     simfiles = glob.glob('{0}/halo_*.convergence_map'.format(simdir))
