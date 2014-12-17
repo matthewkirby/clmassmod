@@ -11,7 +11,7 @@ chaindir = sys.argv[2]
 burn = int(sys.argv[3])
 thin = int(sys.argv[4])
 
-clusters = measurebias.loadClusterData(answerfile, chaindir, burn, thin)
+clusters = measurebias.loadClusterData(answerfile, chaindir, burn, thin, forceReload = True)
 
 with open('%s/clusters.pkl' % chaindir, 'wb') as output:
     cPickle.dump(clusters, output)
