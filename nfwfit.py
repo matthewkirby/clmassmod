@@ -195,13 +195,16 @@ def readSimCatalog(catalogname, simreader, config):
     if 'coresize' in config:
         offsetcat = asciireader.read('SPT_SN_offset.dat')
         m500 = sim.m500
+        if m500 == 0:
+            raise ValueError
         #choose one of the 50 closest in mass at same core radius
-        matchingcoresize = data[offsetcat['coresize[arcmin]'] == config.coresize]
+        matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
+        print 'Distro Available: %d' % len(matchingcoresize)
         deltamass = matchingcoresize['M500c'] - m500
         closestsims = np.argsort(deltamass)
-        selectedsim = closestsims[np.random.uniform(0, 50, 1)]  
+        selectedsim = closestsims[np.random.uniform(0, np.min(50, len(deltamass)))]  
         centeroffsetx = (matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]
-        centeroffsety = (matchingcoresize['peak_ypix[arcmin]'] - matchingcoresize['cluster_ypix'])[selectedsim]
+        centeroffsety = (matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
         print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
     
 
