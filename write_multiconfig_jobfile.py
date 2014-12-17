@@ -50,7 +50,7 @@ queue {njobs}
 
 #########################################################
 
-def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/snap41'):
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/mxxlsnap41'):
     
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
@@ -58,7 +58,7 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple
     configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
 
     input_extensions = 'convergence_map shear_1_map shear_2_map answer'.split()
-    for i, simfile in enumerate(simfiles):
+
 
     simfiles = glob.glob('{0}/halo_*.convergence_map'.format(simdir))
         
@@ -93,19 +93,49 @@ queue {njobs}
 
 ###################
 
-def setupCondor_BK11(configs, jobdir, jobname):
+def setupCondor_BK11(configs, jobdir, jobname, snaps='snap124 snap141'.split()):
+
+    if not os.path.exists(jobdir):
+        os.mkdir(jobdir)
+
 
     simdirbase = '/vol/braid1/vol1/dapple/mxxl'
-    
-    input_extensions = ['']
 
-    for i, snap in enumerate('snap124 snap141'.split()):
+    for i, snap in enumerate(snaps):
 
         simdir = '{0}/{1}/intlength400'.format(simdirbase, snap)
 
+        print simdir
+
+        configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+
         simfiles = glob.glob('{0}/haloid*.fit'.format(simdir))
 
-        setupCondor(configs, jobdir, '{0}.bk11.{1}'.format(jobname, snap), simdir, simfiles, input_extensions)
+        for j, catname in enumerate(simfiles):
+
+            inputfiles = [catname]
+
+            jobparams = createJobParams(catname,
+                                        configfiles,
+                                        inputfiles = inputfiles,
+                                        workbase = './',
+                                        stripCatExt = True)
+            writeJobfile(jobparams, '{0}/{1}.{2}.{3}.job'.format(jobdir, snap, jobname, j))
+
+
+    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+universe = vanilla
+Error = {jobdir}/{jobname}.$(Process).stderr
+Output = {jobdir}/{jobname}.$(Process).stdout
+Log = {jobdir}/{jobname}.$(Process).batch.log
+Arguments = {jobdir}/{jobname}.$(Process).job
+queue {njobs}
+'''.format(jobdir = jobdir, jobname = jobname, njobs = len(simfiles))
+
+    with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
+        output.write(condorfile)
+
+
 
 
 ###################
