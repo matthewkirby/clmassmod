@@ -12,6 +12,7 @@ import astropy.io.ascii as asciireader
 import nfwutils, bashreader, ldac
 import nfwmodeltools as tools
 import varcontainer
+import fitmodel
 import pymc
 import pymc_mymcmc_adapter as pma
 
@@ -202,7 +203,7 @@ def readSimCatalog(catalogname, simreader, config):
         print 'Distro Available: %d' % len(matchingcoresize)
         deltamass = matchingcoresize['M500c'] - m500
         closestsims = np.argsort(deltamass)
-        selectedsim = closestsims[np.random.uniform(0, np.min(50, len(deltamass)))]  
+        selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
         centeroffsetx = (matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]
         centeroffsety = (matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
         print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
@@ -571,7 +572,7 @@ class NFW_MC_Model(NFW_Model):
 
     def __call__(self, x, m200):
 
-        c200 = self.massconRelation(m200*self.massScale*nfwutils.global_cosmology.h, self.zcluster, self.overdensity)        
+        c200 = self.massconRelation(np.abs(m200)*self.massScale*nfwutils.global_cosmology.h, self.zcluster, self.overdensity)        
 
         return super(NFW_MC_Model, self).__call__(x, m200, c200)
 
@@ -658,7 +659,7 @@ class NFWFitter(object):
 
     def runUntilNotFail(self, catalog, config):
 
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog, config)
+        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
 
         for i in range(config.nbootstraps):
 
@@ -741,7 +742,7 @@ def runNFWFit(catalogname, configname, outputname):
     fitter = buildFitter(config)
 
     if 'fitter' in config and config.fitter == 'maxlike':
-        fitvals = fitter.runUnitNotFail(catalog, config)
+        fitvals = fitter.runUntilNotFail(catalog, config)
     else:
         fitvals = fitter.explorePosterior(catalog)
     
