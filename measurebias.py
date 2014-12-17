@@ -18,7 +18,7 @@ from multiprocessing import Pool
 
 __NPROCS__ = 4
 __singlecore__ = False
-__samples__ = 100000
+__samples__ = 20000
 
 __logmass_scale__ = np.log(1e14)
 
@@ -30,12 +30,12 @@ pool = None
 
 ####################
 
-def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
+def loadClusterData(answerfile, chaindir, burn=5000, thin = 10, forceReload = False):
     # loads M-C Chains for individual clusters
 
     #shortcut if the consolidation happened already
     clustersfile = '%s/clusters.pkl' % chaindir
-    if os.path.exists(clustersfile):
+    if forceReload is False and os.path.exists(clustersfile):
         with open(clustersfile, 'rb') as input:
             clusters = cPickle.load(input)
         return clusters
@@ -56,7 +56,7 @@ def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
         with open(chainfile, 'rb') as chaindat:
             chain = cPickle.load(chaindat)
 
-            logM200samples = np.hstack(chain['logM200'])[burn::thin]
+        logM200samples = np.hstack(chain['logM200'])[burn::thin]
         logC200samples = np.log(np.hstack(chain['c200'])[burn::thin])
 
         cluster['id'] = root
@@ -66,7 +66,7 @@ def loadClusterData(answerfile, chaindir, burn=5000, thin = 10):
 
         #priors used in chain sample had flat linear c200 prior, log m200 priors
         #and our model is in logc200
-        cluster['weights'] = 1./logC200samples
+        cluster['weights'] = 1./np.exp(logC200samples)
         cluster['weights'] = cluster['weights'] / np.sum(cluster['weights'])
 
 
@@ -151,8 +151,6 @@ def createMassBinModel(clusters, parts = None, massbinedges = np.logspace(np.log
 
 #        cluster_logprob_partialsums = np.array(map(measurebiashelper.LogSum2DGaussianWrapper, args))
         cluster_logprob_partialsums = np.array(pool.map(measurebiashelper.LogSum2DGaussianWrapper, args))
-
-
 
 
         return np.sum(cluster_logprob_partialsums)

@@ -32,8 +32,8 @@ for i in range(nclusters):
 
     clusterinfo = dict(m200 = np.exp(true_logmasses[i]),
                                   c200 = np.exp(true_logconcens[i]),
-                                  lm200 = np.exp(means[i,0]),
-                                  lc200 = np.exp(means[i,1]))
+                                  lm200 = np.exp(ml_estimate[i,0]),
+                                  lc200 = np.exp(ml_estimate[i,1]))
 
     answers['halo_%d' % i] = clusterinfo
 

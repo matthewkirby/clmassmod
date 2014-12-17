@@ -7,6 +7,8 @@ def LogSum2DGaussianWrapper(args):
     bin_mass_scatter = args['mass_scatter']
     bin_mc_covar = args['mc_covar']
     bin_c200_scatter = args['c200_scatter']
+
+
     
     bin_covar = np.array([[bin_mass_scatter**2, bin_mc_covar*bin_mass_scatter*bin_c200_scatter],
                                 [bin_mc_covar*bin_mass_scatter*bin_c200_scatter, bin_c200_scatter**2]])
@@ -21,22 +23,23 @@ def LogSum2DGaussianWrapper(args):
     clustersinbin = datastore.getClustersInBin(bin_number)
     nInBin = len(clustersinbin)
 
-    cluster_logprobs = np.zeros(nInBin)
+    cluster_logprobs = 0.
 
     for i, cluster in enumerate(clustersinbin):
 
         mu0 = bin_ratio + datastore.log_mtrues[cluster]
         mu1 = bin_logc200
 
-        cluster_logprobs[i] =  stats.LogSum2DGaussian(samples0 = datastore.getLogMassSamples(cluster),
+        cluster_logprob =  stats.LogSum2DGaussian(samples0 = datastore.getLogMassSamples(cluster),
                                                       samples1 = datastore.getLogC200Samples(cluster),
                                                       weights = datastore.getWeights(cluster),
                                                       mu0 = mu0,
                                                       mu1 = mu1,
                                                       invcovar = bin_invcovar,
                                                       invsqrtdetcovar = bin_invsqrtdetcovar)
+        cluster_logprobs += cluster_logprob
 
-    return np.sum(cluster_logprobs)
+    return cluster_logprobs
 
 ###################
 
