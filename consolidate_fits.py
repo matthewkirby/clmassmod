@@ -8,9 +8,9 @@ import nfwutils, nfwfit
 ###########################
 
 
-idpatterns = dict(mxxlsnap41 = re.compile('halo_cid(\d+)\.out'),
-                  mxxlsnap54 = re.compile('halo_cid(\d+)\.out'),
-                  bcc = re.compile('cluster_(\d+)\.out'),
+idpatterns = dict(mxxlsnap41 = re.compile('halo_(\d+_\d)\.out'),
+                  mxxlsnap54 = re.compile('halo_(\d+_\d)\.out'),
+                  bcc = re.compile('cluster_(\d+)\.hdf5.out'),
                   bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
                   bk11snap124 = re.compile('haloid(\d+)_zLens.+'))
 
@@ -67,7 +67,13 @@ def consolidateFits(workdir, simtype, outdir):
 
         match = idpattern.match(filebase)
 
-        haloid = int(match.group(1))
+        try:
+            haloid = int(match.group(1))
+        except AttributeError as e:
+            print filebase
+            raise e
+        except ValueError:
+            haloid = match.group(1)
 
         try:
             truth = answers[haloid]

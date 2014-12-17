@@ -8,10 +8,10 @@ import h5py
 import numpy as np
 
 def getClusterProperties(f):
-    ra = f['Cluster']['Cluster']['ra'][0]
-    dec = f['Cluster']['Cluster']['dec'][0]
-    z = f['Cluster']['Cluster']['z'][0]
-    mass = f['Cluster']['Cluster']['m200'][0]
+    ra = f['Cluster']['Cluster']['ra']
+    dec = f['Cluster']['Cluster']['dec']
+    z = f['Cluster']['Cluster']['z']
+    mass = f['Cluster']['Cluster']['m200']
     return ra, dec, z, mass
 
 def getShearCat(f):

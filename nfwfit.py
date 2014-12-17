@@ -8,6 +8,7 @@
 import importlib, cPickle, sys, os
 import numpy as np
 import astropy.io.fits as pyfits
+import astropy.io.ascii as asciireader
 import nfwutils, bashreader, ldac
 import nfwmodeltools as tools
 import varcontainer
@@ -188,8 +189,42 @@ def readSimCatalog(catalogname, simreader, config):
 
     e1 = sim.g1
     e2 = sim.g2
-    cos2phi = sim.cos2phi
-    sin2phi = sim.sin2phi
+
+    centeroffsetx = 0.
+    centeroffsety = 0.
+    if 'coresize' in config:
+        offsetcat = asciireader.read('SPT_SN_offset.dat')
+        m500 = sim.m500
+        if m500 == 0:
+            raise ValueError
+        #choose one of the 50 closest in mass at same core radius
+        matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
+        print 'Distro Available: %d' % len(matchingcoresize)
+        deltamass = matchingcoresize['M500c'] - m500
+        closestsims = np.argsort(deltamass)
+        selectedsim = closestsims[np.random.uniform(0, np.min(50, len(deltamass)))]  
+        centeroffsetx = (matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]
+        centeroffsety = (matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
+        print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
+    
+
+
+    delta_x = sim.x_arcmin - centeroffsetx
+    delta_y = sim.y_arcmin - centeroffsety
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)
+    deltax_mpc = (delta_x * dL * np.pi)/(180.*60)
+    deltay_mpc = (delta_y * dL * np.pi)/(180.*60)
+    r_mpc = np.sqrt(deltax_mpc**2 + deltay_mpc**2)
+    cosphi = deltax_mpc / r_mpc
+    sinphi = deltay_mpc / r_mpc
+    
+    sin2phi = 2.0*sinphi*cosphi
+    cos2phi = 2.0*cosphi*cosphi-1.0
+
+     
+   
+        
 
     E = -(e1*cos2phi+e2*sin2phi)
 
@@ -204,11 +239,11 @@ def readSimCatalog(catalogname, simreader, config):
 
     visiblemask = np.ones(len(E)) == 1.
     if 'maskname' in config:
-        visiblemask = applyMask(sim.x_arcmin, sim.y_arcmin, sim.zcluster, config)
+        visiblemask = applyMask(delta_x, delta_y, sim.zcluster, config)
 
     densitymask = np.ones(len(E)) == 1.
     if 'nperarcmin' in config:
-        densitymask = applyDensityMask(sim.x_arcmin, sim.y_arcmin, sim.zcluster, config)
+        densitymask = applyDensityMask(delta_x, delta_y, sim.zcluster, config)
 
     mask = np.logical_and(visiblemask, densitymask)
 
@@ -307,8 +342,13 @@ class NFW_Model(object):
         self.overdensity = 200
         self.config = config
 
-        self.m200_low = 1e10
-        self.m200_high = 1e17
+        if config is not None and 'fitter' in config and config.fitter == 'maxlike':
+            self.m200_low = -1e18
+            self.m200_high = 1e18
+        else:
+            self.m200_low = 1e10
+            self.m200_high = 1e17
+
         self.c200_low = 1.1
         self.c200_high = 19.9
 
@@ -700,7 +740,10 @@ def runNFWFit(catalogname, configname, outputname):
 
     fitter = buildFitter(config)
 
-    fitvals = fitter.explorePosterior(catalog)
+    if 'fitter' in config and config.fitter == 'maxlike':
+        fitvals = fitter.runUnitNotFail(catalog, config)
+    else:
+        fitvals = fitter.explorePosterior(catalog)
     
     savefit(fitvals, outputname)
 

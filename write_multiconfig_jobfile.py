@@ -57,10 +57,11 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple
 
     configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
 
-    input_extensions = 'convergence_map shear_1_map shear_2_map'.split()
+    input_extensions = 'convergence_map shear_1_map shear_2_map answer'.split()
+    for i, simfile in enumerate(simfiles):
 
     simfiles = glob.glob('{0}/halo_*.convergence_map'.format(simdir))
-
+        
     for i, halofile in enumerate(simfiles):
 
         basename = os.path.basename(halofile)
@@ -91,6 +92,37 @@ queue {njobs}
 
 
 ###################
+
+def setupCondor_BK11(configs, jobdir, jobname):
+
+    simdirbase = '/vol/braid1/vol1/dapple/mxxl'
+    
+    input_extensions = ['']
+
+    for i, snap in enumerate('snap124 snap141'.split()):
+
+        simdir = '{0}/{1}/intlength400'.format(simdirbase, snap)
+
+        simfiles = glob.glob('{0}/haloid*.fit'.format(simdir))
+
+        setupCondor(configs, jobdir, '{0}.bk11.{1}'.format(jobname, snap), simdir, simfiles, input_extensions)
+
+
+###################
+
+def setupCondor_BCC(configs, jobdir, jobname):
+
+    simdir = '/vol/braid1/vol1/dapple/mxxl/bcc'
+    
+    input_extensions = ['']
+
+    simfiles = glob.glob('{0}/cluster_*.hdf5'.format(simdir))
+
+    setupCondor(configs, jobdir, '{0}.bcc'.format(jobname), simdir, simfiles, input_extensions)
+
+
+###################
+
 
 def setupLSF(configs, jobdir, jobname, simdir, simfiles):
 

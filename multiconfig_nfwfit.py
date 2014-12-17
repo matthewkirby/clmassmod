@@ -26,7 +26,7 @@ def runMultiConfigs(jobparams, jobname=''):
 
             if jobname != '':
                 jobname = '-' + jobname
-                
+
             workdir = '{0}/{1}{2}'.format(workbase, inputbase, jobname)
             print 'WORKDIR: ' + workdir
 

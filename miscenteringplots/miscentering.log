@@ -1,0 +1,356 @@
+# IPython log file
+
+import astropy.io.ascii as asciireader
+data = asciireader.read('SPT_SN_offset.dat')
+data.keys()
+len(data)
+hexbin(data['peak_xpix[arcmin]'], data['peak_ypix'], gridsize=25)
+get_ipython().magic(u'pylab')
+hexbin(data['peak_xpix[arcmin]'], data['peak_ypix'], gridsize=25)
+hist(data['peak_xpix[arcmin]'], bins=50)
+hist(data['peak_xpix[arcmin]'] - data['cluster_xpix'], bins=50)
+deltax = data['peak_xpix[arcmin]'] - data['cluster_xpix']
+deltay = data['peak_ypix[arcmin]'] - data['cluster_ypix']
+deltay = data['peak_ypix'] - data['cluster_ypix']
+np.mean(deltax), np.mean(deltax)
+np.std(deltax), np.std(deltax)
+np.std(deltax), np.std(deltay)
+data.keys()
+deltar = np.sqrt(deltax**2 + deltay**2)
+hist(deltar, bins=50)
+plot(data['M500c'], data['SN'], 'bo')
+plot(np.log(data['M500c']), data['SN'], 'bo')
+plot(np.log10(data['M500c']), data['SN'], 'bo')
+plot(np.log10(data['M500c']), np.log(data['SN']), 'bo')
+plot(np.log(data['M500c']), np.log(data['SN']), 'bo')
+plot(np.log(data['M500c']), np.log(data['coresize[arcmin]']), 'bo')
+plot(np.log(data['SN']), np.log(data['coresize[arcmin]']), 'bo')
+plot(data['M500c'], data['redshift'], 'bo')
+lowmass = data['M500c'] < 2e14
+lowmass
+hist(data['SN'][lowmass], bins=25)
+clf()
+hist(np.log(data['SN'][lowmass]), bins=25, alpha=0.3)
+clf()
+lowz = data['redshift'] < 0.5
+highz = np.logical_and(data['redshift'] >= 0.5, data['redshift'] < 1.5)
+hist(np.log(data['SN'][np.logical_and(lowmass, lowz]), bins=25, alpha=0.3)
+
+
+))
+hist(np.log(data['SN'][np.logical_and(lowmass, lowz)]), bins=25, alpha=0.3)
+hist(np.log(data['SN'][np.logical_and(lowmass, highz)]), bins=25, alpha=0.3)
+clf()
+hist(np.log(data['SN'][np.logical_and(lowmass, highz)]), bins=25, alpha=0.3, normed=True)
+hist(np.log(data['SN'][np.logical_and(lowmass, lowz)]), bins=25, alpha=0.3, normed=True)
+clf()
+hist(np.log(data['coresize[arcmin]'][np.logical_and(lowmass, lowz)]), bins=25, alpha=0.3, normed=True)
+hist(np.log(data['coresize[arcmin]'][np.logical_and(lowmass, highz)]), bins=25, alpha=0.3, normed=True)
+clf()
+hist(np.log(data['coresize[arcmin]'][np.logical_and(lowmass, lowz)]), bins=25, alpha=0.3, normed=True, label='lowz')
+hist(np.log(data['coresize[arcmin]'][np.logical_and(lowmass, highz)]), bins=25, alpha=0.3, normed=True, label='highz')
+legend()
+clf()
+hist(deltar[np.logical_and(lowmass, highz)], bins=25, alpha=0.3, normed=True, label='highz')
+hist(deltar[np.logical_and(lowmass, lowz)], bins=25, alpha=0.3, normed=True, label='lowz')
+legend()
+plot(deltar, data['coresize[arcmin]'], 'bo')
+clf()
+data['coresize[arcmin']]
+data['coresize[arcmin']
+data['coresize[arcmin]']
+hist(data['coresize[arcmin]'], bins=50)
+data['coresize[arcmin]'][100:200]
+np.arange(0.25, 3.0, 0.25)
+np.arange(0.25, 3.1, 0.25)
+clf()
+for coresize in np.arange(0.25, 3.1, 0.25):
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=coresize, alpha=0.25, normed=True)
+    
+for coresize in np.arange(0.25, 3.1, 0.25):
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), alpha=0.25, normed=True)
+    
+clf()
+len(np.arange(0.25, 3.1, 0.25)
+)
+subplot(4,3)
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), normed=True)
+    
+clf()
+np.max(deltar)
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), normed=True)
+    axis([0, 3, 0, 0.5])
+    
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), normed=True)
+    axis([0, 3, 0, 1.0])
+    
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), normed=True)
+    axis([0, 3, 0, 2.0])
+    
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    hist(deltar[data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), normed=True)
+    axis([0, 3, 0, 2.0])
+    text(1.5, 1.5, str(coresize), fontsize=12)
+    
+tight_layout()
+subplot(4,3,10)
+xlabel('Delta r [arcmin]')
+subplot(4,3,11)
+xlabel('Delta r [arcmin]')
+subplot(4,3,12)
+xlabel('Delta r [arcmin]')
+tight_layout()
+subplot(4,3,2)
+title('Core Size [Arcmin]', fontsize=14)
+title('Core Size [Arcmin]', fontsize=14)
+savefig('miscentering_v_coresize.png')
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    hist(data['redshift'][data['coresize[arcmin]'] == coresize], bins=25, label=str(coresize), normed=True)
+    axis([0, 3, 0, 2.0])
+    text(1.5, 1.5, str(coresize), fontsize=12)
+    
+clf()
+figsize(6,8)
+clf()
+close('all')
+figure()
+figsize(8,8)
+figure()
+figsize(10,8)
+figure()
+close('all')
+figure()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    curdata = data[data['coresize[arcmin]'] == coresize]
+    hexbin(curdata['Mass'], 
+    
+    []]])
+    
+get_ipython().magic(u'logstart miscentering.log')
+np.median(data['M500c'])
+np.median(data['M500c'])/1e14
+lowmass = data['M500c'] < 2e14
+highmass = data['M500c'] >= 2e14
+lowz = data['redshift'] < 0.5
+highz = np.logical_and(data['redshift'] >= 0.5, data['redshift'] < 1.5)
+np.hist/
+get_ipython().magic(u'pinfo np.hist')
+get_ipython().magic(u'pinfo np.histogram')
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowmass, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='M < 2e14')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highmass, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='M >= 2e14')
+    axis([0, 3, 0, 2])
+    
+subplot(4,3,3)
+legend()
+for i in range(10, 13):
+    subplot(4,3,i)
+    xlabel('Delta r [arcmin]', fontsize=12)
+    
+tight_layout()
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowmass, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='M < 2e14')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highmass, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='M >= 2e14')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    
+for i in range(10, 13):
+    subplot(4,3,i)
+    xlabel('Delta r [arcmin]', fontsize=12)
+    
+subplot(4,3,3)
+legend()
+tight_layout()
+legend(loc='lower right')
+savefig('miscentering_v_coresize_mass.png')
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowz, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='z < 0.5')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highz, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='0.5 < z < 1.5')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    
+for i in range(10, 13):
+    subplot(4,3,i)
+    xlabel('Delta r [arcmin]', fontsize=12)
+    
+subplot(4,3,3)
+legend(loc='lower right')
+tight_layout()
+savefig('miscentering_v_coresize_redshift.png')
+np.median(data['SN'])
+clf()
+hist(data['SN'], bins=30)
+hist(np.log10(data['SN']), bins=30)
+clf()
+hist(np.log10(data['SN']), bins=30)
+clf()
+hist(data['SN'], log=True, bins=30)
+lowsn = data['SN'] < 8
+highsn = data['SN'] >= 8
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='SN < 8')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='SN > 8')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    
+subplot(4,3,3)
+legend(loc='lower right')
+for i in range(10, 13):
+    subplot(4,3,i)
+    xlabel('Delta r [arcmin]', fontsize=12)
+    
+tight_layout()
+savefig('miscentering_v_coresize_sn.png')
+clf()
+hist(np.log(data['SN']), bins=25)
+np.sort(data['SN'], bins=50)
+np.sort(data['SN'])
+lowsn = data['SN'] < 5
+medsn = np.logical_and(data['SN'] >=5 , data['SN'] < 8)
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='SN < 8')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='SN > 8')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    medhist, hedbins = np.histogram(deltar[np.logical_and(medsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    medcenters = (medbins[:-1] + medbins[1:])/2.
+    plot(medcenters, medhist, label='5 <= SN < 8')
+    
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='SN < 8')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='SN > 8')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    medhist, medbins = np.histogram(deltar[np.logical_and(medsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    medcenters = (medbins[:-1] + medbins[1:])/2.
+    plot(medcenters, medhist, label='5 <= SN < 8')
+    
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='SN < 8')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='SN > 8')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    medhist, medbins = np.histogram(deltar[np.logical_and(medsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    medcenters = (medbins[:-1] + medbins[1:])/2.
+    plot(medcenters, medhist, label='5 <= SN < 8')
+    
+subplot(4,3,3)
+legend(loc='lower right')
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(deltar[np.logical_and(lowsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label='SN < 5')
+    highhist, highbins = np.histogram(deltar[np.logical_and(highsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    highcenters = (highbins[:-1] + highbins[1:])/2.
+    plot(highcenters, highhist, label='SN > 8')
+    axis([0, 3, 0, 2])
+    text(1.5, 1.5, str(coresize))
+    medhist, medbins = np.histogram(deltar[np.logical_and(medsn, data['coresize[arcmin]'] == coresize)], bins=20, normed=True)
+    medcenters = (medbins[:-1] + medbins[1:])/2.
+    plot(medcenters, medhist, label='5 <= SN < 8')
+    
+subplot(4,3,3)
+legend(loc='lower right')
+for i in range(10, 13):
+    subplot(4,3,i)
+    xlabel('Delta r [arcmin]', fontsize=12)
+    
+tight_layout()
+savefig('miscentering_v_coresize_sn.png')
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(data['SN'][data['coresize[arcmin]'] == coresize], bins=20, normed=True)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist)
+    
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    subplot(4,3,i+1)
+    lowhist, lowbins = np.histogram(data['SN'][data['coresize[arcmin]'] == coresize], bins=20)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist)
+    
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    lowhist, lowbins = np.histogram(data['SN'][data['coresize[arcmin]'] == coresize], log=True, bins=20)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    plot(lowcenters, lowhist, label=str(coresize))
+    
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    lowhist, lowbins = np.histogram(data['SN'][data['coresize[arcmin]'] == coresize], bins=20)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    loglog(lowcenters, lowhist, label=str(coresize))
+    
+legend()
+axis([4.5, 100])
+axis([4.5, 100, 0, 1000])
+axis([4.5, 20, 0, 1000])
+clf()
+for i, coresize in enumerate(np.arange(0.25, 3.1, 0.25)):
+    lowhist, lowbins = np.histogram(data['SN'][data['coresize[arcmin]'] == coresize], bins=20)
+    lowcenters = (lowbins[:-1] + lowbins[1:])/2.
+    loglog(lowcenters, lowhist, label=str(coresize))
+    raw_input()
+    
+clf()
+plot(data['SN'], data['coresize[arcmin]'], 'bo')
+clf()
+semilogx(data['SN'], data['coresize[arcmin]'], 'bo')
