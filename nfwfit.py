@@ -342,8 +342,13 @@ class NFW_Model(object):
         self.overdensity = 200
         self.config = config
 
-        self.m200_low = 1e10
-        self.m200_high = 1e17
+        if config is not None and 'fitter' in config and config.fitter == 'maxlike':
+            self.m200_low = -1e18
+            self.m200_high = 1e18
+        else:
+            self.m200_low = 1e10
+            self.m200_high = 1e17
+
         self.c200_low = 1.1
         self.c200_high = 19.9
 
@@ -735,7 +740,10 @@ def runNFWFit(catalogname, configname, outputname):
 
     fitter = buildFitter(config)
 
-    fitvals = fitter.explorePosterior(catalog)
+    if 'fitter' in config and config.fitter == 'maxlike':
+        fitvals = fitter.runUnitNotFail(catalog, config)
+    else:
+        fitvals = fitter.explorePosterior(catalog)
     
     savefit(fitvals, outputname)
 
