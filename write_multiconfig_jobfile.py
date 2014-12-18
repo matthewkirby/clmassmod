@@ -70,6 +70,7 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple
         catname = '{0}/{1}'.format(simdir, root)
 
         inputfiles = ['{0}.{1}'.format(catname, x) for x in input_extensions]
+
         
         jobparams = createJobParams(catname,
                                     configfiles,
@@ -128,9 +129,10 @@ universe = vanilla
 Error = {jobdir}/{jobname}.$(Process).stderr
 Output = {jobdir}/{jobname}.$(Process).stdout
 Log = {jobdir}/{jobname}.$(Process).batch.log
-Arguments = {jobdir}/{jobname}.$(Process).job
+Arguments = {jobdir}/{snapname}.{jobname}.$(Process).job
 queue {njobs}
-'''.format(jobdir = jobdir, jobname = jobname, njobs = len(simfiles))
+'''.format(jobdir = jobdir, snapname = snap, 
+           jobname = jobname, njobs = len(simfiles))
 
     with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
         output.write(condorfile)
