@@ -916,6 +916,32 @@ In the above equations, we are turning the integration over all $M_l$ and $c_l$ 
 Here it is important to pay attention to which variable we are actually integrating over. Are we integrating over $M_l$ and $c_l$ or $\log M_l$ and $\log c_l$. The weight can be ignored if the variable we are integrating in had a uniform prior when we were sampling each individual prior.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+
+\section{Effects of Miscentering}
+
+I have used simulations from Jiayi to characterize how the SZ center is offset from the DM center as a function of the SPT detection properties. The distribution of miscentering is primarily dependent on the core-size used to filter the maps for detection, with a secondary dependence on mass and/or significance.
+
+[Insert figures that describe that distribution here].
+
+I have set up to run on mxxlsnap41 and bk11snap141 to characterize the effect of miscentering on the mass bias at the HST and Megacam redshifts. For the initial run, I ran with three noise levels and three core sizes (plus one control). I'm restricting to using mass-concentration relations, since that makes the distributions gaussian, and is closer to what is being done by Joerg and Tim. These two snaps also have the advantage that I know the m500 values.
+
+
+First question: What does the distribution shape look like between $m_{true}$ and $m_{meas}$?
+
+Looking at the mxxl, the distribution for the bias is not lognormal. There is a tail to overestimated masses at a fixed true mass, and the median of the pull is negative.  Is that duplicated in bk11? Yes. And it can be seen in figure 3 of BK11.
+
+Note that this tail to overestimated masses is not due to noise in the true mass estimates. Or, to put it another way, the true mass estimates would need to have larger errors than the measured mass estimates to have a tail to overestimated masses. Seems unlikely. I'll have to leave investigating these odd tail cases to later.
+
+Some of the fit files, in particular mxxl c4 r5 n3\_2 and n4\_3 appear to have multiple fit failures with nans corrupting the file. Will need to investigate that.
+
+At least for the 0.75 - 2.5 fit range and at low masses, the noise level does appear to make a difference! That is surprising given my tests on perfect NFW halos.  OK, looking back in notes.pdf, maybe it isn't so surprising at the lowest sampling level. I need to look at this in more detail to make sure I understand it.
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
