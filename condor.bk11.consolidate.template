@@ -3,5 +3,5 @@ universe = vanilla
 Error = JOBDIR/consolidateSNAP.CONFIG.stderr
 Output = JOBDIR/consolidateSNAP.CONFIG.stdout
 Log = JOBDIR/consolidateSNAP.CONFIG.batch.log
-Arguments = /vol/braid1/vol1/dapple/mxxl/oldmxxl mxxlsnapSNAP /vol/braid1/vol1/dapple/mxxl/mxxlsnapSNAP/CONFIG
+Arguments = /vol/braid1/vol1/dapple/mxxl/oldmxxl bk11snapSNAP /vol/braid1/vol1/dapple/mxxl/snapSNAP/intlength400/CONFIG
 queue

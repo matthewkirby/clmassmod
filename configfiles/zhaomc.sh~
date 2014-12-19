@@ -1,0 +1,3 @@
+massconModule=basicMassCon
+massconRelation=constant
+concentration=4.0

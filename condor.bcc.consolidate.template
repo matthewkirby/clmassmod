@@ -1,0 +1,7 @@
+executable = /vol/braid1/vol1/dapple/mxxl/oldmxxl/consolidate_condorwrapper.sh
+universe = vanilla
+Error = JOBDIR/consolidateBCC.CONFIG.stderr
+Output = JOBDIR/consolidateBCC.CONFIG.stdout
+Log = JOBDIR/consolidateBCC.CONFIG.batch.log
+Arguments = /vol/braid1/vol1/dapple/mxxl/oldmxxl bcc /vol/braid1/vol1/dapple/mxxl/bcc/CONFIG
+queue

@@ -997,13 +997,14 @@ class headerTextBackend(Backend):
     """
     Like textBackend, but automatically reads/writes a header line with the parameter names.
     """
-    def __init__(self, file, space):
+    def __init__(self, file, space, writeHeader = True):
         self.fields = [p.name for p in space]
         self.writer = csv.DictWriter(file, self.fields, restval = '!', delimiter = ' ', quoting=csv.QUOTE_MINIMAL, )
-        if sys.version_info < (2,7):
-            self.writer.writer.writerow(self.writer.fieldnames)
-        else:
-            self.writer.writeheader()
+        if writeHeader is True:
+            if sys.version_info < (2,7):
+                self.writer.writer.writerow(self.writer.fieldnames)
+            else:
+                self.writer.writeheader()
     def __call__(self, space):
         towrite = {}
         for p in space:
@@ -1080,7 +1081,7 @@ class Engine(list):
     def __call__(self, number=1, struct=None, backends=[stdoutBackend()]):
         try:
             for i in range(number):
-                if i % 100 == 0:
+                if i % 1000 == 0:
                     print 'At Iteration %d' % i
                 for updater in self:
                     for j in range(updater.rate):

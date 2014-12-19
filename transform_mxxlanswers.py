@@ -5,8 +5,9 @@
 # For now, I'm just going to use the existing file, and not include the info I don't have from Aaron's file
 #######################
 
-import sys, binaryutils, readtxtfile, cPickle
+import sys, binaryutils, readtxtfile, cPickle, glob, os, re
 import astropy.io.ascii as asciireader
+import numpy as np
 
 ######################
 
@@ -39,36 +40,37 @@ if __name__ == '__main__':
     snapnum = int(sys.argv[1])
     outfile = sys.argv[2]
 
-    redshift = readtxtfile.readtxtfile('mxxl_imperial/snap%d/redshift' % snapnum)[0,0]
+    redshift = readtxtfile.readtxtfile('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap%d/redshift' % snapnum)[0,0]
 
-    halocat = asciireader.read('mxxl_imperial/snap%d/halos_%d.txt' % (snapnum, snapnum))
+    halocat = readtxtfile.readtxtfile('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap%d/halos_%d.txt' % (snapnum, snapnum))
 
-    idconversion = readtxtfile.readtxtfile('mxxl_imperial/snap%d/idconversion' % snapnum)
+    if snapnum == 41:
+        properties = readMXXLBinary('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap41/Doug_XXL_z1.bin')
+        sort_props = np.argsort(properties['m200'])[::-1]
 
     clusterinfo = {}
 
-    try:
-        for curindexs in [map(int, x) for x in idconversion]:
+    for halofile in glob.glob('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap%d/*.convergence_map' % snapnum):
 
-            cid, sid, projid = curindexs
+        halobase = os.path.basename(halofile)
+        
+        match = re.match('halo_%d_((\d+)_\d)\.convergence_map' % snapnum, 
+                         halobase)
+        
+        myid = match.group(1)
+        stefan_id = int(match.group(2))
 
-            try:
+        m500 = 0.
+        if snapnum == 41:
+            m500 = properties['M500_crit'][sort_props[stefan_id]]*1e10
+       
 
-                clusterinfo[cid] = dict(m500 = halocat['Mass500_crit'][sid]*1e10,
-                                        m200 = halocat['Mass200'][sid]*1e10,
-                                        concen = 1./halocat['EinastoParameter_1'][sid],
-                                        redshift = redshift)
-
-            except:
-
-                clusterinfo[cid] = dict(m500 = 0.,
-                                        m200 = halocat['Mass200'][sid]*1e10,
-                                        concen = 0.,
-                                        redshift = redshift)
+        clusterinfo[myid] = dict(m500 = m500,
+                                 m200 = halocat[stefan_id, 0]*1e10,
+                                 concen = 0.,
+                                 redshift = redshift)
                 
 
-    except ValueError:
-        print curindexs
 
     with open(outfile, 'wb') as output:
 

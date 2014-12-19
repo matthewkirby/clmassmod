@@ -915,6 +915,33 @@ In the above equations, we are turning the integration over all $M_l$ and $c_l$ 
 
 Here it is important to pay attention to which variable we are actually integrating over. Are we integrating over $M_l$ and $c_l$ or $\log M_l$ and $\log c_l$. The weight can be ignored if the variable we are integrating in had a uniform prior when we were sampling each individual prior.
 
+%%%%%%%%%%%
+
+I have finally run the model on some fake data, and I don't like what I'm seeing. There appears to be a bias in the ratio, and it gets more negative at higher masses. I do not know why.
+
+The inferred mass scatter is also wrong. For the lowest mass bins, the scatter is inferred to be too large.
+
+Again with concentration, there is a systematic trend where low masses overestimate and high masses underestimate.
+
+Concentration scatter is across the board underestimated. 
+
+And probably because of all that (or causing it?) the mc covar has the wrong sign.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+
+\section{Miscentering}
+
+We know that the SZ centers are rather noisy. How much of an effect does that have on the inferred bias?
+
+I have a file from hydro sims provided by Jiayi. It has clusters of different masses and redshifts with simulated SZ data. 
+
+There are a number of variables that could matter. Mass, redshift, SN, and coresize. There is a correlation between delta r and coresize.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage \newpage
