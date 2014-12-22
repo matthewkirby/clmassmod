@@ -99,7 +99,8 @@ def consolidateFits(workdir, simtype, outdir):
             continue
 
 
-        measured_m200s[i] = measured['m200']*fitter.model.massScale*nfwutils.global_cosmology.h
+
+        measured_m200s[i] = measured[0]['m200']*fitter.model.massScale*nfwutils.global_cosmology.h
         if 'c200' in measured:
             measured_cs[i] = measured['c200']
         else:
@@ -111,12 +112,21 @@ def consolidateFits(workdir, simtype, outdir):
         #####
         #calculate m500
 
-        measured_rs[i] = nfwutils.rscaleConstM(measured_m200s[i], measured_cs[i],redshifts[i],
+        measured_rs[i] = nfwutils.rscaleConstM(np.abs(measured_m200s[i]), measured_cs[i],redshifts[i],
                                       fitter.model.overdensity)
         measured_m500s[i] = nfwutils.Mdelta(measured_rs[i],
                                             measured_cs[i],
                                             redshifts[i],
                                             500)
+
+        if measured_m200s[i] < 0:
+            measured_m500s[i] = -measured_m500s[i]
+
+        if not np.isfinite(measured_m500s[i]):
+            print 'NOT FINITE'
+            print haloid
+            print measured
+
 
 
 
