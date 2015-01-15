@@ -1,6 +1,8 @@
+import publication_plots as pp
 import pylab
 import numpy as np
 import cPickle
+import bcc_becker_baseline as bbb
 
 #############
 
@@ -14,6 +16,18 @@ def bootstrapMean(sample, nboots=1000):
         bootedmeans[i] = np.mean(sample[curboot])
 
     return bootedmeans
+
+
+def bootstrapMedian(sample, nboots=1000):
+
+    nsamples = len(sample)
+
+    bootedmedians = np.zeros(nboots)
+    for i in range(nboots):
+        curboot = np.random.randint(0, nsamples, nsamples)
+        bootedmedians[i] = np.median(sample[curboot])
+
+    return bootedmedians
 
 
 
@@ -59,20 +73,27 @@ def createErrorbars(samples):
 
 #############
 
+c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5)]
 
-def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, offset = 0., **plotargs):
+
+def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, label, colorindex):
 
     log10massedges = np.log10(massedges)
 
     log10centers = (log10massedges[:-1] + log10massedges[1:])/2.
     nbins = len(log10centers)
 
+
+
+
     ratio = measuredmass / truemass
 
     centers = []
-    means = []
+    medians = []
     stds = []
-    
+    ylows = []
+    yhighs = []
+    xpoints = []    
 
     for i in range(len(log10centers)):
 
@@ -82,25 +103,43 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, offset =
         if len(inbin) < 25:
             continue
 
+        xpoints.append(massedges[i])
+        xpoints.append(massedges[i+1])
+
         centers.append(10**(log10centers[i]))
 
         logratio = np.log(inbin)
 
-        means.append(bootstrapMean(logratio))
+        medians.append(bootstrapMean(logratio))
         stds.append(bootstrapStd(logratio))
 
     centers = np.array(centers)
 
 
 
-    meancenter, meanerrs = createErrorbars(means)
-    meanax.errorbar(centers + offset, meancenter, meanerrs, **plotargs)
+    mediancenter, medianerrs = createErrorbars(medians)
 
-    print meancenter
+    print mediancenter, medianerrs
+
+    for i in range(len(mediancenter)):
+        ylows.append( np.exp(mediancenter[i] - medianerrs[0,i]))
+        ylows.append( np.exp(mediancenter[i] - medianerrs[0,i]))
+        yhighs.append(np.exp(mediancenter[i] + medianerrs[1,i]))
+        yhighs.append(np.exp(mediancenter[i] + medianerrs[1,i]))
+
+#    meanax.errorbar(centers + offset, meancenter, meanerrs, **plotargs)
+    print len(xpoints), 
+    meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], label = label, hatch = None)
+    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=0.8, hatch = None)
+                 
+
+
 
 
     stdcenter, stderrs = createErrorbars(stds)
-    stdax.errorbar(centers + offset, stdcenter, stderrs, **plotargs)
+    stdax.errorbar(centers, stdcenter, stderrs, label = label, color = c[colorindex])
+
+    return patch
 
 
 ################################
@@ -118,6 +157,7 @@ def plotRadiusMXXL():
     radialranges = [5,6,8,9]
     radialnames = ['0.5 - 1.5', '0.5 - 2.5', '0.75 - 1.5', '0.75 - 2.5']
     offsets = np.arange(-1.5e13, 2.0e13, 1e13)
+
 
 
     for i, radrange in enumerate(radialranges):
@@ -166,42 +206,51 @@ def plotNoiseMXXL():
 
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
-    radialranges = [5,9]
+    radialranges = [6]
     radialnames = ['0.5 - 1.5', '0.75 - 2.5']
-    noiseranges = ['0_0', '3_2', '4_3']
-    noisenames = ['NoNoise', '20-0.33', '7-0.5']
+    noiseranges = ['0_0', '4_3']
+    noisenames = ['No Noise', '7 gals/sq. arcmin $\sigma_e = 0.5$']
     offsets = np.linspace(-1.5e13, 1.5e13, 6)
+
+    patches = []
+    labels = []
 
 
     for i, radrange in enumerate(radialranges):
         for j, noiserange in enumerate(noiseranges):
 
-            consolfile = 'run7consolidated/mxxlsnap41.c4-r%d-n%s_corenone.pkl' % (radrange, noiserange)
+            consolfile = 'mxxl_imperial/rundirs/run7consolidated/mxxlsnap41.c4-r%d-n%s_corenone.pkl' % (radrange, noiserange)
             print consolfile
 
             with open(consolfile, 'rb') as input:
 
                 consol = cPickle.load(input)
 
-                
+                label = noisenames[j]
 
-                plotLogNormDistro(consol['true_m500s'], 
-                                  consol['measured_m500s'],
+                plotLogNormDistro(consol['true_m200s'], 
+                                  consol['measured_m200s'],
                                   massedges,
                                   meansax,
                                   stdsax,
-                                  offset = offsets[3*i+j],
                                   label = '%s %s' % (radialnames[i], noisenames[j]),
-                                  linestyle='None',
-                                  linewidth=2.)
+                                  colorindex = j)
+
 
     meansax.set_xscale('log')
-    meansax.set_xlabel('Mass', fontsize=16)
-    meansax.set_ylabel('Mean Log-Bias', fontsize=16)
-    meansax.legend()
+    meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.set_xlim(2e14, 1.3e15)
+    meansax.set_ylim(0.85, 1.10)
+    meansax.set_xticks([1e15])
+    meansax.set_xticklabels(['10'])
+    meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    meansax.legend(patches, labels, loc='upper left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('noisemxxl_mean.png')
+    meansfig.savefig('noisemxxl_median.png')
 
     stdsax.set_xscale('log')
     stdsax.set_xlabel('Mass', fontsize=16)
@@ -225,43 +274,59 @@ def plotCoreMXXL():
     stdsfig = pylab.figure()
     stdsax = stdsfig.add_subplot(1,1,1)
 
-    massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
+    massedges = np.logspace(np.log10(2e14), np.log10(5e15), 12)
     
-    radialranges = [9]
-    radialnames = ['0.75 - 2.5']
-    coreranges = ['0', '5', '11', 'none']
-    offsets = np.linspace(-2.2e13, 2.2e13, 8)
+    radialranges = [5]
+    radialnames = ['0.50 - 1.5']
+    coreranges = ['none', '0', '5']
+    corenames = ['Exact Centering', r"Typical Miscentering: $\theta_c = 0.25'$",
+                 r"Worst Case: $\theta_c = 1.5'$"]
+
+    patches = []
+    labels = []
 
 
     for i, radrange in enumerate(radialranges):
         for j, corerange in enumerate(coreranges):
 
-            consolfile = 'run7consolidated/mxxlsnap41.c4-r%d-n0_0_core%s.pkl' % (radrange, corerange)
+            consolfile = 'mxxl_imperial/rundirs/run7consolidated/mxxlsnap41.c4-r%d-n0_0_core%s.pkl' % (radrange, corerange)
             print consolfile
 
             with open(consolfile, 'rb') as input:
 
                 consol = cPickle.load(input)
-
+                
+                label = corenames[j]
                 
 
-                plotLogNormDistro(consol['true_m500s'], 
-                                  consol['measured_m500s'],
+                patch = plotLogNormDistro(consol['true_m200s'], 
+                                  consol['measured_m200s'],
                                   massedges,
                                   meansax,
                                   stdsax,
-                                  offset = offsets[4*i+j],
-                                  label = '%s %s' % (radialnames[i], corerange),
-                                  linestyle='None',
-                                  linewidth=2.)
+                                  label = label,
+                                  colorindex = j)
+
+                patches.append(patch)
+                labels.append(label)
+
+
 
     meansax.set_xscale('log')
-    meansax.set_xlabel('Mass', fontsize=16)
-    meansax.set_ylabel('Mean Log-Bias', fontsize=16)
-    meansax.legend()
+    meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    meansax.set_ylabel(r'Mean Bias in $M_{200}$', fontsize=16)
+    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.set_xlim(2e14, 1.3e15)
+    meansax.set_ylim(0.7, 1.2)
+    meansax.set_xticks([1e15])
+    meansax.set_xticklabels(['10'])
+    meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    meansax.legend(patches, labels, loc='upper left')
+    meansax.set_title(r'Fit Range: $0.5 < r < 1.5$ Mpc')
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('coremxxl_mean_r9.png')
+    meansfig.savefig('coremxxl_mean_r6.png')
 
     stdsax.set_xscale('log')
     stdsax.set_xlabel('Mass', fontsize=16)
@@ -269,7 +334,7 @@ def plotCoreMXXL():
     stdsax.legend()
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
-    stdsfig.savefig('coremxxl_std_r9.png')
+    stdsfig.savefig('coremxxl_std_r6.png')
 
     return meansfig, stdsfig
 
