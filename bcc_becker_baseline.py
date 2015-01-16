@@ -50,7 +50,8 @@ def loadData(simfile, h=None, useM200=True):
 
     ratio = medians/actuals
 
-    clean = medians > 0
+#    clean = medians > 0
+    clean = medians == medians
     
     
     data = {'medians' : medians[clean],
