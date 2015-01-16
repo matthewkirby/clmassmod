@@ -16,6 +16,20 @@ def bootstrapMean(sample, nboots=1000):
     return bootedmeans
 
 
+############
+
+def bootstrapMedian(sample, nboots=1000):
+
+    nsamples = len(sample)
+
+    bootedmedians = np.zeros(nboots)
+    for i in range(nboots):
+        curboot = np.random.randint(0, nsamples, nsamples)
+        bootedmedians[i] = np.median(sample[curboot])
+
+    return bootedmedians
+
+
 
 
 #############
@@ -60,7 +74,7 @@ def createErrorbars(samples):
 #############
 
 
-def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, offset = 0., **plotargs):
+def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, stdax, offset = 0., **plotargs):
 
     log10massedges = np.log10(massedges)
 
@@ -71,6 +85,7 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, offset =
 
     centers = []
     means = []
+    nongausses = []
     stds = []
     
 
@@ -84,9 +99,13 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, offset =
 
         centers.append(10**(log10centers[i]))
 
+        if (inbin < 0).any():
+            print 'ILLEGAL'
+
         logratio = np.log(inbin)
 
         means.append(bootstrapMean(logratio))
+        nongausses.append(np.median(logratio) - np.mean(logratio))
         stds.append(bootstrapStd(logratio))
 
     centers = np.array(centers)
@@ -96,7 +115,9 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, stdax, offset =
     meancenter, meanerrs = createErrorbars(means)
     meanax.errorbar(centers + offset, meancenter, meanerrs, **plotargs)
 
-    print meancenter
+    print nongausses
+
+    nongaussax.plot(centers+offset, nongausses, marker='o', **plotargs)
 
 
     stdcenter, stderrs = createErrorbars(stds)
@@ -161,22 +182,27 @@ def plotNoiseMXXL():
 
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
+    nongaussfig = pylab.figure()
+    nongaussax = nongaussfig.add_subplot(1,1,1)
     stdsfig = pylab.figure()
     stdsax = stdsfig.add_subplot(1,1,1)
 
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
-    radialranges = [5,9]
+    radialranges = [8]
     radialnames = ['0.5 - 1.5', '0.75 - 2.5']
     noiseranges = ['0_0', '3_2', '4_3']
     noisenames = ['NoNoise', '20-0.33', '7-0.5']
-    offsets = np.linspace(-1.5e13, 1.5e13, 6)
+    offsets = np.linspace(-1.5e13, 1.5e13, 3)
+
+    colors = 'b g r'.split()
+    alphas = [1.0, 0.5]
 
 
     for i, radrange in enumerate(radialranges):
         for j, noiserange in enumerate(noiseranges):
 
-            consolfile = 'run7consolidated/mxxlsnap41.c4-r%d-n%s_corenone.pkl' % (radrange, noiserange)
+            consolfile = '../rundirs/run7consolidated/mxxlsnap41.c4-r%d-n%s_corenone.pkl' % (radrange, noiserange)
             print consolfile
 
             with open(consolfile, 'rb') as input:
@@ -189,11 +215,14 @@ def plotNoiseMXXL():
                                   consol['measured_m500s'],
                                   massedges,
                                   meansax,
+                                  nongaussax,
                                   stdsax,
                                   offset = offsets[3*i+j],
                                   label = '%s %s' % (radialnames[i], noisenames[j]),
                                   linestyle='None',
-                                  linewidth=2.)
+                                  linewidth=2.,
+                                  color = colors[j],
+                                  alpha = alphas[i])
 
     meansax.set_xscale('log')
     meansax.set_xlabel('Mass', fontsize=16)
@@ -203,6 +232,16 @@ def plotNoiseMXXL():
     meansfig.tight_layout()
     meansfig.savefig('noisemxxl_mean.png')
 
+    nongaussax.set_xscale('log')
+    nongaussax.set_xlabel('Mass', fontsize=16)
+    nongaussax.set_ylabel('Median - Mean', fontsize=16)
+    nongaussax.axhline(0.0, c='k', linewidth=2, linestyle='--')
+    nongaussax.legend(loc='upper left')
+    nongaussfig.canvas.draw()
+    nongaussfig.tight_layout()
+    nongaussfig.savefig('noisemxxl_nongauss.png')
+
+
     stdsax.set_xscale('log')
     stdsax.set_xlabel('Mass', fontsize=16)
     stdsax.set_ylabel('Standard Deviation Log-Bias', fontsize=16)
@@ -211,7 +250,7 @@ def plotNoiseMXXL():
     stdsfig.tight_layout()
     stdsfig.savefig('noisemxxl_std.png')
 
-    return meansfig, stdsfig
+    return meansfig, nongaussfig, stdsfig
 
 
 
@@ -222,21 +261,27 @@ def plotCoreMXXL():
 
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
+    nongaussfig = pylab.figure()
+    nongaussax = nongaussfig.add_subplot(1,1,1)
     stdsfig = pylab.figure()
     stdsax = stdsfig.add_subplot(1,1,1)
 
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
-    radialranges = [9]
-    radialnames = ['0.75 - 2.5']
-    coreranges = ['0', '5', '11', 'none']
-    offsets = np.linspace(-2.2e13, 2.2e13, 8)
+    radialranges = [8, 5]
+    radialnames = ['0.75 - 1.5', '0.5-1.5']
+    coreranges = ['none', '0', '5']
+    corenames = ['none', '0.25', '1.5']
+    offsets = np.linspace(-2.2e13, 2.2e13, 6)
+
+    colors = ['b', 'g', 'r']
+    alphas = [1.0, 0.5]
 
 
     for i, radrange in enumerate(radialranges):
         for j, corerange in enumerate(coreranges):
 
-            consolfile = 'run7consolidated/mxxlsnap41.c4-r%d-n0_0_core%s.pkl' % (radrange, corerange)
+            consolfile = '../rundirs/run7consolidated/mxxlsnap41.c4-r%d-n4_3_core%s.pkl' % (radrange, corerange)
             print consolfile
 
             with open(consolfile, 'rb') as input:
@@ -249,11 +294,179 @@ def plotCoreMXXL():
                                   consol['measured_m500s'],
                                   massedges,
                                   meansax,
+                                  nongaussax,
                                   stdsax,
-                                  offset = offsets[4*i+j],
-                                  label = '%s %s' % (radialnames[i], corerange),
+                                  offset = offsets[3*i+j],
+                                  label = '%s %s' % (radialnames[i], corenames[j]),
                                   linestyle='None',
-                                  linewidth=2.)
+                                  linewidth=2.,
+                                  color=colors[j],
+                                  alpha = alphas[i])
+
+    meansax.set_xscale('log')
+    meansax.set_xlabel('Mass', fontsize=16)
+    meansax.set_ylabel('Mean Log-Bias', fontsize=16)
+    meansax.axhline(0.0, c='k', linewidth=2, linestyle='--')
+    meansax.legend(loc='lower left')
+    meansfig.canvas.draw()
+    meansfig.tight_layout()
+    meansfig.savefig('coremxxl_mean.png')
+
+    nongaussax.set_xscale('log')
+    nongaussax.set_xlabel('Mass', fontsize=16)
+    nongaussax.set_ylabel('Median - Mean', fontsize=16)
+    nongaussax.axhline(0.0, c='k', linewidth=2, linestyle='--')
+    nongaussax.legend(loc='upper left')
+    nongaussfig.canvas.draw()
+    nongaussfig.tight_layout()
+    nongaussfig.savefig('coremxxl_nongauss.png')
+
+
+
+    stdsax.set_xscale('log')
+    stdsax.set_xlabel('Mass', fontsize=16)
+    stdsax.set_ylabel('Standard Deviation Log-Bias', fontsize=16)
+    stdsax.set_ybound(0.15, 0.32)
+    stdsax.legend(loc='lower left')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+    stdsfig.savefig('coremxxl_std.png')
+
+
+    return meansfig, nongaussfig, stdsfig
+
+
+#######################################
+
+
+def plotCoreBK11():
+
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+    nongaussfig = pylab.figure()
+    nongaussax = nongaussfig.add_subplot(1,1,1)
+    stdsfig = pylab.figure()
+    stdsax = stdsfig.add_subplot(1,1,1)
+
+    massedges = np.logspace(np.log10(1e14), np.log10(1e15), 6)
+    
+    radialranges = [9,6 ]
+    radialnames = ['0.75 - 2.5', '0.5 - 2.5']
+    coreranges = ['none', '0', '5']
+    corenames = ['none', '0.25', '1.5']
+    offsets = np.linspace(-2.2e13, 2.2e13, 6)
+
+    colors = ['b', 'g', 'r']
+    alphas = [1.0, 0.5]
+
+
+    for i, radrange in enumerate(radialranges):
+        for j, corerange in enumerate(coreranges):
+
+            consolfile = '../rundirs/run7consolidated/bk11snap141..c4-r%d-n4_3_core%s.pkl' % (radrange, corerange)
+            print consolfile
+
+            with open(consolfile, 'rb') as input:
+
+                consol = cPickle.load(input)
+
+                
+
+                plotLogNormDistro(consol['true_m500s'], 
+                                  consol['measured_m500s'],
+                                  massedges,
+                                  meansax,
+                                  nongaussax,
+                                  stdsax,
+                                  offset = offsets[3*i+j],
+                                  label = '%s %s' % (radialnames[i], corenames[j]),
+                                  linestyle='None',
+                                  linewidth=2.,
+                                  color=colors[j],
+                                  alpha = alphas[i])
+
+    meansax.set_xscale('log')
+    meansax.set_xlabel('Mass', fontsize=16)
+    meansax.set_ylabel('Mean Log-Bias', fontsize=16)
+    meansax.axhline(0.0, c='k', linewidth=2, linestyle='--')
+    meansax.legend(loc='upper right')
+    meansfig.canvas.draw()
+    meansfig.tight_layout()
+    meansfig.savefig('corebk11_mean.png')
+
+    nongaussax.set_xscale('log')
+    nongaussax.set_xlabel('Mass', fontsize=16)
+    nongaussax.set_ylabel('Median - Mean', fontsize=16)
+    nongaussax.axhline(0.0, c='k', linewidth=2, linestyle='--')
+    nongaussax.legend(loc='upper left')
+    nongaussfig.canvas.draw()
+    nongaussfig.tight_layout()
+    nongaussfig.savefig('corebk11_nongauss.png')
+
+
+
+    stdsax.set_xscale('log')
+    stdsax.set_xlabel('Mass', fontsize=16)
+    stdsax.set_ylabel('Standard Deviation Log-Bias', fontsize=16)
+    stdsax.set_ybound(0.15, 0.32)
+    stdsax.legend(loc='upper right')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+    stdsfig.savefig('corebk11_std.png')
+
+
+    return meansfig, nongaussfig, stdsfig
+
+
+#######################################
+
+    
+    
+def plotNoiseBK11():
+
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+    nongaussfig = pylab.figure()
+    nongaussax = nongaussfig.add_subplot(1,1,1)
+    stdsfig = pylab.figure()
+    stdsax = stdsfig.add_subplot(1,1,1)
+
+    massedges = np.logspace(np.log10(1e14), np.log10(1e15), 6)
+    
+    radialranges = [8]
+    radialnames = ['0.75 - 1.5']
+    noiseranges = ['0_0', '3_2', '4_3']
+    noisenames = ['NoNoise', '20-0.33', '7-0.5']
+    offsets = np.linspace(-1.5e13, 1.5e13, 3)
+
+    colors = 'b g r'.split()
+    alphas = [1.0, 0.5]
+
+
+    for i, radrange in enumerate(radialranges):
+        for j, noiserange in enumerate(noiseranges):
+
+            consolfile = '../rundirs/run7consolidated/bk11snap141..c4-r%d-n%s_corenone.pkl' % (radrange, noiserange)
+            print consolfile
+
+            with open(consolfile, 'rb') as input:
+
+                consol = cPickle.load(input)
+
+                
+
+                plotLogNormDistro(consol['true_m500s'], 
+                                  consol['measured_m500s'],
+                                  massedges,
+                                  meansax,
+                                  nongaussax,
+                                  stdsax,
+                                  offset = offsets[3*i+j],
+                                  label = '%s %s' % (radialnames[i], noisenames[j]),
+                                  linestyle='None',
+                                  linewidth=2.,
+                                  color = colors[j],
+                                  alpha = alphas[i])
 
     meansax.set_xscale('log')
     meansax.set_xlabel('Mass', fontsize=16)
@@ -261,7 +474,17 @@ def plotCoreMXXL():
     meansax.legend()
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('coremxxl_mean_r9.png')
+    meansfig.savefig('noisebk11_mean.png')
+
+    nongaussax.set_xscale('log')
+    nongaussax.set_xlabel('Mass', fontsize=16)
+    nongaussax.set_ylabel('Median - Mean', fontsize=16)
+    nongaussax.axhline(0.0, c='k', linewidth=2, linestyle='--')
+    nongaussax.legend(loc='upper left')
+    nongaussfig.canvas.draw()
+    nongaussfig.tight_layout()
+    nongaussfig.savefig('noisebk11_nongauss.png')
+
 
     stdsax.set_xscale('log')
     stdsax.set_xlabel('Mass', fontsize=16)
@@ -269,12 +492,13 @@ def plotCoreMXXL():
     stdsax.legend()
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
-    stdsfig.savefig('coremxxl_std_r9.png')
+    stdsfig.savefig('noisebk11_std.png')
 
-    return meansfig, stdsfig
+    return meansfig, nongaussfig, stdsfig
 
-    
-    
+
+
+############################
         
 
     
