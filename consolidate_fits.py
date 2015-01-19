@@ -43,7 +43,9 @@ def consolidateFits(workdir, simtype, outdir):
 
     results = dict(ids = ids,
                         measured_m200s = measured_m200s, 
+                        measured_m200errs = measured_m200errs,
                         measured_m500s = measured_m500s,
+                        measured_m500errss = measured_m500errs,
                         measured_cs = measured_cs,
                         measured_rs = measured_rs,
                         true_m200s = true_m200s,
@@ -102,7 +104,7 @@ def consolidateFits(workdir, simtype, outdir):
 
 
         measured_m200s[i] = measured[0]['m200']*fitter.model.massScale*nfwutils.global_cosmology.h
-        measured_m200errs[i] = np.mean(np.abs(measured[1]))*fitter.model.massScale*nfwutils.global_cosmology.h
+        measured_m200errs[i] = np.mean(np.abs(measured[1]['m200']))*fitter.model.massScale*nfwutils.global_cosmology.h
         if 'c200' in measured:
             measured_cs[i] = measured['c200']
         else:
