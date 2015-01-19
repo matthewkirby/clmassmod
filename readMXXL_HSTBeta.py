@@ -8,6 +8,7 @@ import binaryutils
 import nfwutils
 import readMXXL
 import scipy.interpolate as interpolate
+import astropy.io.ascii as asciireader
 
 #######################
 

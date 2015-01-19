@@ -109,7 +109,7 @@ def consolidateFits(workdir, simtype, outdir):
             measured_cs[i] = measured['c200']
         else:
             ## need to dig up the mc relation
-            measured_cs[i] = fitter.model.massconRelation(measured_m200s[i], 
+            measured_cs[i] = fitter.model.massconRelation(np.abs(measured_m200s[i]), 
                                                           redshifts[i], 
                                                           fitter.model.overdensity)
 
