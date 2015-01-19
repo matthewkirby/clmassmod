@@ -77,10 +77,12 @@ class MXXLHSTSim(object):
         kappafile = '{0}.convergence_map'.format(filebase)
         gamma1file = '{0}.shear_1_map'.format(filebase)
         gamma2file = '{0}.shear_2_map'.format(filebase)
+        answerfile = '{0}.answer'.format(filebase)
 
         kappa = readMXXL.MXXLBinary(kappafile)
         gamma1 = readMXXL.MXXLBinary(gamma1file)
         gamma2 = readMXXL.MXXLBinary(gamma2file)
+        answerfile = asciireader.read(answerfile)
 
         self.zcluster = kappa.redshift
 
@@ -104,6 +106,9 @@ class MXXLHSTSim(object):
         self.r_arcmin = r_arcmin
         self.cos2phi = cos2phi
         self.sin2phi = sin2phi
+        self.m500 = answerfile['m500c'][0]
+        self.m200 = answerfile['m200c'][0]
+        self.c200 = answerfile['c200c'][0]
 
 
         self.redshifts = 2*np.ones_like(kappa.data).flatten()

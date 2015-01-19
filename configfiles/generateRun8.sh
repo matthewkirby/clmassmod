@@ -14,7 +14,7 @@ for sampling in 0_0 2_2 4_3 6_4; do
 		config=${mc}-r${r}-n${sampling}-core${coresize}-${binning}
 		dir=../mxxl_imperial/mxxlsnap$snap/$config
 		mkdir $dir
-		cat base.sh maxlike.sh mxxl.sh ${mc}.sh r${r}.sh n${sampling}.sh core_${coresize}.sh ${binning}.sh > $dir/config.sh
+		cat maxlike.sh mxxl_hstbeta.sh ${mc}.sh r${r}.sh n${sampling}.sh core_${coresize}.sh ${binning}.sh > $dir/config.sh
 	    
 		echo $config >> ../run8
 	    

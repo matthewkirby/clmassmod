@@ -1,0 +1,3 @@
+readermodule=readMXXL_HSTBeta
+readerclass=MXXLHSTSimReader
+targetz=0.9887081240357551
