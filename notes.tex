@@ -403,11 +403,12 @@ I have submitted runs on the MXXL and BCC with different densities. All of the f
 \item 0: Default density
 \item 1: 100 (MXXL only)
 \item 2: 20 (MXXL only)
-\item 3: 20
-\item 4: 7
-\item 5: 4  (MXXL only)
-\item 6: 1  (MXXL only)
+\item 3: 7
+\item 4: 4  (MXXL only)
+\item 5: 1  (MXXL only)
+\item 6: 10
 \end{itemize}
+(19 Jan 2015 Note: The numbering was off. I was using much lower densities than I thought in many of the following tests).
 
 I have used four different noise levels.
 \begin{itemize}
@@ -415,6 +416,7 @@ I have used four different noise levels.
 \item 1: 0.16 shape noise on tangential shear
 \item 2: 0.33
 \item 3: 0.5
+\item 4: 0.4
 \end{itemize}
 
 I ran with c4 and cfree MC relations using the standard nfwfit.py software. Comparisons were made using the script compareSampling.py, and with the logfile compareSampling.log.
@@ -965,6 +967,23 @@ Note that this tail to overestimated masses is not due to noise in the true mass
 Some of the fit files, in particular mxxl c4 r5 n3\_2 and n4\_3 appear to have multiple fit failures with nans corrupting the file. Will need to investigate that.
 
 At least for the 0.75 - 2.5 fit range and at low masses, the noise level does appear to make a difference! That is surprising given my tests on perfect NFW halos.  OK, looking back in notes.pdf, maybe it isn't so surprising at the lowest sampling level. I need to look at this in more detail to make sure I understand it.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage \newpage
+
+\section{Measuring Total Bias for HST Sample}
+
+I'm trying to boil down the correction factor for HST, using all the elements.The first problem I'm having, however, is that I don't know how to describe the distribution coming from the simulations when there is noise.
+
+It's clear from other plots that with no noise, the distribution is not log-normal. When we add noise, part of the distribution is coming from the noise already accounted for in the statistical errors. The rest I need to characterize.
+
+One problem is that if you look at measured mass - true mass (the linear quantity), I would have expected to see a Gaussian distribution. That is because the fit should be almost linear, and in a linear fit the posterior is gaussian. 
+
+One major problem may simply be the number of radial bins in the profile. For one cluster that I checked, the shear profile that I'm fitting to has one datapoint. This is due to the downsampling to match the density of points available. 
+
+Note: This section was down on 19 Jan 2015, after I fixed the number density numbering issue.
 
 
 
