@@ -2,6 +2,7 @@ import publication_plots as pp
 import pylab
 import numpy as np
 import cPickle
+import deconvolvedlognorm as dln
 
 #############
 
@@ -74,10 +75,58 @@ def createErrorbars(samples):
 
 #############
 
-c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5)]
+c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25)]
+
+############
+
+def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax, colorindex):
+
+    log10massedges = np.log10(massedges)
+
+    log10centers = (log10massedges[:-1] + log10massedges[1:])/2.
+    nbins = len(log10centers)
+
+    ylows = []
+    yhighs = []
+    xpoints = []    
+
+    for i in range(len(log10centers)):
+
+        inbin = np.logical_and(truemass >= massedges[i],
+                               truemass < massedges[i+1])
+
+        if len(inbin) < 25:
+            continue
+
+        xpoints.append(massedges[i])
+        xpoints.append(massedges[i+1])
+
+        if (inbin < 0).any() and useLog is True:
+            print 'ILLEGAL'
+
+        parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
+        (logmu, logmuerr), (logsigma, logsigmaerr) = dln.runFit(parts)
+
+        mu_low = np.exp(logmu - logmuerr)
+        mu_high = np.exp(logmu + logmuerr)
+        
+        ylows.append( mu_low)
+        ylows.append( mu_low)
+        yhighs.append(mu_high)
+        yhighs.append(mu_high)
 
 
-def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, stdax, label, colorindex):
+    meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], label = label, hatch = None)
+    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=0.8, hatch = None)
+
+    return patch
+        
+
+################
+    
+
+
+def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, stdax, label, colorindex, useLog = True):
 
     log10massedges = np.log10(massedges)
 
@@ -110,14 +159,22 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, std
 
         centers.append(10**(log10centers[i]))
 
-        if (inbin < 0).any():
+        if (inbin < 0).any() and useLog is True:
             print 'ILLEGAL'
 
-        logratio = np.log(inbin)
 
-        medians.append(bootstrapMean(logratio))
-        nongausses.append(np.median(logratio) - np.mean(logratio))
-        stds.append(bootstrapStd(logratio))
+        if useLog:
+            logratio = np.log(inbin)
+
+            medians.append(bootstrapMean(logratio))
+            nongausses.append(np.median(logratio) - np.mean(logratio))
+            stds.append(bootstrapStd(logratio))
+
+        else:
+
+            medians.append(bootstrapMean(inbin))
+            nongausses.append(np.median(inbin) - np.mean(inbin))
+            stds.append(bootstrapStd(inbin))
 
     centers = np.array(centers)
 
@@ -127,11 +184,19 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, std
 
     print mediancenter, medianerrs
 
-    for i in range(len(mediancenter)):
-        ylows.append( np.exp(mediancenter[i] - medianerrs[0,i]))
-        ylows.append( np.exp(mediancenter[i] - medianerrs[0,i]))
-        yhighs.append(np.exp(mediancenter[i] + medianerrs[1,i]))
-        yhighs.append(np.exp(mediancenter[i] + medianerrs[1,i]))
+    if useLog is True:
+        for i in range(len(mediancenter)):
+            ylows.append( np.exp(mediancenter[i] - medianerrs[0,i]))
+            ylows.append( np.exp(mediancenter[i] - medianerrs[0,i]))
+            yhighs.append(np.exp(mediancenter[i] + medianerrs[1,i]))
+            yhighs.append(np.exp(mediancenter[i] + medianerrs[1,i]))
+    else:
+        for i in range(len(mediancenter)):
+            ylows.append( mediancenter[i] - medianerrs[0,i])
+            ylows.append( mediancenter[i] - medianerrs[0,i])
+            yhighs.append(mediancenter[i] + medianerrs[1,i])
+            yhighs.append(mediancenter[i] + medianerrs[1,i])
+
 
 #    meanax.errorbar(centers + offset, meancenter, meanerrs, **plotargs)
     print len(xpoints), 
@@ -142,7 +207,7 @@ def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, std
 
     print nongausses
 
-    nongaussax.plot(centers+offset, nongausses, marker='o', **plotargs)
+#    nongaussax.plot(centers, nongausses, marker='o', **plotargs)
 
 
     stdcenter, stderrs = createErrorbars(stds)
@@ -210,18 +275,16 @@ def plotNoiseMXXL():
 
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
-    nongaussfig = pylab.figure()
-    nongaussax = nongaussfig.add_subplot(1,1,1)
-    stdsfig = pylab.figure()
-    stdsax = stdsfig.add_subplot(1,1,1)
 
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
-    radialranges = [6]
-    radialnames = ['0.5 - 1.5', '0.75 - 2.5']
-    noiseranges = ['0_0', '4_3']
-    noisenames = ['No Noise', '7 gals/sq. arcmin $\sigma_e = 0.5$']
-    offsets = np.linspace(-1.5e13, 1.5e13, 6)
+    radialranges = [5]
+    radialnames = ['0.5 - 1.5']
+    noiseranges = ['0_0', '2_2', '6_4', '4_3']
+    noisenames = ['No Noise', '20 gals/sq. arcmin $\sigma_e = 0.33$',
+                  '10 gals/sq. arcmin $\sigma_e = 0.4$',
+                  '4 gals/sq. arcmin $\sigma_e = 0.5$']
+
 
     patches = []
     labels = []
@@ -230,7 +293,7 @@ def plotNoiseMXXL():
     for i, radrange in enumerate(radialranges):
         for j, noiserange in enumerate(noiseranges):
 
-            consolfile = 'mxxl_imperial/rundirs/run7consolidated/mxxlsnap41.c4-r%d-n%s_corenone.pkl' % (radrange, noiserange)
+            consolfile = 'mxxl_imperial/rundirs/run8consolidated/mxxlsnap41.c4-r%d-n%s-corenone-linearbins12.pkl' % (radrange, noiserange)
             print consolfile
 
             with open(consolfile, 'rb') as input:
@@ -239,14 +302,15 @@ def plotNoiseMXXL():
 
                 label = noisenames[j]
 
-                plotLogNormDistro(consol['true_m200s'], 
-                                  consol['measured_m200s'],
-                                  massedges,
-                                  meansax,
-                                  nongaussax,
-                                  stdsax,
-                                  label = '%s %s' % (radialnames[i], noisenames[j]),
-                                  colorindex = j)
+                patch = fitLogNormDistro(consol['true_m200s'], 
+                                         consol['measured_m200s'],
+                                         consol['measured_m200errs'],
+                                         massedges,
+                                         meansax,
+                                         colorindex = j)
+
+                patches.append(patch)
+                labels.append(label)
 
 
     meansax.set_xscale('log')
@@ -254,7 +318,7 @@ def plotNoiseMXXL():
     meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
     meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
     meansax.set_xlim(2e14, 1.3e15)
-    meansax.set_ylim(0.85, 1.10)
+#    meansax.set_ylim(0.85, 1.10)
     meansax.set_xticks([1e15])
     meansax.set_xticklabels(['10'])
     meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
@@ -264,25 +328,8 @@ def plotNoiseMXXL():
     meansfig.tight_layout()
     meansfig.savefig('noisemxxl_median.png')
 
-    nongaussax.set_xscale('log')
-    nongaussax.set_xlabel('Mass', fontsize=16)
-    nongaussax.set_ylabel('Median - Mean', fontsize=16)
-    nongaussax.axhline(0.0, c='k', linewidth=2, linestyle='--')
-    nongaussax.legend(loc='upper left')
-    nongaussfig.canvas.draw()
-    nongaussfig.tight_layout()
-    nongaussfig.savefig('noisemxxl_nongauss.png')
 
-
-    stdsax.set_xscale('log')
-    stdsax.set_xlabel('Mass', fontsize=16)
-    stdsax.set_ylabel('Standard Deviation Log-Bias', fontsize=16)
-    stdsax.legend()
-    stdsfig.canvas.draw()
-    stdsfig.tight_layout()
-    stdsfig.savefig('noisemxxl_std.png')
-
-    return meansfig, nongaussfig, stdsfig
+    return meansfig
 
 
 

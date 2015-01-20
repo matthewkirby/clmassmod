@@ -988,6 +988,10 @@ Note: This section was down on 19 Jan 2015, after I fixed the number density num
 
 
 The bias in m200 is flat with mass. The bias in m500 turns positive at low masses. Why??? 
+This is probably a selection effect. We have all clusters down to a mass m200. However, for clusters of a particular mass m200, there will be a range of m500s, which will depend on the concentration of the halo. The halos that are selected are only those m500s where m200 meets our threshold, implying a selection on m500 and concentration.
+
+
+I found the problem with the noise tests! As I reduced the number of samples in the catalog, the equal binning shear profile algorithm started throwing away bins. So that meant for the noisest sampling, my shear profile had only one point. That is why the noise apparent in M_lens / M_true was much higher than I expected. I switched to 12 bin linear binning, which is approximately what Tim is using for the paper. (Prior tests show that the exact number of bins shouldn't matter too much, but I suppose I could try to exactly match Tim's algorithm later). I'm about to check what those distributions look like.
 
 
 
