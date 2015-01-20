@@ -30,32 +30,62 @@ twopi = 2*np.pi
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def integral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_int, 
-              double ml,
+def integral(double mlens,
               double merr, 
               double mtrue,
               double logmu, 
               double sigma):
 
-    cdef Py_ssize_t i, nmax
-    nmax = ml_int.shape[0]
-    cdef double normpart, lognormpart
+    cdef Py_ssize_t i, nsamples
+    nsamples = 50
 
-    cdef np.ndarray[np.double_t, ndim=1, mode='c'] result = np.zeros(nmax, dtype=np.float64)
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] randomdeviates = np.random.standard_normal(nsamples)
 
-    for i from nmax > i >= 0:
-        normpart = exp(-0.5*(ml_int[i]-ml)**2/merr**2)/(sqrt2pi*merr)
-        lognormpart = exp(-0.5*(log(ml_int[i])-logmu)**2/sigma**2)/(sqrt2pi*sigma*ml_int[i])
-        result[i] = normpart*lognormpart
+    cdef double thesum, logmtrue, ml_int, normpart
+    logmtrue = log(mtrue)
+    thesum = 0.
 
-    #trapezoid scheme
-    cdef double sum = 0.
-    for i from nmax-1 > i >= 1:
-        sum += 2*result[i]
-    sum += result[0] + result[nmax-1]
+    for i from nsamples > i >= 0:
+
+        ml_int = exp(logmu + logmtrue + sigma*randomdeviates[i])
+
+        normpart = exp(-0.5*(ml_int-mlens)**2/merr**2)/(sqrt2pi*merr)
 
 
-    return sum*(ml_int[nmax-1] - ml_int[0])/(2*nmax)
+        thesum += normpart
+
+    thesum = thesum / nsamples
+
+    return thesum
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def altintegral(double mlens,
+              double merr, 
+              double mtrue,
+              double logmu, 
+              double sigma):
+
+    cdef Py_ssize_t i, nsamples
+    nsamples = 50
+
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] randomdeviates = np.random.standard_normal(nsamples)
+
+    cdef double thesum, ml_int, lognormpart, logmtrue
+    logmtrue = log(mtrue)
+    thesum = 0.
+
+    for i from nsamples > i >= 0:
+
+        ml_int = mlens + merr*randomdeviates[i]
+
+        lognormpart = exp(-0.5*(log(ml_int)-logmtrue-logmu)**2/sigma**2)/(sqrt2pi*sigma*ml_int)
+
+        thesum += lognormpart
+
+    thesum = thesum / nsamples
+
+    return thesum
 
     
 
@@ -74,25 +104,25 @@ def loglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] mlens,
 
     cdef double sumlogprob = 0.
     cdef double prob = 0.
-
-    cdef np.ndarray[np.double_t, ndim=1, mode='c'] ml_int_grid
     
-    cdef double low, high
-
-    low = exp(logmu - 5*sigma)
-    high = exp(logmu + 5*sigma)
-
 
     for i from nclusters > i >= 0:
 
-        ml_int_grid = np.linspace(low*mtrue[i], high*mtrue[i], 200)
+
         
-        prob = integral(ml_int_grid,
-                        mlens[i],
+        prob = integral(mlens[i],
                         merr[i],
                         mtrue[i],
                         logmu,
                         sigma)
+
+        if prob == 0.:
+            prob = altintegral(mlens[i],
+                               merr[i],
+                               mtrue[i],
+                               logmu,
+                               sigma)
+
 
         sumlogprob += log(prob)
 

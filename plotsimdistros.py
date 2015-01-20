@@ -3,6 +3,7 @@ import pylab
 import numpy as np
 import cPickle
 import deconvolvedlognorm as dln
+import pymc
 
 #############
 
@@ -83,19 +84,19 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
     log10massedges = np.log10(massedges)
 
-    log10centers = (log10massedges[:-1] + log10massedges[1:])/2.
-    nbins = len(log10centers)
+    nbins = len(log10massedges) - 1
 
     ylows = []
     yhighs = []
     xpoints = []    
 
-    for i in range(len(log10centers)):
+    for i in range(nbins):
 
         inbin = np.logical_and(truemass >= massedges[i],
                                truemass < massedges[i+1])
 
-        if len(inbin) < 25:
+
+        if len(truemass[inbin]) < 25:
             continue
 
         xpoints.append(massedges[i])
@@ -104,11 +105,20 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
         if (inbin < 0).any() and useLog is True:
             print 'ILLEGAL'
 
-        parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
+        print len(measuredmass[inbin]), len(measuredmasserr[inbin]), len(truemass[inbin])
+        parts = None
+        for i in range(10):
+            try:
+                parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
+                break
+            except pymc.ZeroProbability:
+                continue
+        if parts is None:
+            raise pymc.ZeroProbability
         (logmu, logmuerr), (logsigma, logsigmaerr) = dln.runFit(parts)
 
-        mu_low = np.exp(logmu - logmuerr)
-        mu_high = np.exp(logmu + logmuerr)
+        mu_low = np.exp(logmu[0] - logmuerr[0,0])
+        mu_high = np.exp(logmu[0] + logmuerr[0,0])
         
         ylows.append( mu_low)
         ylows.append( mu_low)
@@ -116,7 +126,7 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
         yhighs.append(mu_high)
 
 
-    meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], label = label, hatch = None)
+    meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], hatch = None)
     patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=0.8, hatch = None)
 
     return patch

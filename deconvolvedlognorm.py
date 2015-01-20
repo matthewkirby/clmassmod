@@ -13,12 +13,12 @@ import pymc_mymcmc_adapter as pma
 
 def buildModel(mlens, merr, mtrue):
 
+    massnorm = 1e15
+
     parts = {}
 
-    fracerr = mlens/mtrue
-
-    parts['logmu'] = pymc.Uniform('logmu', -1., 1., value=np.log(np.mean(fracerr)))
-    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-4), np.log(10), value = np.log(np.std(fracerr)))
+    parts['logmu'] = pymc.Uniform('logmu', -1., 1.)
+    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-4), np.log(10))
 
     @pymc.deterministic(trace=True)
     def sigma(logsigma = parts['logsigma']):
@@ -27,7 +27,7 @@ def buildModel(mlens, merr, mtrue):
     parts['sigma'] = sigma
 
     @pymc.observed
-    def data(value = 0., mlens = mlens, merr = merr, mtrue = mtrue, logmu = parts['logmu'], sigma = parts['sigma']):
+    def data(value = 0., mlens = mlens/massnorm, merr = merr/massnorm, mtrue = mtrue/massnorm, logmu = parts['logmu'], sigma = parts['sigma']):
 
         return dlntools.loglinearlike(mlens = mlens,
                                       merr = merr,
