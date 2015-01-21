@@ -64,6 +64,8 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
     manager = varcontainer.VarContainer()
     manager.options = options
     manager.model = pymc.Model(parts)
+    
+    assert(np.isfinite(manager.model.logp))
 
     runner = pma.MyMCRunner()
 
@@ -95,4 +97,7 @@ def memsample(parts, samples, adaptevery = 100, adaptafter = 100):
     runner.finalize(manager)
 
     return manager.chain
-    
+
+
+#################
+

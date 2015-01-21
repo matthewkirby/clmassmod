@@ -79,6 +79,10 @@ def altintegral(double mlens,
 
         ml_int = mlens + merr*randomdeviates[i]
 
+        if ml_int <= 0:
+            #we know that the integrand is 0 for these samples
+            continue
+
         lognormpart = exp(-0.5*(log(ml_int)-logmtrue-logmu)**2/sigma**2)/(sqrt2pi*sigma*ml_int)
 
         thesum += lognormpart
@@ -110,18 +114,12 @@ def loglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] mlens,
 
 
         
-        prob = integral(mlens[i],
-                        merr[i],
-                        mtrue[i],
-                        logmu,
-                        sigma)
+        prob = altintegral(mlens[i],
+                           merr[i],
+                           mtrue[i],
+                           logmu,
+                           sigma)
 
-        if prob == 0.:
-            prob = altintegral(mlens[i],
-                               merr[i],
-                               mtrue[i],
-                               logmu,
-                               sigma)
 
 
         sumlogprob += log(prob)

@@ -102,9 +102,6 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
         xpoints.append(massedges[i])
         xpoints.append(massedges[i+1])
 
-        if (inbin < 0).any() and useLog is True:
-            print 'ILLEGAL'
-
         print len(measuredmass[inbin]), len(measuredmasserr[inbin]), len(truemass[inbin])
         parts = None
         for i in range(10):
