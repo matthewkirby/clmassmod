@@ -60,30 +60,24 @@ def integral(double mlens,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def altintegral(double mlens,
-              double merr, 
-              double mtrue,
+def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
+                np.ndarray[np.double_t, ndim=1, mode='c'] delta_logmls,
               double logmu, 
               double sigma):
 
     cdef Py_ssize_t i, nsamples
-    nsamples = 50
+    nsamples = ml_ints.shape[0]
 
-    cdef np.ndarray[np.double_t, ndim=1, mode='c'] randomdeviates = np.random.standard_normal(nsamples)
-
-    cdef double thesum, ml_int, lognormpart, logmtrue
-    logmtrue = log(mtrue)
+    cdef double thesum, lognormpart
     thesum = 0.
+
+    cdef double sigma2, sigmasqrt2pi
+    neg2sigma2 = -2*(sigma**2)
+    sigmasqrt2pi = sigma*sqrt2pi
 
     for i from nsamples > i >= 0:
 
-        ml_int = mlens + merr*randomdeviates[i]
-
-        if ml_int <= 0:
-            #we know that the integrand is 0 for these samples
-            continue
-
-        lognormpart = exp(-0.5*(log(ml_int)-logmtrue-logmu)**2/sigma**2)/(sqrt2pi*sigma*ml_int)
+        lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
 
         thesum += lognormpart
 
@@ -96,15 +90,14 @@ def altintegral(double mlens,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def loglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] mlens, 
-                  np.ndarray[np.double_t, ndim=1, mode='c'] merr, 
-                  np.ndarray[np.double_t, ndim=1, mode='c'] mtrue, 
+def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
+                  np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
                   double logmu, 
                   double sigma):
 
 
     cdef Py_ssize_t i, nclusters
-    nclusters = mlens.shape[0]
+    nclusters = ml_ints.shape[0]
 
     cdef double sumlogprob = 0.
     cdef double prob = 0.
@@ -114,9 +107,8 @@ def loglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] mlens,
 
 
         
-        prob = altintegral(mlens[i],
-                           merr[i],
-                           mtrue[i],
+        prob = altintegral(ml_ints[i,:],
+                           delta_logmls[i,:],
                            logmu,
                            sigma)
 

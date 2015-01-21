@@ -7,11 +7,12 @@ import pymc
 import deconvolvedlognormtools as dlntools
 import varcontainer
 import pymc_mymcmc_adapter as pma
+import scipy.stats
 
 ########################
 
 
-def buildModel(mlens, merr, mtrue):
+def buildModel(mlens, merr, mtrue, nsamples = 150):
 
     massnorm = 1e15
 
@@ -26,12 +27,22 @@ def buildModel(mlens, merr, mtrue):
     
     parts['sigma'] = sigma
 
-    @pymc.observed
-    def data(value = 0., mlens = mlens/massnorm, merr = merr/massnorm, mtrue = mtrue/massnorm, logmu = parts['logmu'], sigma = parts['sigma']):
+    nclusters = len(mlens)
+    ml_ints = np.zeros((nclusters, nsamples))
+    delta_logmls = np.zeros((nclusters, nsamples))
+    for i in range(nclusters):
+        a, b = (0. - mlens[i]) /merr[i], (1e17 - mlens[i]) / merr[i]
+        ml_ints[i,:] = mlens[i] + merr[i]*scipy.stats.truncnorm.rvs(a,b,size=nsamples)
+        delta_logmls[i,:] = np.log(ml_ints[i,:]) - np.log(mtrue[i])
 
-        return dlntools.loglinearlike(mlens = mlens,
-                                      merr = merr,
-                                      mtrue = mtrue,
+    
+
+    @pymc.observed
+    def data(value = 0., ml_ints = ml_ints/massnorm, delta_logmls = delta_logmls, 
+             logmu = parts['logmu'], sigma = parts['sigma']):
+
+        return dlntools.loglinearlike(ml_ints = ml_ints,
+                                      delta_logmls = delta_logmls,
                                       logmu = logmu,
                                       sigma = sigma)
     parts['data'] = data
@@ -46,7 +57,7 @@ def runFit(parts):
     N = pymc.NormApprox(parts)
     N.fit()
     
-    return (N.mu[N.logmu], N.C[N.logmu]), (N.mu[N.logsigma], N.C[N.logsigma])
+    return (N.mu[N.logmu], np.sqrt(N.C[N.logmu])), (N.mu[N.logsigma], np.sqrt(N.C[N.logsigma]))
 
 
 #######################################
@@ -60,6 +71,7 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
     options.nsamples = samples
     options.adapt_every = adaptevery
     options.adapt_after = adaptafter
+    options.restore=True
 
     manager = varcontainer.VarContainer()
     manager.options = options

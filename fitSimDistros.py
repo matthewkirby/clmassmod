@@ -4,6 +4,7 @@
 ################################
 
 import sys, os
+import numpy as np
 import deconvolvedlognorm as dln
 import pymc
 import cPickle
@@ -14,7 +15,7 @@ def runFit(consol, inbin, outputfile, nsamples = 3000):
     parts = None
     for i in range(10):
         try:
-            parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
+            parts = dln.buildModel(consol['measured_m200s'][inbin], consol['measured_m200errs'][inbin], consol['true_m200s'][inbin])
             break
         except pymc.ZeroProbability:
             continue
