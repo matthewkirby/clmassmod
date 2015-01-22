@@ -1001,6 +1001,8 @@ In checking the chisq tests, not every fit uses the same number of data points. 
 
 From spot checking a few catalogs, it does not appear that the fitting algorithm is having a problem. The fits all seem to be working reasonably well. So that to me is suggesting that the lognorm model is not a good description of the data. That's the next to check. I might also need to rerun fits where I keep no shape noise, but decrease the density of points, to see how that alters the intrinsic noise distribution shape.
 
+Conferred with Anja. She things its a binning issue. Two few galaxies per bin might mean that the bootstrap isn't fully capturing the uncertainty in each shear bin. I'll set up a run9 to test different binning strategies. I will also remove the ngal < 5 drop constraint.
+
 
 
 
