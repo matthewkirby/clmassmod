@@ -994,6 +994,12 @@ This is probably a selection effect. We have all clusters down to a mass m200. H
 I found the problem with the noise tests! As I reduced the number of samples in the catalog, the equal binning shear profile algorithm started throwing away bins. So that meant for the noisest sampling, my shear profile had only one point. That is why the noise apparent in M_lens / M_true was much higher than I expected. I switched to 12 bin linear binning, which is approximately what Tim is using for the paper. (Prior tests show that the exact number of bins shouldn't matter too much, but I suppose I could try to exactly match Tim's algorithm later). I'm about to check what those distributions look like.
 
 
+Further update. I've run the noise tests. The initial results seem to suggest that there is a HUGE noise bias problem. Specifically, the bias can be up to a factor of 2x. I don't belive this. If this is true, this is a major. One hint that there is some other problem: The magnitude of the intrinsic scatter is not constant, or decreasing with increasing noise (as I would expect, since it is constant, and harder to detect). It is instead increasing with increasing noise. A quick flip through some of the fits, I worry that the fits are not converging to a proper value, that there is something that is stopping the fits prematurely. My next step is to check the chisq distribution for the fits, to see if it is reasonable. Another possibility is that there is a likelihood barrier at zero mass that might be messing up the fits. 
+
+In checking the chisq tests, not every fit uses the same number of data points. This is because the profile drops radial bins with less than five galaxies. I'm a bit surprised that some profiles only have 6 datapoints (the lowest that I see). Looking at the histogram of cdf values, it is very clear that way too many fits have too high of a chisq. (OK, maybe this is not surprising, considering that there is intrinsic scatter that I'm trying to measure). 
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

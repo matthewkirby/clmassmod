@@ -80,7 +80,7 @@ c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25)]
 
 ############
 
-def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax, colorindex):
+def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax, stdax, colorindex):
 
     log10massedges = np.log10(massedges)
 
@@ -89,6 +89,9 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
     ylows = []
     yhighs = []
     xpoints = []    
+
+    ystdlows = []
+    ystdhighs = []
 
     for i in range(nbins):
 
@@ -113,17 +116,27 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
         if parts is None:
             raise pymc.ZeroProbability
         (logmu, logmuerr), (logsigma, logsigmaerr) = dln.runFit(parts)
+        
 
         mu_low = np.exp(logmu[0] - logmuerr[0,0])
         mu_high = np.exp(logmu[0] + logmuerr[0,0])
+        std_low = np.exp(logsigma[0] - logsigmaerr[0,0])
+        std_high = np.exp(logsigma[0] + logsigmaerr[0,0])
         
         ylows.append( mu_low)
         ylows.append( mu_low)
         yhighs.append(mu_high)
         yhighs.append(mu_high)
 
+        ystdlows.append(std_low)
+        ystdlows.append(std_low)
+        ystdhighs.append(std_high)
+        ystdhighs.append(std_high)
+                     
+
 
     meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], hatch = None)
+    stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=0.8, color = c[colorindex], hatch = None)
     patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=0.8, hatch = None)
 
     return patch
@@ -283,6 +296,9 @@ def plotNoiseMXXL():
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
 
+    stdsfig = pylab.figure()
+    stdax = stdsfig.add_subplot(1,1,1)
+
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
     radialranges = [5]
@@ -314,6 +330,7 @@ def plotNoiseMXXL():
                                          consol['measured_m200errs'],
                                          massedges,
                                          meansax,
+                                         stdax,
                                          colorindex = j)
 
                 patches.append(patch)
@@ -333,10 +350,25 @@ def plotNoiseMXXL():
     meansax.legend(patches, labels, loc='upper left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('noisemxxl_median.png')
+    meansfig.savefig('noisemxxl_logmean.png')
+
+    stdax.set_xscale('log')
+    stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+    stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    stdax.set_xlim(2e14, 1.3e15)
+#    stdax.set_ylim(0.85, 1.10)
+    stdax.set_xticks([1e15])
+    stdax.set_xticklabels(['10'])
+    stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    stdax.legend(patches, labels, loc='upper left')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+    stdsfig.savefig('noisemxxl_logstd.png')
 
 
-    return meansfig
+    return meansfig, stdsfig
 
 
 
