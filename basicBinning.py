@@ -118,8 +118,8 @@ class bootstrapfixedbins(object):
             selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
                                                      catalog[self.profileCol] < maxtake))
 
-            if len(selected) < 5:
-                continue
+#            if len(selected) < 5:
+#                continue
 
             
 
