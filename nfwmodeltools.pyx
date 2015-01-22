@@ -205,14 +205,21 @@ def shearprofile_like(double m200,
                       double rho_c_over_sigma_c):
 
 
-
-
-    cdef double rscale = rscaleConstM(abs(m200), c200,rho_c, 200)
-
     cdef Py_ssize_t nbins = bin_r_mpc.shape[0]
 
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf = NFWShear(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
-    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf = NFWKappa(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
+    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] gamma_inf
+    cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf
+    cdef double rscale
+
+    if m200 == 0:
+        gamma_inf = np.zeros(nbins)
+        kappa_inf = np.zeros(nbins)
+    else:
+
+        rscale = rscaleConstM(abs(m200), c200,rho_c, 200)
+
+        gamma_inf = NFWShear(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
+        kappa_inf = NFWKappa(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
 
     if m200 < 0.:
         gamma_inf = -gamma_inf

@@ -468,7 +468,7 @@ class NFW_Model(object):
         return g
 
 
-#######
+###########################################################
 
 class NFW_MC_Model(NFW_Model):
 
@@ -500,7 +500,7 @@ class NFW_MC_Model(NFW_Model):
         parts = {}
         
         if 'massprior' in self.config and self.config.massprior == 'linear':
-            parts['scaledm200'] = pymc.Uniform('m200', self.m200_low/self.massScale, self.m200_high/self.massScale)
+            parts['scaledm200'] = pymc.Uniform('scaledm200', self.m200_low/self.massScale, self.m200_high/self.massScale, value = self.guess()[0])
             
             @pymc.deterministic(trace=True)
             def m200(scaledm200 = parts['scaledm200']):
@@ -537,24 +537,21 @@ class NFW_MC_Model(NFW_Model):
         def data(value = 0.,
                  r_mpc = r_mpc,
                  ghat = ghat,
-                 sigma_ghat = ghat,
+                 sigma_ghat = sigma_ghat,
                  beta_s = beta_s,
                  beta_s2 = beta_s2,
                  rho_c = rho_c,
                  rho_c_over_sigma_c = rho_c_over_sigma_c,
-                 m200 = parts['m200'],
-                 c200 = parts['c200']):
+                 m200 = m200,
+                 c200 = c200):
+
 
             beta_s = beta_s.astype(np.float64)
             beta_s2 = beta_s.astype(np.float64)
 
 
-
-
-
-
             
-            return tools.shearprofile_like(m200,
+            logprob =  tools.shearprofile_like(m200,
                                           c200,
                                           r_mpc,
                                           ghat,
@@ -563,6 +560,11 @@ class NFW_MC_Model(NFW_Model):
                                           beta_s2,
                                           rho_c,
                                           rho_c_over_sigma_c)
+            print m200/1e14, logprob
+
+            if not np.isfinite(logprob):
+                raise pymc.ZeroProbability
+            return logprob
 
         parts['data'] = data
 
@@ -610,7 +612,15 @@ class NFWFitter(object):
 
         r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
 
-        mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
+        mcmc_model = None
+        for i in range(10):
+            try:
+                mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
+                break
+            except pymc.ZeroProbability:
+                pass
+        if mcmc_model is None:
+            raise pymc.ZeroProbability
 
         manager = varcontainer.VarContainer()
         options = varcontainer.VarContainer()
