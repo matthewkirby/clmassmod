@@ -12,12 +12,13 @@ class Binner(object):
 
         maskedCat = catalog.filter(catalog['mask'])
         radii, shear, shearerr, number = self._makeProfile(maskedCat, config)
+        numbermask = number != -1
 
         if 'shearprofileerr' in config and config.shearprofileerr == 'gaussianapprox':
             allradii, allshear, allshearerr, allnumber = self._makeProfile(catalog, config)
             assert(len(radii) == len(allradii))
-            scalederr = allshearerr*np.sqrt(allnumber/number)
-            return radii, shear, scalederr
+            scalederr = allshearerr[numbermask]*np.sqrt(allnumber[numbermask]/number[numbermask])
+            return radii[numbermask], shear[numbermask], scalederr
 
         return radii, shear, shearerr
 
@@ -142,8 +143,12 @@ class bootstrapfixedbins(Binner):
             selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
                                                      catalog[self.profileCol] < maxtake))
 
-#            if len(selected) < 5:
-#                continue
+            if len(selected) < 2:
+                radii.append(-1)
+                shear.append(-1)
+                shearerr.append(-1)
+                ngals.append(-1)
+                continue
 
             
 
