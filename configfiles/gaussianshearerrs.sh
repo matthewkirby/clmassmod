@@ -1,0 +1,2 @@
+shearprofileerr == 'gaussianapprox'
+
