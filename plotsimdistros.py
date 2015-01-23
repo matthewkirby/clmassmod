@@ -375,6 +375,91 @@ def plotNoiseMXXL():
 ############################
 
 
+def plotShearErrEstimateMXXL():
+
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+
+    stdsfig = pylab.figure()
+    stdax = stdsfig.add_subplot(1,1,1)
+
+    massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
+    
+    radrange = 5
+    radialname = ['0.5 - 1.5']
+    noiseranges = ['2_2', '4_3']
+    noisenames = ['ng=20  $\sigma_e = 0.33$',
+                  'ng=4 $\sigma_e = 0.5$']
+    errests = ['', '-gaussianshearerr']
+    errestnames = ['bootstrap', 'gaussian scaled']
+
+
+    patches = []
+    labels = []
+
+
+    for i, errest in enumerate(errests):
+        for j, noiserange in enumerate(noiseranges):
+
+            consolfile = 'mxxl_imperial/rundirs/run8consolidated/mxxlsnap41.c4-r%d-n%s-corenone-linearbins12%s.pkl' % (radrange, noiserange, errest)
+            print consolfile
+
+            with open(consolfile, 'rb') as input:
+
+                consol = cPickle.load(input)
+
+                label = '%s; %s' % (noisenames[j], errestnames[i])
+
+                patch = fitLogNormDistro(consol['true_m200s'], 
+                                         consol['measured_m200s'],
+                                         consol['measured_m200errs'],
+                                         massedges,
+                                         meansax,
+                                         stdax,
+                                         colorindex = j)
+
+                patches.append(patch)
+                labels.append(label)
+
+
+    meansax.set_xscale('log')
+    meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.set_xlim(2e14, 1.3e15)
+#    meansax.set_ylim(0.85, 1.10)
+    meansax.set_xticks([1e15])
+    meansax.set_xticklabels(['10'])
+    meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    meansax.legend(patches, labels, loc='upper left')
+    meansfig.canvas.draw()
+    meansfig.tight_layout()
+    meansfig.savefig('noisemxxl_logmean.png')
+
+    stdax.set_xscale('log')
+    stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+    stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    stdax.set_xlim(2e14, 1.3e15)
+#    stdax.set_ylim(0.85, 1.10)
+    stdax.set_xticks([1e15])
+    stdax.set_xticklabels(['10'])
+    stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    stdax.legend(patches, labels, loc='upper left')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+    stdsfig.savefig('noisemxxl_logstd.png')
+
+
+    return meansfig, stdsfig
+
+
+
+############################
+
+
 
 def plotBinningMXXL():
 
