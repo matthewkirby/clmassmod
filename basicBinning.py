@@ -4,7 +4,26 @@
 
 import numpy as np
 
-class dumbequalbins(object):
+#################################
+
+class Binner(object):
+
+    def __call__(self, catalog, config):
+
+        maskedCat = catalog.filter(catalog['mask'])
+        radii, shear, shearerr, number = self._makeProfile(maskedCat, config)
+
+        if 'shearprofileerr' in config and config.shearprofileerr == 'gaussianapprox':
+            allradii, allshear, allshearerr, allnumber = self._makeProfile(catalog, config)
+            assert(len(radii) == len(allradii))
+            scalederr = allshearerr*np.sqrt(allnumber/number)
+            return radii, shear, scalederr
+
+        return radii, shear, shearerr
+
+##################################
+
+class dumbequalbins(Binner):
 
     def __init__(self, config = None):
         self.ngals = 200
@@ -19,7 +38,7 @@ class dumbequalbins(object):
             self.profileCol = config.profilecol
         
 
-    def __call__(self, catalog, config):
+    def _makeProfile(self, catalog, config):
 
         sorted_cat = catalog.filter(np.argsort(catalog[self.profileCol]))
         sorted_cat = sorted_cat.filter(np.logical_and(sorted_cat[self.profileCol] > self.minradii, 
@@ -27,13 +46,15 @@ class dumbequalbins(object):
         radii = []
         shear = []
         shearerr = []
+        ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
             maxtake = min(i+self.ngals, len(catalog))
             radii.append(np.mean(sorted_cat['r_mpc'][i:maxtake]))
             shear.append(np.mean(sorted_cat['ghat'][i:maxtake]))
             shearerr.append(np.std(sorted_cat['ghat'][i:maxtake])/np.sqrt(maxtake-i))
+            ngals.append(len(sorted_cat['r_mpc'][i:maxtake]))
 
-        return np.array(radii), np.array(shear), np.array(shearerr)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
 
 ############################
 
@@ -48,7 +69,7 @@ def bootstrapmean(distro, nboot=1000):
 
 ############################
 
-class bootstrapequalbins(object):
+class bootstrapequalbins(Binner):
 
     def __init__(self, config = None):
         self.ngals = 200
@@ -63,7 +84,7 @@ class bootstrapequalbins(object):
             self.profileCol = config.profilecol
         
 
-    def __call__(self, catalog, config):
+    def _makeProfile(self, catalog, config):
 
         sorted_cat = catalog.filter(np.argsort(catalog[self.profileCol]))
         sorted_cat = sorted_cat.filter(np.logical_and(sorted_cat[self.profileCol] > self.minradii, 
@@ -71,6 +92,7 @@ class bootstrapequalbins(object):
         radii = []
         shear = []
         shearerr = []
+        ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
             maxtake = min(i+self.ngals, len(catalog))
             radii.append(np.mean(sorted_cat['r_mpc'][i:maxtake]))
@@ -78,13 +100,14 @@ class bootstrapequalbins(object):
             curmean, curerr = bootstrapmean(sorted_cat['ghat'][i:maxtake])
             shear.append(curmean)
             shearerr.append(curerr)
+            ngals.append(len(sorted_cat['ghat'][i:maxtake]))
 
-        return np.array(radii), np.array(shear), np.array(shearerr)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
             
 
 ##############################
 
-class bootstrapfixedbins(object):
+class bootstrapfixedbins(Binner):
 
     def __init__(self, config = None):
         self.ngals = 200
@@ -102,7 +125,7 @@ class bootstrapfixedbins(object):
             self.profileCol = config.profilecol
         
 
-    def __call__(self, catalog, config):
+    def _makeProfile(self, catalog, config):
 
         if self.binspacing == 'linear':
             binedges = np.linspace(self.minradii, self.maxradii, self.nbins+1)
@@ -112,6 +135,7 @@ class bootstrapfixedbins(object):
         radii = []
         shear = []
         shearerr = []
+        ngals = []
         for i in range(self.nbins):
             mintake = binedges[i]
             maxtake = binedges[i+1]
@@ -128,6 +152,7 @@ class bootstrapfixedbins(object):
             curmean, curerr = bootstrapmean(selected['ghat'])
             shear.append(curmean)
             shearerr.append(curerr)
+            ngals.append(len(selected))
 
-        return np.array(radii), np.array(shear), np.array(shearerr)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
       

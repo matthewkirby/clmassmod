@@ -107,7 +107,7 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
         print len(measuredmass[inbin]), len(measuredmasserr[inbin]), len(truemass[inbin])
         parts = None
-        for i in range(10):
+        for i in range(20):
             try:
                 parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
                 break
@@ -373,6 +373,93 @@ def plotNoiseMXXL():
 
 
 ############################
+
+
+
+def plotBinningMXXL():
+
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+
+    stdsfig = pylab.figure()
+    stdax = stdsfig.add_subplot(1,1,1)
+
+    massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
+    
+    radialrange = 5
+    radialname = '0.5 - 1.5'
+    noiserange = '6_4'
+    noisename = ['10 gals/sq. arcmin $\sigma_e = 0.4$']
+    binnings = ['linearbins6', 'linearbins12', 'logbins6']
+    binningnames = ['linear 6 bins', 'linear 12 bins', 'log 6 bins']
+
+
+    patches = []
+    labels = []
+
+
+    for i, binning in enumerate(binnings):
+
+
+            consolfile = 'mxxl_imperial/rundirs/run9consolidated/mxxlsnap41.c4-r%d-n%s-corenone-%s.pkl' % (radialrange, noiserange,binning)
+            print consolfile
+
+            with open(consolfile, 'rb') as input:
+
+                consol = cPickle.load(input)
+
+                label = binningnames[i]
+
+                patch = fitLogNormDistro(consol['true_m200s'], 
+                                         consol['measured_m200s'],
+                                         consol['measured_m200errs'],
+                                         massedges,
+                                         meansax,
+                                         stdax,
+                                         colorindex = i)
+
+                patches.append(patch)
+                labels.append(label)
+
+
+    meansax.set_xscale('log')
+    meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+    meansax.set_title(r'10 Galaxies/ sq arcmin; $\sigma_e = 0.4$')
+    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.set_xlim(2e14, 1.3e15)
+#    meansax.set_ylim(0.85, 1.10)
+    meansax.set_xticks([1e15])
+    meansax.set_xticklabels(['10'])
+    meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    meansax.legend(patches, labels, loc='upper left')
+    meansfig.canvas.draw()
+    meansfig.tight_layout()
+    meansfig.savefig('binningmxxl_logmean.png')
+
+    stdax.set_xscale('log')
+    stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+    stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+    stdax.set_title(r'10 Galaxies/ sq arcmin; $\sigma_e = 0.4$')
+    stdax.set_xlim(2e14, 1.3e15)
+#    stdax.set_ylim(0.85, 1.10)
+    stdax.set_xticks([1e15])
+    stdax.set_xticklabels(['10'])
+    stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+    stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+    stdax.legend(patches, labels, loc='lower left')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+    stdsfig.savefig('binningmxxl_logstd.png')
+
+
+    return meansfig, stdsfig
+
+
+
+############################
+
 
 
 def plotCoreMXXL():

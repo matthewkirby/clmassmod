@@ -253,12 +253,13 @@ def readSimCatalog(catalogname, simreader, config):
     redshifts = sim.redshifts
     beta_s = sim.beta_s
 
-    cols = [pyfits.Column(name = 'r_arcmin', format = 'E', array = r_arcmin[mask]),
-            pyfits.Column(name = 'r_mpc', format='E', array = r_mpc[mask]),
-            pyfits.Column(name = 'ghat', format='E', array = E[mask]),
-            pyfits.Column(name = 'gcross', format='E', array = B[mask]),
-            pyfits.Column(name = 'z', format='E', array = redshifts[mask]),
-            pyfits.Column(name = 'beta_s', format = 'E', array = beta_s[mask])]
+    cols = [pyfits.Column(name = 'r_arcmin', format = 'E', array = r_arcmin),
+            pyfits.Column(name = 'r_mpc', format='E', array = r_mpc),
+            pyfits.Column(name = 'ghat', format='E', array = E),
+            pyfits.Column(name = 'gcross', format='E', array = B),
+            pyfits.Column(name = 'z', format='E', array = redshifts),
+            pyfits.Column(name = 'beta_s', format = 'E', array = beta_s),
+            pyfits.Column(name = 'mask', format = 'L', array = mask)]
     catalog = ldac.LDACCat(pyfits.BinTableHDU.from_columns(pyfits.ColDefs(cols)))
     catalog.hdu.header['ZLENS'] = sim.zcluster
 
