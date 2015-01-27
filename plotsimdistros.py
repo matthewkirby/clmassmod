@@ -416,7 +416,7 @@ def plotShearErrEstimateMXXL():
                                          massedges,
                                          meansax,
                                          stdax,
-                                         colorindex = j)
+                                         colorindex = i)
 
                 patches.append(patch)
                 labels.append(label)

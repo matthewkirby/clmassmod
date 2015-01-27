@@ -12,9 +12,12 @@ import scipy.stats
 ########################
 
 
-def buildModel(mlens, merr, mtrue, nsamples = 150):
+def buildModel(mlens, merr, mtrue, nsamples = 150, noisefloor = False):
 
     massnorm = 1e15
+
+    if noisefloor is True:
+        merr = np.maximum(np.sqrt(merr**2 + (0.2*mtrue)**2), 0.1*np.abs(mlens))
 
     parts = {}
 
@@ -48,6 +51,64 @@ def buildModel(mlens, merr, mtrue, nsamples = 150):
     parts['data'] = data
 
     return parts
+
+
+#######################################
+
+def buildOutlierModel(mlens, merr, mtrue, nsamples = 150, outlierfactor=100):
+
+    massnorm = 1e15
+
+    parts = {}
+
+    parts['logmu'] = pymc.Uniform('logmu', -1., 1.)
+    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-4), np.log(10))
+
+    @pymc.deterministic(trace=True)
+    def sigma(logsigma = parts['logsigma']):
+        return np.exp(logsigma)
+    
+    parts['sigma'] = sigma
+
+    parts['fracoutliers'] = pymc.Uniform('fracoutliers', 0., 1.)
+
+    nclusters = len(mlens)
+    ml_ints = np.zeros((nclusters, nsamples))
+    delta_logmls = np.zeros((nclusters, nsamples))
+    outlier_ml_ints = np.zeros((nclusters, nsamples))
+    outlier_delta_logmls = np.zeros((nclusters, nsamples))
+    for i in range(nclusters):
+        a, b = (0. - mlens[i]) /merr[i], (1e17 - mlens[i]) / merr[i]
+        ml_ints[i,:] = mlens[i] + merr[i]*scipy.stats.truncnorm.rvs(a,b,size=nsamples)
+        delta_logmls[i,:] = np.log(ml_ints[i,:]) - np.log(mtrue[i])
+
+        a, b = (0. - mlens[i]) /outlierfactor*merr[i], (1e17 - mlens[i]) / outlierfactor*merr[i]
+        outlier_ml_ints[i,:] = mlens[i] + outlierfactor*merr[i]*scipy.stats.truncnorm.rvs(a,b,size=nsamples)
+        outlier_delta_logmls[i,:] = np.log(outlier_ml_ints[i,:]) - np.log(mtrue[i])
+
+    
+
+    @pymc.observed
+    def data(value = 0., ml_ints = ml_ints/massnorm, delta_logmls = delta_logmls,
+             outlier_ml_ints = outlier_ml_ints, outlier_delta_logmls = outlier_delta_logmls,
+             logmu = parts['logmu'], sigma = parts['sigma'],
+             fracoutliers = parts['fracoutliers']):
+
+        return dlntools.outlierloglinearlike(ml_ints,
+                                             delta_logmls,
+                                             outlier_ml_ints,
+                                             outlier_delta_logmls,
+                                             logmu,
+                                             sigma,
+                                             fracoutliers)
+    parts['data'] = data
+
+    return parts
+
+
+    
+
+    
 
 #######################################
 

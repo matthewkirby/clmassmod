@@ -28,7 +28,7 @@ def consolidateFits(workdir, simtype, outdir):
     outputfiles = glob.glob('%s/*.out' % outdir)
     nhalos = len(outputfiles)
 
-    ids = np.zeros(nhalos)
+    ids = []
     measured_m200s = np.zeros(nhalos)
     measured_m200errs = np.zeros(nhalos)
     measured_m500s = np.zeros(nhalos)
@@ -84,7 +84,7 @@ def consolidateFits(workdir, simtype, outdir):
         except KeyError:
             print 'Failure at {0}'.format(output)
             raise
-
+        ids.append(haloid)
         true_m200s[i] = truth['m200']
         true_m500s[i] = truth['m500']
         true_cs[i] = truth['concen']

@@ -4,6 +4,8 @@
 
 # Compiling info: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /u/ki/dapple/include/python2.7/ -I /u/ki/dapple/lib/python2.7/site-packages/numpy/core/include/ -o deconvolvedlognormtools.so deconvolvedlognormtools.c
 
+#aifa: gcc -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I /users/dapple/anaconda/pkgs/numpy-1.7.1-py27_2/lib/python2.7/site-packages/numpy/core/include/ -I /users/dapple/anaconda/include/python2.7/ -o deconvolvedlognormtools.so deconvolvedlognormtools.c
+
 
 ########################
 
@@ -85,7 +87,6 @@ def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
 
     return thesum
 
-    
 
 
 @cython.boundscheck(False)
@@ -101,6 +102,7 @@ def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
 
     cdef double sumlogprob = 0.
     cdef double prob = 0.
+
     
 
     for i from nclusters > i >= 0:
@@ -115,6 +117,48 @@ def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
 
 
         sumlogprob += log(prob)
+
+    return sumlogprob
+
+    
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
+                         np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
+                         np.ndarray[np.double_t, ndim=2, mode='c'] outlier_ml_ints,
+                         np.ndarray[np.double_t, ndim=2, mode='c'] outlier_delta_logmls,
+                         double logmu, 
+                         double sigma,
+                         double fracoutliers):
+
+
+    cdef Py_ssize_t i, nclusters
+    nclusters = ml_ints.shape[0]
+
+    cdef double sumlogprob = 0.
+    cdef double prob = 0.
+    cdef outlierprob = 0.
+    
+
+    for i from nclusters > i >= 0:
+
+
+        
+        prob = altintegral(ml_ints[i,:],
+                           delta_logmls[i,:],
+                           logmu,
+                           sigma)
+
+        outlierprob = altintegral(outlier_ml_ints[i,:],
+                                  delta_logmls[i,:],
+                                  logmu,
+                                  sigma)
+
+
+
+        sumlogprob += log((1-fracoutliers)*prob + fracoutliers*outlierprob)
 
     return sumlogprob
 
