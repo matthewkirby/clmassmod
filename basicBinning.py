@@ -143,9 +143,8 @@ class bootstrapfixedbins(Binner):
             selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
                                                      catalog[self.profileCol] < maxtake))
 
-            ngals = len(selected)
-            
-            if 
+        
+        
 
             if len(selected) < 2:
                 radii.append(-1)
