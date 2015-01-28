@@ -303,8 +303,10 @@ def plotNoiseMXXL():
     
     radialranges = [5]
     radialnames = ['0.5 - 1.5']
-    noiseranges = ['0_0', '2_2', '6_4', '4_3']
-    noisenames = ['No Noise', '20 gals/sq. arcmin $\sigma_e = 0.33$',
+#    noiseranges = ['0_0', '2_2', '6_4', '4_3']
+    noiseranges = ['2_2', '6_4', '4_3']
+#    noisenames = ['No Noise', 
+    noisenames = ['20 gals/sq. arcmin $\sigma_e = 0.33$',
                   '10 gals/sq. arcmin $\sigma_e = 0.4$',
                   '4 gals/sq. arcmin $\sigma_e = 0.5$']
 
@@ -316,7 +318,7 @@ def plotNoiseMXXL():
     for i, radrange in enumerate(radialranges):
         for j, noiserange in enumerate(noiseranges):
 
-            consolfile = 'mxxl_imperial/rundirs/run8consolidated/mxxlsnap41.c4-r%d-n%s-corenone-linearbins12.pkl' % (radrange, noiserange)
+            consolfile = 'mxxl_imperial/rundirs/run10consolidated/mxxlsnap41.c4-r%d-n%s-corenone-lineargaussbins12.pkl' % (radrange, noiserange)
             print consolfile
 
             with open(consolfile, 'rb') as input:

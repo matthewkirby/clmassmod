@@ -35,11 +35,20 @@ def createPerfectProfile(m200, c, zcluster, r_mpc, beta_s):
 
 #########################
 
-def createClusterSet(config, mtrues, zcluster, r_mpc, beta_s, noise, concens = None):
+def createClusterSet(config, mtrues, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise, concens = None):
 
     nclusters = len(mtrues)
 
     model = nfwfit.buildModel(config)
+    profile_rmpcs = []
+    shearprofiles = []
+    shearerrprofiles = []
+
+
+    arcmin_max = (r_mpc_edges[-1] / nfwutils.global_cosmology.angulardist(zcluster))*(180./np.pi)*60
+    arcminarea = arcmin_max**2
+    ngals = int(arcminarea * galdensity)
+
 
     if concens is None:
 
@@ -48,9 +57,6 @@ def createClusterSet(config, mtrues, zcluster, r_mpc, beta_s, noise, concens = N
         except AttributeError:
             mcrelation = nfwfit.buildObject('basicMassCon', 'Duffy', config)
 
-
-    shearprofiles = []
-    shearerr = (noise/np.sqrt(r_mpc))*np.ones_like(r_mpc)
 
 
     for i in range(nclusters):
@@ -62,18 +68,42 @@ def createClusterSet(config, mtrues, zcluster, r_mpc, beta_s, noise, concens = N
         else:
             c200 = concens[i]
 
-        gtrue = createPerfectProfile(m200, c200,
-                                     zcluster, r_mpc, beta_s)
 
-        shearprofiles.append(gtrue + shearerr*np.random.standard_normal(size=len(r_mpc)))
+        xs = np.random.uniform(-r_mpc_edges[-1], r_mpc_edges[-1], size=ngals)
+        ys = np.random.uniform(-r_mpc_edges[-1], r_mpc_edges[-1], size=ngals)
+        gal_r_mpcs = np.sqrt(xs**2 + ys**2)
+        gtrue = createPerfectProfile(m200, c200, zcluster, gal_r_mpcs, beta_s)
+        gobs = gtrue + shapenoise*np.random.standard_normal(size=ngals)
+    
+        radii = []
+        shear = []
+        shearerr = []
+        for i in range(len(r_mpc_edges)-1):
+            mintake = r_mpc_edges[i]
+            maxtake = r_mpc_edges[i+1]
+            selected = np.logical_and(gal_r_mpcs >= mintake,
+                                      gal_r_mpcs < maxtake)
+
+            ngal = len(gal_r_mpcs[selected])            
+        
+            if ngal == 0:
+                continue
+            
+            radii.append(np.mean(gal_r_mpcs[selected]))
+            shear.append(np.mean(gobs[selected]))
+            shearerr.append(shapenoise/np.sqrt(ngal))
+
+        profile_rmpcs.append(np.array(radii))
+        shearprofiles.append(np.array(shear))
+        shearerrprofiles.append(np.array(shearerr))
 
 
-    return shearprofiles, shearerr
+    return profile_rmpcs, shearprofiles, shearerrprofiles
 
 
 ##########################
 
-def fitClusterSet(config, zcluster, r_mpc, beta_s, shearprofiles, shearerr):
+def fitClusterSet(config, zcluster, r_mpcs, beta_s, shearprofiles, shearerrs):
 
     fitter = nfwfit.buildFitter(config)
 
@@ -83,9 +113,9 @@ def fitClusterSet(config, zcluster, r_mpc, beta_s, shearprofiles, shearerr):
 
     for i in range(len(shearprofiles)):
 
-        fitres = fitter.minChisqMethod(r_mpc, shearprofiles[i], shearerr, beta_s, beta_s**2, zcluster)
+        fitres = fitter.minChisqMethod(r_mpcs[i], shearprofiles[i], shearerrs[i], beta_s, beta_s**2, zcluster)
         if fitres is None:
-            fitres = fitter.minChisqMethod(r_mpc, shearprofiles[i], shearerr, beta_s, beta_s**2, 
+            fitres = fitter.minChisqMethod(r_mpcs[i], shearprofiles[i], shearerrs[i], beta_s, beta_s**2, 
                                            zcluster, useSimplex=True)
 
         if fitres is None:
@@ -126,10 +156,7 @@ def bootstrapMean(distro, nboots = 1000):
 
 #########################
 
-def runNoiseScaling(config, nclusters, zcluster, r_mpc, beta_s, noiselevels):
-
-    bias = np.zeros(len(noiselevels))
-    biaserr = np.zeros(len(noiselevels))
+def runNoiseScaling(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensities, shapenoises):
 
     mfitsets = []
     merrsets = []
@@ -139,15 +166,15 @@ def runNoiseScaling(config, nclusters, zcluster, r_mpc, beta_s, noiselevels):
     merrsets2 = []
     masksets2 = []
 
-    mtrues = 10**np.random.uniform(15.8, 16., size=nclusters)
+    mtrues = 10**np.random.uniform(14., 15.5, size=nclusters)
 
-    for i in range(len(noiselevels)):
+    for i in range(len(galdensities)):
 
-        shearprofiles, shearerr = createClusterSet(config, mtrues, zcluster, r_mpc, beta_s, noiselevels[i])
+        r_mpcs, shearprofiles, shearerrs = createClusterSet(config, mtrues, zcluster, r_mpc_edges, beta_s, galdensities[i], shapenoises[i])
 
-        fitMasses, mask  = fitClusterSet(config, zcluster, r_mpc, beta_s, shearprofiles, shearerr)
+        fitMasses, fitErrs, mask  = fitClusterSet(config, zcluster, r_mpcs, beta_s, shearprofiles, shearerrs)
         mfitsets.append(fitMasses)
-#        merrsets.append(fitErrs)
+        merrsets.append(fitErrs)
         masksets.append(mask)
 
 
@@ -158,7 +185,7 @@ def runNoiseScaling(config, nclusters, zcluster, r_mpc, beta_s, noiselevels):
 #    return mtrues, mfitsets, merrsets, masksets, mfitsets2, merrsets2, masksets2
 
 #    return mtrues, mfitsets, merrsets, masksets
-    return mtrues, mfitsets, masksets
+    return mtrues, mfitsets, merrsets, masksets
 
     
 ##########################

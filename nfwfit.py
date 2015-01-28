@@ -361,7 +361,7 @@ class NFW_Model(object):
 
     def guess(self):
 
-        guess = [10**(np.random.uniform(14, 16)),
+        guess = [10**(np.random.uniform(14, 15.5)),
                  np.random.uniform(1., 20.)]
 
         guess[0] = guess[0] / self.massScale
@@ -480,7 +480,7 @@ class NFW_MC_Model(NFW_Model):
 
     def guess(self):
 
-        guess = [10**(np.random.uniform(14, 16))]
+        guess = [10**(np.random.uniform(14, 15.5))]
 
         guess[0] = guess[0] / self.massScale
 
@@ -648,9 +648,10 @@ class NFWFitter(object):
                    guess = [],
                    useSimplex=False):
 
-
         if guess == []:
             guess = self.model.guess()
+
+        print 'GUESS: %f' % guess[0]
 
         self.model.setData(beta_s, beta_s2, zcluster)
 
