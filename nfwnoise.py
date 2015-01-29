@@ -9,6 +9,9 @@ import nfwmodeltools as tools
 import fitmodel
 import scipy.misc
 import basicMassCon
+import varcontainer
+import pymc
+import pymc_mymcmc_adapter as pma
 
 
 
@@ -156,6 +159,53 @@ def bootstrapMean(distro, nboots = 1000):
 
 #########################
 
+def createFakeChains(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise):
+
+    mtrues = 10**14.4*np.ones(nclusters)
+
+    r_mpcs, shearprofiles, shearerrs = createClusterSet(config, mtrues, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise)
+
+    fitter = nfwfit.buildFitter(config)
+
+    chains = []
+
+    for i in range(nclusters):
+
+        mcmc_model = None
+        for i in range(10):
+            try:
+                mcmc_model = fitter.model.makeMCMCModel(r_mpcs[i], shearprofiles[i], shearerrs[i], beta_s, beta_s**2, zcluster)
+                break
+            except pymc.ZeroProbability:
+                pass
+        if mcmc_model is None:
+            raise pymc.ZeroProbability
+
+        manager = varcontainer.VarContainer()
+        options = varcontainer.VarContainer()
+        manager.options = options
+        
+        options.singlecore = True
+        options.adapt_every = 100
+        options.adapt_after = 100
+        options.nsamples = 1000
+        manager.model = mcmc_model
+        
+        runner = pma.MyMCMemRunner()
+        runner.run(manager)
+        runner.finalize(manager)
+
+        chains.append(manager.chain['m200'])
+
+    return mtrues, chains
+
+
+        
+
+
+
+#########################
+
 def runNoiseScaling(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensities, shapenoises):
 
     mfitsets = []
@@ -166,7 +216,8 @@ def runNoiseScaling(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensiti
     merrsets2 = []
     masksets2 = []
 
-    mtrues = 10**np.random.uniform(14., 15.5, size=nclusters)
+#    mtrues = 10**np.random.uniform(14., 15.5, size=nclusters)
+    mtrues = 10**14.4*np.ones(nclusters)
 
     for i in range(len(galdensities)):
 
