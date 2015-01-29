@@ -562,7 +562,7 @@ class NFW_MC_Model(NFW_Model):
                                           beta_s2,
                                           rho_c,
                                           rho_c_over_sigma_c)
-            print m200/1e14, logprob
+
 
             if not np.isfinite(logprob):
                 raise pymc.ZeroProbability
