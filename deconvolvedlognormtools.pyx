@@ -120,6 +120,40 @@ def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
 
     return sumlogprob
 
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
+                      np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
+                      np.ndarray[np.int_t, ndim=1, mode='c'] ngoodsamples,
+                      double logmu, 
+                      double sigma):
+
+
+    cdef Py_ssize_t i, nclusters, nsamples
+    nclusters = ml_ints.shape[0]
+
+    cdef double sumlogprob = 0.
+    cdef double prob = 0.
+
+    
+
+    for i from nclusters > i >= 0:
+
+        nsamples = ngoodsamples[i]
+        
+        prob = altintegral(ml_ints[i,:nsamples],
+                           delta_logmls[i,:nsamples],
+                           logmu,
+                           sigma)
+
+
+
+        sumlogprob += log(prob)
+
+    return sumlogprob
+
     
 
 
