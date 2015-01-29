@@ -344,12 +344,13 @@ class NFW_Model(object):
         self.overdensity = 200
         self.config = config
 
-        if config is not None and 'fitter' in config and config.fitter == 'maxlike':
-            self.m200_low = -1e18
-            self.m200_high = 1e18
-        else:
+        if config is not None and 'massprior' in config and config.massprior != 'linear':
             self.m200_low = 1e10
             self.m200_high = 1e17
+        else:
+            self.m200_low = -1e18
+            self.m200_high = 1e18
+
 
         self.c200_low = 1.1
         self.c200_high = 19.9

@@ -298,8 +298,10 @@ class MyMCMemRunner(object):
         
         step = mymc.Slice()
 
-
-        updater = mymc.MultiDimRotationUpdater(space, step, options.adapt_every, options.adapt_after, parallel = parallel)
+        if len(space) == 1:
+            updater = mymc.CartesianSequentialUpdater(space, step, options.adapt_every, options.adapt_after, parallel = parallel)
+        else:
+            updater = mymc.MultiDimRotationUpdater(space, step, options.adapt_every, options.adapt_after, parallel = parallel)
 
         manager.engine = mymc.Engine([updater], trace)
 
