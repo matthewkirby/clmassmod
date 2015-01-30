@@ -531,7 +531,6 @@ class NFW_MC_Model(NFW_Model):
             return 0.
         parts['c200pot'] = c200pot
 
-
         rho_c = np.float64(nfwutils.global_cosmology.rho_crit(zcluster))
         rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
@@ -549,7 +548,7 @@ class NFW_MC_Model(NFW_Model):
 
 
             beta_s = beta_s.astype(np.float64)
-            beta_s2 = beta_s.astype(np.float64)
+            beta_s2 = beta_s2.astype(np.float64)
 
 
             
