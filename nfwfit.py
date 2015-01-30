@@ -630,7 +630,7 @@ class NFWFitter(object):
         options.singlecore = True
         options.adapt_every = 100
         options.adapt_after = 100
-        options.nsamples = 10000
+        options.nsamples = 50000
         if 'nsamples' in self.config:
             options.nsamples = self.config.nsamples
         manager.model = mcmc_model

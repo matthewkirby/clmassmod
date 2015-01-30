@@ -14,7 +14,7 @@ import nfwutils, nfwfit, nfwnoise
 
 ########################
 
-def loadMCMCChains(chaindir, simtype, simreader):
+def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, thin=1):
 
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
@@ -27,12 +27,6 @@ def loadMCMCChains(chaindir, simtype, simreader):
     halos = []
 
     for chainfile in glob.glob('%s/*.out' % chaindir):
-        with open(chainfile, 'rb') as input:
-            chain = cPickle.load(input)
-
-        m200s = np.array(chain['m200'][200:])*nfwutils.global_cosmology.h
-        
-        
 
         filebase = os.path.basename(chainfile)
 
@@ -53,11 +47,26 @@ def loadMCMCChains(chaindir, simtype, simreader):
             print 'Failure at {0}'.format(output)
             raise
 
+        if massedges is not None \
+                and massbin is not None \
+                and (truth['m200'] < massedges[massbin] \
+                         or truth['m200'] >= massedges[massbin+1]):
+                continue
+
+
+        with open(chainfile, 'rb') as input:
+            chain = cPickle.load(input)
+
+        m200s = np.array(chain['m200'][200::thin])*nfwutils.global_cosmology.h
+        
+        
+
+
         halos.append(dict(id = haloid,
                           true_m200 = truth['m200'],
                           measured_m200s = m200s))
 
-        
+    print 'Num Halos: ', len(halos)
                          
     return halos
 
@@ -104,7 +113,7 @@ def buildMCMCModel(halos, maxsamples = 200):
     parts = {}
 
     parts['logmu'] = pymc.Uniform('logmu', -1., 1.)
-    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-4), np.log(10))
+    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-2), np.log(10))
 
     @pymc.deterministic(trace=True)
     def sigma(logsigma = parts['logsigma']):

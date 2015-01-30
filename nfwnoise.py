@@ -26,7 +26,6 @@ def createPerfectProfile(m200, c, zcluster, r_mpc, beta_s):
     rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
 
-
     r_scale = nfwutils.rscaleConstM(m200, c, zcluster, 200)
 
     nfw_shear_inf = tools.NFWShear(r_mpc, c, r_scale, rho_c_over_sigma_c)
@@ -161,9 +160,9 @@ def bootstrapMean(distro, nboots = 1000):
 
 #########################
 
-def createFakeChains(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise, nsamples=1000):
+def createFakeChains(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise, nsamples=1000, mass=10**15.2):
 
-    mtrues = 10**14.5*np.ones(nclusters)
+    mtrues = mass*np.ones(nclusters)
 
     r_mpcs, shearprofiles, shearerrs = createClusterSet(config, mtrues, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise)
 

@@ -4,6 +4,7 @@ import numpy as np
 import cPickle
 import deconvolvedlognorm as dln
 import pymc
+import load_chains, os
 
 #############
 
@@ -143,7 +144,78 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
         
 
 ################
-    
+
+def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex):
+
+    nbins = len(massedges) - 1
+
+    ylows = []
+    yhighs = []
+    xpoints = []    
+
+    ystdlows = []
+    ystdhighs = []
+
+    for i in range(nbins):
+
+        chainfile = '%s/dln_%d.chain.0' % (chaindir, i)
+        if not os.path.exists(chainfile):
+            continue
+
+        chain = load_chains.loadChains([chainfile])
+
+        inbin = np.logical_and(truemass >= massedges[i],
+                               truemass < massedges[i+1])
+
+
+        if len(truemass[inbin]) < 25:
+            continue
+
+        xpoints.append(massedges[i])
+        xpoints.append(massedges[i+1])
+
+        print len(measuredmass[inbin]), len(measuredmasserr[inbin]), len(truemass[inbin])
+        parts = None
+        for i in range(20):
+            try:
+                parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
+                break
+            except pymc.ZeroProbability:
+                continue
+        if parts is None:
+            raise pymc.ZeroProbability
+        (logmu, logmuerr), (logsigma, logsigmaerr) = dln.runFit(parts)
+        
+
+        mu_low = np.exp(logmu[0] - logmuerr[0,0])
+        mu_high = np.exp(logmu[0] + logmuerr[0,0])
+        std_low = np.exp(logsigma[0] - logsigmaerr[0,0])
+        std_high = np.exp(logsigma[0] + logsigmaerr[0,0])
+        
+        ylows.append( mu_low)
+        ylows.append( mu_low)
+        yhighs.append(mu_high)
+        yhighs.append(mu_high)
+
+        ystdlows.append(std_low)
+        ystdlows.append(std_low)
+        ystdhighs.append(std_high)
+        ystdhighs.append(std_high)
+                     
+
+
+    meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], hatch = None)
+    stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=0.8, color = c[colorindex], hatch = None)
+    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=0.8, hatch = None)
+
+    return patch
+        
+
+
+
+
+
+################    
 
 
 def plotLogNormDistro(truemass, measuredmass, massedges, meanax, nongaussax, stdax, label, colorindex, useLog = True):
