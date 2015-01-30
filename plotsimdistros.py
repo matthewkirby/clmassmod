@@ -5,6 +5,7 @@ import cPickle
 import deconvolvedlognorm as dln
 import pymc
 import load_chains, os
+import confidenceinterval as ci
 
 #############
 
@@ -162,35 +163,24 @@ def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex):
         if not os.path.exists(chainfile):
             continue
 
-        chain = load_chains.loadChains([chainfile])
+        chain = load_chains.loadChains([chainfile], trim=True)
 
-        inbin = np.logical_and(truemass >= massedges[i],
-                               truemass < massedges[i+1])
-
-
-        if len(truemass[inbin]) < 25:
+        print chainfile, len(chain['logmu'])
+        if len(chain['logmu'][0,:]) < 5000:
+            print 'Skipping'
             continue
 
         xpoints.append(massedges[i])
         xpoints.append(massedges[i+1])
 
-        print len(measuredmass[inbin]), len(measuredmasserr[inbin]), len(truemass[inbin])
-        parts = None
-        for i in range(20):
-            try:
-                parts = dln.buildModel(measuredmass[inbin], measuredmasserr[inbin], truemass[inbin])
-                break
-            except pymc.ZeroProbability:
-                continue
-        if parts is None:
-            raise pymc.ZeroProbability
-        (logmu, logmuerr), (logsigma, logsigmaerr) = dln.runFit(parts)
-        
+        mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
+        sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
 
-        mu_low = np.exp(logmu[0] - logmuerr[0,0])
-        mu_high = np.exp(logmu[0] + logmuerr[0,0])
-        std_low = np.exp(logsigma[0] - logsigmaerr[0,0])
-        std_high = np.exp(logsigma[0] + logsigmaerr[0,0])
+        
+        mu_low =  mu - muerr[0]
+        mu_high = mu + muerr[1]
+        std_low = sig - sigerr[0]
+        std_high =sig + sigerr[1]
         
         ylows.append( mu_low)
         ylows.append( mu_low)
@@ -202,7 +192,8 @@ def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex):
         ystdhighs.append(std_high)
         ystdhighs.append(std_high)
                      
-
+    if len(xpoints) == 0:
+        return None
 
     meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], hatch = None)
     stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=0.8, color = c[colorindex], hatch = None)
@@ -373,12 +364,14 @@ def plotNoiseMXXL():
 
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
-    radialranges = [5]
-    radialnames = ['0.5 - 1.5']
-#    noiseranges = ['0_0', '2_2', '6_4', '4_3']
-    noiseranges = ['2_2', '6_4', '4_3']
-#    noisenames = ['No Noise', 
-    noisenames = ['20 gals/sq. arcmin $\sigma_e = 0.33$',
+
+    chaindirs = ['mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n0_0-corenone-linearbins12',
+                 'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n2_2-corenone-lineargaussbins12',
+                 'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n6_4-corenone-lineargaussbins12',
+                 'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n4_3-corenone-lineargaussbins12']
+
+    noisenames = ['No Noise', 
+                  '20 gals/sq. arcmin $\sigma_e = 0.33$',
                   '10 gals/sq. arcmin $\sigma_e = 0.4$',
                   '4 gals/sq. arcmin $\sigma_e = 0.5$']
 
@@ -387,28 +380,26 @@ def plotNoiseMXXL():
     labels = []
 
 
-    for i, radrange in enumerate(radialranges):
-        for j, noiserange in enumerate(noiseranges):
+    for i in range(len(chaindirs)-1, -1,-1):
 
-            consolfile = 'mxxl_imperial/rundirs/run10consolidated/mxxlsnap41.c4-r%d-n%s-corenone-lineargaussbins12.pkl' % (radrange, noiserange)
-            print consolfile
+        chaindir = chaindirs[i]
 
-            with open(consolfile, 'rb') as input:
+        print chaindir
 
-                consol = cPickle.load(input)
 
-                label = noisenames[j]
+        label = noisenames[i]
 
-                patch = fitLogNormDistro(consol['true_m200s'], 
-                                         consol['measured_m200s'],
-                                         consol['measured_m200errs'],
+        patch = precomputedLogNormDistro(chaindir, 
                                          massedges,
                                          meansax,
                                          stdax,
-                                         colorindex = j)
+                                         colorindex = i)
 
-                patches.append(patch)
-                labels.append(label)
+        if patch is None:
+            continue
+
+        patches.append(patch)
+        labels.append(label)
 
 
     meansax.set_xscale('log')
@@ -416,12 +407,12 @@ def plotNoiseMXXL():
     meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
     meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
     meansax.set_xlim(2e14, 1.3e15)
-#    meansax.set_ylim(0.85, 1.10)
+    meansax.set_ylim(0.65, 1.2)
     meansax.set_xticks([1e15])
     meansax.set_xticklabels(['10'])
     meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
     meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
-    meansax.legend(patches, labels, loc='upper left')
+    meansax.legend(patches[::-1], labels[::-1], loc='upper left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
     meansfig.savefig('noisemxxl_logmean.png')
@@ -436,7 +427,7 @@ def plotNoiseMXXL():
     stdax.set_xticklabels(['10'])
     stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
     stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
-    stdax.legend(patches, labels, loc='upper left')
+    stdax.legend(patches[::-1], labels[::-1], loc='upper left')
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
     stdsfig.savefig('noisemxxl_logstd.png')
