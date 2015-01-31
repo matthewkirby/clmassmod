@@ -22,6 +22,7 @@ import pymc_mymcmc_adapter as pma
 
 def createPerfectProfile(m200, c, zcluster, r_mpc, beta_s):
 
+
     rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
 
@@ -159,20 +160,21 @@ def bootstrapMean(distro, nboots = 1000):
 
 #########################
 
-def createFakeChains(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise):
+def createFakeChains(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise, nsamples=1000, mass=10**15.2):
 
-    mtrues = 10**14.4*np.ones(nclusters)
+    mtrues = mass*np.ones(nclusters)
 
     r_mpcs, shearprofiles, shearerrs = createClusterSet(config, mtrues, zcluster, r_mpc_edges, beta_s, galdensity, shapenoise)
 
     fitter = nfwfit.buildFitter(config)
+
 
     chains = []
 
     for i in range(nclusters):
 
         mcmc_model = None
-        for i in range(10):
+        for j in range(10):
             try:
                 mcmc_model = fitter.model.makeMCMCModel(r_mpcs[i], shearprofiles[i], shearerrs[i], beta_s, beta_s**2, zcluster)
                 break
@@ -188,14 +190,14 @@ def createFakeChains(config, nclusters, zcluster, r_mpc_edges, beta_s, galdensit
         options.singlecore = True
         options.adapt_every = 100
         options.adapt_after = 100
-        options.nsamples = 1000
+        options.nsamples = nsamples
         manager.model = mcmc_model
         
         runner = pma.MyMCMemRunner()
         runner.run(manager)
         runner.finalize(manager)
 
-        chains.append(manager.chain['m200'])
+        chains.append(manager.chain['m200'][200:])
 
     return mtrues, chains
 
