@@ -87,6 +87,46 @@ def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
 
     return thesum
 
+#########
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
+                np.ndarray[np.double_t, ndim=1, mode='c'] deltamasses,
+                np.ndarray[np.double_t, ndim=1, mode='c'] delta_logmls,
+                np.ndarray[np.double_t, ndim=1, mode='c'] pdf,
+                double logmu, 
+                double sigma):
+
+    cdef Py_ssize_t i, nsamples
+    nsamples = ml_ints.shape[0]
+
+    cdef double thesum, lognormpart
+    thesum = 0.
+
+    cdef double sigma2, sigmasqrt2pi
+    neg2sigma2 = -2*(sigma**2)
+    sigmasqrt2pi = sigma*sqrt2pi
+
+    #need trapezoid rule here; assume first mass is 0 -> 0 prob
+    for i from nsamples-1 > i >= 1:
+
+        lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
+
+        thesum += 2*lognormpart*pdf[i]*deltamasses[i]
+
+    #last term of trapezoid
+    lognormpart = exp((delta_logmls[nsamples-1]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[nsamples-1])
+
+    thesum += lognormpart*pdf[nsamples]*deltamasses[i]
+
+    
+
+    return thesum
+
+
+
+#########
 
 
 @cython.boundscheck(False)
@@ -145,6 +185,44 @@ def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
         
         prob = altintegral(ml_ints[i,:nsamples],
                            delta_logmls[i,:nsamples],
+                           logmu,
+                           sigma)
+
+
+
+        sumlogprob += log(prob)
+
+    return sumlogprob
+
+
+##############
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
+                      np.ndarray[np.double_t, ndim=1, mode='c'] deltamasses,
+                      np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
+                      np.ndarray[np.int_t, ndim=2, mode='c'] pdfs,
+                      double logmu, 
+                      double sigma):
+
+
+    cdef Py_ssize_t i, nclusters, nmasses
+    nclusters = ml_ints.shape[0]
+    nmasses = ml_ints.shape[1]
+
+    cdef double sumlogprob = 0.
+    cdef double prob = 0.
+
+    
+
+    for i from nclusters > i >= 0:
+        
+        prob = pdfintegral(ml_ints,
+                           deltamasses,
+                           delta_logmls[i,:],
+                           pdfs[i,:],
                            logmu,
                            sigma)
 

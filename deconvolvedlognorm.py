@@ -74,6 +74,65 @@ def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, t
 
 #######################
 
+def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
+
+    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+
+    idpattern = consolidate_fits.idpatterns[simtype]
+
+    answers = cPickle.load(open('{0}_answers.pkl'.format(simtype), 'rb'))
+
+
+        
+    halos = []
+
+    for pdffile in glob.glob('%s/*.out' % pdfdir):
+
+        filebase = os.path.basename(chainfile)
+
+        match = idpattern.match(filebase)
+        
+
+        try:
+            haloid = int(match.group(1))
+        except AttributeError as e:
+            print filebase
+            raise e
+        except ValueError:
+            haloid = match.group(1)
+
+        try:
+            truth = answers[haloid]
+        except KeyError:
+            print 'Failure at {0}'.format(output)
+            raise
+
+        if massedges is not None \
+                and massbin is not None \
+                and (truth['m200'] < massedges[massbin] \
+                         or truth['m200'] >= massedges[massbin+1]):
+                continue
+
+
+        with open(chainfile, 'rb') as input:
+            masses, pdf = cPickle.load(input)
+        
+        
+
+        halos.append(dict(id = haloid,
+                          true_m200 = truth['m200'],
+                          masses = masses,
+                          pdf = pdf))
+
+    print 'Num Halos: ', len(halos)
+                         
+    return halos
+
+
+
+
+#######################
+
 def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masses=np.arange(-5e14, 5e15, 1e13), beta = 0.28):
 
     if config.binspacing == 'linear':
@@ -140,6 +199,56 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
         return pdfs
     
                 
+#####################
+
+
+def buildPDFModel(halos):
+
+    massnorm = 1e15
+
+    parts = {}
+
+    parts['logmu'] = pymc.Uniform('logmu', -1., 1.)
+    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-2), np.log(10))
+
+    @pymc.deterministic(trace=True)
+    def sigma(logsigma = parts['logsigma']):
+        return np.exp(logsigma)
+    
+    parts['sigma'] = sigma
+
+    masses = halos[0]['masses']
+    posmasses = masses[masses >= 0]
+    nmasses = len(posmasses)
+    deltamasses = posmasses[1:] - posmasses[:-1]
+
+
+    nclusters = len(halos)
+
+    delta_logmls = np.zeros((nclusters, nmasses))
+    pdfs = np.zeros((nclusters, nmasses))
+
+    for i in range(nclusters):
+
+        delta_logmls[i,:] = np.log(posmasses) - np.log(halos[i]['true_m200'])
+        pdfs[i,:] = halos[i]['pdf'][masses>=0]
+
+    
+
+    @pymc.observed
+    def data(value = 0., ml_ints = posmasses/massnorm, deltamasses = deltamasses/massnorm,
+             delta_logmls = delta_logmls, pdfs = pdfs,
+             logmu = parts['logmu'], sigma = parts['sigma']):
+
+        return dlntools.mcmcloglinearlike(ml_ints = ml_ints,
+                                          deltamasses = deltamasses,
+                                          delta_logmls = delta_logmls,
+                                          pdfs = pdfs,
+                                          logmu = logmu,
+                                          sigma = sigma)
+    parts['data'] = data
+
+    return parts
 
 
         

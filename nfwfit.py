@@ -669,6 +669,34 @@ class NFWFitter(object):
 
     #######
 
+    def scanPF(self, catalog, config, masses = np.arange(-1e15, 5e15, 1e13)):
+
+        #only want to define a scan for a 1d model at this point.
+        assert(isinstance(self.model, NFW_MC_Model))
+
+        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
+
+        self.model.setData(beta_s, beta_s2, zcluster)
+
+        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
+                                   guess = self.model.guess())
+
+        chisqs = np.zeros(len(nmasses))
+        
+        for i, mass in enumerate(masses):
+                
+            chisqs[i] = modelfitter.statfunc(modelfitter.ydata,
+                                             modelfitter.yerr,
+                                             modelfitter.model(modelfitter.xdata,
+                                                               mass / fitter.model.massScale))
+
+
+        pdf = np.exp(chisqs - np.max(chisqs))
+        pdf = pdf/np.sum(pdf)
+        return (masses, pdf)
+
+    #######
+
     def runUntilNotFail(self, catalog, config):
 
         r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
@@ -755,6 +783,8 @@ def runNFWFit(catalogname, configname, outputname):
 
     if 'fitter' in config and config.fitter == 'maxlike':
         fitvals = fitter.runUntilNotFail(catalog, config)
+    elif 'fitter' in config and config.fitter == 'pdf':
+        fitvals = fitter.scanPDF(catalog, config)
     else:
         fitvals = fitter.explorePosterior(catalog)
     
