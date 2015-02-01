@@ -4,13 +4,14 @@
 
 import glob, cPickle, os
 import numpy as np
-import pymc
+#import pymc
 import consolidate_fits
 import deconvolvedlognormtools as dlntools
 import varcontainer
 import pymc_mymcmc_adapter as pma
 import scipy.stats
 import nfwutils, nfwfit, nfwnoise
+import fitmodel
 
 ########################
 
@@ -73,7 +74,7 @@ def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, t
 
 #######################
 
-def posteriorPredictiveMCMC(logmu, logsigma, mtrues, config, nmlsamples=5, nmcmcsamples = 25):
+def posteriorPredictiveMCMC(logmu, logsigma, mtrues, config, nmlsamples=5, masses=np.arange(-5e14, 5e15, 1e13), beta = 0.28):
 
     if config.binspacing == 'linear':
         binedges = np.linspace(config.minradii, config.maxradii, config.nbins+1)
@@ -81,10 +82,13 @@ def posteriorPredictiveMCMC(logmu, logsigma, mtrues, config, nmlsamples=5, nmcmc
         binedges = np.logspace(np.log10(config.minradii), np.log10(config.maxradii), config.nbins+1)
     
 
-    
+    fitter = nfwfit.buildFitter(config)
+    fitter.model.setData(beta, beta**2, config.targetz)
+
+    nmasses = len(masses)
 
     nclusters = len(mtrues)
-    samples = np.zeros((nclusters, nmlsamples, nmcmcsamples))
+    pdfs = np.zeros((nclusters, nmlsamples, nmasses))
     for i in range(nclusters):
         mls = np.exp(logmu + np.log(mtrues[i]) + np.exp(logsigma)*np.random.standard_normal(nmlsamples))
         profile_rmpcs, shearprofiles, shearerrprofiles = nfwnoise.createClusterSet(config,
@@ -92,11 +96,34 @@ def posteriorPredictiveMCMC(logmu, logsigma, mtrues, config, nmlsamples=5, nmcmc
                                                                                    config.targetz,
                                                                                    binedges,
                                                                                    0.28,
-                                                                                   config.nperacrmin,
+                                                                                   config.nperarcmin,
                                                                                    config.shapenoise,
                                                                                    concens = 4.*np.ones(nmlsamples))
 
+        for j in range(nmlsamples):
+
+            modelfitter = fitmodel.FitModel(profile_rmpcs[j], 
+                                            shearprofiles[j], 
+                                            shearerrprofiles[j], 
+                                            fitter.model,
+                                            guess = fitter.model.guess())
+
+
+            for k, mass in enumerate(masses):
+                
+                pdfs[i,j,k] = modelfitter.statfunc(modelfitter.ydata,
+                                                   modelfitter.yerr,
+                                                   modelfitter.model(modelfitter.xdata,
+                                                                     mass / fitter.model.massScale))
+
+
+    pdfs = np.exp(pdfs - np.max(pdfs))
         
+
+    return pdfs
+    
+                
+
 
         
                                                                                    
