@@ -969,6 +969,11 @@ Some of the fit files, in particular mxxl c4 r5 n3\_2 and n4\_3 appear to have m
 At least for the 0.75 - 2.5 fit range and at low masses, the noise level does appear to make a difference! That is surprising given my tests on perfect NFW halos.  OK, looking back in notes.pdf, maybe it isn't so surprising at the lowest sampling level. I need to look at this in more detail to make sure I understand it.
 
 
+I compared the observed offset distribution from Jiayi's sims to a simple analytic model that Brad proposed. That model is a .3 arcmin gaussian scatter with a 100kpc gaussian scatter. The first is due to noise effects in the SZ detection (as determined in comparison to X-ray obs) and the second is a physical offset between Planck SZ and BCG peaks, representing cluster intrinsic shapes. That model seems to describe the simulations reasonably well, at least where we actually have clusters.
+
+\logfig{figures/offsetdistro_vs_analytic}{Comparison of simulation offset distributions to an analytic model of two convolvued gaussians. The blue line is from Jiayi's simulations. The green line is the miscentering distribution assuming a gaussian scatter with width sqrt(.3 arcmin ^ 2 + 100kpc@mean(clusterz)).}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage \newpage

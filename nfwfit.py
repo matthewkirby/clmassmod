@@ -669,29 +669,29 @@ class NFWFitter(object):
 
     #######
 
-    def scanPF(self, catalog, config, masses = np.arange(-1e15, 5e15, 1e13)):
+    def scanPDF(self, catalog, config, masses = np.arange(-1e15, 5e15, 1e13)):
 
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
 
         r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
 
-        self.model.setData(beta_s, beta_s2, zcluster)
+        self.model.setData(beta_s, beta_s2, zlens)
 
         fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
                                    guess = self.model.guess())
 
-        chisqs = np.zeros(len(nmasses))
+        chisqs = np.zeros(len(masses))
         
         for i, mass in enumerate(masses):
                 
-            chisqs[i] = modelfitter.statfunc(modelfitter.ydata,
-                                             modelfitter.yerr,
-                                             modelfitter.model(modelfitter.xdata,
-                                                               mass / fitter.model.massScale))
+            chisqs[i] = fitter.statfunc(fitter.ydata,
+                                             fitter.yerr,
+                                             fitter.model(fitter.xdata,
+                                                               mass / self.model.massScale))
 
 
-        pdf = np.exp(chisqs - np.max(chisqs))
+        pdf = np.exp(-0.5*chisqs)
         pdf = pdf/np.sum(pdf)
         return (masses, pdf)
 

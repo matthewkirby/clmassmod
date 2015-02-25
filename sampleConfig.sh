@@ -7,8 +7,12 @@ readerclass=MXXLSimReader
 
 nbootstraps=1
 
+fitter=pdf
+
 profileModule=basicBinning
-profileBuilder=dumbequalbins
+profileBuilder=bootstrapfixedbins
+binspacing='linear'
+nbins=12
 
 profileCol=r_mpc
 profileMin=.5
