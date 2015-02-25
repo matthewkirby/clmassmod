@@ -15,6 +15,7 @@ import varcontainer
 import fitmodel
 import pymc
 import pymc_mymcmc_adapter as pma
+import scipy.integrate
 
 
 #######################
@@ -692,7 +693,7 @@ class NFWFitter(object):
 
 
         pdf = np.exp(-0.5*chisqs)
-        pdf = pdf/np.sum(pdf)
+        pdf = pdf/scipy.integrate.trapz(pdf, masses)
         return (masses, pdf)
 
     #######

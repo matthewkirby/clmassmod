@@ -7,7 +7,6 @@ readerclass=MXXLSimReader
 
 nbootstraps=1
 
-fitter=pdf
 
 profileModule=basicBinning
 profileBuilder=bootstrapfixedbins
