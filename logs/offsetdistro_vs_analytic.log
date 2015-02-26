@@ -1,0 +1,161 @@
+# IPython log file
+
+get_ipython().magic(u'pylab')
+import astrop.io.ascii as asciireader
+import astropy.io.ascii as asciireader
+offsetcat = asciireader.read('SPT_SN_offset.dat')
+offsetcat.keys()
+plot(offsetcat['M500c'], offsetcat['redshift'], 'bo')
+clf()
+semilogy(offsetcat['redshift'], offsetcat['M500c'], 'bo')
+clf()
+offsetcat['coresize[arcmin']
+offsetcat['coresize[arcmin]']
+coresizes = np.arange(0.25, 3.1, 0.25)
+len(coresizes)
+for i, coresize in enumerate(coresizes):
+    subplot(3,4,i+1)
+    
+offsetcat.keys()
+delta = np.sqrt((offsetcat['peak_xpix[arcmin]'] - offsetcat['cluster_xpix'])**2 + (offsetcat['peak_ypix'] - offsetcat['cluster_ypix'])**2)
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=25)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=25, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    
+edges = np.linspace(0., 3.0, 20)
+edges
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angdist(meanz))*(180./np.pi)*60.
+    randomx = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomy = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    
+import nfwutils
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angdist(meanz))*(180./np.pi)*60.
+    randomx = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomy = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angulardist(meanz))*(180./np.pi)*60.
+    randomx = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomy = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angulardist(meanz))*(180./np.pi)*60.
+    randomx = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomy = np.sqrt(.3**2 + physicaloffset**2 + coresize**2)*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angulardist(meanz))*(180./np.pi)*60.
+    randomx = coresize*np.random.standard_normal(size=50000)
+    randomy = coresize*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angulardist(meanz))*(180./np.pi)*60.
+    randomx = coresize*np.random.standard_normal(size=50000)
+    randomy = coresize*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    text(2.0, 1.0, '%1.2f' % coresize)
+    axis([0., 3., 0., 2.5])
+    
+clf()
+for i, coresize in enumerate(coresizes):
+    subplot(4,3,i+1)
+    inbin = offsetcat['coresize[arcmin]'] == coresize
+    hist, edges = np.histogram(delta[inbin], bins=edges, normed=True)
+    centers = (edges[:-1] + edges[1:])/2.
+    plot(centers, hist)
+    meanz = np.mean(offsetcat['redshift'])
+    physicaloffset = (.1 / nfwutils.global_cosmology.angulardist(meanz))*(180./np.pi)*60.
+    randomx = np.sqrt(physicaloffset**2 + .3**2)*np.random.standard_normal(size=50000)
+    randomy = np.sqrt(physicaloffset**2 + .3**2)*np.random.standard_normal(size=50000)
+    randomr = np.sqrt(randomx**2 + randomy**2)
+    hist, edges = np.histogram(randomr, bins=edges, normed=True)
+    plot(centers, hist)
+    text(2.0, 1.0, '%1.2f' % coresize)
+    axis([0., 3., 0., 2.5])
+    
+tight_layout()
+figure()
+bigcore = offsetcat['coresize[arcmin]'] > 1.25
+plot(offsetcat['redshift'][bigcore], delta[bigcore], 'bo')
+figure(1)
+savefig('offsetdistro_vs_analytic.png')
+get_ipython().magic(u'logstart logs/offsetdistro_vs_analytic.log')

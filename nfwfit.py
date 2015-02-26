@@ -596,16 +596,13 @@ class NFWFitter(object):
 
     def prepData(self, curCatalog):
         
-        beta_s = np.mean(curCatalog['beta_s'], dtype=np.float64)
-        beta_s2 = np.mean(curCatalog['beta_s']**2, dtype=np.float64)
-        
-        r_mpc, ghat, sigma_ghat = [x.astype(np.float64) for x in self.profileBuilder(curCatalog, self.config)]
+        r_mpc, ghat, sigma_ghat, beta_s, beta_s2 = [x.astype(np.float64) for x in self.profileBuilder(curCatalog, self.config)]
 
         clean = sigma_ghat > 0
 
         zlens = curCatalog.hdu.header['ZLENS']
 
-        return r_mpc[clean], ghat[clean], sigma_ghat[clean], beta_s, beta_s2, zlens
+        return r_mpc[clean], ghat[clean], sigma_ghat[clean], beta_s[clean], beta_s2[clean], zlens
 
 
     ######

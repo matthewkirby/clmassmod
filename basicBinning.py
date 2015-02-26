@@ -11,16 +11,16 @@ class Binner(object):
     def __call__(self, catalog, config):
 
         maskedCat = catalog.filter(catalog['mask'])
-        radii, shear, shearerr, number = self._makeProfile(maskedCat, config)
+        radii, shear, shearerr, avebeta, avebeta2, number = self._makeProfile(maskedCat, config)
         numbermask = number != -1
 
         if 'shearprofileerr' in config and config.shearprofileerr == 'gaussianapprox':
-            allradii, allshear, allshearerr, allnumber = self._makeProfile(catalog, config)
+            allradii, allshear, allshearerr, allavebeta, allavebeta2, allnumber = self._makeProfile(catalog, config)
             assert(len(radii) == len(allradii))
             scalederr = allshearerr[numbermask]*np.sqrt(allnumber[numbermask]/number[numbermask])
             return radii[numbermask], shear[numbermask], scalederr
 
-        return radii, shear, shearerr
+        return radii, shear, shearerr, avebeta, avebeta2
 
 ##################################
 
@@ -47,15 +47,19 @@ class dumbequalbins(Binner):
         radii = []
         shear = []
         shearerr = []
+        avebeta = []
+        avebeta2 = []
         ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
             maxtake = min(i+self.ngals, len(catalog))
             radii.append(np.mean(sorted_cat['r_mpc'][i:maxtake]))
             shear.append(np.mean(sorted_cat['ghat'][i:maxtake]))
             shearerr.append(np.std(sorted_cat['ghat'][i:maxtake])/np.sqrt(maxtake-i))
+            avebeta.append(np.mean(sorted_cat['beta_s'][i:maxtake]))
+            avebeta2.append(np.mean(sorted_cat['beta_s'][i:maxtake]**2))
             ngals.append(len(sorted_cat['r_mpc'][i:maxtake]))
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
 
 ############################
 
@@ -93,6 +97,8 @@ class bootstrapequalbins(Binner):
         radii = []
         shear = []
         shearerr = []
+        avebeta = []
+        avebeta2 = []
         ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
             maxtake = min(i+self.ngals, len(catalog))
@@ -101,9 +107,11 @@ class bootstrapequalbins(Binner):
             curmean, curerr = bootstrapmean(sorted_cat['ghat'][i:maxtake])
             shear.append(curmean)
             shearerr.append(curerr)
+            avebeta.append(np.mean(sorted_cat['beta_s'][i:maxtake]))
+            avebeta2.append(np.mean(sorted_cat['beta_s'][i:maxtake]**2))
             ngals.append(len(sorted_cat['ghat'][i:maxtake]))
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
             
 
 ##############################
@@ -136,6 +144,8 @@ class bootstrapfixedbins(Binner):
         radii = []
         shear = []
         shearerr = []
+        avebeta = []
+        avebeta2 = []
         ngals = []
         for i in range(self.nbins):
             mintake = binedges[i]
@@ -150,6 +160,8 @@ class bootstrapfixedbins(Binner):
                 radii.append(-1)
                 shear.append(-1)
                 shearerr.append(-1)
+                avebeta.append(-1)
+                avebeta2.append(-1)
                 ngals.append(-1)
                 continue
 
@@ -160,9 +172,11 @@ class bootstrapfixedbins(Binner):
             curmean, curerr = bootstrapmean(selected['ghat'])
             shear.append(curmean)
             shearerr.append(curerr)
+            avebeta.append(np.mean(selected['beta_s']))
+            avebeta2.append(np.mean(selected['beta_s']**2))
             ngals.append(len(selected))
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
       
 
 
@@ -197,6 +211,8 @@ class gaussianfixedbins(Binner):
         radii = []
         shear = []
         shearerr = []
+        avebeta = []
+        avebeta2 = []
         ngals = []
         for i in range(self.nbins):
             mintake = binedges[i]
@@ -212,8 +228,10 @@ class gaussianfixedbins(Binner):
             radii.append(np.mean(selected['r_mpc']))
             shear.append(np.mean(selected['ghat']))
             shearerr.append(self.shapenoise / np.sqrt(ngal))
+            avebeta.append(np.mean(selected['beta_s']))
+            avebeta2.append(np.mean(selected['beta_s']**2))
             ngals.append(ngal)
 
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(ngals)
+        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
       

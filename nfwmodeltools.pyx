@@ -199,8 +199,8 @@ def shearprofile_like(double m200,
                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_r_mpc not None,
                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_shear not None,
                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_shearerr not None,
-                      double avebeta,
-                      double avebeta2,
+                      np.ndarray[np.double_t, ndim=1, mode='c'] avebeta,
+                      np.ndarray[np.double_t, ndim=1, mode='c'] avebeta2,
                       double rho_c,
                       double rho_c_over_sigma_c):
 
@@ -234,13 +234,15 @@ def shearprofile_like(double m200,
     cdef Py_ssize_t i, j, s
     cdef DTYPE_T logProb = 0.
 
-    cdef double betaratio = avebeta2/avebeta
+    cdef double betaratio
 
         
     #calculate logprob
     for i from nbins > i >= 0:
+
+        betaratio = avebeta2[i]/avebeta[i]
        
-        modelg = (avebeta*gamma_inf[i] / (1 - betaratio*kappa_inf[i]))
+        modelg = (avebeta[i]*gamma_inf[i] / (1 - betaratio*kappa_inf[i]))
 
         delta = bin_shear[i] - modelg
 
