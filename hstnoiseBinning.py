@@ -1,4 +1,6 @@
 import readtxtfile
+import nfwutils
+import numpy as np
 
 class hstnoisebins(object):
     ''' Note: This binning class adds noise, unlike the other binning classes. Should not be run with shape noise added at the catalog reader stage.'''
@@ -8,6 +10,8 @@ class hstnoisebins(object):
         if 'shapenoise' in config and config['shapenoise'] > 0.:
             raise ValueError
         
+        self.maxradii = config.profilemax
+        self.minradii = config.profilemin
 
         self.profileCol = config.profilecol
         self.binwidth = config.binwidth
@@ -17,12 +21,16 @@ class hstnoisebins(object):
         
         self.bincenters = [x[0] for x in profile]
         self.deltag = [x[2] for x in profile]
-        self.avebeta = [x[5] for x in profile]
+
+        zcluster = config.targetz
+        betainf = nfwutils.global_cosmology.beta([1e6], zcluster)
+
+        self.avebeta = np.array([x[5] for x in profile]) / betainf #because Tim uses beta not beta_s
         self.nbins = len(self.bincenters)
         
             
 
-    def makeProfile(self, catalog, config):
+    def __call__(self, catalog, config):
 
         radii = []
         shear = []
@@ -32,6 +40,10 @@ class hstnoisebins(object):
 
 
         for i in range(self.nbins):
+
+            if self.bincenters[i] < self.minradii or self.bincenters[i] > self.maxradii:
+                continue
+
             selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= (self.bincenters[i] - self.binwidth/2.),
                                                      catalog[self.profileCol] < (self.bincenters[i] + self.binwidth/2.)))
 
@@ -44,7 +56,9 @@ class hstnoisebins(object):
 
             radii.append(self.bincenters[i])
 
-            scaledshear = selected['ghat']*self.avebeta[i]/selected['beta_s']
+
+
+            scaledshear = selected['ghat']*(self.avebeta[i])/selected['beta_s']
 
             shear.append(np.mean(scaledshear) + self.deltag[i]*np.random.standard_normal())  #Take the mean shear and add noise
         
