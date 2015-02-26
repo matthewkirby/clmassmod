@@ -121,8 +121,8 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
 
         halos.append(dict(id = haloid,
                           true_m200 = truth['m200'],
-                          masses = masses,
-                          pdf = pdf))
+                          masses = masses*nfwutils.global_cosmology.h,
+                          pdf = pdf/nfwutils.global_cosmology.h))
 
     print 'Num Halos: ', len(halos)
                          
@@ -231,7 +231,8 @@ def buildPDFModel(halos):
     for i in range(nclusters):
 
         delta_logmls[i,:] = np.log(posmasses) - np.log(halos[i]['true_m200'])
-        pdfs[i,:] = halos[i]['pdf'][masses>=0]
+        rawpdf = halos[i]['pdf'][masses>=0]
+        pdfs[i,:] = rawpdf / scipy.integrate.trapz(rawpdf, posmasses)
 
     
 
