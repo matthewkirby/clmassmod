@@ -101,26 +101,22 @@ def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
     cdef Py_ssize_t i, nsamples
     nsamples = ml_ints.shape[0]
 
-    cdef double thesum, lognormpart
+    cdef double thesum
     thesum = 0.
 
     cdef double sigma2, sigmasqrt2pi
     neg2sigma2 = -2*(sigma**2)
     sigmasqrt2pi = sigma*sqrt2pi
 
-    #need trapezoid rule here; assume first mass is 0 -> 0 prob
-    for i from nsamples-1 > i >= 1:
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] lognormpart = np.zeros(nsamples)
 
-        lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
+    #first term assumed mass is 0 -> 0 prob
+    for i from 1 <= i < nsamples:
 
-        thesum += 2*lognormpart*pdf[i]*deltamasses[i]
+        lognormpart[i] = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
 
-    #last term of trapezoid
-    lognormpart = exp((delta_logmls[nsamples-1]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[nsamples-1])
+        thesum += 0.5*deltamasses[i-1]*(lognormpart[i]*pdf[i] + lognormpart[i-1]*pdf[i-1])
 
-    thesum += lognormpart*pdf[nsamples]*deltamasses[i]
-
-    
 
     return thesum
 
@@ -203,7 +199,7 @@ def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
 def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
                       np.ndarray[np.double_t, ndim=1, mode='c'] deltamasses,
                       np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
-                      np.ndarray[np.int_t, ndim=2, mode='c'] pdfs,
+                      np.ndarray[np.double_t, ndim=2, mode='c'] pdfs,
                       double logmu, 
                       double sigma):
 

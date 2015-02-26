@@ -82,13 +82,12 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
 
     answers = cPickle.load(open('{0}_answers.pkl'.format(simtype), 'rb'))
 
-
         
     halos = []
 
     for pdffile in glob.glob('%s/*.out' % pdfdir):
 
-        filebase = os.path.basename(chainfile)
+        filebase = os.path.basename(pdffile)
 
         match = idpattern.match(filebase)
         
@@ -114,7 +113,7 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
                 continue
 
 
-        with open(chainfile, 'rb') as input:
+        with open(pdffile, 'rb') as input:
             masses, pdf = cPickle.load(input)
         
         
@@ -230,7 +229,7 @@ def buildPDFModel(halos):
 
     for i in range(nclusters):
 
-        delta_logmls[i,:] = np.log(posmasses) - np.log(halos[i]['true_m200'])
+        delta_logmls[i,1:] = np.log(posmasses[1:]) - np.log(halos[i]['true_m200'])
         pdfs[i,:] = halos[i]['pdf'][masses>=0]
 
     
@@ -240,7 +239,7 @@ def buildPDFModel(halos):
              delta_logmls = delta_logmls, pdfs = pdfs,
              logmu = parts['logmu'], sigma = parts['sigma']):
 
-        return dlntools.mcmcloglinearlike(ml_ints = ml_ints,
+        return dlntools.pdfloglinearlike(ml_ints = ml_ints,
                                           deltamasses = deltamasses,
                                           delta_logmls = delta_logmls,
                                           pdfs = pdfs,
