@@ -80,7 +80,7 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
 
     idpattern = consolidate_fits.idpatterns[simtype]
 
-    answers = cPickle.load(open('{0}_answers.pkl'.format(simtype), 'rb'))
+    answers = cPickle.load(open('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/{0}_answers.pkl'.format(simtype), 'rb'))
 
         
     halos = []
@@ -203,8 +203,6 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
 
 def buildPDFModel(halos):
 
-    massnorm = 1e15
-
     parts = {}
 
     parts['logmu'] = pymc.Uniform('logmu', -1., 1.)
@@ -236,7 +234,7 @@ def buildPDFModel(halos):
     
 
     @pymc.observed
-    def data(value = 0., ml_ints = posmasses/massnorm, deltamasses = deltamasses/massnorm,
+    def data(value = 0., ml_ints = posmasses, deltamasses = deltamasses,
              delta_logmls = delta_logmls, pdfs = pdfs,
              logmu = parts['logmu'], sigma = parts['sigma']):
 

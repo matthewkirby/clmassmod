@@ -195,7 +195,7 @@ def readSimCatalog(catalogname, simreader, config):
     centeroffsetx = 0.
     centeroffsety = 0.
     if 'coresize' in config:
-        offsetcat = asciireader.read('/vol/braid1/vol1/dapple/mxxl/mxxlsims/SPT_SN_offset.dat')
+        offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
         m500 = sim.m500
         if m500 == 0:
             raise ValueError
