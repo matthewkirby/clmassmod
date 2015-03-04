@@ -204,9 +204,9 @@ def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
                       double sigma):
 
 
-    cdef Py_ssize_t i, nclusters, nmasses
-    nclusters = ml_ints.shape[0]
-    nmasses = ml_ints.shape[1]
+    cdef Py_ssize_t i, nclusters
+    nclusters = pdfs.shape[0]
+
 
     cdef double sumlogprob = 0.
     cdef double prob = 0.

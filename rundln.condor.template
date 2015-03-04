@@ -1,0 +1,7 @@
+executable = /vol/euclid1/euclid1_raid1/dapple/mxxlsims/rundln_condorwrapper.sh
+universe = vanilla
+Error = JOBDIR/rundlnSNAP.CONFIG.MASSBIN.stderr
+Output = JOBDIR/rundlnSNAP.CONFIG.MASSBIN.stdout
+Log = JOBDIR/rundlnSNAP.CONFIG.MASSBIN.batch.log
+Arguments = mxxlsnapSNAP /vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnapSNAP/CONFIG MASSBIN
+queue

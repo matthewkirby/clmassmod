@@ -192,6 +192,8 @@ def readSimCatalog(catalogname, simreader, config):
     e1 = sim.g1
     e2 = sim.g2
 
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)
+
     centeroffsetx = 0.
     centeroffsety = 0.
     if 'coresize' in config:
@@ -208,13 +210,20 @@ def readSimCatalog(catalogname, simreader, config):
         centeroffsetx = (matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]
         centeroffsety = (matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
         print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
-    
+    elif 'xraycentering' in config and config['xraycentering'] == 'True':
+        
+        #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
+        centeroffsetx_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
+        centeroffsety_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
+        
+        centeroffsetx = (centeroffsetx_kpc/(1000.*dL))*(180./np.pi)*60.
+        centeroffsety = (centeroffsety_kpc/(1000.*dL))*(180./np.pi)*60.
 
 
     delta_x = sim.x_arcmin - centeroffsetx
     delta_y = sim.y_arcmin - centeroffsety
 
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)
+
     deltax_mpc = (delta_x * dL * np.pi)/(180.*60)
     deltay_mpc = (delta_y * dL * np.pi)/(180.*60)
     r_mpc = np.sqrt(deltax_mpc**2 + deltay_mpc**2)
