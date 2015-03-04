@@ -204,6 +204,8 @@ class MyMCRunner(object):
 
         writeHeader = True
         if options.restore is True:
+
+
             
             #  load previous proposal distribution
             if os.path.exists(bitsfile):
@@ -217,6 +219,9 @@ class MyMCRunner(object):
                 chain = load_chains.loadChains([chainfile])
                 for param in space:
                     param.set(chain[param.name][0,-1])
+
+
+                
 
                     
                     

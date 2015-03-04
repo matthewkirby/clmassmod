@@ -429,7 +429,7 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
     options.nsamples = samples
     options.adapt_every = adaptevery
     options.adapt_after = adaptafter
-    options.restore=True
+    options.restore=False
 
     manager = varcontainer.VarContainer()
     manager.options = options

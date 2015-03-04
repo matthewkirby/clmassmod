@@ -146,7 +146,7 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
 ################
 
-def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex):
+def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex, alpha=0.8):
 
     nbins = len(massedges) - 1
 
@@ -195,9 +195,9 @@ def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex):
     if len(xpoints) == 0:
         return None
 
-    meanax.fill_between(xpoints, ylows, yhighs, alpha=0.8, color = c[colorindex], hatch = None)
-    stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=0.8, color = c[colorindex], hatch = None)
-    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=0.8, hatch = None)
+    meanax.fill_between(xpoints, ylows, yhighs, alpha=alpha, color = c[colorindex], hatch = None)
+    stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=alpha, color = c[colorindex], hatch = None)
+    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=alpha, hatch = None)
 
     return patch
         
@@ -855,8 +855,127 @@ def plotNoiseBK11():
 
 
 ############################
+
+
+def plotHSTNoiseNoOffset():
+
+
+
+    massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
+    
+    chaindirs = ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0000-5748',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0102-4915',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0205-5829',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0533-5005',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0546-5345',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0559-5249',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0615-5746',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2040-5725',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2106-5844',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2331-5051',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2337-5942',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2341-5119',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2342-5411',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2359-5009']
+    
+
+
+    clusternames = ['J0000-5748',
+                    'J0102-4915',
+                    'J0205-5829',
+                    'J0533-5005',
+                    'J0546-5345',
+                    'J0559-5249',
+                    'J0615-5746',
+                    'J2040-5725',
+                    'J2106-5844',
+                    'J2331-5051',
+                    'J2337-5942',
+                    'J2341-5119',
+                    'J2342-5411',
+                    'J2359-5009']
+
+    meansfigs = []
+    stdsfigs = []
+
+    for startCurve in range(0, len(chaindirs), 4):
+
+        meansfig = pylab.figure()
+        meanfsfigs.append(meansfigs)
+        meansax = meansfig.add_subplot(1,1,1)
+
+        stdsfig = pylab.figure()
+        stdsfigs.append(stdsfig)
+        stdax = stdsfig.add_subplot(1,1,1)
+
+
+
+        patches = []
+        labels = []
+
+
+        for i in range(startCurve, startCurve+4):
+
+            chaindir = chaindirs[i]
+
+            print chaindir
+
+
+            label = noisenames[i]
+
+            patch = precomputedLogNormDistro(chaindir, 
+                                             massedges,
+                                             meansax,
+                                             stdax,
+                                             colorindex = i,
+                                             alpha = 0.3)
+
+            if patch is None:
+                continue
+
+            patches.append(patch)
+            labels.append(label)
+
+
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(2e14, 1.3e15)
+        meansax.set_ylim(0.65, 1.2)
+        meansax.set_xticks([1e15])
+        meansax.set_xticklabels(['10'])
+        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+        meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+        meansax.legend(patches[::-1], labels[::-1], loc='upper left')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        meansfig.savefig('hstnoisemxxl_logmean_%d.png' % startCurve )
+
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        stdax.set_xlim(2e14, 1.3e15)
+    #    stdax.set_ylim(0.85, 1.10)
+        stdax.set_xticks([1e15])
+        stdax.set_xticklabels(['10'])
+        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+        stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        stdsfig.savefig('hstnoisemxxl_logstd_%d.png' % startCurve)
+
+
+    return meansfigs, stdsfigs
+
+
+
+
+
         
 
-    
+############################    
 
     
