@@ -22,11 +22,11 @@ class hstnoisebins(object):
         self.bincenters = [x[0] for x in profile]
         self.deltag = [x[2] for x in profile]
 
-        zcluster = config.targetz
-        betainf = nfwutils.global_cosmology.beta([1e6], zcluster)
-
-        self.avebeta = np.array([x[5] for x in profile]) / betainf #because Tim uses beta not beta_s
         self.nbins = len(self.bincenters)
+
+        self.useAveForCenter = False
+        if 'centerforbin' in config and config['centerforbin'] == 'ave':
+            self.useAveForCenter = True
         
             
 
@@ -54,17 +54,17 @@ class hstnoisebins(object):
 
             
 
-            radii.append(self.bincenters[i])
+            if self.useAveForCenter:
+                radii.append(np.mean(selected[self.profileCol]))
+            else:
+                radii.append(self.bincenters[i])
 
 
-
-            scaledshear = selected['ghat']*(self.avebeta[i])/selected['beta_s']
-
-            shear.append(np.mean(scaledshear) + self.deltag[i]*np.random.standard_normal())  #Take the mean shear and add noise
+            shear.append(np.mean(selected['ghat']) + self.deltag[i]*np.random.standard_normal())  #Take the mean shear and add noise
         
             shearerr.append(self.deltag[i])
-            avebeta.append(self.avebeta[i])
-            avebeta2.append(self.avebeta[i]**2)
+            avebeta.append(np.mean(selected['beta_s']))
+            avebeta2.append(np.mean(selected['beta_s']**2))
 
 
         return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2)

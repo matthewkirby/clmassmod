@@ -365,15 +365,19 @@ def plotNoiseMXXL():
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
 
-    chaindirs = ['mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n0_0-corenone-linearbins12',
-                 'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n2_2-corenone-lineargaussbins12',
-                 'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n6_4-corenone-lineargaussbins12',
-                 'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n4_3-corenone-lineargaussbins12']
+    chaindirs = [#'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n0_0-corenone-linearbins12',
+                 '/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n2_2-corenone-lineargaussbins12',
+                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-testprofile',
+                 #'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n6_4-corenone-lineargaussbins12',
+                 #'mxxl_imperial/mxxlsnap41/mcmc_linear-c4-r5-n4_3-corenone-lineargaussbins12',
+    ]
 
-    noisenames = ['No Noise', 
+    noisenames = [#'No Noise', 
                   '20 gals/sq. arcmin $\sigma_e = 0.33$',
-                  '10 gals/sq. arcmin $\sigma_e = 0.4$',
-                  '4 gals/sq. arcmin $\sigma_e = 0.5$']
+                  'hst noise control',
+                  #'10 gals/sq. arcmin $\sigma_e = 0.4$',
+                  #'4 gals/sq. arcmin $\sigma_e = 0.5$'
+    ]
 
 
     patches = []
@@ -415,7 +419,7 @@ def plotNoiseMXXL():
     meansax.legend(patches[::-1], labels[::-1], loc='upper left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('noisemxxl_logmean.png')
+    meansfig.savefig('hstnoisemxxl_logmean_control.png')
 
     stdax.set_xscale('log')
     stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
@@ -430,7 +434,7 @@ def plotNoiseMXXL():
     stdax.legend(patches[::-1], labels[::-1], loc='upper left')
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
-    stdsfig.savefig('noisemxxl_logstd.png')
+    stdsfig.savefig('hstnoisemxxl_logstd_control.png')
 
 
     return meansfig, stdsfig
@@ -863,41 +867,94 @@ def plotHSTNoiseNoOffset():
 
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
-    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2337-5942',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2331-5051',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0533-5005'],
-                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2342-5411',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2106-5844',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0615-5746'],
-                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0000-5748',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2040-5725',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0546-5345'],
-                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0102-4915',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2341-5119'],
-                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2359-5009',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0559-5249']]
-
+#    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2337-5942',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2331-5051',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0533-5005'],
+#                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2342-5411',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2106-5844',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0615-5746'],
+#                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0000-5748',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2040-5725',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0546-5345'],
+#                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0102-4915',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2341-5119'],
+#                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2359-5009',
+#                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0559-5249']]
+#
     
 
-    clustergroups = [['J2337-5942',
-                   'J2331-5051',
-                   'J0533-5005'],
-                   ['J2342-5411',
-                   'J2106-5844',
-                   'J0615-5746'],
-                   ['J0000-5748',
-                   'J2040-5725',
-                   'J0546-5345'],
-                   ['J0102-4915',
-                   'J2341-5119'],
-                   ['J2359-5009',
-                    'J0559-5249']]
+#    clustergroups = [['J2337-5942',
+#                   'J2331-5051',
+#                   'J0533-5005'],
+#                   ['J2342-5411',
+#                   'J2106-5844',
+#                   'J0615-5746'],
+#                   ['J0000-5748',
+#                   'J2040-5725',
+#                   'J0546-5345'],
+#                   ['J0102-4915',
+#                   'J2341-5119'],
+#                   ['J2359-5009',
+#                    'J0559-5249']]
+#
+#    groupnames = ['0a',
+#                  '0b',
+#                  '1',
+#                  '2',
+#                  '3']
+#
 
-    groupnames = ['0a',
-                  '0b',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2331-5051',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0559-5249',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0000-5748'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2359-5009',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2337-5942',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0102-4915'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0533-5005',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2040-5725',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0615-5746'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2341-5119',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ0546-5345'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2342-5411',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2106-5844']]
+
+
+    clustergroups = [['SPT-CLJ2331-5051',
+                      'SPT-CLJ0559-5249',
+                      'SPT-CLJ0000-5748'],
+                   [  'SPT-CLJ2359-5009',
+                      'SPT-CLJ2337-5942',
+                      'SPT-CLJ0102-4915'],
+                   [  'SPT-CLJ0533-5005',
+                      'SPT-CLJ2040-5725',
+                      'SPT-CLJ0615-5746'],
+                   [  'SPT-CLJ2341-5119',
+                      'SPT-CLJ0546-5345'],
+                   [  'SPT-CLJ2342-5411',
+                      'SPT-CLJ2106-5844']]
+
+    groupnames = ['0',
                   '1',
                   '2',
-                  '3']
+                  '3',
+                  '4']
 
 
 

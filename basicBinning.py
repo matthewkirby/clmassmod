@@ -234,4 +234,10 @@ class gaussianfixedbins(Binner):
 
 
         return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
-      
+
+
+
+
+########################################
+
+

@@ -18,6 +18,7 @@ import pymc_mymcmc_adapter as pma
 import scipy.integrate
 
 
+
 #######################
 
 def applyMask(x_arcmin, y_arcmin, zcluster, config):
@@ -136,10 +137,40 @@ def applyMask(x_arcmin, y_arcmin, zcluster, config):
 
 class InsufficientGalaxiesException(Exception): pass
 
-def applyDensityMask(x_arcmin, y_arcmin, zcluster, config):
+def applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='full'):
     #assumes that the input catalog is rectalinear
 
-    targetdensity = config.nperarcmin
+    if mode == 'full' and 'density_transition_arcmin' in config:
+
+        target_angdist = nfwutils.global_cosmology.angulardist(config.targetz)
+        ref_angdist = nfwutils.global_cosmology.angulardist(zcluster)
+        target_transition_mpc = (config.density_transition_arcmin/60.)*(np.pi/180.)*target_angdist
+        ref_transition_arcmin = (target_transition_mpc/ref_angdist)*(180./np.pi)*60.
+
+        print ref_transition_arcmin
+
+        isInside = np.logical_and(np.abs(x_arcmin) < ref_transition_arcmin,
+                                  np.abs(y_arcmin) < ref_transition_arcmin)
+        insidemask = applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='inside')
+
+
+        isOutside = np.logical_not(isInside)
+        outsidemask = applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='outside')
+
+        
+        
+
+        return np.logical_or(np.logical_and(isInside, insidemask), 
+                             np.logical_and(isOutside, outsidemask))
+
+    if mode == 'full':
+        targetdensity = config.nperarcmin
+    elif mode == 'inside':
+        targetdensity = config.nperarcmin_inside
+    elif mode == 'outside':
+        targetdensity = config.nperarcmin_outside
+    else:
+        raise ValueError
 
     max_x = np.max(x_arcmin)
     min_x = np.min(x_arcmin)
@@ -150,7 +181,7 @@ def applyDensityMask(x_arcmin, y_arcmin, zcluster, config):
     delta_y = max_y - min_y
 
     area = delta_x*delta_y
-
+        
     if targetdensity == -1:
         #take all
         targetnumber = len(x_arcmin)
@@ -247,14 +278,14 @@ def readSimCatalog(catalogname, simreader, config):
         E = E + config.shapenoise*np.random.standard_normal(len(E))
         B = B + config.shapenoise*np.random.standard_normal(len(B))
 
+    densitymask = np.ones(len(E)) == 1.
+    if 'nperarcmin' in config or 'nperarcmin_inside' in config:
+        densitymask = applyDensityMask(delta_x, delta_y, sim.zcluster, config)
 
     visiblemask = np.ones(len(E)) == 1.
     if 'maskname' in config:
         visiblemask = applyMask(delta_x, delta_y, sim.zcluster, config)
 
-    densitymask = np.ones(len(E)) == 1.
-    if 'nperarcmin' in config:
-        densitymask = applyDensityMask(delta_x, delta_y, sim.zcluster, config)
 
     mask = np.logical_and(visiblemask, densitymask)
 
