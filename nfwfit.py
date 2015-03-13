@@ -238,8 +238,14 @@ def readSimCatalog(catalogname, simreader, config):
         deltamass = matchingcoresize['M500c'] - m500
         closestsims = np.argsort(deltamass)
         selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
-        centeroffsetx = (matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]
-        centeroffsety = (matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
+        targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+        anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
+        centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcsec
+        centeroffsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
+
+
+        
+
         print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
     elif 'xraycentering' in config and config['xraycentering'] == 'True':
         

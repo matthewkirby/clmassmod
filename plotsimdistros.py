@@ -146,7 +146,7 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
 ################
 
-def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex, alpha=0.8):
+def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex, alpha=0.8, biaslabel = True):
 
     nbins = len(massedges) - 1
 
@@ -213,7 +213,8 @@ def precomputedLogNormDistro(chaindir, massedges, meanax, stdax, colorindex, alp
     
 
     meanax.fill_between(xpoints, ylows, yhighs, alpha=alpha, color = c[colorindex], hatch = None)
-    meanax.text(2.5e14, 0.75 + float(colorindex)/10., '%1.2f +/- %1.2f' % (avebias, errbias))
+    if biaslabel is True:
+        meanax.text(2.5e14, 0.75 + float(colorindex)/10., '%1.2f +/- %1.2f' % (avebias, errbias))
     stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=alpha, color = c[colorindex], hatch = None)
     patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=alpha, hatch = None)
 
@@ -1132,29 +1133,17 @@ def plotSplitNoise():
     massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
     
 
-    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz0.5-splitdensity',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz1.0-splitdensity'],
-                   ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz1.0-n5_4',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz1.0-n4_4',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz1.0-n7_4'],
-                   ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz0.5-n5_4',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz0.5-n4_4',
-                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-targetz0.5-n7_4']]
+    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-splitdensity-fakeSPT2106',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2106-5844'],
+                   ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/lineargaussbins-c4-r5-splitdensity-fakeSPT2331',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corenone-SPT-CLJ2331-5051']]
+    clustergroups = [['Simulated SPT2106 Noise',
+                      'Actual SPT2106 Shear Noise'],
+                   [  'Simulated SPT2331 Shear Noise',
+                      'Actual SPT2331 Shear Noise']]
 
-
-    clustergroups = [['$z=0.5$ Split Noise',
-                      '$z=1.0$ Split Noise'],
-                   [  '$z=1.0$ 1 gals/arcmin$^2$',
-                      '$z=1.0$ 5 gals/arcmin$^2$',
-                      '$z=1.0$ 18 gals/arcmin$^2$'],
-                   [  '$z=0.5$ 1 gals/arcmin$^2$',
-                      '$z=0.5$ 5 gals/arcmin$^2$',
-                      '$z=0.5$ 18 gals/arcmin$^2$']]
-
-    groupnames = ['Mixed Density',
-                  'Uniform Density z=1.0',
-                  'Uniform Density z=0.5']
-
+    groupnames = ['spt2106',
+                  'spt2331']
 
 
 
@@ -1376,8 +1365,135 @@ def plotHSTNoiseSZOffset():
 ###############################################
 
 
+def plotHSTNoiseXrayOffset():
+
+
+
+    massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
+
+    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2331-5051',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ0559-5249',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ0000-5748'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2359-5009',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2337-5942',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ0102-4915'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ0533-5005',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2040-5725',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ0615-5746'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2341-5119',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ0546-5345'],
+                 [  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2342-5411',
+                    '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-corexray-SPT-CLJ2106-5844']]
+
+
+    clustergroups = [['SPT-CLJ2331-5051',
+                      'SPT-CLJ0559-5249',
+                      'SPT-CLJ0000-5748'],
+                   [  'SPT-CLJ2359-5009',
+                      'SPT-CLJ2337-5942',
+                      'SPT-CLJ0102-4915'],
+                   [  'SPT-CLJ0533-5005',
+                      'SPT-CLJ2040-5725',
+                      'SPT-CLJ0615-5746'],
+                   [  'SPT-CLJ2341-5119',
+                      'SPT-CLJ0546-5345'],
+                   [  'SPT-CLJ2342-5411',
+                      'SPT-CLJ2106-5844']]
+
+    groupnames = ['0',
+                  '1',
+                  '2',
+                  '3',
+                  '4']
+
+
+
+
+    meansfigs = []
+    stdsfigs = []
+
+    for curgroup in range(len(groupnames)):
+
+        chaindirs = chaingroups[curgroup]
+        clusternames = clustergroups[curgroup]
+
+        meansfig = pylab.figure()
+        meansfigs.append(meansfigs)
+        meansax = meansfig.add_subplot(1,1,1)
+
+        stdsfig = pylab.figure()
+        stdsfigs.append(stdsfig)
+        stdax = stdsfig.add_subplot(1,1,1)
+
+
+
+        patches = []
+        labels = []
+
+
+        for i in range(len(clusternames)):
+
+            chaindir = chaindirs[i]
+
+            print chaindir
+
+
+            label = clusternames[i]
+
+            patch = precomputedLogNormDistro(chaindir, 
+                                             massedges,
+                                             meansax,
+                                             stdax,
+                                             colorindex = i%4)
+
+            if patch is None:
+                continue
+
+            patches.append(patch)
+            labels.append(label)
+
+        meansax.set_title(groupnames[curgroup])
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(2e14, 1.3e15)
+        meansax.set_ylim(0.5, 1.05)
+        meansax.set_xticks([1e15])
+        meansax.set_xticklabels(['10'])
+        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+        meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+        meansax.legend(patches[::-1], labels[::-1], loc='upper left')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        meansfig.savefig('hstnoisemxxl_logmean_%s.png' % groupnames[curgroup] )
+
+        stdax.set_title(groupnames[curgroup])
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        stdax.set_xlim(2e14, 1.3e15)
+    #    stdax.set_ylim(0.85, 1.10)
+        stdax.set_xticks([1e15])
+        stdax.set_xticklabels(['10'])
+        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+        stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        stdsfig.savefig('hstnoisemxxl_logstd_%s.png' % groupnames[curgroup])
+
+
+    return meansfigs, stdsfigs
+
+
+    
+###############################################
+
+
  
-def plotBinCenterMXXL():
+def plotNoiseGradient():
 
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
@@ -1389,11 +1505,13 @@ def plotBinCenterMXXL():
     
 
 
-    chaindirs = ['/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-simple',
-                 '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-simple-avebincenters']
+    chaindirs = [ '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-risingnoise',
+                  '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-flatnoise',
+                 '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-droppingnoise']
 
-    noisenames = ['Fixed Center',
-                  'Average Center']
+    noisenames = ['Dense Core Sampling',
+                  'Flat Noise Profile',
+                  'Sparse Core Sampling']
 
 
     patches = []
@@ -1413,7 +1531,7 @@ def plotBinCenterMXXL():
                                          massedges,
                                          meansax,
                                          stdax,
-                                         colorindex = i)
+                                         colorindex = i, biaslabel=False)
 
         if patch is None:
             continue
@@ -1435,7 +1553,7 @@ def plotBinCenterMXXL():
     meansax.legend(patches[::-1], labels[::-1], loc='upper left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
- #   meansfig.savefig('hstnoisemxxl_logmean_control.png')
+    meansfig.savefig('hstnoisemxxl_logmean_noiseprofiles.png')
 
     stdax.set_xscale('log')
     stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
@@ -1450,7 +1568,7 @@ def plotBinCenterMXXL():
     stdax.legend(patches[::-1], labels[::-1], loc='upper left')
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
-#    stdsfig.savefig('hstnoisemxxl_logstd_control.png')
+    stdsfig.savefig('hstnoisemxxl_logstd_noiseprofiles.png')
 
 
     return meansfig, stdsfig

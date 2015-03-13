@@ -4,5 +4,5 @@ nperarcmin_inside=18.
 nperarcmin_outside=5.
 
 
-shapenoise=0.4
+shapenoise=0.28
 

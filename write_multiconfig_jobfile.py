@@ -35,7 +35,7 @@ def setupCondor_MB(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/m
                                     stripCatExt = False)
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
 
-    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+    condorfile = '''executable = /vol/euclid1/euclid1_raid1/dapple/mxxlsims/nfwfit_condorwrapper.sh
 universe = vanilla
 Error = {jobdir}/{jobname}.$(Process).stderr
 Output = {jobdir}/{jobname}.$(Process).stdout
@@ -79,7 +79,7 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple
                                     stripCatExt = False)
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
 
-    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+    condorfile = '''executable = /vol/euclid1/euclid1_raid1/dapple/mxxlsims/nfwfit_condorwrapper.sh
 universe = vanilla
 Error = {jobdir}/{jobname}.$(Process).stderr
 Output = {jobdir}/{jobname}.$(Process).stdout
