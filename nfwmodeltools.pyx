@@ -167,7 +167,7 @@ def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,
             avekappa[i] = (2*a/b + c)/(x**2)
 
         else:
-            avekappa[i] = 1 + ln(0.5)
+            avekappa[i] = 1 + log(0.5)
 
     return avekappa*amp
 
