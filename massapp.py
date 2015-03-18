@@ -108,7 +108,7 @@ def massapp(catalog, config):
 
 
 
-    nfwkappa = tools.NFWKappa(np.ascontiguousarray(catalog['r_mpc']), c200, nfwrscale, rho_c_over_sigma_c)
+    nfwkappa = tools.NFWKappa(np.ascontiguousarray(catalog['r_mpc'], dtype='<d'), c200, nfwrscale, rho_c_over_sigma_c)
     gamma = catalog['ghat']*(1-catalog['beta']*nfwkappa)/catalog['beta']
 
 
