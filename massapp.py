@@ -75,7 +75,7 @@ def logbinning(minradii, maxraii, nbins):
 
 def massapp(catalog, config):
 
-    zcluster = catalog['ZLENS']
+    zcluster = catalog.hdu.header['ZLENS']
     dL = nfwutils.global_cosmology.angulardist(zcluster)
 
     r2 = (config.massappr2/3600.)*(np.pi/180.)*dL
