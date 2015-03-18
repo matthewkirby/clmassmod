@@ -75,8 +75,11 @@ def logbinning(minradii, maxraii, nbins):
 
 def massapp(catalog, config):
 
-    r2 = config.massappr2
-    rmax = config.massapprmax
+    zcluster = catalog['ZLENS']
+    dL = nfwutils.global_cosmology.angulardist(zcluster)
+
+    r2 = (config.massappr2/3600.)*(np.pi/180.)*dL
+    rmax = (config.massapprmax/3600.)*(np.pi/180.)*dL
 
     minradii = config.profilemin
     maxradii = config.profilemax
@@ -89,10 +92,9 @@ def massapp(catalog, config):
     nfwm200, nfwm200err = nfwfitter.runUntilNotFail(catalog, config)
     c200 = nfwfitter.model.massconRelation(np.abs(m200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
 
-    zcluster = catalog['ZLENS']
 
     rho_c = nfwutils.rho_crit(zcluster)
-    rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+    rho_c_over_sigma_c = 1.5 * dL * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
     nfwrscale = tools.rscaleConstM(nfwm200,
                                    c200,
