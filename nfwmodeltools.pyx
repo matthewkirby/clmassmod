@@ -157,13 +157,13 @@ def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,
             
             a = atanh(sqrt((1-x)/(1+x)))
             b = sqrt(1-x**2)
-            c = ln(x/2.)
+            c = log(x/2.)
             avekappa[i] = (2*a/b + c)/(x**2)
 
         elif x > 1:
             a = atan(sqrt((x-1)/(1+x)))
             b = sqrt(x**2-1)
-            c = ln(x/2.)
+            c = log(x/2.)
             avekappa[i] = (2*a/b + c)/(x**2)
 
         else:
