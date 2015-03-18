@@ -75,6 +75,9 @@ def logbinning(minradii, maxraii, nbins):
 
 def massapp(catalog, config):
 
+    r2 = config.massappr2
+    rmax = config.massapprmax
+
     minradii = config.profilemin
     maxradii = config.profilemax
     nbins = config.nbins
@@ -106,50 +109,75 @@ def massapp(catalog, config):
     gamma = catalog['ghat']*(1-catalog['beta']*nfwkappa)/catalog['beta']
 
 
-    #gamma integrals
+    r1s = np.arange(minradii, maxradii, 0.1)
+    kappa_proj = np.zeros_like(r1s)
+    matching_m200s = np.zeros_like(r1s)
+    mass_enclosed = np.zeros_like(r1s)
+    density_enclosed = np.zeros_like(r1s)
 
-    radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(r1, r2, int1bins)
+    for cur_ap_index, r1 in enumerate(r1s):
 
-    integrand1 = shear/radii
-    res = scipy.integrate.simps(integrand1, radii)
-    int1 = 2*res
+        #gamma integrals
 
-    radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(r2, rmax, int2bins)
-    integrand2 = shear/radii
-    int2 = 2*rmax**2*scipy.integrate.simps(integrand2, radii)/(rmax**2 - r2**2)
+        radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(r1, r2, int1bins)
 
-    zeta_c = int1 + int2
-    
+        integrand1 = shear/radii
+        res = scipy.integrate.simps(integrand1, radii)
+        int1 = 2*res
 
-    #kappa aperture
+        radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(r2, rmax, int2bins)
+        integrand2 = shear/radii
+        int2 = 2*rmax**2*scipy.integrate.simps(integrand2, radii)/(rmax**2 - r2**2)
 
-    kappa_ap = avekappa(r2, rmax, nfwrscale, c200, rho_c_over_sigma_c)
-
-
-    #find best matched nfw that reproduces kappa core
-
-    kappa_r1 = zeta_c + kappa_ap
+        zeta_c = int1 + int2
 
 
-    def findNFW(m200):
+        #kappa aperture
 
-        c200 = nfwfitter.model.massconRelation(np.abs(m200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
+        kappa_ap = avekappa(r2, rmax, nfwrscale, c200, rho_c_over_sigma_c)
+
+
+        #find best matched nfw that reproduces kappa core
+
+        kappa_r1 = zeta_c + kappa_ap
+        kappa_proj[cur_ap_index] = kappa_proj
+
+        ##
+
+        def findNFW(m200):
+
+            c200 = nfwfitter.model.massconRelation(np.abs(m200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
         
-        nfwrscale = tools.rscaleConstM(m200,
-                                       c200,
-                                       rho_c,
-                                       200)
+            nfwrscale = tools.rscaleConstM(m200,
+                                           c200,
+                                           rho_c,
+                                           200)
 
-        avekappa = tools.aveEnclosedKappa(np.array([r1]),
-                                          c200,
-                                          nfwrscale,
-                                          rho_c_over_sigma_c)
-        return avekappa - kappa_r1
+            avekappa = tools.aveEnclosedKappa(np.array([r1]),
+                                              c200,
+                                              nfwrscale,
+                                              rho_c_over_sigma_c)
+            return avekappa - kappa_r1
 
-    m200_best = scipy.optimize.brentq(findNFW, 5e13, 1e16)
+        ##
+
+        best_m200 = scipy.optimize.brentq(findNFW, 5e13, 1e16)
+        matching_m200s[cur_ap_index] = best_m200
+        best_c200 = nfwfitter.model.massconRelation(np.abs(best_m200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
+        
+        best_nfwrscale = tools.rscaleConstM(best_m200,
+                                            best_c200,
+                                            rho_c,
+                                            200)
+
+        mass_enclosed[cur_ap_index] = nfwutils.massInsideR(best_nfwrscale, best_c200,
+                                                           zcluster, r1)
+        vol = (4./3)*np.pi*r1**3
+        density_enclosed[cur_ap_index] = mass_enclosed[cur_ap_index] / vol
 
 
-    return m200_best
+
+    return r1s, kappa_proj, matching_m200s, mass_enclosed, density_enclosed
 
 
     
