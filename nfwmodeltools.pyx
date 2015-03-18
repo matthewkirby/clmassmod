@@ -135,6 +135,51 @@ def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+def aveEnclosedKappa(double np.ndarray[np.double_t, ndim=1, mode='c'] r, 
+                     double concentration, 
+                     double rs,
+                     double rho_c_over_sigma_c):
+
+    cdef double delta_c = deltaC(concentration)
+    cdef double amp = 4*rs*delta_c*rho_c_over_sigma_c
+
+    cdef Py_ssize_t i, npos
+    npos = r.shape[0]
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] avekappa = np.zeros(npos, dtype=np.float64)
+
+    cdef double x, a,b,c
+
+    for i from npos > i >= 0:
+
+        x = r[i]/rs
+
+        if x < 1:
+            
+            a = atanh(sqrt((1-x)/(1+x)))
+            b = sqrt(1-x**2)
+            c = ln(x/2.)
+            avekappa[i] = (2*a/b + c)/(x**2)
+
+        elif x > 1:
+            a = atan(sqrt((x-1)/(1+x)))
+            b = sqrt(x**2-1)
+            c = ln(x/2.)
+            avekappa[i] = (2*a/b + c)/(x**2)
+
+        else:
+            avekappa[i] = 1 + ln(0.5)
+
+    return kappa*amp
+
+
+
+
+
+
+###############################
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def rdelta2rs(double rdelta, 
               double c, 
               double delta):
