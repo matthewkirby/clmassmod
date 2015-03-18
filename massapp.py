@@ -90,6 +90,7 @@ def massapp(catalog, config):
 
     nfwfitter = nfwfit.buildFitter(config)
     nfwm200, nfwm200err = nfwfitter.runUntilNotFail(catalog, config)
+    nfwm200 = nfwm200['m200']
     c200 = nfwfitter.model.massconRelation(np.abs(nfwm200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
 
 
