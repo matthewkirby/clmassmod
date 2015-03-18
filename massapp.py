@@ -94,7 +94,7 @@ def massapp(catalog, config):
     c200 = nfwfitter.model.massconRelation(np.abs(nfwm200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
 
 
-    rho_c = nfwutils.rho_crit(zcluster)
+    rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
     rho_c_over_sigma_c = 1.5 * dL * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
     nfwrscale = tools.rscaleConstM(nfwm200,
