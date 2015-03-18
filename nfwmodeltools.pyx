@@ -135,7 +135,7 @@ def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def aveEnclosedKappa(double np.ndarray[np.double_t, ndim=1, mode='c'] r, 
+def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r, 
                      double concentration, 
                      double rs,
                      double rho_c_over_sigma_c):
