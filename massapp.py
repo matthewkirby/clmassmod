@@ -163,7 +163,7 @@ def massapp(catalog, config, nfwconfig):
                                            rho_c,
                                            200)
 
-            avekappa = tools.aveEnclosedKappa(np.array([r1]),
+            avekappa = tools.aveEnclosedKappa(np.array([r1], dtype=np.double_t),
                                               c200,
                                               nfwrscale,
                                               rho_c_over_sigma_c)
