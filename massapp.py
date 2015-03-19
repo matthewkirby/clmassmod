@@ -150,7 +150,7 @@ def massapp(catalog, config, nfwconfig):
         #find best matched nfw that reproduces kappa core
 
         kappa_r1 = zeta_c + kappa_ap
-        kappa_proj[cur_ap_index] = kappa_proj
+        kappa_proj[cur_ap_index] = kappa_r1
 
         ##
 
