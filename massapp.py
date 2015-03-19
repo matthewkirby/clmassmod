@@ -19,6 +19,8 @@ def avekappa(r1, r2, rscale, concentration, rho_c_over_sigma_c):
 
     def integrand(r):
 
+        r = np.array([r]).flatten()
+
         return r*tools.NFWKappa(r, concentration, rscale, rho_c_over_sigma_c)
 
     
