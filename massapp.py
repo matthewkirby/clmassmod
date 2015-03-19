@@ -73,22 +73,23 @@ def logbinning(minradii, maxraii, nbins):
 #########
 
 
-def massapp(catalog, config):
+def massapp(catalog, config, nfwconfig):
 
     zcluster = catalog.hdu.header['ZLENS']
     dL = nfwutils.global_cosmology.angulardist(zcluster)
 
-    r2 = (config.massappr2/3600.)*(np.pi/180.)*dL
-    rmax = (config.massapprmax/3600.)*(np.pi/180.)*dL
+    r2 = config.massappr2
 
+    controlbins = config.controlbins
+    
     minradii = config.profilemin
-    maxradii = config.profilemax
+    rmax = config.profilemax
     nbins = config.nbins
-    shapenoise = config.shapenoise
+
 
     # fit NFW profile
 
-    nfwfitter = nfwfit.buildFitter(config)
+    nfwfitter = nfwfit.buildFitter(nfwconfig)
     nfwm200, nfwm200err = nfwfitter.runUntilNotFail(catalog, config)
     nfwm200 = nfwm200['m200']
     c200 = nfwfitter.model.massconRelation(np.abs(nfwm200)*nfwfitter.model.massScale*nfwutils.global_cosmology.h, nfwfitter.model.zcluster, nfwfitter.model.overdensity)       
@@ -112,7 +113,17 @@ def massapp(catalog, config):
     gamma = catalog['ghat']*(1-catalog['beta_s']*nfwkappa)/catalog['beta_s']
 
 
-    r1s = np.arange(minradii, maxradii, 0.1)
+    radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(minradii, r2, nbins)
+    
+    cradii, cshear, cshearerr, cavebeta, cavebeat2, cngals = logbinning(r2, rmax, controlbins)
+    integrand2 = cshear/cradii
+    int2 = 2*rmax**2*scipy.integrate.simps(integrand2, radii)/(rmax**2 - r2**2)
+    
+    #kappa aperture
+    kappa_ap = avekappa(r2, rmax, nfwrscale, c200, rho_c_over_sigma_c)
+
+
+    r1s = radii
     kappa_proj = np.zeros_like(r1s)
     matching_m200s = np.zeros_like(r1s)
     mass_enclosed = np.zeros_like(r1s)
@@ -122,22 +133,11 @@ def massapp(catalog, config):
 
         #gamma integrals
 
-        radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(r1, r2, int1bins)
-
-        integrand1 = shear/radii
-        res = scipy.integrate.simps(integrand1, radii)
+        integrand1 = (shear/radii)[cur_ap_index:]
+        res = scipy.integrate.simps(integrand1, radii[cur_ap_index:])
         int1 = 2*res
 
-        radii, shear, shearerr, avebeta, avebeta2, ngals = logbinning(r2, rmax, int2bins)
-        integrand2 = shear/radii
-        int2 = 2*rmax**2*scipy.integrate.simps(integrand2, radii)/(rmax**2 - r2**2)
-
         zeta_c = int1 + int2
-
-
-        #kappa aperture
-
-        kappa_ap = avekappa(r2, rmax, nfwrscale, c200, rho_c_over_sigma_c)
 
 
         #find best matched nfw that reproduces kappa core
