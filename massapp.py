@@ -30,7 +30,7 @@ def avekappa(r1, r2, rscale, concentration, rho_c_over_sigma_c):
 
 #########
 
-def logbinning(minradii, maxraii, nbins):
+def logbinning(minradii, maxradii, nbins):
 
     binedges = np.logspace(np.log10(minradii), np.log10(maxradii), nbins+1)
 
