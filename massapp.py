@@ -122,7 +122,7 @@ def massapp(catalog, config, nfwconfig):
     
     cradii, cshear, cshearerr, cavebeta, cavebeat2, cngals = logbinning(catalog, gamma, r2, rmax, controlbins)
     integrand2 = cshear/cradii
-    int2 = 2*rmax**2*scipy.integrate.simps(integrand2, radii)/(rmax**2 - r2**2)
+    int2 = 2*rmax**2*scipy.integrate.simps(integrand2, cradii)/(rmax**2 - r2**2)
     
     #kappa aperture
     kappa_ap = avekappa(r2, rmax, nfwrscale, c200, rho_c_over_sigma_c)
