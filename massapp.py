@@ -30,7 +30,7 @@ def avekappa(r1, r2, rscale, concentration, rho_c_over_sigma_c):
 
 #########
 
-def logbinning(minradii, maxradii, nbins):
+def logbinning(catalog, gamma, minradii, maxradii, nbins):
 
     binedges = np.logspace(np.log10(minradii), np.log10(maxradii), nbins+1)
 
@@ -40,7 +40,7 @@ def logbinning(minradii, maxradii, nbins):
     avebeta = []
     avebeta2 = []
     ngals = []
-    for i in range(self.nbins):
+    for i in range(nbins):
         mintake = binedges[i]
         maxtake = binedges[i+1]
         selected = np.logical_and(catalog['r_mpc'] >= mintake,
@@ -52,8 +52,13 @@ def logbinning(minradii, maxradii, nbins):
             continue
 
         radii.append(np.mean(catalog['r_mpc'][selected]))
-        shear.append(np.mean(gamma[selected]))
-        shearerr.append(self.shapenoise / np.sqrt(ngal))
+
+        bootedmeans = np.zeros(500)
+        for curboot in range(500):
+            bootedmeans[curboot] = np.mean(gamma[selected][np.random.randint(0, ngal, ngal)])
+
+        shear.append(np.mean(bootedmeans))
+        shearerr.append(np.std(bootedmeans))
         avebeta.append(np.mean(catalog['beta_s'][selected]))
         avebeta2.append(np.mean(catalog['beta_s'][selected]**2))
         ngals.append(ngal)
