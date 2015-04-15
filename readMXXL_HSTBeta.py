@@ -24,6 +24,9 @@ class MXXLHSTSimReader(object):
 
     def effectiveBeta(self):
 
+        if 'beta' in self.config:
+            return self.beta
+
         betatable = np.array([[0.4, 0.6],
                               [0.65,  0.43],  
                               [0.70,  0.40 ],
