@@ -100,7 +100,7 @@ def setupCondor_BK11(configs, jobdir, jobname, snaps='snap124 snap141'.split()):
         os.mkdir(jobdir)
 
 
-    simdirbase = '/vol/braid1/vol1/dapple/mxxl'
+    simdirbase = '/vol/euclid1/euclid1_raid1/dapple/bk11_lensing'
 
     for i, snap in enumerate(snaps):
 
@@ -124,18 +124,20 @@ def setupCondor_BK11(configs, jobdir, jobname, snaps='snap124 snap141'.split()):
             writeJobfile(jobparams, '{0}/{1}.{2}.{3}.job'.format(jobdir, snap, jobname, j))
 
 
-    condorfile = '''executable = /vol/braid1/vol1/dapple/mxxl/mxxlsims/nfwfit_condorwrapper.sh
+        
+
+        condorfile = '''executable = /vol/euclid1/euclid1_raid1/dapple/mxxlsims/nfwfit_condorwrapper.sh
 universe = vanilla
-Error = {jobdir}/{jobname}.$(Process).stderr
-Output = {jobdir}/{jobname}.$(Process).stdout
-Log = {jobdir}/{jobname}.$(Process).batch.log
+Error = {jobdir}/{snapname}.{jobname}.$(Process).stderr
+Output = {jobdir}/{snapname}.{jobname}.$(Process).stdout
+Log = {jobdir}/{snapname}.{jobname}.$(Process).batch.log
 Arguments = {jobdir}/{snapname}.{jobname}.$(Process).job
 queue {njobs}
 '''.format(jobdir = jobdir, snapname = snap, 
            jobname = jobname, njobs = len(simfiles))
 
-    with open('{0}/{1}.submit'.format(jobdir, jobname), 'w') as output:
-        output.write(condorfile)
+        with open('{0}/{1}.{2}.submit'.format(jobdir, jobname, snap), 'w') as output:
+            output.write(condorfile)
 
 
 

@@ -6,6 +6,7 @@ import deconvolvedlognorm as dln
 import pymc
 import load_chains, os
 import confidenceinterval as ci
+import readtxtfile
 
 #############
 
@@ -1572,5 +1573,136 @@ def plotNoiseGradient():
 
 
     return meansfig, stdsfig
+
+
+
+
+
+#############################################
+
+
+def plotMegacamSnapComp():
+
+    config = 'mega-c4-r6-sigma0.25-corenone'
+
+    clusters = ['SPT-CLJ0234-5831',
+               'SPT-CLJ0240-5946',
+               'SPT-CLJ0254-5857',
+               'SPT-CLJ0307-6225',
+               'SPT-CLJ0317-5935',
+               'SPT-CLJ0346-5438',
+               'SPT-CLJ0348-4514',
+               'SPT-CLJ0426-5455',
+               'SPT-CLJ0509-5342',
+               'SPT-CLJ0516-5430',
+               'SPT-CLJ0551-5709',
+               'SPT-CLJ2022-6324',
+               'SPT-CLJ2031-5638',
+               'SPT-CLJ2032-5627',
+               'SPT-CLJ2136-5726',
+               'SPT-CLJ2138-6008',
+               'SPT-CLJ2145-5644',
+               'SPT-CLJ2332-5358',
+               'SPT-CLJ2355-5056']
+
+    snapdirs = ['/users/dapple/euclid1raid1/bk11_lensing/snap124/intlength400',
+                '/users/dapple/euclid1raid1/bk11_lensing/snap141/intlength400']
+
+
+    snapnames = ['Snap 124',
+                 'Snap 141']
+
+    
+    redshiftfile = readtxtfile.readtxtfile('configfiles/megacam_siminput.list')
+    redshiftlookup = {}
+    for line in redshiftfile:
+        redshiftlookup[line[0]] = float(line[1])
+
+    redshifts = np.array([redshiftlookup[x] for x in clusters])
+    
+
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+
+    stdsfig = pylab.figure()
+    stdax = stdsfig.add_subplot(1,1,1)
+
+    for cursnap in range(len(snapdirs)):
+
+        chaindirs = ['%s/%s-%s' % (snapdirs[cursnap], config, x) for x in clusters]
+
+        patches = []
+        labels = []
+
+        biasmean = []
+        biaserrs = []
+        stdmean = []
+        stderr = []
+
+
+        for i in range(len(clusters)):
+
+            chaindir = chaindirs[i]
+
+            print chaindir
+
+            chainfile = '%s/dln_0.chain.0' % (chaindir)
+            chain = load_chains.loadChains([chainfile], trim=True)
+            print chainfile, len(chain['logmu'])
+            if len(chain['logmu'][0,:]) < 5000:
+                print 'Skipping'
+                continue
+
+            mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
+            biasmean.append(mu)
+            biaserrs.append(muerr)
+            sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
+            stdmean.append(sig)
+            stderr.append(sigerr)
+
+
+        biaserrs = np.array(biaserrs).T
+        stderr = np.array(stderr).T
+
+        meansax.errorbar(redshifts, biasmean, biaserrs, label=snapnames[cursnap], linestyle='none', c=c[cursnap])
+        stdax.errorbar(redshifts, stdmean, stderr, label=snapnames[cursnap], linestyle='none', c=c[cursnap])
+
+
+
+
+
+#        meansax.set_xscale('log')
+        meansax.set_xlabel('Cluster Redshift', fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+#        meansax.set_xlim(0.2, 0.7)
+        meansax.set_ylim(0.5, 1.05)
+#        meansax.set_xticks([1e15])
+#        meansax.set_xticklabels(['10'])
+#        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+#        meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+        meansax.legend(loc='upper left')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        meansfig.savefig('megacam_snapcomp_logmean.png')
+
+
+#        stdax.set_xscale('log')
+        stdax.set_xlabel('Cluster Redshift', fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+#        stdax.set_xlim(2e14, 1.3e15)
+    #    stdax.set_ylim(0.85, 1.10)
+#        stdax.set_xticks([1e15])
+#        stdax.set_xticklabels(['10'])
+#        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
+#        stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+        stdax.legend(loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        stdsfig.savefig('megacam_snapcomp_logstd.png')
+
+
+    return meansfig, stdsfig
+
 
 

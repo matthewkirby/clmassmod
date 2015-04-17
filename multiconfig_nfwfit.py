@@ -48,6 +48,8 @@ def runMultiConfigs(jobparams, jobname=''):
 
             outputname = '{0}/{1}{2}'.format(outdir, outbasename, outputExt)
 
+            print configfile, outputname
+
             nfwfit.runNFWFit(inputname, configfile, outputname)
 
     finally:

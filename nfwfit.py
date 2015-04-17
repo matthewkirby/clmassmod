@@ -229,15 +229,18 @@ def readSimCatalog(catalogname, simreader, config):
     centeroffsety = 0.
     if 'coresize' in config:
         offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
-        m500 = sim.m500
-        if m500 == 0:
-            raise ValueError
-        #choose one of the 50 closest in mass at same core radius
         matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
         print 'Distro Available: %d' % len(matchingcoresize)
-        deltamass = matchingcoresize['M500c'] - m500
-        closestsims = np.argsort(deltamass)
-        selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
+
+        m500 = sim.m500
+        if m500 == 0:
+            selectedsim = matchingcoresize
+        else:
+            #choose one of the 50 closest in mass at same core radius
+            deltamass = matchingcoresize['M500c'] - m500
+            closestsims = np.argsort(deltamass)
+            selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
+
         targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
         anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
         centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcsec
@@ -713,7 +716,7 @@ class NFWFitter(object):
 
     #######
 
-    def scanPDF(self, catalog, config, masses = np.arange(-1e15, 5e15, 1e13)):
+    def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 5e15, 1e13)):
 
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
@@ -808,6 +811,8 @@ def savefit(bootstrap_vals, outputname):
 
     with open(outputname, 'wb') as output:
 
+        print '!!!!!!!!!!!!!!!!!!!!!!!', outputname
+
         cPickle.dump(bootstrap_vals, output, -1)
 
 
@@ -815,24 +820,29 @@ def savefit(bootstrap_vals, outputname):
 
 def runNFWFit(catalogname, configname, outputname):
 
-    config = readConfiguration(configname)
+    try:
 
-    simreader = buildSimReader(config)
+        config = readConfiguration(configname)
 
-    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+        simreader = buildSimReader(config)
 
-    catalog = readSimCatalog(catalogname, simreader, config)
+        nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
-    fitter = buildFitter(config)
+        catalog = readSimCatalog(catalogname, simreader, config)
 
-    if 'fitter' in config and config.fitter == 'maxlike':
-        fitvals = fitter.runUntilNotFail(catalog, config)
-    elif 'fitter' in config and config.fitter == 'pdf':
-        fitvals = fitter.scanPDF(catalog, config)
-    else:
-        fitvals = fitter.explorePosterior(catalog)
+        fitter = buildFitter(config)
+
+        if 'fitter' in config and config.fitter == 'maxlike':
+            fitvals = fitter.runUntilNotFail(catalog, config)
+        elif 'fitter' in config and config.fitter == 'pdf':
+            fitvals = fitter.scanPDF(catalog, config)
+        else:
+            fitvals = fitter.explorePosterior(catalog)
     
-    savefit(fitvals, outputname)
+        savefit(fitvals, outputname)
+
+    except TypeError:
+        raise TypeError(configname)
 
 ############################
 

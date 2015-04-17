@@ -74,7 +74,8 @@ def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, t
 
 #######################
 
-def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
+
+def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None, mass='m200'):
 
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
@@ -108,8 +109,8 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
 
         if massedges is not None \
                 and massbin is not None \
-                and (truth['m200'] < massedges[massbin] \
-                         or truth['m200'] >= massedges[massbin+1]):
+                and (truth[mass] < massedges[massbin] \
+                         or truth[mass] >= massedges[massbin+1]):
                 continue
 
 
@@ -119,7 +120,8 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None):
         
 
         halos.append(dict(id = haloid,
-                          true_m200 = truth['m200'],
+                          true_masses = dict(m200 = truth['m200'],
+                                             m500 = truth['m500']),
                           masses = masses*nfwutils.global_cosmology.h,
                           pdf = pdf/nfwutils.global_cosmology.h))
 
@@ -201,7 +203,7 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
 #####################
 
 
-def buildPDFModel(halos):
+def buildPDFModel(halos, mass = 'm200'):
 
     parts = {}
 
@@ -227,7 +229,7 @@ def buildPDFModel(halos):
 
     for i in range(nclusters):
 
-        delta_logmls[i,1:] = np.log(posmasses[1:]) - np.log(halos[i]['true_m200'])
+        delta_logmls[i,1:] = np.log(posmasses[1:]) - np.log(halos[i]['true_masses'][mass])
         rawpdf = halos[i]['pdf'][masses>=0]
         pdfs[i,:] = rawpdf / scipy.integrate.trapz(rawpdf, posmasses)
 
