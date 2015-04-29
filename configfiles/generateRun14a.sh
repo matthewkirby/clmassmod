@@ -21,7 +21,7 @@ for snap in 124 141; do
 			    config=mega-${mc}-r${r}-sigma${shapenoise}-core${coresize}-${cluster}
 			    dir=../../bk11_lensing/snap$snap/intlength400/$config
 			    mkdir $dir
-			    cat scanpdf.sh bk11_beta.sh ${mc}.sh r${r}.sh core_${coresize}.sh ${binning}.sh > $dir/config.sh
+			    cat scanpdf.sh bk11.sh ${mc}.sh r${r}.sh core_${coresize}.sh ${binning}.sh > $dir/config.sh
 			    echo "targetz=$zcluster" >> $dir/config.sh
 			    echo "nperarcmin=$ndensity" >> $dir/config.sh
 			    echo "shapenoise=$shapenoise" >> $dir/config.sh
