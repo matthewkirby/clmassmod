@@ -273,6 +273,24 @@ def XrayWTGOffset(sim, config):
     return centeroffsetx, centeroffsety
 
 
+###
+
+def XrayCCCPOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
+    offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/cccp_offsets.dat')]
+
+    radial_offset_kpc = offsets_kpc[np.random.randint(0, len(offsets_kpc), 1)]
+    radial_offset_arcmin = (radial_offset_mpc/(1000.*dL))*(180./np.pi)*60.
+    phi_offset = np.random.uniform(0, 2*np.pi)
+    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
+    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
+ 
+     return centeroffsetx, centeroffsety
+
+
+
     
 def getCenterOffset(sim, config):
 
