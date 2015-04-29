@@ -249,7 +249,7 @@ def readSimCatalog(catalogname, simreader, config):
 
         
 
-        print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
+
     elif 'xraycentering' in config and config['xraycentering'] == 'True':
         
         #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
@@ -258,6 +258,20 @@ def readSimCatalog(catalogname, simreader, config):
         
         centeroffsetx = (centeroffsetx_kpc/(1000.*dL))*(180./np.pi)*60.
         centeroffsety = (centeroffsety_kpc/(1000.*dL))*(180./np.pi)*60.
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
+
+        targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+        
+        sz_noisescatter = 0.3*nfwutils.global_cosmology.angulardist(config.targetz)/dL #arcmin, scaled
+        physical_scatter = (0.1/dL)*(180./np.pi)*60 #fixed in kpc, converted to arcmin
+        total_scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)
+
+        centeroffsetx = total_scatter*np.random.standard_normal(1)
+        centeroffsety = total_scatter*np.random.standard_normal(1)
+        
+        
+    print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)        
 
 
     delta_x = sim.x_arcmin - centeroffsetx
