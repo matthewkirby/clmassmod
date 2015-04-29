@@ -212,6 +212,82 @@ def applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='full'):
     return randomthrow < accept
 
 
+#######################
+
+def SZSimOffset(sim, config):
+
+    offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
+    matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
+    print 'Distro Available: %d' % len(matchingcoresize)
+
+    m500 = sim.m500
+    if m500 == 0:
+        selectedsim = matchingcoresize
+    else:
+        #choose one of the 50 closest in mass at same core radius
+        deltamass = matchingcoresize['M500c'] - m500
+        closestsims = np.argsort(deltamass)
+        selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
+
+    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+    anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
+    centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcsec
+    centeroffsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
+
+    return centeroffsetx, centeroffsety
+
+####
+
+def XrayWTGOffset(sim, config):
+
+    #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
+    centeroffsetx_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
+    centeroffsety_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
+    
+    centeroffsetx = (centeroffsetx_kpc/(1000.*dL))*(180./np.pi)*60.
+    centeroffsety = (centeroffsety_kpc/(1000.*dL))*(180./np.pi)*60.
+
+    return centeroffsetx, centeroffsety
+
+####
+
+def XrayCCCPOffset(sim, config):
+
+    offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/cccp_offsets.dat')]
+
+    radial_offset_kpc = offsets_kpc[np.random.randint(0, len(offsets_kpc), 1)]
+    radial_offset_arcmin = (radial_offset_mpc/(1000.*dL))*(180./np.pi)*60.
+    phi_offset = np.random.uniform(0, 2*np.pi)
+    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
+    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
+
+    return centeroffsetx, centeroffsety
+
+
+    
+def getCenterOffset(sim, config):
+
+    centeroffsetx = 0.
+    centeroffsety = 0.
+    if 'coresize' in config:
+        
+        centeroffsetx, centeroffsety = SZSimOffset(sim, config)
+        
+
+    elif 'xraycentering' in config and config['xraycentering'] == 'True':
+
+        centeroffsetx, centeroffsety = XrayWTGOffset(sim, config)
+
+    elif 'xraycentering' in config and config['xraycentering'] == 'CCCP':
+
+        centeroffsetx, centeroffsety = XrayCCCPOffset(sim, config)
+        
+    print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
+
+
+    return centeroffsetx, centeroffsety
+
+
 
 ########################
 
@@ -225,39 +301,8 @@ def readSimCatalog(catalogname, simreader, config):
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)
 
-    centeroffsetx = 0.
-    centeroffsety = 0.
-    if 'coresize' in config:
-        offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
-        matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
-        print 'Distro Available: %d' % len(matchingcoresize)
+    centeroffsetx, centeroffsety = getCenterOffsets(sim, config)
 
-        m500 = sim.m500
-        if m500 == 0:
-            selectedsim = matchingcoresize
-        else:
-            #choose one of the 50 closest in mass at same core radius
-            deltamass = matchingcoresize['M500c'] - m500
-            closestsims = np.argsort(deltamass)
-            selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
-
-        targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-        anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-        centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcsec
-        centeroffsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
-
-
-        
-
-        print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
-    elif 'xraycentering' in config and config['xraycentering'] == 'True':
-        
-        #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
-        centeroffsetx_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
-        centeroffsety_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
-        
-        centeroffsetx = (centeroffsetx_kpc/(1000.*dL))*(180./np.pi)*60.
-        centeroffsety = (centeroffsety_kpc/(1000.*dL))*(180./np.pi)*60.
 
 
     delta_x = sim.x_arcmin - centeroffsetx
