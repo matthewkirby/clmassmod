@@ -249,20 +249,6 @@ def XrayWTGOffset(sim, config):
 
     return centeroffsetx, centeroffsety
 
-####
-
-def XrayCCCPOffset(sim, config):
-
-    offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/cccp_offsets.dat')]
-
-    radial_offset_kpc = offsets_kpc[np.random.randint(0, len(offsets_kpc), 1)]
-    radial_offset_arcmin = (radial_offset_mpc/(1000.*dL))*(180./np.pi)*60.
-    phi_offset = np.random.uniform(0, 2*np.pi)
-    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
-    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
-
-    return centeroffsetx, centeroffsety
-
 
     
 def getCenterOffset(sim, config):
@@ -281,6 +267,19 @@ def getCenterOffset(sim, config):
     elif 'xraycentering' in config and config['xraycentering'] == 'CCCP':
 
         centeroffsetx, centeroffsety = XrayCCCPOffset(sim, config)
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
+
+        targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+        
+        sz_noisescatter = 0.3*nfwutils.global_cosmology.angulardist(config.targetz)/dL #arcmin, scaled
+        physical_scatter = (0.1/dL)*(180./np.pi)*60 #fixed in kpc, converted to arcmin
+        total_scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)
+
+        centeroffsetx = total_scatter*np.random.standard_normal(1)
+        centeroffsety = total_scatter*np.random.standard_normal(1)
+        
+        
         
     print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
 
