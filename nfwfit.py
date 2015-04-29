@@ -16,7 +16,7 @@ import fitmodel
 import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
-
+import readtxtfile
 
 
 #######################
@@ -234,8 +234,15 @@ def SZSimOffset(sim, config):
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-    centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcmin
-    centeroffsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
+    offsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcmin
+    offsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
+
+    offset_radial = np.sqrt(offsetx**2 + offsety**2)
+    offset_phi = np.random.uniform(0, 2*np.pi)
+
+    centeroffsetx = offset_radial*np.cos(offset_phi)
+    centeroffsety = offset_radial*np.sin(offset_phi)
+
 
     return centeroffsetx, centeroffsety
 
@@ -248,12 +255,10 @@ def SZTheoryOffset(sim, config):
     
     sz_noisescatter = 0.3*targetDl/dL #arcmin, scaled
     physical_scatter = (0.1/dL)*(180./np.pi)*60 #fixed in kpc, converted to arcmin
-    total_scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)
-    offset_radial = total_scatter*np.random.standard_normal(1)
-    offset_phi = np.random.uniform(0, 2*np.pi)
-    
-    centeroffsetx = offset_radial*np.cos(offset_phi)
-    centeroffsety = offset_radial*np.sin(offset_phi)
+    scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)/np.sqrt(2.)
+    centeroffsetx, centeroffsety = scatter*np.random.standard_normal(2)
+
+    return centeroffsetx, centeroffsety
 
 
 ####
@@ -263,7 +268,7 @@ def XrayWTGOffset(sim, config):
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
     #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
-    centeroffset_kpc = 10**(np.log10(22.) + 0.289)*np.random.standard_normal())
+    centeroffset_kpc = 10**(np.log10(22.) + 0.289*np.random.standard_normal())
     offset_radial = (centeroffset_kpc/(1000.*dL))*(180./np.pi)*60.
     offset_phi = np.random.uniform(0, 2*np.pi)
     
@@ -282,12 +287,12 @@ def XrayCCCPOffset(sim, config):
     offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/cccp_offsets.dat')]
 
     radial_offset_kpc = offsets_kpc[np.random.randint(0, len(offsets_kpc), 1)]
-    radial_offset_arcmin = (radial_offset_mpc/(1000.*dL))*(180./np.pi)*60.
+    radial_offset_arcmin = (radial_offset_kpc/(1000.*dL))*(180./np.pi)*60.
     phi_offset = np.random.uniform(0, 2*np.pi)
     centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
     centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
  
-     return centeroffsetx, centeroffsety
+    return centeroffsetx, centeroffsety
 
 
 
