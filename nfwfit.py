@@ -216,6 +216,8 @@ def applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='full'):
 
 def SZSimOffset(sim, config):
 
+
+
     offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
     matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
     print 'Distro Available: %d' % len(matchingcoresize)
@@ -229,23 +231,44 @@ def SZSimOffset(sim, config):
         closestsims = np.argsort(deltamass)
         selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
 
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-    centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcsec
+    centeroffsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcmin
     centeroffsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
 
     return centeroffsetx, centeroffsety
+
+###
+
+def SZTheoryOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+    
+    sz_noisescatter = 0.3*targetDl/dL #arcmin, scaled
+    physical_scatter = (0.1/dL)*(180./np.pi)*60 #fixed in kpc, converted to arcmin
+    total_scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)
+    offset_radial = total_scatter*np.random.standard_normal(1)
+    offset_phi = np.random.uniform(0, 2*np.pi)
+    
+    centeroffsetx = offset_radial*np.cos(offset_phi)
+    centeroffsety = offset_radial*np.sin(offset_phi)
+
 
 ####
 
 def XrayWTGOffset(sim, config):
 
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
     #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
-    centeroffsetx_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
-    centeroffsety_kpc = 10**(np.log10(22.) + (0.289/np.sqrt(2.))*np.random.standard_normal())
+    centeroffset_kpc = 10**(np.log10(22.) + 0.289)*np.random.standard_normal())
+    offset_radial = (centeroffset_kpc/(1000.*dL))*(180./np.pi)*60.
+    offset_phi = np.random.uniform(0, 2*np.pi)
     
-    centeroffsetx = (centeroffsetx_kpc/(1000.*dL))*(180./np.pi)*60.
-    centeroffsety = (centeroffsety_kpc/(1000.*dL))*(180./np.pi)*60.
+    centeroffsetx = offset_radial*np.cos(offset_phi)
+    centeroffsety = offset_radial*np.sin(offset_phi)
 
     return centeroffsetx, centeroffsety
 
@@ -270,15 +293,7 @@ def getCenterOffset(sim, config):
 
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
 
-        targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-        
-        sz_noisescatter = 0.3*nfwutils.global_cosmology.angulardist(config.targetz)/dL #arcmin, scaled
-        physical_scatter = (0.1/dL)*(180./np.pi)*60 #fixed in kpc, converted to arcmin
-        total_scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)
-
-        centeroffsetx = total_scatter*np.random.standard_normal(1)
-        centeroffsety = total_scatter*np.random.standard_normal(1)
-        
+        centeroffsetx, centeroffsety = SZTheoryOffset(sim, config)
         
         
     print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
@@ -298,7 +313,6 @@ def readSimCatalog(catalogname, simreader, config):
     e1 = sim.g1
     e2 = sim.g2
 
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)
 
     centeroffsetx, centeroffsety = getCenterOffsets(sim, config)
 
