@@ -11,6 +11,7 @@ import numpy as np
 
 simtype=sys.argv[1]
 chaindir=sys.argv[2]
+delta=int(sys.argv[3])
 #massbin=int(sys.argv[3])
 #massbin='all'
 

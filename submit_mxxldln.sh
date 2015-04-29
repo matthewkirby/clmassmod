@@ -4,6 +4,7 @@
 jobdir=$1
 torun=$2
 nbins=$3
+delta=$4
 
 for snap in 41 54; do
 
@@ -16,7 +17,7 @@ for snap in 41 54; do
 
 	for massbin in `seq 0 $nbins`; do
 
-	    sed -e "s|JOBDIR|$jobdir|g" -e "s/CONFIG/$config/g" -e "s/SNAP/$snap/g" -e "s/MASSBIN/$massbin/g" rundln.condor.template >> $jobdir/rundln$snap.condor.submit
+	    sed -e "s|JOBDIR|$jobdir|g" -e "s/CONFIG/$config/g" -e "s/SNAP/$snap/g" -e "s/MASSBIN/$massbin/g" -e "s/DELTA/$delta/g" rundln.condor.template >> $jobdir/rundln$snap.condor.submit
 
 	done
  

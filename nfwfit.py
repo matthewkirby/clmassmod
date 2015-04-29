@@ -716,7 +716,7 @@ class NFWFitter(object):
 
     #######
 
-    def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 5e15, 1e13)):
+    def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 5e15, 1e13), deltas = [200, 500, 2500]):
 
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
@@ -728,19 +728,37 @@ class NFWFitter(object):
         fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
                                    guess = self.model.guess())
 
-        chisqs = np.zeros(len(masses))
-        
-        for i, mass in enumerate(masses):
-                
-            chisqs[i] = fitter.statfunc(fitter.ydata,
-                                             fitter.yerr,
-                                             fitter.model(fitter.xdata,
-                                                               mass / self.model.massScale))
+        pdfs = {}
+
+        for delta in deltas:
+
+            chisqs = np.zeros(len(masses))
+
+            if delta == 200:
+                workingmasses = masses
+            if delta != 200:
+                workingmasses = np.zeros_like(masses)
+                for i, curm in enumerate(masses):
+                    c200 = self.model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
+                                                      zlens, float(delta))
+                    rscale = nfwutils.rscaleConstM(np.abs(curm), c200, zlens, float(delta))
+                    m200 = nfwutils.Mdelta(rscale, c200, zlens, 200)
+                    if curm < 0:
+                        m200 = -m200
+                    workingmasses[i] = m200
+
+            for i, mass in enumerate(workingmasses):
+
+                chisqs[i] = fitter.statfunc(fitter.ydata,
+                                                 fitter.yerr,
+                                                 fitter.model(fitter.xdata,
+                                                                   mass / self.model.massScale))
 
 
-        pdf = np.exp(-0.5*chisqs)
-        pdf = pdf/scipy.integrate.trapz(pdf, masses)
-        return (masses, pdf)
+            pdf = np.exp(-0.5*chisqs)
+            pdf = pdf/scipy.integrate.trapz(pdf, masses)
+            pdfs[delta] = pdf
+        return (masses, pdfs)
 
     #######
 
