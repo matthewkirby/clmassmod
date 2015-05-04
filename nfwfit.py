@@ -267,14 +267,14 @@ def XrayWTGOffset(sim, config):
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
-    #offset distribution simple log10 delta r ~ N(mu, sig) fit to WtG I xray bcg offset distro
-    centeroffset_kpc = 10**(np.log10(22.) + 0.289*np.random.standard_normal())
-    offset_radial = (centeroffset_kpc/(1000.*dL))*(180./np.pi)*60.
-    offset_phi = np.random.uniform(0, 2*np.pi)
-    
-    centeroffsetx = offset_radial*np.cos(offset_phi)
-    centeroffsety = offset_radial*np.sin(offset_phi)
+    offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/wtg_offsets.dat')]
 
+    radial_offset_mpc = offsets_mpc[np.random.randint(0, len(offsets_mpc), 1)]
+    radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
+    phi_offset = np.random.uniform(0, 2*np.pi)
+    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
+    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
+ 
     return centeroffsetx, centeroffsety
 
 
