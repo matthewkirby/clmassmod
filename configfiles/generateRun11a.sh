@@ -1,6 +1,6 @@
 #!/bin/bash -u
 
-snap=41
+snap=54
 sampling=0_0
 binning=hstnoisebins
 r=5
@@ -17,7 +17,7 @@ cat ../shearprofiles/coresizeindex.list | { while read cluster coresizeindex; do
 	    cat scanpdf.sh mxxl_hstbeta.sh ${mc}.sh r${r}.sh core_xray.sh ${binning}.sh > $dir/config.sh
 	    echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh
 	    
-	    echo $config >> ../run11a
+	    echo $config >> ../run11a.$snap
 	    
 
 

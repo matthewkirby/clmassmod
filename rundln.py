@@ -18,8 +18,13 @@ delta=int(sys.argv[3])
 config = nfwfit.readConfiguration('%s/config.sh' % chaindir)
 simreader = nfwfit.buildSimReader(config)
 nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
-massedges = np.array([4e14, 5e15])
-massbin = 0
+
+if delta == 200:
+    massedges = np.array([4e14, 5e15])
+    massbin = 0
+else:
+    massedges = np.array([1.3e14, 5e15])
+    massbin=0
 #massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
 
 halos = dln.loadPDFs(chaindir, simtype, simreader, massedges, massbin)

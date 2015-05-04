@@ -1,7 +1,9 @@
 #!/bin/bash -u
 
-snap=54
+
 binning=linearbins12
+
+for snap in 41 54; do
 
 cat megacam_siminput.list | { 
 
@@ -38,6 +40,8 @@ cat megacam_siminput.list | {
     done
     
 }
+
+done
 
 
 	

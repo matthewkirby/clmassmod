@@ -77,6 +77,8 @@ def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, t
 
 def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None, delta=200):
 
+    mass = 'm%d' % delta
+
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
     idpattern = consolidate_fits.idpatterns[simtype]

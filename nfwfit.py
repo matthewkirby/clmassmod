@@ -336,8 +336,10 @@ def readSimCatalog(catalogname, simreader, config):
     e1 = sim.g1
     e2 = sim.g2
 
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
-    centeroffsetx, centeroffsety = getCenterOffsets(sim, config)
+
+    centeroffsetx, centeroffsety = getCenterOffset(sim, config)
 
 
 
