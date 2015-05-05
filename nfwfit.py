@@ -282,8 +282,10 @@ def XrayWTGOffset(sim, config):
 
 def XraySPTHSTOffset(sim, config):
 
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
     #offset distribution simple log delta r ~ N(mu, sig) fit to SPT-HST xray bcg offset distro (from Inon)
-    centeroffset_mpc = np.exp(np.log(-2.625) + 1.413*np.random.standard_normal())
+    centeroffset_mpc = np.exp(-2.625 + 1.413*np.random.standard_normal())
     offset_radial = (centeroffset_mpc/dL)*(180./np.pi)*60.
     offset_phi = np.random.uniform(0, 2*np.pi)
     
@@ -320,7 +322,7 @@ def getCenterOffset(sim, config):
         centeroffsetx, centeroffsety = SZSimOffset(sim, config)
         
 
-    elif 'xraycentering' in config and config['xraycentering'] == 'True':
+    elif 'xraycentering' in config and config['xraycentering'] == 'WTG':
 
         centeroffsetx, centeroffsety = XrayWTGOffset(sim, config)
 
