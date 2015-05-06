@@ -118,6 +118,11 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None, delta=200
 
         with open(pdffile, 'rb') as input:
             masses, pdfs = cPickle.load(input)
+            
+        if type(pdfs) != dict:
+            print 'Skipping ', filebase
+            continue
+            
         
         
 

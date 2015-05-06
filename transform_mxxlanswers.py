@@ -40,9 +40,9 @@ if __name__ == '__main__':
     snapnum = int(sys.argv[1])
     outfile = sys.argv[2]
 
-    redshift = readtxtfile.readtxtfile('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap%d/redshift' % snapnum)[0,0]
+    redshift = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap%d/redshift' % snapnum)[0,0]
 
-    halocat = readtxtfile.readtxtfile('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap%d/halos_%d.txt' % (snapnum, snapnum))
+    halocat = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap%d/halos_%d.txt' % (snapnum, snapnum))
 
     if snapnum == 41:
         properties = readMXXLBinary('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap41/Doug_XXL_z1.bin')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     clusterinfo = {}
 
-    for halofile in glob.glob('/users/dapple/astro/mxxlsims/mxxl_imperial/mxxlsnap%d/*.convergence_map' % snapnum):
+    for halofile in glob.glob('/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap%d/*.convergence_map' % snapnum):
 
         halobase = os.path.basename(halofile)
         
