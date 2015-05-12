@@ -34,10 +34,10 @@ for halofile in glob.glob('/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsn
 
     profile = rmp.MXXLProfile('/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap%d/halo_%d_%d.radial_profile_3D.txt' % (snapnum, snapnum, stefan_id))
 
-    clusterinfo[myid] = dict(m500 = profile.overdensityMass(500.),
-                             m200 = profile.overdensityMass(200.),
-                             m1p5 = profile.massEnclosed(1.5),
-                             m2500 = profile.overdensityMass(2500.),
+    clusterinfo[myid] = dict(m500 = profile.overdensityMass(500.)*rmp.h,
+                             m200 = profile.overdensityMass(200.)*rmp.h,
+                             m1p5 = profile.massEnclosed(1.5)*rmp.h,
+                             m2500 = profile.overdensityMass(2500.)*rmp.h,
                              concen = 0.,
                              redshift = redshift)
 
