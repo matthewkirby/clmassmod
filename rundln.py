@@ -8,6 +8,7 @@ import deconvolvedlognorm as dln
 import nfwfit
 import nfwutils
 import numpy as np
+import pymc
 
 def run(simtype, chaindir, delta, massbin=0):
 
@@ -21,8 +22,18 @@ def run(simtype, chaindir, delta, massbin=0):
         else:
             massedges = np.array([1.3e14, 5e15])
 
-    elif simtype == 'mxxlsnap41' or simtype == 'mxxlsnap54':
-        massedges = np.logspace(np.log10(2e14), np.log10(3e15), 9)
+    elif simtype == 'mxxlsnap41':
+        if delta == 200:
+            massedges = np.logspace(np.log10(4.7e14), np.log10(2e15), 8)
+        elif delta == 500:
+            massedges = np.logspace(np.log10(4.5e14), np.log10(1.9e15), 6)
+
+    elif simtype == 'mxxlsnap54':
+        if delta == 200:
+            massedges = np.logspace(np.log10(2e14), np.log10(6e15), 10)
+        elif delta == 500:
+            massedges = np.logspace(np.log10(7.8e14), np.log10(3.7e15), 7)
+
         
 
     halos = dln.loadPDFs(chaindir, simtype, simreader, massedges, massbin)
@@ -31,9 +42,24 @@ def run(simtype, chaindir, delta, massbin=0):
     if len(halos) < 5:
         sys.exit(0)
 
-    parts = dln.buildPDFModel(halos)
+    success = False
+    for i in range(20):
 
-    dln.sample(parts, '%s/dln_%d.%d' % (chaindir, massbin, delta), 10000, singlecore=True)
+        try:
+        
+            parts = dln.buildPDFModel(halos)
+
+            dln.sample(parts, '%s/dln_%d.%d' % (chaindir, massbin, delta), 10000, singlecore=True)
+
+            success=True
+            
+            break
+
+        except (AssertionError, pymc.ZeroProbability) as e:
+            
+            continue
+
+    assert(success is True)
 
 
 
