@@ -42,7 +42,7 @@ def run(simtype, chaindir, delta, massbin=0):
     simreader = nfwfit.buildSimReader(config)
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
-    massedges = defineMassedgs(simtype, delta)
+    massedges = defineMassEdges(simtype, delta)
         
 
     halos = dln.loadPDFs(chaindir, simtype, simreader, massedges, massbin)

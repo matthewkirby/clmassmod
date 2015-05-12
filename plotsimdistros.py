@@ -165,9 +165,14 @@ def precomputedLogNormDistro(chaindir, delta, massedges, meanax, stdax, colorind
 
     for i in range(nbins):
 
-        chainfile = '%s/dln_%d.chain.0' % (chaindir, i)
+        chainfile = '%s/dln_%d.%d.chain.0' % (chaindir, i, delta)
         if not os.path.exists(chainfile):
-            continue
+            if delta == 200:
+                chainfile = '%s/dln_%d.chain.0' % (chaindir, i)
+                if not os.path.exists(chainfile):
+                    continue
+            else:
+                continue
             
         try:
             chain = load_chains.loadChains([chainfile], trim=True)
@@ -1370,14 +1375,16 @@ def plotHSTNoiseSZOffset():
 
 def plotHSTNoiseXrayOffset():
 
-    deltas = [200, 500]
+    deltas = [200]
 
-    snaps = [54]
+    snaps = [41]
 
-    centerings = 'NONE WTG CCCP SPTHST'.split()
+#    centerings = 'NONE WTG CCCP SPTHST'.split()
+    centerings = 'xrayNONE corenone'.split()
 
     
-    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-xray%(centering)s-%(cluster)s'
+#    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-xray%(centering)s-%(cluster)s'
+    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-%(centering)s-%(cluster)s'
 
 
     clusters = ['SPT-CLJ2331-5051',
@@ -1434,6 +1441,7 @@ def plotHSTNoiseXrayOffset():
                     label = centerings[i]
 
                     patch = precomputedLogNormDistro(chaindir, 
+                                                     delta,
                                                      massedges,
                                                      meansax,
                                                      stdax,
