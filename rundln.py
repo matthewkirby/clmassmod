@@ -10,11 +10,7 @@ import nfwutils
 import numpy as np
 import pymc
 
-def run(simtype, chaindir, delta, massbin=0):
-
-    config = nfwfit.readConfiguration('%s/config.sh' % chaindir)
-    simreader = nfwfit.buildSimReader(config)
-    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+def defineMassEdges(simtype, delta):
 
     if simtype == 'bk11snap124' or simtype == 'bk11snap141':
         if delta == 200:
@@ -34,6 +30,19 @@ def run(simtype, chaindir, delta, massbin=0):
         elif delta == 500:
             massedges = np.logspace(np.log10(7.8e14), np.log10(3.7e15), 7)
 
+    return massedges
+
+#########
+
+    
+
+def run(simtype, chaindir, delta, massbin=0):
+
+    config = nfwfit.readConfiguration('%s/config.sh' % chaindir)
+    simreader = nfwfit.buildSimReader(config)
+    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+
+    massedges = defineMassedgs(simtype, delta)
         
 
     halos = dln.loadPDFs(chaindir, simtype, simreader, massedges, massbin)

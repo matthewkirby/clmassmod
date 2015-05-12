@@ -9,7 +9,7 @@ import nfwutils, nfwfit
 
 
 idpatterns = dict(mxxlsnap41 = re.compile('halo_41_(\d+_\d)\.out'),
-                  mxxlsnap54 = re.compile('halo_(\d+_\d)\.out'),
+                  mxxlsnap54 = re.compile('halo_54_(\d+_\d)\.out'),
                   bcc = re.compile('cluster_(\d+)\.hdf5.out'),
                   bk11snap141 = re.compile('haloid(\d+)_zLens.+'),
                   bk11snap124 = re.compile('haloid(\d+)_zLens.+'))
