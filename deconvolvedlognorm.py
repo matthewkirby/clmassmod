@@ -15,6 +15,9 @@ import fitmodel
 
 ########################
 
+class BadPDFException(Exception): pass
+
+
 def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, thin=1):
 
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
@@ -118,6 +121,13 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None, delta=200
 
         with open(pdffile, 'rb') as input:
             masses, pdfs = cPickle.load(input)
+            
+        if type(pdfs) != dict:
+            print 'Skipping ', filebase
+            continue
+
+        if np.any(np.logical_not(np.isfinite(pdfs[delta]))):
+            raise BadPDFException(filebase)
         
         
 

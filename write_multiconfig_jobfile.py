@@ -50,7 +50,7 @@ queue {njobs}
 
 #########################################################
 
-def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/mxxlsnap41'):
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41'):
     
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
