@@ -3,10 +3,13 @@
 
 jobdir=$1
 torun=$2
-nbins=$3
+snap=$3
 delta=$4
+nbins=$5
 
-for snap in 41 54; do
+
+
+
 
     jobfile=$jobdir/rundln$snap.$delta.condor.submit
 
@@ -25,4 +28,4 @@ for snap in 41 54; do
  
     done
 
-done
+
