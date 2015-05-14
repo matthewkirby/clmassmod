@@ -20,7 +20,7 @@ for snap in 41 54; do
 		realdir=/vol/euclid1/euclid1_3/dapple/mxxl_lensing/mxxlsnap$snap/$config
 		mkdir $realdir
 		ln -s $realdir $dir
-		cat scanpdf.sh mxxl.sh ${mc}.sh r${r}.sh core_${coresizeindex} ${binning}.sh > $realdir/config.sh
+		cat scanpdf.sh mxxl.sh ${mc}.sh r${r}.sh core_${coresizeindex}.sh ${binning}.sh > $realdir/config.sh
 
 		echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $realdir/config.sh
 	    
