@@ -50,12 +50,15 @@ queue {njobs}
 
 #########################################################
 
-def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41'):
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41', outputdir=None):
     
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
 
-    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+    if outputdir is None:
+        outputdir = simdir
+
+    configfiles = ['{0}/{1}/config.sh'.format(outputdir, config) for config in configs]
 
     input_extensions = 'convergence_map shear_1_map shear_2_map answer'.split()
 
@@ -94,7 +97,9 @@ queue {njobs}
 
 ###################
 
-def setupCondor_BK11(configs, jobdir, jobname, snaps='snap124 snap141'.split()):
+def setupCondor_BK11(configs, jobdir, jobname, 
+                     snaps='snap124 snap141'.split(),
+                     outputdir = None):
 
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
@@ -106,9 +111,13 @@ def setupCondor_BK11(configs, jobdir, jobname, snaps='snap124 snap141'.split()):
 
         simdir = '{0}/{1}/intlength400'.format(simdirbase, snap)
 
+        curoutputdir = outputdir
+        if outputdir is None:
+            curoutputdir = simdir
+
         print simdir
 
-        configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+        configfiles = ['{0}/{1}/config.sh'.format(curoutputdir, config) for config in configs]
 
         simfiles = glob.glob('{0}/haloid*.fit'.format(simdir))
 
