@@ -1379,28 +1379,29 @@ def plotHSTNoiseXrayOffset():
 
     snaps = [41]
 
-#    centerings = 'NONE WTG CCCP SPTHST'.split()
-    centerings = 'xrayNONE corenone'.split()
+    centerings = 'NONE WTG CCCP SPTHST'.split()
+#    centerings = 'xrayNONE corenone'.split()
+
 
     
-#    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-xray%(centering)s-%(cluster)s'
-    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-%(centering)s-%(cluster)s'
+    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-xray%(centering)s-%(cluster)s'
+#    configtemplate = '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap%(snap)d/hstnoisebins-c4-r5-%(centering)s-%(cluster)s'
 
 
     clusters = ['SPT-CLJ2331-5051',
                 'SPT-CLJ0559-5249',
-                'SPT-CLJ0000-5748',
-                'SPT-CLJ2359-5009',
-                'SPT-CLJ2337-5942',
-                'SPT-CLJ0102-4915',
-                'SPT-CLJ0533-5005',
-                'SPT-CLJ2040-5725',
-                'SPT-CLJ0615-5746',
-                'SPT-CLJ2341-5119',
-                'SPT-CLJ0546-5345',
-                'SPT-CLJ2342-5411',
-                'SPT-CLJ2106-5844']
-
+                'SPT-CLJ0000-5748']
+#                'SPT-CLJ2359-5009',
+#                'SPT-CLJ2337-5942',
+#                'SPT-CLJ0102-4915',
+#                'SPT-CLJ0533-5005',
+#                'SPT-CLJ2040-5725',
+#                'SPT-CLJ0615-5746',
+#                'SPT-CLJ2341-5119',
+#                'SPT-CLJ0546-5345',
+#                'SPT-CLJ2342-5411',
+#                'SPT-CLJ2106-5844']
+#
 
     meansfigs = []
     stdsfigs = []
@@ -1410,8 +1411,10 @@ def plotHSTNoiseXrayOffset():
         for snap in snaps:
 
             simtype = 'mxxlsnap%d' % snap
-
             massedges = rundln.defineMassEdges(simtype, delta)
+#            massedge_sets = [rundln.defineMassEdges(simtype, delta),
+#                             np.logspace(np.log10(2e14), np.log10(1e15), 7)]
+
 
             for cluster in clusters:
                 
@@ -1440,6 +1443,8 @@ def plotHSTNoiseXrayOffset():
 
                     label = centerings[i]
 
+#                    massedges = massedge_sets[i]
+
                     patch = precomputedLogNormDistro(chaindir, 
                                                      delta,
                                                      massedges,
@@ -1458,12 +1463,14 @@ def plotHSTNoiseXrayOffset():
                 meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
                 meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
                 meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
-                meansax.set_xlim(2e14, 1.3e15)
+                meansax.set_xlim(2e14, 6e15)
                 meansax.set_ylim(0.5, 1.05)
                 meansax.set_xticks([1e15])
                 meansax.set_xticklabels(['10'])
-                meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
-                meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+                meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 
+                                    2e15, 3e15, 4e15, 5e15, 6e15], minor=True)
+                meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', 
+                                         '20', '', '40', '', '60'], minor=True)
                 meansax.legend(patches[::-1], labels[::-1], loc='upper left')
                 meansfig.canvas.draw()
                 meansfig.tight_layout()
@@ -1474,12 +1481,14 @@ def plotHSTNoiseXrayOffset():
                 stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
                 stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
                 stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
-                stdax.set_xlim(2e14, 1.3e15)
+                stdax.set_xlim(2e14, 1.6e15)
                 #    stdax.set_ylim(0.85, 1.10)
                 stdax.set_xticks([1e15])
                 stdax.set_xticklabels(['10'])
-                stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
-                stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
+                stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 
+                                    2e15, 3e15, 4e15, 5e15, 6e15], minor=True)
+                stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', 
+                                         '20', '', '40', '', '60'], minor=True)
                 stdax.legend(patches[::-1], labels[::-1], loc='upper left')
                 stdsfig.canvas.draw()
                 stdsfig.tight_layout()

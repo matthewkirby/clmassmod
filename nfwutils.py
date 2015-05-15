@@ -76,10 +76,32 @@ class Cosmology(object):
         return (self.omega_r*inv_a**4 + self.omega_m*inv_a**3 + \
                   self.omega_l*(inv_a**(3*(1+self.w))) + (1 - self.omega_m - self.omega_l - self.omega_r)*inv_a**2)*self.H0**2
 
+    def Ez(self, z):
+
+        return np.sqrt(self.hubble2(z))/self.H0
+
     def get_hubble_length(self):
         return self.v_c / self.H0
 
     hubble_length = property(get_hubble_length)
+
+
+    def _integral_1pzOverEz3(self, z_min, z_max = np.inf):
+		
+        def integrand(z):
+            return (1.0 + z) / (self.Ez(z))**3
+		
+        y, err = quad(integrand, z_min, z_max)
+        return y
+
+
+    def UnnormedGrowthFactor(self, z):
+
+        return 5.0 / 2.0 * self.omega_m * self.Ez(z) * self._integral_1pzOverEz3(z)
+
+    def GrowthFactor(self, z):
+
+        return self.UnnormedGrowthFactor(z)/self.UnnormedGrowthFactor(0.)
     
 
     def rho_crit(self, z):
