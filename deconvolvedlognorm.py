@@ -123,8 +123,10 @@ def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None, delta=200
             masses, pdfs = cPickle.load(input)
             
         if type(pdfs) != dict:
-            print 'Skipping ', filebase
-            continue
+            if delta != 200:
+                print 'Skipping ', filebase
+                continue
+            pdfs = {200:pdfs}  #historical reasons. If it isn't a pdf, it was computed as 200.
 
         if np.any(np.logical_not(np.isfinite(pdfs[delta]))):
             raise BadPDFException(filebase)
