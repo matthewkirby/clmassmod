@@ -4,7 +4,7 @@ import numpy as np
 import cPickle
 import deconvolvedlognorm as dln
 import pymc
-import load_chains, os
+import load_chains, os, glob
 import confidenceinterval as ci
 import readtxtfile
 import nfwutils
