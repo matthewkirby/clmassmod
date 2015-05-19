@@ -149,7 +149,7 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
 ################
 
-def precomputedLogNormDistro(chaindir, delta, massedges, meanax, stdax, colorindex, alpha=0.8, biaslabel = True):
+def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True):
 
     nbins = len(massedges) - 1
 
@@ -163,16 +163,12 @@ def precomputedLogNormDistro(chaindir, delta, massedges, meanax, stdax, colorind
     ystdlows = []
     ystdhighs = []
 
-    for i in range(nbins):
+    chainfiles = glob.glob('%s/dln*.%d.chain.0' % (chaindir, delta))
+    for chainfile in chainfiles:
 
-        chainfile = '%s/dln_%d.%d.chain.0' % (chaindir, i, delta)
-        if not os.path.exists(chainfile):
-            if delta == 200:
-                chainfile = '%s/dln_%d.chain.0' % (chaindir, i)
-                if not os.path.exists(chainfile):
-                    continue
-            else:
-                continue
+        fileroot = chainfile.split('.chain')[0]
+        massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % fileroot)]
+
             
         try:
             chain = load_chains.loadChains([chainfile], trim=True)
@@ -184,8 +180,8 @@ def precomputedLogNormDistro(chaindir, delta, massedges, meanax, stdax, colorind
             print 'Skipping'
             continue
 
-        xpoints.append(massedges[i])
-        xpoints.append(massedges[i+1])
+        xpoints.append(massbinlow)
+        xpoints.append(massbinhigh)
 
         mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
         sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
