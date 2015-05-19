@@ -1294,7 +1294,7 @@ def plotHSTNoiseSZOffset():
 
     for curgroup in range(len(groupnames)):
 
-        chaindirs = chaingroups[curgroup] % snap
+        chaindirs = chaingroups[curgroup]
         clusternames = clustergroups[curgroup]
 
         meansfig = pylab.figure()
@@ -1313,7 +1313,7 @@ def plotHSTNoiseSZOffset():
 
         for i in range(len(clusternames)):
 
-            chaindir = chaindirs[i]
+            chaindir = chaindirs[i] % snap
 
             print chaindir
 
