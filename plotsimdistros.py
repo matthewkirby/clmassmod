@@ -170,10 +170,8 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % fileroot)]
 
             
-        try:
-            chain = load_chains.loadChains([chainfile], trim=True)
-        except:
-            continue
+
+        chain = load_chains.loadChains([chainfile], trim=True)
 
         print chainfile, len(chain['logmu'])
         if len(chain['logmu'][0,:]) < 5000:
