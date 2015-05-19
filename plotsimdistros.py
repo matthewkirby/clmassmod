@@ -151,7 +151,7 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
 def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True):
 
-    nbins = len(massedges) - 1
+
 
     ylows = []
     yhighs = []
