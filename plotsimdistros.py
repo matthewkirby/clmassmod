@@ -1242,22 +1242,25 @@ def plotSplitNoise():
 def plotHSTNoiseSZOffset():
 
 
+    delta = 500
+    snap = 41
 
-    massedges = np.logspace(np.log10(2e14), np.log10(1e15), 7)
-    
-    chaingroups = [['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core0-SPT-CLJ2337-5942',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core0-SPT-CLJ2331-5051',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core0-SPT-CLJ0533-5005'],
-                 ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core0-SPT-CLJ2342-5411',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core0-SPT-CLJ2106-5844',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core0-SPT-CLJ0615-5746'],
-                 ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core1-SPT-CLJ0000-5748',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core1-SPT-CLJ2040-5725',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core1-SPT-CLJ0546-5345'],
-                 ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core2-SPT-CLJ0102-4915',
-                 '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core2-SPT-CLJ2341-5119'],
-                 ['/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core3-SPT-CLJ2359-5009',
-                  '/users/dapple/euclid1raid1/mxxl_lensing/mxxlsnap41/hstnoisebins-c4-r5-core3-SPT-CLJ0559-5249']]
+
+
+
+    chaingroups = [['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2337-5942',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2331-5051',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ0533-5005'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2342-5411',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2106-5844',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ0615-5746'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core1-SPT-CLJ0000-5748',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core1-SPT-CLJ2040-5725',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core1-SPT-CLJ0546-5345'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core2-SPT-CLJ0102-4915',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core2-SPT-CLJ2341-5119'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core3-SPT-CLJ2359-5009',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core3-SPT-CLJ0559-5249']]
 
     
 
@@ -1291,7 +1294,7 @@ def plotHSTNoiseSZOffset():
 
     for curgroup in range(len(groupnames)):
 
-        chaindirs = chaingroups[curgroup]
+        chaindirs = chaingroups[curgroup] % snap
         clusternames = clustergroups[curgroup]
 
         meansfig = pylab.figure()
@@ -1318,7 +1321,7 @@ def plotHSTNoiseSZOffset():
             label = clusternames[i]
 
             patch = precomputedLogNormDistro(chaindir, 
-                                             massedges,
+                                             delta,
                                              meansax,
                                              stdax,
                                              colorindex = i%4)
@@ -1343,13 +1346,13 @@ def plotHSTNoiseSZOffset():
         meansax.legend(patches[::-1], labels[::-1], loc='upper left')
         meansfig.canvas.draw()
         meansfig.tight_layout()
-        meansfig.savefig('hstnoisemxxl_logmean_%s.png' % groupnames[curgroup] )
+        meansfig.savefig('hstnoisemxxl_szsimcenter_logmean_%s.snap%d.delta%d.png' % (groupnames[curgroup], snap, delta) )
 
         stdax.set_title(groupnames[curgroup])
         stdax.set_xscale('log')
         stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
         stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
-        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+#        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
         stdax.set_xlim(2e14, 1.3e15)
     #    stdax.set_ylim(0.85, 1.10)
         stdax.set_xticks([1e15])
@@ -1359,7 +1362,8 @@ def plotHSTNoiseSZOffset():
         stdax.legend(patches[::-1], labels[::-1], loc='upper left')
         stdsfig.canvas.draw()
         stdsfig.tight_layout()
-        stdsfig.savefig('hstnoisemxxl_logstd_%s.png' % groupnames[curgroup])
+        stdsfig.savefig('hstnoisemxxl_szsimcenter_logstd_%s.snap%d.delta%d.png' % (groupnames[curgroup], snap, delta) )
+
 
 
     return meansfigs, stdsfigs
