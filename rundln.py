@@ -36,7 +36,7 @@ def defineMassEdges(simtype, delta):
 
     
 
-def run(simtype, chaindir, delta, massbin=0):
+def run(simtype, chaindir, outfile, delta, massbin=0):
 
     config = nfwfit.readConfiguration('%s/config.sh' % chaindir)
     simreader = nfwfit.buildSimReader(config)
@@ -46,9 +46,9 @@ def run(simtype, chaindir, delta, massbin=0):
         
 
     halos = dln.loadPDFs(chaindir, simtype, simreader, massedges, massbin)
-    #halos = dln.loadPDFs(chaindir, simtype, simreader)
 
-    if len(halos) < 5:
+
+    if len(halos) < 10:
         sys.exit(0)
 
     success = False
@@ -57,11 +57,7 @@ def run(simtype, chaindir, delta, massbin=0):
         try:
         
             parts = dln.buildPDFModel(halos)
-
-            dln.sample(parts, '%s/dln_%d.%d' % (chaindir, massbin, delta), 10000, singlecore=True)
-
             success=True
-            
             break
 
         except (AssertionError, pymc.ZeroProbability) as e:
@@ -69,6 +65,10 @@ def run(simtype, chaindir, delta, massbin=0):
             continue
 
     assert(success is True)
+
+    with open('%s.massrange' % outfile, 'w') as output:
+        output.write('%f\n%f\n' % (massedges[massbin], massedges[massbin+1]))
+    dln.sample(parts, outfile, 10000, singlecore=True)
 
 
 
@@ -79,11 +79,15 @@ if __name__ == '__main__':
 
     simtype=sys.argv[1]
     chaindir=sys.argv[2]
-    if len(sys.argv) == 5:
-        massbin=int(sys.argv[3])
-    delta=int(sys.argv[-1])
+    outfile=sys.argv[3]
+    delta=int(sys.argv[4])
+    if len(sys.argv) > 5:
+        massbin=int(sys.argv[5])
 
-    print 'Called with:', simtype, chaindir, massbin, delta
+    print 'Called with:', dict(simtype=simtype, chaindir=chaindir, 
+                               outfile=outfile, delta=delta, 
+                               massbin=massbin)
 
-
-    run(simtype, chaindir, delta, massbin)
+    
+    run(simtype, chaindir, outfile, delta, massbin)
+        

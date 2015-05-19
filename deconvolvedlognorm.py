@@ -2,7 +2,9 @@
 # Fit a model which is lognorm intrinsic scatter and linear norm noise
 ########################
 
-import glob, cPickle, os
+
+
+import glob, cPickle, os, shutil, tempfile
 import numpy as np
 import pymc
 import consolidate_fits
@@ -437,9 +439,11 @@ def runFit(parts):
 
 def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singlecore = False):
 
+    tempoutputdir = tempfile.mkdtemp()
+    outputdir, outputbase = os.path.split(outputfile)
 
     options = varcontainer.VarContainer()
-    options.outputFile = outputfile
+    options.outputFile = '%s/%s' % (tempoutputdir, outputbase)
     options.singlecore = singlecore
     options.nsamples = samples
     options.adapt_every = adaptevery
@@ -454,9 +458,19 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
 
     runner = pma.MyMCRunner()
 
-    runner.run(manager)
+    try:
+        runner.run(manager)
+        runner.finalize(manager)
+    finally:
+        outputfiles = glob.glob('%s/*' % tempoutputdir)
+        for curoutputfile in outputfiles:
+            curoutputbase = os.path.basename(curoutputfile)
+            destination_output = '%s/%s' % (outputdir, curoutputbase)
 
-    runner.finalize(manager)
+            if os.path.exists(destination_output):
+                os.remove(destination_output)
+            shutil.copyfile(curoutputfile, destination_output)
+        shutil.rmtree(tempoutputdir)
 
 
 
