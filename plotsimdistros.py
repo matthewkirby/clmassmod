@@ -164,6 +164,9 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
     ystdhighs = []
 
     chainfiles = glob.glob('%s/dln*.%d.chain.0' % (chaindir, delta))
+
+    assert(len(chainfiles) > 0)
+
     for chainfile in chainfiles:
 
         fileroot = chainfile.split('.chain')[0]
