@@ -163,7 +163,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
     ystdlows = []
     ystdhighs = []
 
-    chainfiles = glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta))
+    chainfiles = sorted(glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta)))
 
     assert(len(chainfiles) > 0)
 
