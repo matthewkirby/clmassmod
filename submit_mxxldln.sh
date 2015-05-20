@@ -7,7 +7,7 @@ snap=$3
 delta=$4
 nbins=$5
 
-chainbase=/vol/euclid1/euclid1_1/dapple/mxxl_lensing/mxxlsnap$snap
+chainbase=/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap$snap
 outputdir=/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap$snap/
 
 jobfile=$jobdir/rundln$snap.$delta.condor.submit

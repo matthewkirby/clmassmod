@@ -9,6 +9,7 @@ import confidenceinterval as ci
 import readtxtfile
 import nfwutils
 import rundln
+import astropy.io.ascii as asciireader
 
 #############
 
@@ -165,7 +166,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
 
     chainfiles = sorted(glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta)))
 
-    assert(len(chainfiles) > 0)
+#    assert(len(chainfiles) > 0)
 
     for chainfile in chainfiles:
 
@@ -1244,24 +1245,25 @@ def plotHSTNoiseSZOffset():
 
 
     delta = 500
-    snap = 41
+    snap = 54
+    mcrelation='c4'
 
 
 
 
-    chaingroups = [['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2337-5942',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2331-5051',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ0533-5005'],
-                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2342-5411',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ2106-5844',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core0-SPT-CLJ0615-5746'],
-                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core1-SPT-CLJ0000-5748',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core1-SPT-CLJ2040-5725',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core1-SPT-CLJ0546-5345'],
-                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core2-SPT-CLJ0102-4915',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core2-SPT-CLJ2341-5119'],
-                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core3-SPT-CLJ2359-5009',
-                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-c4-r5-core3-SPT-CLJ0559-5249']]
+    chaingroups = [['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core0-SPT-CLJ2337-5942',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core0-SPT-CLJ2331-5051',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core0-SPT-CLJ0533-5005'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core0-SPT-CLJ2342-5411',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core0-SPT-CLJ2106-5844',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core0-SPT-CLJ0615-5746'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core1-SPT-CLJ0000-5748',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core1-SPT-CLJ2040-5725',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core1-SPT-CLJ0546-5345'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core2-SPT-CLJ0102-4915',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core2-SPT-CLJ2341-5119'],
+                   ['/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core3-SPT-CLJ2359-5009',
+                    '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/hstnoisebins-%s-r5-core3-SPT-CLJ0559-5249']]
 
     
 
@@ -1314,7 +1316,7 @@ def plotHSTNoiseSZOffset():
 
         for i in range(len(clusternames)):
 
-            chaindir = chaindirs[i] % snap
+            chaindir = chaindirs[i] % (snap, mcrelation)
 
             print chaindir
 
@@ -1347,7 +1349,7 @@ def plotHSTNoiseSZOffset():
         meansax.legend(patches[::-1], labels[::-1], loc='upper left')
         meansfig.canvas.draw()
         meansfig.tight_layout()
-        meansfig.savefig('hstnoisemxxl_szsimcenter_logmean_%s.snap%d.delta%d.png' % (groupnames[curgroup], snap, delta) )
+        meansfig.savefig('hstnoisemxxl_szsimcenter_logmean_%s.snap%d.delta%d.%s.png' % (groupnames[curgroup], snap, delta, mcrelation) )
 
         stdax.set_title(groupnames[curgroup])
         stdax.set_xscale('log')
@@ -1363,7 +1365,7 @@ def plotHSTNoiseSZOffset():
         stdax.legend(patches[::-1], labels[::-1], loc='upper left')
         stdsfig.canvas.draw()
         stdsfig.tight_layout()
-        stdsfig.savefig('hstnoisemxxl_szsimcenter_logstd_%s.snap%d.delta%d.png' % (groupnames[curgroup], snap, delta) )
+        stdsfig.savefig('hstnoisemxxl_szsimcenter_logstd_%s.snap%d.delta%d.%s.png' % (groupnames[curgroup], snap, delta, mcrelation) )
 
 
 
@@ -2301,6 +2303,136 @@ def plotMegacamSZMiscenteringComp():
 
                         
     biasfile.close()
+    
+
+
+###############################################################
+
+
+
+def plotHSTSZMiscenteringComp():
+
+    delta = 200
+    rs = 'r5'
+    mc = 'duffy'
+    snaps = [41, 54]
+
+    alphas = [0.8, 0.3]
+
+    miscenterings = ['xrayNONE', 'sztcenter', 'core%d']
+
+    names = ['Perfect Centers',
+             'Approx Miscentering',
+             'Hydro Miscentering']
+
+
+    
+    datafile = asciireader.read('sptdat')
+    redshift_sortorder = np.argsort(datafile['z_l'])
+    clusters = datafile['name'][redshift_sortorder]
+    altnames = datafile['altname'][redshift_sortorder]
+    redshifts = datafile['z_l'][redshift_sortorder]
+
+    corefileindex = readtxtfile.readtxtfile('shearprofiles/coresizeindex.list')
+    corelookup = {}
+    for line in corefileindex:
+        corelookup[line[0]] = int(line[1])
+    cores = np.array([corelookup[x] for x in altnames])
+
+    meansfigs = []
+    stdsfigs = []
+
+    for curcluster, cluster in enumerate(clusters):
+
+        
+        meansfig = pylab.figure()
+        meansax = meansfig.add_subplot(1,1,1)
+        
+        stdsfig = pylab.figure()
+        stdax = stdsfig.add_subplot(1,1,1)
+
+        patches = []
+        labels = []
+
+
+
+        for cursnap, snap in enumerate(snaps):
+
+            snapdir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d' % snap
+            config = 'hstnoisebins-%s-%s' % (mc, rs)
+
+            for curcenter in range(len(miscenterings)):
+
+                chaindir = '%s/%s-%s-%s' % (snapdir, 
+                                            config, 
+                                            miscenterings[curcenter] % cores[curcluster],
+                                            cluster) 
+
+                print chaindir
+
+                label = names[curcenter]
+                
+                patch = precomputedLogNormDistro(chaindir, 
+                                                 delta,
+                                                 meansax,
+                                                 stdax,
+                                                 colorindex = curcenter%3,
+                                                 alpha = alphas[cursnap],
+                                                 biaslabel = False)
+
+
+                if patch is None:
+                    continue
+                    
+                if cursnap == 0:
+                    patches.append(patch)
+                    labels.append(label)
+            
+
+
+        meansax.set_title('%s %1.2f' % (cluster, redshifts[curcluster]))
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(3e14, 4e15)
+        meansax.set_ylim(0.5, 1.05)
+        meansax.set_xticks([1e15])
+        meansax.set_xticklabels(['10'])
+        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        meansax.legend(patches[::-1], labels[::-1], loc='upper left')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        meansfig.savefig('hst_sim_plots/hstnoisemxxl_szcentercomp_logmean_%s.delta%d.%s.png' % (cluster, delta, mc) )
+
+        stdax.set_title('%s %1.2f' % (cluster, redshifts[curcluster]))
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+#        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        stdax.set_xlim(3e14, 4e15)
+#        stdax.set_ylim(0.5, 1.05)
+        stdax.set_xticks([1e15])
+        stdax.set_xticklabels(['10'])
+        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        stdsfig.savefig('hst_sim_plots/hstnoisemxxl_szcentercomp_logstd_%s.delta%d.%s.png' % (cluster, delta, mc) )
+
+        meansfigs.append(meansfig)
+        stdsfigs.append(stdsfig)
+
+    return meansfigs, stdsfigs
+
+
+
+
+
+
+
     
 
 
