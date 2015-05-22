@@ -163,7 +163,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
 
     ystdlows = []
     ystdhighs = []
-
+    
     chainfiles = sorted(glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta)))
 
 #    assert(len(chainfiles) > 0)
@@ -171,7 +171,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
     for chainfile in chainfiles:
 
         fileroot = chainfile.split('.chain')[0]
-        massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % fileroot)]
+
 
             
 
@@ -181,6 +181,8 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         if len(chain['logmu'][0,:]) < 5000:
             print 'Skipping'
             continue
+
+        massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % fileroot)]
 
         xpoints.append(massbinlow)
         xpoints.append(massbinhigh)
@@ -2312,7 +2314,7 @@ def plotMegacamSZMiscenteringComp():
 
 def plotHSTSZMiscenteringComp():
 
-    delta = 200
+    delta = 500
     rs = 'r5'
     mc = 'duffy'
     snaps = [41, 54]
@@ -2392,14 +2394,14 @@ def plotHSTSZMiscenteringComp():
 
         meansax.set_title('%s %1.2f' % (cluster, redshifts[curcluster]))
         meansax.set_xscale('log')
-        meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
-        meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
+        meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
         meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
         meansax.set_xlim(3e14, 4e15)
         meansax.set_ylim(0.5, 1.05)
         meansax.set_xticks([1e15])
         meansax.set_xticklabels(['10'])
-        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
         meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
         meansax.legend(patches[::-1], labels[::-1], loc='upper left')
         meansfig.canvas.draw()
@@ -2408,14 +2410,14 @@ def plotHSTSZMiscenteringComp():
 
         stdax.set_title('%s %1.2f' % (cluster, redshifts[curcluster]))
         stdax.set_xscale('log')
-        stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
+        stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
         stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
 #        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
         stdax.set_xlim(3e14, 4e15)
 #        stdax.set_ylim(0.5, 1.05)
         stdax.set_xticks([1e15])
         stdax.set_xticklabels(['10'])
-        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
         stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
         stdax.legend(patches[::-1], labels[::-1], loc='upper left')
         stdsfig.canvas.draw()
