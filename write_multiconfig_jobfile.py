@@ -111,9 +111,11 @@ def setupCondor_BK11(configs, jobdir, jobname,
 
         simdir = '{0}/{1}/intlength400'.format(simdirbase, snap)
 
-        curoutputdir = outputdir
+
         if outputdir is None:
             curoutputdir = simdir
+        else:
+            curoutputdir = '{0}/{1}/intlength400'.format(outputdir, snap)
 
         print simdir
 
