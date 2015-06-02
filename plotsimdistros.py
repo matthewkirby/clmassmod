@@ -166,7 +166,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
     
     chainfiles = sorted(glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta)))
 
-#    assert(len(chainfiles) > 0)
+    assert(len(chainfiles) > 0)
 
     for chainfile in chainfiles:
 
@@ -2440,3 +2440,138 @@ def plotHSTSZMiscenteringComp():
 
 ###############################################################
 
+
+def plotHST_MXXL_BK11_Comp():
+
+    bk11_snap_ranges = {124 : {500 : 1e14*np.array([1.5, 6.4]),
+                               200 : 1e14*np.array([4, 10])},
+                        141 : {500 : 1e14*np.array([2, 9]),
+                               200 : 1e14*np.array([4, 1.6])}}
+
+    
+    delta = 500
+    rs = 'r5'
+    mc = 'c4'
+    mxxlsnaps = [41, 54]
+    mxxlredshifts = 'z=1.0 z=0.25'.split()
+    bk11snaps = [124, 141]
+    bk11redshifts = 'z=0.5 z=0.25'.split()
+
+#    alphas = [0.8, 0.3]
+
+    config = 'hstnoisebins-%s-r5-xrayNONE-%s'
+
+    clusters = 'SPT-CLJ2341-5119 SPT-CLJ0559-5249 SPT-CLJ2106-5844'.split()
+
+    meansfigs = []
+    stdsfigs = []
+
+    for curcluster, clustername in enumerate(clusters):
+
+        curconfig = config % (mc, clustername)
+
+        meansfig = pylab.figure()
+        meansax = meansfig.add_subplot(1,1,1)
+
+        stdsfig = pylab.figure()
+        stdax = stdsfig.add_subplot(1,1,1)
+
+        patches = []
+        labels = []
+
+        
+        #first bk11
+        
+        for snapi, snap in enumerate(bk11snaps):
+
+            chaindir = '/users/dapple/euclid1_2/rundlns/bk11snap%d/%s' % (snap, curconfig)
+            chainfile = '%s/rundln%d.%d.0.chain.0' % (chaindir, snap, delta)
+            chain = load_chains.loadChains([chainfile], trim=True)
+            print chainfile, len(chain['logmu'])
+            if len(chain['logmu'][0,:]) < 5000:
+                print 'Skipping'
+                continue
+
+            mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
+            sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
+
+            meansax.fill_between(bk11_snap_ranges[snap][delta], 
+                                 mu-muerr[0], mu+muerr[1], 
+                                 facecolor=c[snapi],alpha=0.8)
+            stdax.fill_between(bk11_snap_ranges[snap][delta], 
+                               sig-sigerr[0], sig+sigerr[1], 
+                               facecolor=c[snapi], alpha=0.8)
+
+            patch = pylab.Rectangle((0, 0), 1, 1, fc=c[snapi], alpha=0.8, hatch = None)
+
+            patches.append(patch)
+            labels.append('BK11 %s' % bk11redshifts[snapi])
+
+
+
+        #then mxxl
+
+        for snapi, snap in enumerate(mxxlsnaps):
+
+            chaindir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/%s' % (snap, curconfig)
+
+
+            patch = precomputedLogNormDistro(chaindir, 
+                                             delta,
+                                             meansax,
+                                             stdax,
+                                             colorindex = 2 + snapi,
+                                             biaslabel = False)
+
+            if patch is None:
+                print 'Error. Skipped'
+                continue
+
+                    
+
+            patches.append(patch)
+            labels.append('MXXL %s' % mxxlredshifts[snapi])
+
+
+
+
+        meansax.set_title('%s' % (clustername))
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(3e14, 4e15)
+        meansax.set_ylim(0.5, 1.3)
+        meansax.set_xticks([1e15])
+        meansax.set_xticklabels(['10'])
+        meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        if mc == 'c4':
+            meansax.legend(patches[::-1], labels[::-1], loc='upper right')
+        else:
+            meansax.legend(patches[::-1], labels[::-1], loc='lower left')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        meansfig.savefig('hst_sim_plots/hst_mxxlbk11_comp_logmean_%s.delta%d.%s.png' % (clustername, delta, mc) )
+
+        stdax.set_title('%s' % (clustername))
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+#        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        stdax.set_xlim(3e14, 4e15)
+#        stdax.set_ylim(0.5, 1.05)
+        stdax.set_xticks([1e15])
+        stdax.set_xticklabels(['10'])
+        stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        stdsfig.savefig('hst_sim_plots/hst_mxxlbk11_comp_logstd_%s.delta%d.%s.png' % (clustername, delta, mc) )
+
+
+        meansfigs.append(meansfig)
+        stdsfigs.append(stdsfig)
+
+    return meansfigs, stdsfigs
