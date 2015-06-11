@@ -214,37 +214,41 @@ def applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='full'):
 
 #######################
 
+szsim_offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
+
 def SZSimOffset(sim, config):
 
-
-
-    offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
-    matchingcoresize = offsetcat[offsetcat['coresize[arcmin]'] == config.coresize]
-    print 'Distro Available: %d' % len(matchingcoresize)
+    matchingcoresize = szsim_offsetcat[szsim_offsetcat['coresize[arcmin]'] == config.coresize]
 
     m500 = sim.m500
-    if m500 == 0:
-        selectedsim = matchingcoresize
-    else:
-        #choose one of the 50 closest in mass at same core radius
-        deltamass = matchingcoresize['M500c'] - m500
-        closestsims = np.argsort(deltamass)
-        selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
-
+#    if m500 == 0:
+    selectedsim =np.random.uniform(0, len(matchingcoresize))
+#    else:
+#        #choose one of the 50 closest in mass at same core radius
+#        deltamass = matchingcoresize['M500c'] - m500
+#        closestsims = np.argsort(deltamass)
+#        selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
+#
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
     offsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcmin
     offsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
 
-    offset_radial = np.sqrt(offsetx**2 + offsety**2)
+#    offset_radial = np.sqrt(offsetx**2 + offsety**2)
     offset_phi = np.random.uniform(0, 2*np.pi)
 
-    centeroffsetx = offset_radial*np.cos(offset_phi)
-    centeroffsety = offset_radial*np.sin(offset_phi)
+    newoffsetx = offsetx*np.cos(offset_phi) - offsety*np.sin(offset_phi)
+    newoffsety = offsetx*np.sin(offset_phi) + offsety*np.cos(offset_phi)
 
+    return newoffsetx, newoffsety
 
-    return centeroffsetx, centeroffsety
+#
+#    centeroffsetx = offset_radial*np.cos(offset_phi)
+#    centeroffsety = offset_radial*np.sin(offset_phi)
+#
+
+#    return centeroffsetx, centeroffsety
 
 ###
 
@@ -263,13 +267,34 @@ def SZTheoryOffset(sim, config):
 
 ####
 
+def SZXVPTheoryOffset(sim, config):
+
+    #physical scatter in arcmin, approp for target redshift
+    xvp_offsetx, xvp_offsety = XrayXVPOffset(sim, config)
+
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+    
+    sz_noisescatter = 0.3*targetDl/dL #arcmin, scaled
+    centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
+
+    return (centeroffsetx + xvp_offsetx, 
+            centeroffsety + xvp_offsety)
+
+
+####
+
+
+wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/wtg_offsets.dat')]
+
 def XrayWTGOffset(sim, config):
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
-    offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/wtg_offsets.dat')]
 
-    radial_offset_mpc = offsets_mpc[np.random.randint(0, len(offsets_mpc), 1)]
+
+    radial_offset_mpc = wtg_offsets_mpc[np.random.randint(0, len(wtg_offsets_mpc), 1)]
     radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
     phi_offset = np.random.uniform(0, 2*np.pi)
     centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
@@ -296,6 +321,26 @@ def XraySPTHSTOffset(sim, config):
 
 ###
 
+xvp_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgxray')]
+
+def XrayXVPOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
+
+
+    radial_offset_mpc = xvp_offsets_mpc[np.random.randint(0, len(xvp_offsets_mpc), 1)]
+    radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
+    phi_offset = np.random.uniform(0, 2*np.pi)
+    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
+    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
+ 
+    return centeroffsetx, centeroffsety
+
+
+###
+
+
 def XrayCCCPOffset(sim, config):
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
@@ -319,8 +364,8 @@ def XraySPTXVPOffset(sim, config):
 
     offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgxray')]
 
-    radial_offset_mpc = offsets_kpc[np.random.randint(0, len(offsets_mpc), 1)]
-    radial_offset_arcmin = (radial_offset_kpc/dL)*(180./np.pi)*60.
+    radial_offset_mpc = offsets_mpc[np.random.randint(0, len(offsets_mpc), 1)]
+    radial_offset_arcmin = (radial_offset_mpc/dL)*(180./np.pi)*60.
     phi_offset = np.random.uniform(0, 2*np.pi)
     centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
     centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
@@ -352,6 +397,10 @@ def getCenterOffset(sim, config):
     elif 'xraycentering' in config and config['xraycentering'] == 'SPTHST':
         
         centeroffsetx, centeroffsety = XraySPTHSTOffset(sim, config)
+
+    elif 'xraycentering' in config and config['xraycentering'] == 'XVP':
+        
+        centeroffsetx, centeroffsety = XraySPTXVPOffset(sim, config)
 
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
 
