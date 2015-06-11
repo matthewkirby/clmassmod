@@ -52,7 +52,11 @@ def runMultiConfigs(jobparams, jobname=''):
 
             nfwfit.runNFWFit(inputname, configfile, outputname)
 
+    except Exception, e:
+        print e
+
     finally:
+
 
         if doTransfer:
 
