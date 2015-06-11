@@ -33,13 +33,11 @@ def CreateSigmaSteps(histogram, xedges, yedges, problevels=[0.68,0.95,0.99], smo
 
     CLregion = problevels[0]*CLregion
 
-    for i in range(1, len(problevels)):
+    for i in range(len(problevels)-1, -1, -1):
         curRegion, X, Y = Confidence2D(histogram, xedges,yedges, problevels[i], smooth=smooth)
-        CLregion += problevels[i]*curRegion
+        CLregion += curRegion
 
-    problevels.append(1.)
-    problevels = np.array(problevels)
-    splits = (problevels[1:] + problevels[0:-1])/2.
+    splits = np.arange(0.999, 0.999 + len(problevels), 1.)
 
     if fig is None:
         fig = pylab.figure()

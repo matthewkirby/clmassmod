@@ -317,8 +317,8 @@ class Likelihood(object):
                                        self.r_mpc,
                                        self.g,
                                        self.gerr,
-                                       self.beta_s,
-                                       self.beta_s2,
+                                       self.beta_s*np.ones_like(self.r_mpc),
+                                       self.beta_s2*np.ones_like(self.r_mpc),
                                        self.rho_c,
                                        self.rho_c_over_sigma_c)
 
@@ -369,6 +369,35 @@ def calcMassUncert(config, r_mpc, beta_s, zcluster, shearprofiles, shearerr,
         
         
 
+def testnoisebias(noise = 0.04, niters = 10000):
+
+    r_mpc =  np.linspace(0.25, 3.0, 20)
+    beta_s = 0.5
+    zcluster = 0.5
+    g = createPerfectProfile(1e15, 4.0, zcluster, r_mpc, beta_s)
+    gerr = noise/np.sqrt(r_mpc)
+    
+#    m200scan = np.logspace(np.log10(1e13), np.log10(5e15), 200)
+    m200scan = np.arange(-1e15 + 5e12, 5e15, 1e13)
+    
+    config = nfwfit.readConfiguration('testnoisebias.config')
+    likelihood = Likelihood(config)
+
+    likelihood.bindData(r_mpc, g, gerr, beta_s, zcluster)
+    perfectpdf = np.array([likelihood(m200 = curm200) for curm200 in m200scan])
+
+    maxs = np.zeros(niters)
+    for i in range(niters):
+        gwnoise = g + gerr*np.random.standard_normal(size=len(g))
+        likelihood.bindData(r_mpc, gwnoise, gerr, beta_s, zcluster)
+        logprob = np.array([likelihood(m200 = curm200) for curm200 in m200scan])
+        maxs[i] = m200scan[logprob == np.max(logprob)]
 
 
+    return r_mpc, g, gerr, m200scan, perfectpdf, maxs
+
+    
+
+
+    
     
