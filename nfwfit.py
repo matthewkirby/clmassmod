@@ -267,6 +267,20 @@ def SZTheoryOffset(sim, config):
 
 ####
 
+def SZLensingPeakOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+    
+    scatter = 0.237*targetDl/dL #arcmin, scaled
+    centeroffsetx, centeroffsety = scatter*np.random.standard_normal(2)
+
+    return centeroffsetx, centeroffsety
+
+
+####
+
+
 def SZXVPTheoryOffset(sim, config):
 
     #physical scatter in arcmin, approp for target redshift
@@ -375,6 +389,17 @@ def XraySPTXVPOffset(sim, config):
 
 ###
 
+def XrayLensingPeakOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
+    delta_mpc = 0.107*np.random.standard_normal(2)
+    
+    centeroffsetx, centeroffsety = (delta_mpc/dL)*(180./np.pi)*60 #arcmin
+
+    return centeroffsetx, centeroffsety
+
+###
 
     
 def getCenterOffset(sim, config):
@@ -402,9 +427,17 @@ def getCenterOffset(sim, config):
         
         centeroffsetx, centeroffsety = XraySPTXVPOffset(sim, config)
 
+    elif 'xraycentering' in config and config['xraycentering'] == 'lensingpeak':
+
+        centeroffsetx, centeroffsety = XrayLensingPeakOffset(sim, config)
+
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
 
         centeroffsetx, centeroffsety = SZTheoryOffset(sim, config)
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'lensingpeak':
+        
+        centeroffsetx, centeroffsety = SZLensingPeakOffset(sim, config)
         
         
     print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
