@@ -358,22 +358,6 @@ def XrayCCCPOffset(sim, config):
 
 ###
 
-def XraySPTXVPOffset(sim, config):
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-    offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgxray')]
-
-    radial_offset_mpc = offsets_mpc[np.random.randint(0, len(offsets_mpc), 1)]
-    radial_offset_arcmin = (radial_offset_mpc/dL)*(180./np.pi)*60.
-    phi_offset = np.random.uniform(0, 2*np.pi)
-    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
-    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
- 
-    return centeroffsetx, centeroffsety
-
-
-###
 
 
     
@@ -400,11 +384,16 @@ def getCenterOffset(sim, config):
 
     elif 'xraycentering' in config and config['xraycentering'] == 'XVP':
         
-        centeroffsetx, centeroffsety = XraySPTXVPOffset(sim, config)
+        centeroffsetx, centeroffsety = XrayXVPOffset(sim, config)
 
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
 
         centeroffsetx, centeroffsety = SZTheoryOffset(sim, config)
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'xvp':
+
+        centeroffsetx, centeroffsety = SZXVPTheoryOffset(sim, config)
+
         
         
     print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
