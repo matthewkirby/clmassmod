@@ -15,52 +15,50 @@ def runMultiConfigs(jobparams, jobname=''):
     workbase = jobparams['workbase']
     doTransfer = workbase is not None
 
-    try:
-
-        inputname = jobparams['catname']
-        outbasename = jobparams['outbasename']
-
-        if doTransfer:
-
-            inputbase = os.path.basename(inputname)
-
-            if jobname != '':
-                jobname = '-' + jobname
-
-            workdir = '{0}/{1}{2}'.format(workbase, inputbase, jobname)
-            print 'WORKDIR: ' + workdir
 
 
-            if not os.path.exists(workdir):
-                os.mkdir(workdir)
+    inputname = jobparams['catname']
+    outbasename = jobparams['outbasename']
 
-            for inputfile in inputfiles:
-                shutil.copy(inputfile, workdir)
+    if doTransfer:
 
+        inputbase = os.path.basename(inputname)
 
-            inputname = '{0}/{1}'.format(workdir, inputbase)
+        if jobname != '':
+            jobname = '-' + jobname
 
-
-
-        for configfile in jobparams['configurations']:
-
-            outdir = os.path.dirname(configfile)
-
-            outputname = '{0}/{1}{2}'.format(outdir, outbasename, outputExt)
-
-            print configfile, outputname
-
-            nfwfit.runNFWFit(inputname, configfile, outputname)
-
-    except Exception, e:
-        print e
-
-    finally:
+        workdir = '{0}/{1}{2}'.format(workbase, inputbase, jobname)
+        print 'WORKDIR: ' + workdir
 
 
-        if doTransfer:
+        if not os.path.exists(workdir):
+            os.mkdir(workdir)
 
-            shutil.rmtree(workdir)
+        for inputfile in inputfiles:
+            shutil.copy(inputfile, workdir)
+
+
+        inputname = '{0}/{1}'.format(workdir, inputbase)
+
+
+
+    for configfile in jobparams['configurations']:
+
+        outdir = os.path.dirname(configfile)
+
+        outputname = '{0}/{1}{2}'.format(outdir, outbasename, outputExt)
+
+        print configfile, outputname
+
+        nfwfit.runNFWFit(inputname, configfile, outputname)
+
+
+
+
+
+    if doTransfer:
+        
+        shutil.rmtree(workdir)
 
 ########
 
