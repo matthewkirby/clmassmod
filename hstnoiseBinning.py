@@ -1,19 +1,26 @@
 import readtxtfile
 import nfwutils
 import numpy as np
+import os.path
 
 #####################
 
-__lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_output_v3_ctim_bgq/massana/gb1_pofz_tim1_1p5m/SPT-CLJ2359-5009/massana_apera_c_x0/lssmocks'
-__lss_valid_ids__ = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/lss.valid_ids')[:,0]
+__lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_output_v3_ctim_bgq/massana/gb1_pofz_tim1_1p5m/{cluster}/massana_apera_c_x0/lssmocks'
 
-def loadLSSRealization(id = None):
 
-    if id is None or id == 'random':
-        id = __lss_valid_ids__[np.random.randint(0, len(__lss_valid_ids__), 1)]
+def loadLSSRealization(cluster, id = 'random'):
 
-    lssfile = '%s/mock%d/shear.profile.all.beta2.unchanged' % (__lss_dir__,
-                                                               id)
+    clustermockdir = __lss_dir__.format(cluster = cluster)
+
+    if id == 'random':
+
+        lss_possible = readtxtfile.readtxtfile('{mockdir}/fit_lss.results'.format(clustermockdir))
+        ids_available = lss_possible[:,0][lss_possible[:,7] > 1000]
+
+        id = ids_available[np.random.randint(0, len(ids_available), 1)]
+
+    lssfile = '{mockdir}/mock{id}/shear.profile.all.beta2.unchanged'.format(mockdir = clustermockdir,
+                                                                            id = id)
 
     rawlssprofile = readtxtfile.readtxtfile(lssfile)
 
@@ -43,6 +50,7 @@ class hstnoisebins(object):
         self.profileCol = config.profilecol
         self.binwidth = config.binwidth
         self.profilefile = config.profilefile
+        self.clustername = config.clustername
 
         profile = readtxtfile.readtxtfile(self.profilefile)
         
@@ -72,7 +80,7 @@ class hstnoisebins(object):
 
         lssrealization = None
         if self.lssnoise:
-            lssrealization = loadLSSRealization(self.lssnoise)
+            lssrealization = loadLSSRealization(self.clustername, self.lssnoise)
 
 
         for i in range(self.nbins):
