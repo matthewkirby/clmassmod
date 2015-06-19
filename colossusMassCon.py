@@ -75,7 +75,7 @@ class ColossusMC(IterateC200):
 
     def __init__(self, config):
 
-        self.modelname = config.colossusMC_name
+        self.modelname = config.colossusmcname
 
 
     ###
