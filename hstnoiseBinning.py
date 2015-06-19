@@ -9,15 +9,17 @@ __lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_
 
 
 def loadLSSRealization(cluster, id = 'random'):
-
+        
     clustermockdir = __lss_dir__.format(cluster = cluster)
 
     if id == 'random':
 
-        lss_possible = readtxtfile.readtxtfile('{mockdir}/fit_lss.results'.format(clustermockdir))
+        lss_possible = readtxtfile.readtxtfile('{}/fit_lss.results'.format(clustermockdir))
         ids_available = lss_possible[:,0][lss_possible[:,7] > 1000]
 
-        id = ids_available[np.random.randint(0, len(ids_available), 1)]
+        id = int(ids_available[np.random.randint(0, len(ids_available), 1)])
+
+    print 'Loading LSS %d' % id
 
     lssfile = '{mockdir}/mock{id}/shear.profile.all.beta2.unchanged'.format(mockdir = clustermockdir,
                                                                             id = id)
@@ -65,7 +67,7 @@ class hstnoisebins(object):
             self.useAveForCenter = True
 
         self.lssnoise = None
-        if 'lssnoise' in config:
+        if 'lssnoise' in config and config.lssnoise != 'False':
             self.lssnoise = config.lssnoise
         
             
@@ -79,7 +81,7 @@ class hstnoisebins(object):
         avebeta2 = []
 
         lssrealization = None
-        if self.lssnoise:
+        if self.lssnoise is not None:
             lssrealization = loadLSSRealization(self.clustername, self.lssnoise)
 
 
@@ -110,7 +112,9 @@ class hstnoisebins(object):
             if lssrealization is not None:
                 selectbin = np.logical_and(lssrealization['r_mpc'] == self.bincenters[i],
                                            lssrealization['magbin'] == self.magbinids[i])
-                ghat += lssrealization['gt'][selectbin]
+                lss_gt = lssrealization['gt'][selectbin]
+                assert(lss_gt.shape == (1,))
+                ghat += float(lss_gt)
 
             shear.append(ghat)  
         

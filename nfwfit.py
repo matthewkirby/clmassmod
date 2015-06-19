@@ -335,7 +335,7 @@ def XraySPTHSTOffset(sim, config):
 
 ###
 
-xvp_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgxray')]
+xvp_offsets_mpc = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgxray')[:,0]
 
 def XrayXVPOffset(sim, config):
 

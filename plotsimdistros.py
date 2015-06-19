@@ -2495,7 +2495,8 @@ def plotHST_MXXL_BK11_Summary():
     for i in range(len(datafile)):
         nametranslator[datafile['name'][i]] = datafile['altname'][i]
 
-    clusters = datafile['name']
+#    clusters = datafile['name']
+    clusters = ['SPT-CLJ2040-5726']
 
     corefileindex = readtxtfile.readtxtfile('shearprofiles/coresizeindex.list')
     corelookup = {}
@@ -2508,7 +2509,7 @@ def plotHST_MXXL_BK11_Summary():
     meansfigs = []
     stdsfigs = []
 
-    with open('hstbiassummary', 'w') as output:
+    with open('hstbiassummary_2040', 'w') as output:
 
         output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
 
@@ -2530,7 +2531,9 @@ def plotHST_MXXL_BK11_Summary():
 
                     for curcluster, clustername in enumerate(clusters):
 
-                        clusterinfo = '%s %1.2f %1.2f' % (clustername, 
+                        curaltname = nametranslator[clustername]
+
+                        clusterinfo = '%s %1.2f %1.2f' % (curaltname,
                                                           datafile['z_l'][curcluster],
                                                           cores[curcluster])
 
@@ -2542,7 +2545,7 @@ def plotHST_MXXL_BK11_Summary():
 
                         curconfig = config.format(mc = mc, rs = rs, 
                                                   curcenter = curcenter, 
-                                                  clustername = clustername)
+                                                  clustername = curaltname)
 
                         meansfig = pylab.figure()
                         meansax = meansfig.add_subplot(1,1,1)

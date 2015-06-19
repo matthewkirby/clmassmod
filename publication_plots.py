@@ -25,3 +25,5 @@ params = {'text.usetex' : True,
           'figure.figsize' : fig_size}
 pylab.rcParams.update(params)
 
+
+colors = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25)]

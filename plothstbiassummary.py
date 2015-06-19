@@ -6,7 +6,8 @@ import numpy as np
 
 
 
-data = asciireader.read('hstbiassummary_nocomments')
+#data = asciireader.read('hstbiassummary_nocomments')
+data = asciireader.read('hstbiassummary_2040')
 
 def plotOne(center, mc, rs, delta = 500, fig = None):
 
@@ -114,7 +115,7 @@ def doAll():
 
     figs = []
 
-    with open('hstbiassummary_reduced', 'w') as output:
+    with open('hstbiassummary_reduced_2040', 'w') as output:
 
         output.write('cluster zcluster rad mc delta center b b_err\n')
 
@@ -146,9 +147,9 @@ def doAll():
                                                        
 
 
-                    fig.savefig('hstbiassummary_plots/summary.%s.%s.%s.png' % (rs, center, mc))
+#                    fig.savefig('hstbiassummary_plots/summary.%s.%s.%s.png' % (rs, center, mc))
 
-                    figs.append(fig)
+#                    figs.append(fig)
 
     return figs
 
@@ -156,7 +157,7 @@ def doAll():
 
 ##################
 
-pubplotdata = asciireader.read('hstbiassummary_reduced')
+#pubplotdata = asciireader.read('hstbiassummary_reduced')
 
 def pubplots():
 
