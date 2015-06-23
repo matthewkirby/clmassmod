@@ -33,14 +33,14 @@ def makeXrayPlot():
     #xrayxvp
 
     xrayxvpoffsets = 1000*nfwfit.xvp_offsets_mpc
-    plotcdf(xrayxvpoffsets, ax, label='XVP X-ray-BCG', linewidth=2, color=pp.colors[0])
+    plotcdf(xrayxvpoffsets, ax, label='XVP X-ray-BCG', linewidth=3, color=pp.colors[1])
 
     #xraylensing
 
     dLs = np.array([nfwutils.global_cosmology.angulardist(z) for z in sptdat['z_l']])
     xray_lensing_offsets = 1000*dLs*(np.pi/180.)*astroutils.greatCircleDistance(sptdat['xray_ra'], sptdat['xray_dec'], sptdat['lensing_ra'], sptdat['lensing_dec'])
 
-    plotcdf(xray_lensing_offsets, ax, label='SPT13 X-ray-Lensing', linewidth=2.5, color=pp.colors[1])
+    plotcdf(xray_lensing_offsets, ax, label='SPT13 X-ray-Lensing', linewidth=1.5, color=pp.colors[0])
 
     fit_deltas_kpc = 0.107*np.random.standard_normal((2, 2000))*1000
     fit_offsets = np.sqrt(fit_deltas_kpc[0]**2 + fit_deltas_kpc[1]**2)
@@ -75,13 +75,13 @@ def makeSZPlot():
     hydro_offset = np.sqrt((hydrocat['peak_xpix[arcmin]'] - hydrocat['cluster_xpix'])**2 + \
                            (hydrocat['peak_ypix'] - hydrocat['cluster_ypix'])**2)
 
-    plotcdf(hydro_offset, ax, label='Hydro Sims', linewidth=2, color=pp.colors[0])
+    plotcdf(hydro_offset, ax, label='Hydro Sims', linewidth=3, color=pp.colors[1])
 
     #lensing sz offsets
 
     sz_lensing = 60*astroutils.greatCircleDistance(sptdat['sz_ra'], sptdat['sz_dec'], sptdat['lensing_ra'], sptdat['lensing_dec'])
 
-    plotcdf(sz_lensing, ax, label='SPT13 SZ-Lensing', linewidth=2.5, color=pp.colors[1])
+    plotcdf(sz_lensing, ax, label='SPT13 SZ-Lensing', linewidth=1.5, color=pp.colors[0])
 
     fit_deltas = 0.237*np.random.standard_normal((2, 2000))
     fit_offsets = np.sqrt(fit_deltas[0]**2 + fit_deltas[1]**2)

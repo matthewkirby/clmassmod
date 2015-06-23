@@ -45,7 +45,7 @@ def run(simtype, chaindir, outfile, delta, massbin=0):
     massedges = defineMassEdges(simtype, delta)
         
 
-    halos = dln.loadPDFs(chaindir, simtype, simreader, massedges, massbin)
+    halos = dln.loadPDFs(chaindir, simtype, simreader, delta, massedges, massbin)
 
 
     if len(halos) < 10:

@@ -80,7 +80,7 @@ def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, t
 #######################
 
 
-def loadPDFs(pdfdir, simtype, simreader, massedges=None, massbin=None, delta=200):
+def loadPDFs(pdfdir, simtype, simreader, delta, massedges=None, massbin=None):
 
     mass = 'm%d' % delta
 

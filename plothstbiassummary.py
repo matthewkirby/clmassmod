@@ -6,10 +6,10 @@ import numpy as np
 
 
 
-#data = asciireader.read('hstbiassummary_nocomments')
-data = asciireader.read('hstbiassummary_2040')
 
-def plotOne(center, mc, rs, delta = 500, fig = None):
+#data = asciireader.read('hstbiassummary_2040')
+
+def plotOne(data, center, mc, rs, delta, fig = None):
 
     if fig is None:
         fig = pylab.figure()
@@ -59,6 +59,7 @@ def plotOne(center, mc, rs, delta = 500, fig = None):
 
     interpted_bias = np.zeros_like(redshifts)
     interpted_biaserr = np.zeros_like(redshifts)
+    delta_bias = np.zeros_like(redshifts)
 
     if len(sortedbiases[0]) == len(sortedbiases[1]) and len(redshifts) > 0:
 
@@ -67,6 +68,8 @@ def plotOne(center, mc, rs, delta = 500, fig = None):
             ys = np.array([biasvals[i] for biasvals in sortedbiases])
             yerrs = np.array([biaserrs[i] for biaserrs in sortedbiaserrs])
             ax.plot(xs, ys, 'k:')
+
+            delta_bias[i] = ys[1] - ys[0]
 
             #interp bias
             if redshifts[i] <= simredshifts[0]:
@@ -100,56 +103,62 @@ def plotOne(center, mc, rs, delta = 500, fig = None):
 
     
 
-    return fig, clusters, redshifts, interpted_bias, interpted_biaserr
+    return fig, clusters, redshifts, interpted_bias, interpted_biaserr, delta_bias
         
 ####
 
 
-centers = 'xrayNONE xraySPTHST xrayXVP sztcenter szxvptcenter core%d '.split()
+centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak szlensingpeak'.split()
 mcs = 'c4 duffy'.split()
 rss = 'r5 r16'.split()
-delta = 500
+deltas = [500, 200]
 
 
 def doAll():
 
+    data = asciireader.read('hstbiassummary_nocomments')
+
     figs = []
 
-    with open('hstbiassummary_reduced_2040', 'w') as output:
+    with open('hstbiassummary_reduced', 'w') as output:
 
-        output.write('cluster zcluster rad mc delta center b b_err\n')
+        output.write('cluster zcluster rad mc delta center b b_err b_delta\n')
 
-        for rs in rss:
-            for center in centers:
-                for mc in mcs:
+        for delta in deltas:
 
-                    results = plotOne(center, mc, rs, delta = delta)
-                    fig, clusters, redshifts, interpted_bias, interpted_biaserr = results
-                    ax = pylab.gca()
-                    if rs == 'r5':
-                        ax.set_ylim(0.65, 1.15)
-                    elif rs == 'r16':
-                        ax.set_ylim(0.5, 0.9)
+            for rs in rss:
+                for center in centers:
+                    for mc in mcs:
 
-                    for cluster, redshift, bias, biaserr in zip(clusters, 
-                                                                redshifts, 
-                                                                interpted_bias, 
-                                                                interpted_biaserr):
-                        output.write('%s %1.2f %s %s %d %s %1.4f %1.4f\n' % (cluster,
-                                                                             redshift,
-                                                                             rs,
-                                                                             mc,
-                                                                             delta,
-                                                                             center,
-                                                                             bias,
-                                                                             biaserr))
+                        results = plotOne(data, center, mc, rs, delta = delta)
+                        fig, clusters, redshifts, interpted_bias, interpted_biaserr, delta_bias = results
+                        ax = pylab.gca()
+                        if rs == 'r5':
+                            ax.set_ylim(0.65, 1.15)
+                        elif rs == 'r16':
+                            ax.set_ylim(0.5, 0.9)
+
+                        for cluster, redshift, bias, biaserr, deltabias in zip(clusters, 
+                                                                               redshifts, 
+                                                                               interpted_bias, 
+                                                                               interpted_biaserr,
+                                                                               delta_bias):
+                            output.write('%s %1.2f %s %s %d %s %1.4f %1.4f %1.4f\n' % (cluster,
+                                                                                       redshift,
+                                                                                       rs,
+                                                                                       mc,
+                                                                                       delta,
+                                                                                       center,
+                                                                                       bias,
+                                                                                       biaserr,
+                                                                                       deltabias))
                                                                              
                                                        
 
 
-#                    fig.savefig('hstbiassummary_plots/summary.%s.%s.%s.png' % (rs, center, mc))
+                        fig.savefig('hstbiassummary_plots/summary.%s.%s.%s.%d.png' % (rs, center, mc, delta))
 
-#                    figs.append(fig)
+                        figs.append(fig)
 
     return figs
 
