@@ -10,6 +10,7 @@ import nfwutils
 import astroutils
 import numpy as np
 import astropy.io.ascii as asciireader
+import voigt_tools as vt
 
 ####
 
@@ -42,10 +43,15 @@ def makeXrayPlot():
 
     plotcdf(xray_lensing_offsets, ax, label='SPT13 X-ray-Lensing', linewidth=1.5, color=pp.colors[0])
 
-    fit_deltas_kpc = 0.107*np.random.standard_normal((2, 2000))*1000
-    fit_offsets = np.sqrt(fit_deltas_kpc[0]**2 + fit_deltas_kpc[1]**2)
-    
-    plotcdf(fit_offsets, ax, c='k', linestyle='--', label='Gaussian Model')
+#    fit_deltas_kpc = 0.107*np.random.standard_normal((2, 2000))*1000
+#    fit_offsets = np.sqrt(fit_deltas_kpc[0]**2 + fit_deltas_kpc[1]**2)
+#    
+#    plotcdf(fit_offsets, ax, c='k', linestyle='--', label='Gaussian Model')
+
+    fit_deltas_kpc = vt.voigtSamples(0.048, 0.0565, 10000, limits=(-0.3, 0.3))*1000
+    fit_offsets = np.sqrt(fit_deltas_kpc[:5000]**2 + fit_deltas_kpc[5000:]**2)
+
+    plotcdf(fit_offsets, ax, c='k', linestyle='--', label='Truncated Voigt Model')
 
     ax.set_xlim(1, 1000)
     ax.set_xscale('log')
