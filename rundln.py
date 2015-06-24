@@ -23,6 +23,8 @@ def defineMassEdges(simtype, delta):
             massedges = np.logspace(np.log10(3.5e14), np.log10(1.4e15), 8)
         elif delta == 500:
             massedges = np.logspace(np.log10(3.2e14), np.log10(1.2e15), 5)
+        elif delta == 2500:
+            massedges = np.array([1.6e14, 4e14])
 
     elif simtype == 'mxxlsnap54':
         if delta == 200:
