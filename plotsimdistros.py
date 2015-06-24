@@ -2466,6 +2466,53 @@ def plotHSTSZMiscenteringComp():
 ###############################################################
 
 
+def dumpConfigList():
+
+    centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak szlensingpeak'.split()
+    mcs = 'c4 duffy'.split()
+    rss = 'r5 r16'.split()
+
+    datafile = asciireader.read('sptdat')
+    nametranslator = {}
+    for i in range(len(datafile)):
+        nametranslator[datafile['name'][i]] = datafile['altname'][i]
+
+    clusters = datafile['name']
+
+
+    corefileindex = readtxtfile.readtxtfile('shearprofiles/coresizeindex.list')
+    corelookup = {}
+    for line in corefileindex:
+        corelookup[line[0]] = int(line[1])
+    cores = np.array([corelookup[nametranslator[x]] for x in clusters])
+    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{clustername}'
+
+    with open('hstsummary_all_configs.list', 'w') as output:
+
+        for rs in rss:
+            for center in centers:
+                for mc in mcs:
+                    for curcluster, clustername in enumerate(clusters):
+
+                        curcenter = center
+                        if center == 'core%d':
+                            curcenter = center % cores[curcluster]
+
+
+                        curaltname = nametranslator[clustername]
+                        curconfig = config.format(mc = mc, rs = rs, 
+                                                  curcenter = curcenter, 
+                                                  clustername = curaltname)
+
+                        output.write('{}\n'.format(curconfig))
+
+                
+
+
+
+###############################################################
+
+
 def plotHST_MXXL_BK11_Summary():
 
     bk11_snap_ranges = {124 : {500 : 1e14*np.array([1.5, 6.4]),

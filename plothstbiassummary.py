@@ -114,6 +114,7 @@ rss = 'r5 r16'.split()
 deltas = [500, 200]
 
 
+
 def doAll():
 
     data = asciireader.read('hstbiassummary_nocomments')
