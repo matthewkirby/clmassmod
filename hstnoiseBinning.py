@@ -52,7 +52,7 @@ class hstnoisebins(object):
         self.profileCol = config.profilecol
         self.binwidth = config.binwidth
         self.profilefile = config.profilefile
-        self.clustername = config.clustername
+
 
         profile = readtxtfile.readtxtfile(self.profilefile)
         
