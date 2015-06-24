@@ -17,6 +17,7 @@ import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
 import readtxtfile
+import voigt_tools as vt
 
 
 #######################
@@ -383,6 +384,18 @@ def XrayLensingPeakOffset(sim, config):
 
     return centeroffsetx, centeroffsety
 
+def XrayLensingPeakVoigtOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
+    delta_mpc = vt.voigtSamples(0.048, 0.0565, 2, limits=(-0.3, 0.3))
+    
+    centeroffsetx, centeroffsety = (delta_mpc/dL)*(180./np.pi)*60 #arcmin
+
+    return centeroffsetx, centeroffsety
+
+    
+
 ###
 
     
@@ -415,6 +428,10 @@ def getCenterOffset(sim, config):
 
         centeroffsetx, centeroffsety = XrayLensingPeakOffset(sim, config)
 
+    elif 'xraycentering' in config and config['xraycentering'] == 'voigtlensingpeak':
+
+        centeroffsetx, centeroffsety = XrayLensingPeakVoigtOffset(sim, config)
+    
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
 
         centeroffsetx, centeroffsety = SZTheoryOffset(sim, config)
