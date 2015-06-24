@@ -2,11 +2,20 @@
 
 import glob
 
-sims = 'bk11snap124 mxxlsnap41'.split()
-rss = 'r5 r16'.split()
+##HST
+#sims = 'bk11snap124 mxxlsnap41'.split()
+#rss = 'r5 r16'.split()
+#mcs = 'c4 duffy diemer15'.split()
+#centers = 'xrayNONE core szxvptcenter szlensingpeak xrayXVP xraylensingpeak'.split()
+#deltas = (200, 500, 2500)
+#
+
+##Megacam
+sims = 'bk11snap124 bk11snap141 mxxlsnap41 mxxlsnap54'.split()
+rss = ['r9']
 mcs = 'c4 duffy diemer15'.split()
-centers = 'xrayNONE core szxvptcenter szlensingpeak xrayXVP xraylensingpeak'.split()
-deltas = (200, 500, 2500)
+centers = 'corenone sztcenter szxvptcenter core'.split()
+deltas = (200, 500)
 
 halosprocessed = {}
 for line in open('haloprocessed').readlines():
@@ -46,14 +55,23 @@ for sim in sims:
     for rs in rss:
         for mc in mcs:
             for center in centers:
-                for line in open('shearprofiles/coresizeindex.list').readlines():
-                    cluster, coreindex, coresize = line.split()
+#                for line in open('shearprofiles/coresizeindex.list').readlines():
+#                    cluster, coreindex, coresize = line.split()
+                for line in open('configfiles/megacam_siminput.reduced.list').readlines():
+                    cluster, zcluster, ndensity, beta, core, coreindex = line.split()
+
                     curcenter = center
                     if center == 'core':
                         curcenter = 'core{}'.format(coreindex)
-                    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{cluster}'.format(mc = mc,          
-                                                                                   rs = rs,          
-                                                                                   curcenter = curcenter,  
+
+#                    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{cluster}'.format(mc = mc,          
+#                                                                                   rs = rs,          
+#                                                                                   curcenter = curcenter,  
+#                                                                                   cluster = cluster)
+
+                    config = 'mega-{mc}-{rs}-sigma0.25-{curcenter}-{cluster}'.format(mc = mc,
+                                                                                   rs = rs,
+                                                                                   curcenter = curcenter,
                                                                                    cluster = cluster)
 
                     if config not in cursimlist:
