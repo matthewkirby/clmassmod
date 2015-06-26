@@ -108,7 +108,7 @@ def plotOne(data, center, mc, rs, delta, fig = None):
 ####
 
 
-centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak szlensingpeak'.split()
+centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak xraylensingvoigt szlensingpeak'.split()
 mcs = 'c4 duffy'.split()
 rss = 'r5 r16'.split()
 deltas = [500, 200]
