@@ -2179,40 +2179,46 @@ def plotMegacamRangeCompNoOffset():
 def plotMegacamSZMiscenteringComp():
 
     deltas = [500,200]
-    rss = ['r6', 'r9']
-    mcs = ['c4', 'duffy']
+    rss = ['r9']
+    mcs = ['c4', 'duffy', 'diemer15']
     snaps = [124,141]
 
-    miscenterings = ['corenone', 'sztcenter', 'core%d']
+    miscenterings = ['corenone', 'sztcenter', 'szxvptcenter', 'core%d']
 
     names = ['Perfect Centers',
-             'Approx Miscentering',
+             'Approx Miscentering1',
+             'Approx Miscentering2',
              'Hydro Miscentering']
 
 
 
 
+#    clusters = ['SPT-CLJ0234-5831',
+#               'SPT-CLJ0240-5946',
+#               'SPT-CLJ0254-5857',
+#               'SPT-CLJ0307-6225',
+#               'SPT-CLJ0317-5935',
+#               'SPT-CLJ0346-5438',
+#               'SPT-CLJ0348-4514',
+#               'SPT-CLJ0426-5455',
+#               'SPT-CLJ0509-5342',
+#               'SPT-CLJ0516-5430',
+#               'SPT-CLJ0551-5709',
+#               'SPT-CLJ2022-6324',
+#               'SPT-CLJ2031-5638',
+#               'SPT-CLJ2032-5627',
+#               'SPT-CLJ2136-5726',
+#               'SPT-CLJ2138-6008',
+#               'SPT-CLJ2145-5644',
+#               'SPT-CLJ2332-5358',
+#               'SPT-CLJ2355-5056']
+#
     clusters = ['SPT-CLJ0234-5831',
-               'SPT-CLJ0240-5946',
-               'SPT-CLJ0254-5857',
-               'SPT-CLJ0307-6225',
-               'SPT-CLJ0317-5935',
                'SPT-CLJ0346-5438',
-               'SPT-CLJ0348-4514',
                'SPT-CLJ0426-5455',
-               'SPT-CLJ0509-5342',
-               'SPT-CLJ0516-5430',
-               'SPT-CLJ0551-5709',
-               'SPT-CLJ2022-6324',
-               'SPT-CLJ2031-5638',
                'SPT-CLJ2032-5627',
                'SPT-CLJ2136-5726',
-               'SPT-CLJ2138-6008',
-               'SPT-CLJ2145-5644',
-               'SPT-CLJ2332-5358',
-               'SPT-CLJ2355-5056']
-
-
+               'SPT-CLJ2138-6008']
 
     
     datafile = readtxtfile.readtxtfile('configfiles/megacam_siminput.list')
@@ -2233,7 +2239,8 @@ def plotMegacamSZMiscenteringComp():
                 for snap in snaps:
 
                     biasfile.write('\nm%d %s %s snap%d\n' % (delta, rs, mc, snap))
-                    snapdir = '/users/dapple/euclid1raid1/bk11_lensing/snap%d/intlength400' % snap
+#                    snapdir = '/users/dapple/euclid1raid1/bk11_lensing/snap%d/intlength400' % snap
+                    snapdir = '/vol/euclid1/euclid1_2/dapple/rundlns/bk11snap%d' % snap
                     config = 'mega-%s-%s-sigma0.25' % (mc, rs)    
 
                     meansfig = pylab.figure()
@@ -2244,7 +2251,7 @@ def plotMegacamSZMiscenteringComp():
 
                     for curcenter in range(len(miscenterings)):
 
-                        if curcenter == 2:
+                        if curcenter == 3:
                             chaindirs = ['%s/%s-%s-%s' % (snapdir, config, 
                                                           miscenterings[curcenter] % cores[i],
                                                           clusters[i]) \
@@ -2270,7 +2277,8 @@ def plotMegacamSZMiscenteringComp():
 
                             print chaindir
 
-                            chainfile = '%s/dln_0.%d.chain.0' % (chaindir, delta)
+#                            chainfile = '%s/dln_0.%d.chain.0' % (chaindir, delta)
+                            chainfile = '%s/rundln%d.%d.0.chain.0' % (chaindir, snap, delta)
                             chain = load_chains.loadChains([chainfile], trim=True)
                             print chainfile, len(chain['logmu'])
                             if len(chain['logmu'][0,:]) < 5000:
@@ -2296,7 +2304,7 @@ def plotMegacamSZMiscenteringComp():
 
 
 
-
+                        meansax.set_title('%d %s %s %d' % (delta, rs, mc, snap))
                 #        meansax.set_xscale('log')
                         meansax.set_xlabel('Cluster Redshift', fontsize=16)
                         meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
@@ -2312,7 +2320,7 @@ def plotMegacamSZMiscenteringComp():
                         meansfig.tight_layout()
                         meansfig.savefig('megacam_sim_plots/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.png' % (delta, rs, mc, snap))
 
-
+                        stdax.set_title('%d %s %s %d' % (delta, rs, mc, snap))
                 #        stdax.set_xscale('log')
                         stdax.set_xlabel('Cluster Redshift', fontsize=16)
                         stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
@@ -2526,7 +2534,7 @@ def plotHST_MXXL_BK11_Summary():
     mcs = 'c4 duffy diemer'.split()
 
     
-    centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak szlensingpeak'.split()
+    centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak szlensingpeak xraylensingvoigt'.split()
 
 
     mxxlsnap = 41
