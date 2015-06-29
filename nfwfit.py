@@ -308,7 +308,7 @@ def SZXVPBCGOffset(sim, config):
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
 
-    offset = 60*sz_xvp_bcg_offsets_deg[np.random.randint(0, len(sz_xvp_bcg_offstes_deg), 1)]
+    offset = 60*anglescale*sz_xvp_bcg_offsets_deg[np.random.randint(0, len(sz_xvp_bcg_offsets_deg), 1)]
 
     offset_phi = np.random.uniform(0, 2*np.pi)
 
@@ -319,6 +319,21 @@ def SZXVPBCGOffset(sim, config):
 
 
 ####
+
+def SZAnalytic(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+    anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
+
+    sz_noisescatter = anglescale*np.sqrt(config.szbeam**2 + config.coresize**2)/config.sz_xi
+
+    centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
+
+    return (centeroffsetx, 
+            centeroffsety)
+    
+    
 
 
 wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/wtg_offsets.dat')]
@@ -462,6 +477,15 @@ def getCenterOffset(sim, config):
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'lensingpeak':
         
         centeroffsetx, centeroffsety = SZLensingPeakOffset(sim, config)
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'xvp_szbcg':
+
+        centeroffsetx, centeroffsety = SZXVPBCGOffset(sim, config)
+
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'analytic':
+
+        centeroffsetx, centeroffsety = SZAnalytic(sim, config)
 
         
         
