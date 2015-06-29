@@ -300,6 +300,26 @@ def SZXVPTheoryOffset(sim, config):
 
 ####
 
+sz_xvp_bcg_offsets_deg = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgsz')[:,1]
+
+def SZXVPBCGOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
+    anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
+
+    offset = 60*sz_xvp_bcg_offsets_deg[np.random.randint(0, len(sz_xvp_bcg_offstes_deg), 1)]
+
+    offset_phi = np.random.uniform(0, 2*np.pi)
+
+    newoffsetx = offset*np.cos(offset_phi)
+    newoffsety = offset*np.sin(offset_phi)
+
+    return newoffsetx, newoffsety
+
+
+####
+
 
 wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/wtg_offsets.dat')]
 
