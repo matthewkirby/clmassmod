@@ -82,7 +82,8 @@ def createErrorbars(samples):
 
 #############
 
-c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25)]
+c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25), 
+     (0, .45, .7), (.8, .4, 0), (.8, .6, .7)]
 
 ############
 
@@ -2180,14 +2181,15 @@ def plotMegacamSZMiscenteringComp():
 
     deltas = [500,200]
     rss = ['r9']
-    mcs = ['c4', 'duffy', 'diemer15']
+    mcs = ['duffy', 'diemer15']
     snaps = [124,141]
 
-    miscenterings = ['corenone', 'sztcenter', 'szxvptcenter', 'core%d']
+    miscenterings = ['corenone', 'szxvptcenter', 'szanalytic', 'szxvpbcg', 'core%d', ]
 
     names = ['Perfect Centers',
-             'Approx Miscentering1',
-             'Approx Miscentering2',
+             'XVP Xray Convolved (AM2)',
+             'Song12',
+             'XVP SZ-BCG',
              'Hydro Miscentering']
 
 
@@ -2249,16 +2251,16 @@ def plotMegacamSZMiscenteringComp():
                     stdsfig = pylab.figure()
                     stdax = stdsfig.add_subplot(1,1,1)
 
-                    for curcenter in range(len(miscenterings)):
+                    for curcenteri, curcenter in enumerate(miscenterings):
 
-                        if curcenter == 3:
+                        if curcenter == 'core%d':
                             chaindirs = ['%s/%s-%s-%s' % (snapdir, config, 
-                                                          miscenterings[curcenter] % cores[i],
+                                                          curcenter % cores[i],
                                                           clusters[i]) \
                                          for i in range(len(clusters))]
                         else:
 
-                            chaindirs = ['%s/%s-%s-%s' % (snapdir, config, miscenterings[curcenter], 
+                            chaindirs = ['%s/%s-%s-%s' % (snapdir, config, curcenter, 
                                                           clusters[i]) \
                                          for i in range(len(clusters))]
 
@@ -2296,10 +2298,10 @@ def plotMegacamSZMiscenteringComp():
                         biaserrs = np.array(biaserrs).T
                         stderr = np.array(stderr).T
 
-                        meansax.errorbar(redshifts, biasmean, biaserrs, label=names[curcenter], linestyle='none', c=c[curcenter])
-                        stdax.errorbar(redshifts, stdmean, stderr, label=names[curcenter], linestyle='none', c=c[curcenter])
+                        meansax.errorbar(redshifts, biasmean, biaserrs, label=names[curcenteri], linestyle='none', c=c[curcenteri])
+                        stdax.errorbar(redshifts, stdmean, stderr, label=names[curcenteri], linestyle='none', c=c[curcenteri])
 
-                        biasfile.write('%s %1.3f %1.3f %1.3f %1.3f %1.3f %1.3f\n' % (names[curcenter], np.mean(biasmean), np.std(biasmean), np.mean(biaserrs[0,:]+biaserrs[1,:])/2., np.mean(stdmean), np.std(stdmean), np.mean(stderr[0,:]+stderr[1,:])/2.))
+                        biasfile.write('%s %1.3f %1.3f %1.3f %1.3f %1.3f %1.3f\n' % (names[curcenteri], np.mean(biasmean), np.std(biasmean), np.mean(biaserrs[0,:]+biaserrs[1,:])/2., np.mean(stdmean), np.std(stdmean), np.mean(stderr[0,:]+stderr[1,:])/2.))
 
 
 
@@ -2531,10 +2533,10 @@ def plotHST_MXXL_BK11_Summary():
     
     deltas = [200, 500]
     rss = 'r5 r16'.split()
-    mcs = 'c4 duffy diemer'.split()
+    mcs = 'c4 duffy diemer15'.split()
 
     
-    centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak szlensingpeak xraylensingvoigt'.split()
+    centers = 'xrayNONE xrayXVP xraylensingpeak xraylensingvoigt core%d szlensingpeak szxvpbcg szanalytic'.split()
 
 
     mxxlsnap = 41
