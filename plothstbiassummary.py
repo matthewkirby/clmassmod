@@ -31,6 +31,8 @@ def plotOne(data, center, mc, rs, delta, fig = None):
     redshifts = []
     sortedbiases = []
     sortedbiaserrs = []
+    sortedsigs = []
+    sorted_sigerrs = []
 
     for sim, offset, marker, color in zip(sims, offsets, markers, colors):
         
@@ -47,6 +49,8 @@ def plotOne(data, center, mc, rs, delta, fig = None):
 
         sortedbiases.append(records['b'][redshiftorder])
         sortedbiaserrs.append(records['b_err'][redshiftorder])
+        sortedsigs.append(records['sig'][redshiftorder])
+        sorted_sigerrs.append(records['sig_err'][redshiftorder])
 
         ax.errorbar(records['zcluster'][redshiftorder] + offset, 
                     records['b'][redshiftorder],
@@ -61,6 +65,10 @@ def plotOne(data, center, mc, rs, delta, fig = None):
     interpted_biaserr = np.zeros_like(redshifts)
     delta_bias = np.zeros_like(redshifts)
 
+    interpted_sig = np.zeros_like(redshifts)
+    interpted_sigerr = np.zeros_like(redshifts)
+    delta_sig = np.zeros_like(redshifts)
+
     if len(sortedbiases[0]) == len(sortedbiases[1]) and len(redshifts) > 0:
 
         for i in range(len(redshifts)):
@@ -68,21 +76,33 @@ def plotOne(data, center, mc, rs, delta, fig = None):
             ys = np.array([biasvals[i] for biasvals in sortedbiases])
             yerrs = np.array([biaserrs[i] for biaserrs in sortedbiaserrs])
             ax.plot(xs, ys, 'k:')
+            ysigs = np.array([sigvals[i] for sigvals in sortedsigs])
+            ysigerrs = np.array([sigerrvals[i] for sigerrvals in sorted_sigerrs])
 
             delta_bias[i] = ys[1] - ys[0]
+            delta_sig[i] = ysigs[1] - ysigs[0]
 
             #interp bias
             if redshifts[i] <= simredshifts[0]:
                 interpted_bias[i] = ys[0]
                 interpted_biaserr[i] = yerrs[0]
+                interpted_sig[i] = ysigs[0]
+                interpted_sigerr = ysigerrs[0]
             elif redshifts[i] >= simredshifts[1]:
                 interpted_bias[i] = ys[1]
                 interpted_biaserr[i] = yerrs[1]
+                interpted_sig[i] = ysigs[1]
+                interpted_sigerr[i] = ysigerrs[1]
             else:
                 m = (ys[1] - ys[0])/(simredshifts[1] - simredshifts[0])
                 interpted_bias[i] = m*(redshifts[i] - simredshifts[0]) + ys[0]
                 interpted_biaserr[i] = np.sqrt(((xs[1] - redshifts[i])*yerrs[0])**2 + \
                                                ((redshifts[i] - xs[0])*yerrs[1])**2)/(xs[1] - xs[0])
+                sigm = (ysigs[1] - ysigs[0])/(simredshifts[1] - simredshifts[0])
+                interpted_sig[i] = sigm*(redshifts[i] - simredshifts[0]) + ysigs[0]
+                interpted_sigerr[i] = np.sqrt(((xs[1] - redshifts[i])*ysigerrs[0])**2 + \
+                                               ((redshifts[i] - xs[0])*ysigerrs[1])**2)/(xs[1] - xs[0])
+                
                 
 
             
@@ -103,13 +123,20 @@ def plotOne(data, center, mc, rs, delta, fig = None):
 
     
 
-    return fig, clusters, redshifts, interpted_bias, interpted_biaserr, delta_bias
+    return fig, dict(cluster = clusters, 
+                     redshift = redshifts, 
+                     bias = interpted_bias, 
+                     biaserr = interpted_biaserr, 
+                     deltabias = delta_bias, 
+                     sig = interpted_sig,
+                     sigerr = interpted_sigerr,
+                     deltasig = delta_sig)
         
 ####
 
 
-centers = 'xrayNONE xrayXVP szxvptcenter core%d xraylensingpeak xraylensingvoigt szlensingpeak'.split()
-mcs = 'c4 duffy'.split()
+centers = 'xrayNONE xrayXVP xraylensingpeak xraylensingvoigt core%d szlensingpeak szxvpbcg szanalytic'.split()
+mcs = 'c4 duffy diemer15'.split()
 rss = 'r5 r16'.split()
 deltas = [500, 200]
 
@@ -117,13 +144,16 @@ deltas = [500, 200]
 
 def doAll():
 
+    outputheader = 'cluster zcluster rad mc delta center b b_err b_delta sig sig_err sig_delta\n'
+    outputtemplate = '{cluster} {redshift:.2f} {rs} {mc} {delta:d} {center} {bias:.4f} {biaserr:.4f} {deltabias:.4f} {sig:.4f} {sigerr:.4f} {deltasig:.4f}\n'
+
     data = asciireader.read('hstbiassummary_nocomments')
 
     figs = []
 
     with open('hstbiassummary_reduced', 'w') as output:
 
-        output.write('cluster zcluster rad mc delta center b b_err b_delta\n')
+        output.write(outputheader)
 
         for delta in deltas:
 
@@ -131,29 +161,25 @@ def doAll():
                 for center in centers:
                     for mc in mcs:
 
-                        results = plotOne(data, center, mc, rs, delta = delta)
-                        fig, clusters, redshifts, interpted_bias, interpted_biaserr, delta_bias = results
-                        ax = pylab.gca()
+                        fig, results = plotOne(data, center, mc, rs, delta = delta)
+
+                        ax = fig.gca()
                         if rs == 'r5':
                             ax.set_ylim(0.65, 1.15)
                         elif rs == 'r16':
                             ax.set_ylim(0.5, 0.9)
 
-                        for cluster, redshift, bias, biaserr, deltabias in zip(clusters, 
-                                                                               redshifts, 
-                                                                               interpted_bias, 
-                                                                               interpted_biaserr,
-                                                                               delta_bias):
-                            output.write('%s %1.2f %s %s %d %s %1.4f %1.4f %1.4f\n' % (cluster,
-                                                                                       redshift,
-                                                                                       rs,
-                                                                                       mc,
-                                                                                       delta,
-                                                                                       center,
-                                                                                       bias,
-                                                                                       biaserr,
-                                                                                       deltabias))
-                                                                             
+                        for clusteri in range(len(results['cluster'])):
+                            
+                            formatdict = dict(rs = rs,
+                                              mc = mc,
+                                              center = center,
+                                              delta = delta)
+                            for key in results:
+                                formatdict[key] = results[key][clusteri]
+
+                                              
+                            output.write(outputtemplate.format(**formatdict))
                                                        
 
 
