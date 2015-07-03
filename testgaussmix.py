@@ -1,5 +1,6 @@
 import numpy as np
-#import deconvolvedlognorm as dln
+import deconvolvedlognorm as dln
+import pymc
 
 #############
 
@@ -42,9 +43,25 @@ def runTest():
 
     halos = createData()
 
-    parts = dln.buildGaussMixture1DModel(halos, 3)
+    success = False
+    for i in range(20):
 
-    dln.sample(parts, 'testgaussmix', 100, singlecore=True)
+        try:
+            parts = dln.buildGaussMixture1DModel(halos, 3)
+
+            dln.sample(parts, 'testgaussmix', 100, singlecore=True)
+
+            success = True
+            break
+
+        except pymc.ZeroProbability:
+            pass
+
+    if success is True:
+        print 'SUCESS'
+    else:
+        print 'FAIL'
+
 
 
 if __name__ == '__main__':

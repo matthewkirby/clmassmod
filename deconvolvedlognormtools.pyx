@@ -295,7 +295,7 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
 
     #normalization
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] norms = np.zeros(ngauss)
-    for j from nguass > j >= 0:
+    for j from ngauss > j >= 0:
         norms[j] = 1./(sqrt2pi*sqrt(tau2[j]))
     
     #exponentials
