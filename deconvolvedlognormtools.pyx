@@ -271,3 +271,58 @@ def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
     return sumlogprob
 
         
+###########
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def pdfGaussMix1D(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
+                  np.ndarray[np.double_t, ndim=1, mode='c'] deltamasses,
+                  np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
+                  np.ndarray[np.double_t, ndim=2, mode='c'] pdfs,
+                  np.ndarray[np.double_t, ndim=1, mode='c'] pis,
+                  np.ndarray[np.double_t, ndim=1, mode='c'] mus,
+                  np.ndarray[np.double_t, ndim=1, mode='c'] tau2):
+                  
+
+
+    cdef Py_ssize_t i, j, nclusters, ngauss, nmasses
+    nclusters = pdfs.shape[0]
+    ngauss = pis.shape[0]
+    nmasses = deltamasses.shape[0]
+
+    ### build intrinsic pdf
+
+    #normalization
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] norms = np.zeros(ngauss)
+    for j from nguass > j >= 0:
+        norms[j] = 1./(sqrt2pi*sqrt(tau2[j]))
+    
+    #exponentials
+    cdef np.ndarray[np.double_t, ndim=1, mode='c'] intrinsicpdf = np.zeros(nmasses)
+    cdef double deltamass_mu2, gausseval
+    for i from nmasses > i >= 0:
+        for j from ngauss > j >= 0:
+            deltamass_mu2 = (deltamasses[i] - mus[j])**2
+            gausseval = pis[j]*exp(-0.5*deltamass_mu2/tau2[j])*norms[j]
+            intrinsicpdf[i] = intrinsicpdf[i] + gausseval
+            
+            
+    ### convolve with pdfs
+
+    cdef double sumlogprob = 0.
+    cdef double prob = 0.
+    
+
+    for i from nclusters > i >= 0:
+        
+        prob = 0.
+        for j from nmasses > j >= 0:
+            
+            prob = prob + pdfs[i,j]*intrinsicpdf[j]*deltamasses[j]
+        
+
+        sumlogprob += log(prob)
+
+    return sumlogprob
+
