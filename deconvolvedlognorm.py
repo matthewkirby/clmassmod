@@ -285,7 +285,7 @@ def buildGaussMixture1DModel(halos, ngauss):
              delta_mls = delta_mls, pdfs = pdfs,
              pis = pis,
              xmus = xmus,
-             xvars = xvars)
+             xvars = xvars):
 
 
         return dlntools.pdfGaussMix1D(ml_ints = ml_ints,
