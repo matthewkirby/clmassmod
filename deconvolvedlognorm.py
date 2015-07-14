@@ -217,6 +217,94 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
                 
 #####################
 
+def buildGaussMixture1DModel(halos, ngauss):
+
+    parts = {}
+
+    #### Mixture model priors
+    
+    piprior = pymc.Dirichlet('pi', np.ones(ngauss))
+    parts['piprior'] = piprior
+
+    @pymc.deterministic(trace=False)
+    def pis(piprior = piprior):
+        lastpi = 1. - np.sum(piprior)
+        allpi = np.zeros(ngauss)
+        allpi[:-1] = piprior
+        allpi[-1] = lastpi
+        return allpi
+    parts['pis'] = pis
+
+    @pymc.potential
+    def identifiablepis(pis = pis):
+        isRanked = reduce(lambda x,y: x > y, pis)
+        if isRanked is False:
+            raise pymc.ZeroProbability
+        return 0.
+        
+    
+    mu0 = pymc.Uninformative('mu0', np.random.uniform(-1, 1))
+    parts['mu0'] = mu0
+    w2 = pymc.Uniform('w2', 1e-3, 1e3)
+    parts['w2'] = w2
+
+
+    xvars = pymc.InverseGamma('xvars', 0.5, w2, size=ngauss+1)  #dropping the 1/2 factor on w2, because I don't think it matters
+    parts['xvars'] = xvars
+
+    @pymc.deterministic(trace=False)
+    def tauU2(xvars = xvars):
+        return 1./xvars[-1]
+    parts['tauU2'] = tauU2
+
+    xmus = pymc.Normal('xmus', mu0, tauU2, size = ngauss)
+    parts['xmus'] = xmus
+
+    ### PDF handling
+
+    masses = halos[0]['masses']
+    nmasses = len(masses)
+    deltamasses = masses[1:] - masses[:-1]
+
+
+    nclusters = len(halos)
+
+    delta_mls = np.zeros((nclusters, nmasses))
+    pdfs = np.zeros((nclusters, nmasses))
+
+    for i in range(nclusters):
+
+        delta_mls[i,:] = masses - halos[i]['true_mass']
+        rawpdf = halos[i]['pdf'][masses>=0]
+        pdfs[i,:] = halos[i]['pdf']
+
+    
+
+    @pymc.observed
+    def data(value = 0., ml_ints = masses, deltamasses = deltamasses,
+             delta_mls = delta_mls, pdfs = pdfs,
+             pis = pis,
+             xmus = xmus,
+             xvars = xvars):
+
+
+        return dlntools.pdfGaussMix1D(ml_ints = ml_ints,
+                                      deltamasses = deltamasses,
+                                      delta_mls = delta_mls,
+                                      pdfs = pdfs,
+                                      pis = pis,
+                                      mus = xmus,
+                                      tau2 = xvars[:-1])
+    parts['data'] = data
+
+    return parts
+
+
+
+
+
+#####################
+
 
 def buildPDFModel(halos):
 
