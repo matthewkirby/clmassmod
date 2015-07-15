@@ -31,6 +31,9 @@ def defineMassEdges(simtype, delta):
             massedges = np.logspace(np.log10(1.5e14), np.log10(4e15), 10)
         elif delta == 500:
             massedges = np.logspace(np.log10(7.8e14), np.log10(3e15), 7)
+        elif delta == 2500:
+            massedges = np.array([3.15e14, 1.2e15])
+
 
     return massedges
 

@@ -217,7 +217,7 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
                 
 #####################
 
-def buildGaussMixture1DModel(halos, ngauss):
+def buildGaussMixture1DModel(halos, ngauss, type='additive'):
 
     parts = {}
 
@@ -262,9 +262,13 @@ def buildGaussMixture1DModel(halos, ngauss):
 
     ### PDF handling
 
+    massnorm = 1e15
+
     masses = halos[0]['masses']
     nmasses = len(masses)
-    deltamasses = masses[1:] - masses[:-1]
+
+
+    delta_masses = (masses[1:] - masses[:-1])/massnorm
 
 
     nclusters = len(halos)
@@ -274,23 +278,27 @@ def buildGaussMixture1DModel(halos, ngauss):
 
     for i in range(nclusters):
 
-        delta_mls[i,:] = masses - halos[i]['true_mass']
-        rawpdf = halos[i]['pdf'][masses>=0]
-        pdfs[i,:] = halos[i]['pdf']
+        if type == 'additive':
+            delta_mls[i,:] = (masses - halos[i]['true_mass'])/massnorm
+            pdfs[i,:] = halos[i]['pdf']*massnorm   #preserve unitarity under integration
+        elif type == 'ratio':
+            delta_mls[i,:] = masses / halos[i]['true_mass']
+            pdfs[i,:] = halos[i]['pdf']*halos[i]['true_mass']
 
     
 
     @pymc.observed
-    def data(value = 0., ml_ints = masses, deltamasses = deltamasses,
-             delta_mls = delta_mls, pdfs = pdfs,
+    def data(value = 0., 
+             delta_mls = delta_mls, 
+             delta_masses = delta_masses,
+             pdfs = pdfs,
              pis = pis,
              xmus = xmus,
              xvars = xvars):
 
 
-        return dlntools.pdfGaussMix1D(ml_ints = ml_ints,
-                                      deltamasses = deltamasses,
-                                      delta_mls = delta_mls,
+        return dlntools.pdfGaussMix1D(delta_mls = delta_mls,
+                                      delta_masses = delta_masses,
                                       pdfs = pdfs,
                                       pis = pis,
                                       mus = xmus,
