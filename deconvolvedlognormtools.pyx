@@ -277,7 +277,7 @@ def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
-                  np.ndarray[np.double_t, ndim=1, mode='c'] delta_masses,
+                  np.ndarray[np.double_t, ndim=2, mode='c'] delta_masses,
                   np.ndarray[np.double_t, ndim=2, mode='c'] pdfs,
                   np.ndarray[np.double_t, ndim=1, mode='c'] pis,
                   np.ndarray[np.double_t, ndim=1, mode='c'] mus,
@@ -288,7 +288,7 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
     cdef Py_ssize_t i, j, nclusters, ngauss, nmasses
     nclusters = pdfs.shape[0]
     ngauss = pis.shape[0]
-    nmasses = ml_ints.shape[0]
+    nmasses = delta_mls.shape[1]
 
     ### build intrinsic pdf
 
@@ -310,7 +310,7 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
     ### convolve with pdfs
 
     cdef double sumlogprob = 0.
-    cdef double deltamass_mu2, gausseval, integrand    
+    cdef double deltamass_mu2, gausseval   
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] integrand = np.zeros(nmasses)
 
     for i from nclusters > i >= 0:
@@ -331,7 +331,7 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
         #trapezoid rule
         prob = 0.
         for j from nmasses-1 > j >= 0:
-            prob += delta_masses[j]*(integrand[j+1] + integrand[j])
+            prob += delta_masses[i,j]*(integrand[j+1] + integrand[j])
         prob *= 0.5
 
         sumlogprob += log(prob)

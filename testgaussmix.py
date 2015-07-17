@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import numpy as np
 import deconvolvedlognorm as dln
 import pymc
@@ -49,7 +50,7 @@ def runTest():
         try:
             parts = dln.buildGaussMixture1DModel(halos, 3)
 
-            dln.sample(parts, 'testgaussmix', 100, singlecore=True)
+            dln.sample(parts, '/users/dapple/astro/mxxlsims/testgaussmix3', 100, singlecore=True)
 
             success = True
             break

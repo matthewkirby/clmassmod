@@ -217,39 +217,96 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
                 
 #####################
 
+def evalGaussModel(xs, chain, ngauss, index):
+
+    pis = []
+    mus = []
+    taus = []
+    for i in range(ngauss):
+        mus.append(chain['xmus_{}'.format(i)][index])
+        taus.append(np.exp(chain['logxsigma_{}'.format(i)][index])**2)
+        if i < ngauss - 1:
+            pis.append(chain['piprior_{}'.format(i)][index])
+
+    pis.append(1. - np.sum(np.array(pis)))
+
+    pdf = np.zeros_like(xs)
+    for pi, mu, tau in zip(pis, mus, taus):
+        pdf += pi*np.exp(-0.5*(xs - mu)**2/tau)/np.sqrt(2*np.pi*tau)
+
+    return pdf
+
+###
+
 def buildGaussMixture1DModel(halos, ngauss, type='additive'):
 
     parts = {}
 
+    ### PDF handling
+
+    massnorm = 1e15
+
+    masses = halos[0]['masses']
+    nmasses = len(masses)
+
+
+
+
+
+    nclusters = len(halos)
+    delta_masses = np.zeros((nclusters, nmasses-1))
+    delta_mls = np.zeros((nclusters, nmasses))
+    pdfs = np.zeros((nclusters, nmasses))
+
+    #also need to collect some statistics, to init mixture model
+    pdfmeans = np.zeros(nclusters)
+    pdfwidths = np.zeros(nclusters)
+
+    for i in range(nclusters):
+
+        if type == 'additive':
+            delta_masses[i,:] = (masses[1:] - masses[:-1])/massnorm
+            delta_mls[i,:] = (masses - halos[i]['true_mass'])/massnorm
+            pdfs[i,:] = halos[i]['pdf']*massnorm   #preserve unitarity under integration
+        elif type == 'ratio':
+            delta_masses[i,:] = (masses[1:] - masses[:-1])/halos[i]['true_mass']
+            delta_mls[i,:] = masses / halos[i]['true_mass']
+            pdfs[i,:] = halos[i]['pdf']*halos[i]['true_mass']
+        
+        pdfmeans[i] = scipy.integrate.trapz(delta_mls[i,:]*pdfs[i,:], delta_mls[i,:])
+        pdfwidths[i] = np.sqrt(scipy.integrate.trapz(pdfs[i,:]*(delta_mls[i,:] - pdfmeans[i])**2, delta_mls[i,:]))
+        
+    datacenter = np.mean(pdfmeans)
+    dataspread = np.std(pdfmeans)
+    datatypvar = np.mean(pdfwidths)
+    dataminsamp = np.min(delta_masses)
+
+    print datacenter, dataspread, datatypvar, dataminsamp
+
     #### Mixture model priors
+
     
-    piprior = pymc.Dirichlet('pi', np.ones(ngauss))
+    piprior = pymc.Dirichlet('piprior', np.ones(ngauss))
     parts['piprior'] = piprior
 
-    @pymc.deterministic(trace=False)
-    def pis(piprior = piprior):
-        lastpi = 1. - np.sum(piprior)
-        allpi = np.zeros(ngauss)
-        allpi[:-1] = piprior
-        allpi[-1] = lastpi
-        return allpi
-    parts['pis'] = pis
-
-    @pymc.potential
-    def identifiablepis(pis = pis):
-        isRanked = reduce(lambda x,y: x > y, pis)
-        if isRanked is False:
-            raise pymc.ZeroProbability
-        return 0.
-        
     
-    mu0 = pymc.Uninformative('mu0', np.random.uniform(-1, 1))
+    mu0 = pymc.Uninformative('mu0', datacenter + np.random.uniform(-5*dataspread, 5*dataspread))
     parts['mu0'] = mu0
-    w2 = pymc.Uniform('w2', 1e-3, 1e3)
-    parts['w2'] = w2
 
+# kelly07 xvars prior. 
+#    w2 = pymc.Uniform('w2', 0.1/dataspread**2., 100*max(1./dataspread**2, 1./datatypvar**2))
+#    print w2.parents
+#    parts['w2'] = w2
+#
+#
+#    xvars = pymc.InverseGamma('xvars', 0.5, 0.5*w2, size=ngauss+1)  #dropping the 1/2 factor on w2, because I don't think it matters
 
-    xvars = pymc.InverseGamma('xvars', 0.5, w2, size=ngauss+1)  #dropping the 1/2 factor on w2, because I don't think it matters
+    logxsigma = pymc.Uniform('logxsigma', np.log(2*dataminsamp), np.log(5*dataspread), size = ngauss+1)
+    parts['logxsigma'] = logxsigma
+
+    @pymc.deterministic(trace=False)
+    def xvars(logxsigma = logxsigma):
+        return np.exp(logxsigma)**2
     parts['xvars'] = xvars
 
     @pymc.deterministic(trace=False)
@@ -260,30 +317,6 @@ def buildGaussMixture1DModel(halos, ngauss, type='additive'):
     xmus = pymc.Normal('xmus', mu0, tauU2, size = ngauss)
     parts['xmus'] = xmus
 
-    ### PDF handling
-
-    massnorm = 1e15
-
-    masses = halos[0]['masses']
-    nmasses = len(masses)
-
-
-    delta_masses = (masses[1:] - masses[:-1])/massnorm
-
-
-    nclusters = len(halos)
-
-    delta_mls = np.zeros((nclusters, nmasses))
-    pdfs = np.zeros((nclusters, nmasses))
-
-    for i in range(nclusters):
-
-        if type == 'additive':
-            delta_mls[i,:] = (masses - halos[i]['true_mass'])/massnorm
-            pdfs[i,:] = halos[i]['pdf']*massnorm   #preserve unitarity under integration
-        elif type == 'ratio':
-            delta_mls[i,:] = masses / halos[i]['true_mass']
-            pdfs[i,:] = halos[i]['pdf']*halos[i]['true_mass']
 
     
 
@@ -292,9 +325,20 @@ def buildGaussMixture1DModel(halos, ngauss, type='additive'):
              delta_mls = delta_mls, 
              delta_masses = delta_masses,
              pdfs = pdfs,
-             pis = pis,
+             piprior = piprior,
              xmus = xmus,
              xvars = xvars):
+
+        #complete pi
+        pis = pymc.extend_dirichlet(piprior)
+
+#        print pis
+
+
+        #enforce identiability
+        for i in range(pis.shape[0]-1):
+            if (pis[i] < pis[i+1:]).any():
+                raise pymc.ZeroProbability
 
 
         return dlntools.pdfGaussMix1D(delta_mls = delta_mls,
