@@ -971,6 +971,9 @@ class NFWFitter(object):
 
     def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 6e15, 1e13), deltas = [200, 500, 2500]):
 
+        if 'scanpdf_minmass' in config:
+            masses = np.arange(config.scanpdf_minmass, config.scanpdf_maxmass, config.scanpdf_massstep)
+
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
 
@@ -1008,7 +1011,7 @@ class NFWFitter(object):
                                                                    mass / self.model.massScale))
 
 
-            pdf = np.exp(-0.5*chisqs)
+            pdf = np.exp(-0.5*(chisqs - np.min(chisqs)))
             pdf = pdf/scipy.integrate.trapz(pdf, masses)
             pdfs[delta] = pdf
         return (masses, pdfs)
