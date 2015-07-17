@@ -969,7 +969,7 @@ class NFWFitter(object):
 
     #######
 
-    def scanPDF(self, catalog, config, masses = np.arange(-5e12, 6e15, 1e13), deltas = [200, 500, 2500]):
+    def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 6e15, 1e13), deltas = [200, 500, 2500]):
 
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
