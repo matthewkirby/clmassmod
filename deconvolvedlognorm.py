@@ -335,11 +335,11 @@ def buildGaussMixture1DModel(halos, ngauss, type='additive'):
 #        print pis
 
 
-        #enforce identiability
-        for i in range(pis.shape[0]-1):
-            if (pis[i] < pis[i+1:]).any():
-                raise pymc.ZeroProbability
-
+#        #enforce identiability by ranking means
+#        for i in range(xmus.shape[0]-1):
+#            if (xmus[i] >= xmus[i+1:]).any():
+#                raise pymc.ZeroProbability
+#
 
         return dlntools.pdfGaussMix1D(delta_mls = delta_mls,
                                       delta_masses = delta_masses,
@@ -372,7 +372,7 @@ def buildPDFModel(halos):
     parts['sigma'] = sigma
 
     masses = halos[0]['masses']
-    posmasses = masses[masses >= 0]
+    posmasses = masses[masses > 0]
     nmasses = len(posmasses)
     deltamasses = posmasses[1:] - posmasses[:-1]
 
@@ -384,8 +384,8 @@ def buildPDFModel(halos):
 
     for i in range(nclusters):
 
-        delta_logmls[i,1:] = np.log(posmasses[1:]) - np.log(halos[i]['true_mass'])
-        rawpdf = halos[i]['pdf'][masses>=0]
+        delta_logmls[i,:] = np.log(posmasses) - np.log(halos[i]['true_mass'])
+        rawpdf = halos[i]['pdf'][masses>0]
         pdfs[i,:] = rawpdf / scipy.integrate.trapz(rawpdf, posmasses)
 
     

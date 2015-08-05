@@ -97,6 +97,9 @@ def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
                 np.ndarray[np.double_t, ndim=1, mode='c'] pdf,
                 double logmu, 
                 double sigma):
+    ### assumes that ml_ints = 0 is not included
+    ### but that there is an implicit ml_ints = 0 calculation.
+    ### deltamasses should be one less in length than ml_ints
 
     cdef Py_ssize_t i, nsamples
     nsamples = ml_ints.shape[0]
@@ -110,7 +113,9 @@ def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
 
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] lognormpart = np.zeros(nsamples)
 
-    #first term assumed mass is 0 -> 0 prob
+    lognormpart[0] = exp((delta_logmls[0]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[0])
+    thesum += 0.5*ml_ints[0]*lognormpart[0]*pdf[0]  #ml_ints[0] is deltamasses[-1]; integrand @ ml=0 is 0
+
     for i from 1 <= i < nsamples:
 
         lognormpart[i] = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
