@@ -651,12 +651,12 @@ class NFW_Model(object):
             self.m200_low = 1e10
             self.m200_high = 1e17
         else:
-            self.m200_low = -1e18
-            self.m200_high = 1e18
+            self.m200_low = 0.0
+            self.m200_high = 1e16
 
 
-        self.c200_low = 1.
-        self.c200_high = 20.
+        self.c200_low = 0.
+        self.c200_high = 1000.
 
     def paramLimits(self):
 
