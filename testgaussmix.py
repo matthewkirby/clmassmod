@@ -1,6 +1,8 @@
+#!/usr/bin/env python
 import numpy as np
 import deconvolvedlognorm as dln
 import pymc
+import cPickle
 
 #############
 
@@ -37,19 +39,44 @@ def createData(datasig = .15):
     
 
     return halos
+
+def createLogNormData(datasig = .1):
+
+    truth=8e14
+
+    truevals = np.exp(np.log(truth) + 0.2*np.random.standard_normal(size=500))
+
+    masses = np.arange(1e12, 5e15, 2e12)
+
+    sig = datasig*1e15
+
+    statvals = truevals + sig*np.random.standard_normal(len(truevals))
+
+    statval_grid, mass_grid = np.meshgrid(statvals, masses, indexing='ij')
+    
+    probs = np.exp(-0.5*((mass_grid - statval_grid)/sig)**2)/(np.sqrt(2*np.pi)*sig)
+
+    
+    halos = [dict(id = i,
+                  true_mass = truth,
+                  masses = masses,
+                  pdf = probs[i,:]) for i in range(len(truevals))]
+
+    
+
+    return halos
     
 
 def runTest():
 
-    halos = createData()
+#    halos = createLogNormData()
+    halos = cPickle.load(open('testmix_recoverlognorm.dat', 'rb'))
 
     success = False
     for i in range(20):
 
         try:
-            parts = dln.buildGaussMixture1DModel(halos, 3)
-
-            dln.sample(parts, 'testgaussmix', 100, singlecore=True)
+            parts = dln.buildGaussMixture1DModel(halos, 5)
 
             success = True
             break
@@ -61,6 +88,8 @@ def runTest():
         print 'SUCESS'
     else:
         print 'FAIL'
+
+    dln.sample(parts, '/users/dapple/astro/mxxlsims/testmix_recoverlognorm', 100000, singlecore=False)
 
 
 

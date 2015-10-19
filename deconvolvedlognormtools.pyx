@@ -15,6 +15,8 @@ import numpy as np
 cimport numpy as np
 cimport cython
 
+import scipy.stats
+
 
 cdef extern from "math.h":
     double exp(double)
@@ -97,6 +99,9 @@ def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
                 np.ndarray[np.double_t, ndim=1, mode='c'] pdf,
                 double logmu, 
                 double sigma):
+    ### assumes that ml_ints = 0 is not included
+    ### but that there is an implicit ml_ints = 0 calculation.
+    ### deltamasses should be one less in length than ml_ints
 
     cdef Py_ssize_t i, nsamples
     nsamples = ml_ints.shape[0]
@@ -110,7 +115,9 @@ def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
 
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] lognormpart = np.zeros(nsamples)
 
-    #first term assumed mass is 0 -> 0 prob
+    lognormpart[0] = exp((delta_logmls[0]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[0])
+    thesum += 0.5*ml_ints[0]*lognormpart[0]*pdf[0]  #ml_ints[0] is deltamasses[-1]; integrand @ ml=0 is 0
+
     for i from 1 <= i < nsamples:
 
         lognormpart[i] = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
@@ -277,7 +284,7 @@ def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
-                  np.ndarray[np.double_t, ndim=1, mode='c'] delta_masses,
+                  np.ndarray[np.double_t, ndim=2, mode='c'] delta_masses,
                   np.ndarray[np.double_t, ndim=2, mode='c'] pdfs,
                   np.ndarray[np.double_t, ndim=1, mode='c'] pis,
                   np.ndarray[np.double_t, ndim=1, mode='c'] mus,
@@ -288,14 +295,22 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
     cdef Py_ssize_t i, j, nclusters, ngauss, nmasses
     nclusters = pdfs.shape[0]
     ngauss = pis.shape[0]
-    nmasses = ml_ints.shape[0]
+    nmasses = delta_mls.shape[1]
 
     ### build intrinsic pdf
 
     #normalization
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] norms = np.zeros(ngauss)
+    cdef double zeroboundrenorm
+    cdef double tau
     for j from ngauss > j >= 0:
-        norms[j] = 1./(sqrt2pi*sqrt(tau2[j]))
+        tau = sqrt(tau2[j])
+        zeroboundrenorm = 1. - scipy.stats.norm.cdf(-mus[j]/tau)
+        if zeroboundrenorm < 1e-4:  #avoid divide by 0 by making it zero probability
+            return -np.inf
+        norms[j] = 1./(zeroboundrenorm*sqrt2pi*tau)   #truncate at 0, boost normalization
+
+
     
 #    #exponentials
 #    cdef np.ndarray[np.double_t, ndim=1, mode='c'] intrinsicpdf = np.zeros(nmasses)
@@ -310,7 +325,7 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
     ### convolve with pdfs
 
     cdef double sumlogprob = 0.
-    cdef double deltamass_mu2, gausseval, integrand    
+    cdef double deltamass_mu2, gausseval   
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] integrand = np.zeros(nmasses)
 
     for i from nclusters > i >= 0:
@@ -331,7 +346,7 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
         #trapezoid rule
         prob = 0.
         for j from nmasses-1 > j >= 0:
-            prob += delta_masses[j]*(integrand[j+1] + integrand[j])
+            prob += delta_masses[i,j]*(integrand[j+1] + integrand[j])
         prob *= 0.5
 
         sumlogprob += log(prob)
