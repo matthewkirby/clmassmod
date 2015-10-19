@@ -2792,14 +2792,14 @@ def plotWTG_MXXL_BK11_Summary():
 
     
 #    deltas = [200, 500, 2500]
-    deltas = [2500]
+    deltas = [2500, 500]
 #    rss = 'r6 r7 r9 r10 r17 r18'.split()
-rss = ['r9', 'r10', 'r17']
+    rss = ['r10']
 #    mcs = 'c4 diemer15'.split()
-    mcs = ['c4', 'diemer15']
+    mcs = ['c4']
     
-#    centers = 'xrayNONE xrayWTG'.split()
-    centers = ['xrayNONE']
+    centers = 'xrayNONE xrayWTG'.split()
+
 
 #    noiselevels='n2_4 n3_4 n5_5'.split()
     noiselevels=['n2_4']

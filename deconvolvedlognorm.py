@@ -217,14 +217,18 @@ def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masse
                 
 #####################
 
+#####################
+
 def evalGaussModel(xs, chain, ngauss, index):
+
+    assert((xs >= 0).all())
 
     pis = []
     mus = []
     taus = []
     for i in range(ngauss):
         mus.append(chain['xmus_{}'.format(i)][index])
-        taus.append(np.exp(chain['logxsigma_{}'.format(i)][index])**2)
+        taus.append(np.exp(chain['logxsigma_{}'.format(i)][index]))
         if i < ngauss - 1:
             pis.append(chain['piprior_{}'.format(i)][index])
 
@@ -232,13 +236,14 @@ def evalGaussModel(xs, chain, ngauss, index):
 
     pdf = np.zeros_like(xs)
     for pi, mu, tau in zip(pis, mus, taus):
-        pdf += pi*np.exp(-0.5*(xs - mu)**2/tau)/np.sqrt(2*np.pi*tau)
+        zerobound = -mu/tau
+        pdf += pi*np.exp(-0.5*(xs - mu)**2/tau**2)/((np.sqrt(2*np.pi)*tau)*(1. - scipy.stats.norm.cdf(zerobound)))
 
     return pdf
 
 ###
 
-def buildGaussMixture1DModel(halos, ngauss, type='additive'):
+def buildGaussMixture1DModel(halos, ngauss, modeltype='ratio'):
 
     parts = {}
 
@@ -264,11 +269,11 @@ def buildGaussMixture1DModel(halos, ngauss, type='additive'):
 
     for i in range(nclusters):
 
-        if type == 'additive':
+        if modeltype == 'additive':
             delta_masses[i,:] = (masses[1:] - masses[:-1])/massnorm
             delta_mls[i,:] = (masses - halos[i]['true_mass'])/massnorm
             pdfs[i,:] = halos[i]['pdf']*massnorm   #preserve unitarity under integration
-        elif type == 'ratio':
+        elif modeltype == 'ratio':
             delta_masses[i,:] = (masses[1:] - masses[:-1])/halos[i]['true_mass']
             delta_mls[i,:] = masses / halos[i]['true_mass']
             pdfs[i,:] = halos[i]['pdf']*halos[i]['true_mass']
@@ -588,7 +593,7 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
     options.nsamples = samples
     options.adapt_every = adaptevery
     options.adapt_after = adaptafter
-    options.restore=False
+    options.restore=True
 
     manager = varcontainer.VarContainer()
     manager.options = options

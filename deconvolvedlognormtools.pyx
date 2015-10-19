@@ -15,6 +15,8 @@ import numpy as np
 cimport numpy as np
 cimport cython
 
+import scipy.stats
+
 
 cdef extern from "math.h":
     double exp(double)
@@ -299,8 +301,16 @@ def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,
 
     #normalization
     cdef np.ndarray[np.double_t, ndim=1, mode='c'] norms = np.zeros(ngauss)
+    cdef double zeroboundrenorm
+    cdef double tau
     for j from ngauss > j >= 0:
-        norms[j] = 1./(sqrt2pi*sqrt(tau2[j]))
+        tau = sqrt(tau2[j])
+        zeroboundrenorm = 1. - scipy.stats.norm.cdf(-mus[j]/tau)
+        if zeroboundrenorm < 1e-4:  #avoid divide by 0 by making it zero probability
+            return -np.inf
+        norms[j] = 1./(zeroboundrenorm*sqrt2pi*tau)   #truncate at 0, boost normalization
+
+
     
 #    #exponentials
 #    cdef np.ndarray[np.double_t, ndim=1, mode='c'] intrinsicpdf = np.zeros(nmasses)
