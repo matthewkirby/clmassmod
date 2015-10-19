@@ -969,6 +969,8 @@ class NFWFitter(object):
 
     #######
 
+    class BadPDFException(Exception): pass
+
     def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 6e15, 1e13), deltas = [200, 500, 2500]):
 
         if 'scanpdf_minmass' in config:
@@ -1014,6 +1016,10 @@ class NFWFitter(object):
             pdf = np.exp(-0.5*(chisqs - np.min(chisqs)))
             pdf = pdf/scipy.integrate.trapz(pdf, masses)
             pdfs[delta] = pdf
+
+            if np.any(np.logical_not(np.isfinite(pdf))):
+                raise BadPDFException
+
         return (masses, pdfs)
 
     #######
