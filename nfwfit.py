@@ -655,8 +655,8 @@ class NFW_Model(object):
             self.m200_high = 1e18
 
 
-        self.c200_low = 1.1
-        self.c200_high = 19.9
+        self.c200_low = 1.
+        self.c200_high = 20.
 
     def paramLimits(self):
 
@@ -690,7 +690,7 @@ class NFW_Model(object):
         parts = {}
         
         if 'massprior' in self.config and self.config.massprior == 'linear':
-            parts['scaledm200'] = pymc.Uniform('m200', self.m200_low/self.massScale, self.m200_high/self.massScale)
+            parts['scaledm200'] = pymc.Uniform('scaledm200', self.m200_low/self.massScale, self.m200_high/self.massScale)
             
             @pymc.deterministic(trace=True)
             def m200(scaledm200 = parts['scaledm200']):
@@ -930,7 +930,7 @@ class NFWFitter(object):
         options.singlecore = True
         options.adapt_every = 100
         options.adapt_after = 100
-        options.nsamples = 50000
+        options.nsamples = 30000
         if 'nsamples' in self.config:
             options.nsamples = self.config.nsamples
         manager.model = mcmc_model
