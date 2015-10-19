@@ -261,7 +261,8 @@ def shearprofile_like(double m200,
         kappa_inf = np.zeros(nbins)
     else:
 
-        rscale = rscaleConstM(abs(m200), c200,rho_c, 200)
+        rdelta = (3*abs(m200)/(4*200*np.pi*rho_c))**(1./3.)
+        rscale = rdelta / c200
 
         gamma_inf = NFWShear(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
         kappa_inf = NFWKappa(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
