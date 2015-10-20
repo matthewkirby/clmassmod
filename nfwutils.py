@@ -181,11 +181,11 @@ global_cosmology = CosmologySingleton()
 
 ##################################
 
-def deltaC(c):
+def deltaC(c, delta = 200.):
 
     c = float(c)
 
-    return (200./3.)*c**3/(np.log(1+c) - (c/(1+c)))
+    return (delta/3.)*c**3/(np.log(1+c) - (c/(1+c)))
 
 
 ###################################
