@@ -655,8 +655,8 @@ class NFW_Model(object):
             self.m200_high = 1e16
 
 
-        self.c200_low = 0.
-        self.c200_high = 1000.
+        self.c200_low = 0.1
+        self.c200_high = 100.
 
     def paramLimits(self):
 
@@ -758,6 +758,7 @@ class NFW_Model(object):
         if isNegative:
             m200 = np.abs(m200)
 
+        
             
         r_scale = nfwutils.rscaleConstM(m200*self.massScale, c200, self.zcluster, self.overdensity)
     
@@ -914,7 +915,7 @@ class NFWFitter(object):
         r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
 
         mcmc_model = None
-        for i in range(10):
+        for i in range(20):
             try:
                 mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
                 break

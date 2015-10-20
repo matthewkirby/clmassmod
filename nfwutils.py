@@ -325,11 +325,14 @@ def rdeltaConstM(mdelta,z, delta, cosmology = global_cosmology):
 #######################################
 
 
-def rscaleConstM(mdelta, c, z, delta, cosmology = global_cosmology):
+def rscaleConstM(mdelta, c200, z, delta, cosmology = global_cosmology):
 
     rho_c = cosmology.rho_crit(z)
 
     rdelta = (3*mdelta/(4*delta*np.pi*rho_c))**(1./3.)
+
+    if delta == 200.:
+        return rdelta / c200
 
     return rdelta2rs(rdelta, c, delta)
 
