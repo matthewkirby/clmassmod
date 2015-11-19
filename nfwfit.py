@@ -945,9 +945,9 @@ class NFWFitter(object):
             runner.run(manager)
             runner.finalize(manager)
 
-            reducedchain = dict(cdelta = np.hstack(manager.chain['cdelta'][5000::2]),
-                                mdelta = np.hstack(manager.chain['mdelta'][5000::2]),
-                                likelihood = np.hstack(manager.chain['likelihood'][5000::2]))
+            reducedchain = dict(cdelta = np.hstack(manager.chain['cdelta'][5000::2].astype(np.float32)),
+                                mdelta = np.hstack(manager.chain['mdelta'][5000::2].astype(np.float32)),
+                                likelihood = np.hstack(manager.chain['likelihood'][5000::2].astype(np.float32)))
 
             chains[delta] = reducedchain
 
