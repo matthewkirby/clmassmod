@@ -939,7 +939,11 @@ class NFWFitter(object):
         runner.run(manager)
         runner.finalize(manager)
 
-        return manager.chain
+        return dict(cdelta = manager.chain['cdelta'][5000::2],
+                    mdelta = manager.chain['mdelta'][5000::2],
+                    likelihood = manager.chain['likelihood'][5000::2])
+
+
         
 
     ######

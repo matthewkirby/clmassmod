@@ -2193,8 +2193,8 @@ def plotMegacamSZMiscenteringComp():
 #    mcs = ['c4', 'duffy', 'diemer15']
     mcs = ['diemer15']
 
-#    snaps = [124,141]
-    snaps = [124]
+    snaps = [124,141]
+#    snaps = [124]
 
 #    miscenterings = ['corenone', 'szxvptcenter', 'szanalytic', 'szxvpbcg', 'core%d', ]
     miscenterings = ['core%d', 'szanalytic']
@@ -2250,7 +2250,7 @@ def plotMegacamSZMiscenteringComp():
     corelookup = {}
     for line in datafile:
         redshiftlookup[line[0]] = float(line[1])
-        corelookup[line[0]] = int(line[-1])
+        corelookup[line[0]] = int(line[-2])
 
     redshifts = np.array([redshiftlookup[x] for x in clusters])
     cores = np.array([corelookup[x] for x in clusters])
@@ -2566,18 +2566,21 @@ def plotHST_MXXL_BK11_Summary():
                                200 : 1e14*np.array([4, 1.6])}}
 
     
-    deltas = [200, 500]
-    rss = 'r5 r16'.split()
+#    deltas = [200, 500]
+    deltas = [500]
+#    rss = 'r5 r16'.split()
+    rss = ['r5']
     mcs = 'c4 duffy diemer15'.split()
 
     
-    centers = 'xrayNONE xrayXVP xraylensingpeak xraylensingvoigt core%d szlensingpeak szxvpbcg szanalytic'.split()
+#    centers = 'xrayNONE xrayXVP xraylensingpeak xraylensingvoigt core%d szlensingpeak szxvpbcg szanalytic'.split()
+    centers = ['xrayNONE']
 
 
-    mxxlsnap = 41
-    mxxlredshift = 'z=1.0'
-    bk11snap = 124
-    bk11redshift = 'z=0.5'
+    mxxlsnaps = [41, 54]
+    mxxlredshifts = ['z=1.0', 'z=0.25']
+    bk11snaps = [124, 141]
+    bk11redshifts = ['z=0.5', 'z=0.25']
 
     config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{clustername}'
 
@@ -2587,7 +2590,7 @@ def plotHST_MXXL_BK11_Summary():
     for i in range(len(datafile)):
         nametranslator[datafile['name'][i]] = datafile['altname'][i]
 
-    clusters = datafile['name']
+    clusters = ['SPT-CLJ0559-5249']
 
 
     corefileindex = readtxtfile.readtxtfile('shearprofiles/coresizeindex.list')
@@ -2601,7 +2604,7 @@ def plotHST_MXXL_BK11_Summary():
     meansfigs = []
     stdsfigs = []
 
-    with open('hstbiassummary', 'w') as output:
+    with open('hstbiassummary_dummy', 'w') as output:
 
         output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
 
@@ -2653,81 +2656,84 @@ def plotHST_MXXL_BK11_Summary():
 
                             #first bk11
 
-                            chaindir = '/users/dapple/euclid1_2/rundlns/bk11snap%d/%s' % (bk11snap, curconfig)
-                            chainfile = '%s/rundln%d.%d.0.chain.0' % (chaindir, bk11snap, delta)
-                            try:
-                                chain = load_chains.loadChains([chainfile], trim=True)
-                                print chainfile, len(chain['logmu'])
-                                if len(chain['logmu'][0,:]) < 5000:
-                                    print 'Skipping'
-                                    continue
+                            for bk11snap, bk11redshift in zip(bk11snaps, bk11redshifts):
 
-                                mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
-                                sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
+                                chaindir = '/users/dapple/euclid1_2/rundlns/bk11snap%d/%s' % (bk11snap, curconfig)
+                                chainfile = '%s/rundln%d.%d.0.chain.0' % (chaindir, bk11snap, delta)
+                                try:
+                                    chain = load_chains.loadChains([chainfile], trim=True)
+                                    print chainfile, len(chain['logmu'])
+                                    if len(chain['logmu'][0,:]) < 5000:
+                                        print 'Skipping'
+                                        continue
 
-
-
-                                meansax.fill_between(bk11_snap_ranges[bk11snap][delta], 
-                                                     mu-muerr[0], mu+muerr[1], 
-                                                     facecolor=c[0],alpha=0.8)
-                                stdax.fill_between(bk11_snap_ranges[bk11snap][delta], 
-                                                   sig-sigerr[0], sig+sigerr[1], 
-                                                   facecolor=c[0], alpha=0.8)
-
-                                patch = pylab.Rectangle((0, 0), 1, 1, fc=c[0], alpha=0.8, hatch = None)
-
-                                patches.append(patch)
-                                labels.append('BK11 %s' % bk11redshift)
+                                    mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
+                                    sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
 
 
-                                output.write('%s BK11%d %s %f %f %f %f\n' % (clusterinfo, 
-                                                                             bk11snap, prefix, 
-                                                                             mu,np.mean(muerr),
-                                                                             sig, np.mean(sigerr)))
 
-                                makePretty = True
+                                    meansax.fill_between(bk11_snap_ranges[bk11snap][delta], 
+                                                         mu-muerr[0], mu+muerr[1], 
+                                                         facecolor=c[0],alpha=0.8)
+                                    stdax.fill_between(bk11_snap_ranges[bk11snap][delta], 
+                                                       sig-sigerr[0], sig+sigerr[1], 
+                                                       facecolor=c[0], alpha=0.8)
+
+                                    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[0], alpha=0.8, hatch = None)
+
+                                    patches.append(patch)
+                                    labels.append('BK11 %s' % bk11redshift)
 
 
-                            except IOError:
-                                print 'Skipping BK11 %s' % clustername
+                                    output.write('%s BK11%d %s %f %f %f %f\n' % (clusterinfo, 
+                                                                                 bk11snap, prefix, 
+                                                                                 mu,np.mean(muerr),
+                                                                                 sig, np.mean(sigerr)))
+
+                                    makePretty = True
+
+                                    
+                                except IOError:
+                                    print 'Skipping BK11 %s' % clustername
 
 
 
                             #then mxxl
+                            
+                            for mxxlsnap, mxxlredshift in zip(mxxlsnaps, mxxlredshifts):
 
+                                chaindir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/%s' % (mxxlsnap, curconfig)
+                                try:
+                                    patch, summary = precomputedLogNormDistro(chaindir, 
+                                                                              delta,
+                                                                              meansax,
+                                                                              stdax,
+                                                                              colorindex = 2,
+                                                                              biaslabel = False)
 
-                            chaindir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/%s' % (mxxlsnap, curconfig)
-                            try:
-                                patch, summary = precomputedLogNormDistro(chaindir, 
-                                                                          delta,
-                                                                          meansax,
-                                                                          stdax,
-                                                                          colorindex = 2,
-                                                                          biaslabel = False)
-
-                                (avebias, errbias), (avestd, errstd) = summary
-
-
-
-                                output.write('%s MXXL%d %s %f %f %f %f\n' % (clusterinfo,
-                                                                             mxxlsnap, prefix, 
-                                                                             avebias, errbias, 
-                                                                             avestd, errstd))
+                                    (avebias, errbias), (avestd, errstd) = summary
 
 
 
-                                if patch is None:
-                                    print 'Error. Skipped'
-                                    continue
+                                    output.write('%s MXXL%d %s %f %f %f %f\n' % (clusterinfo,
+                                                                                 mxxlsnap, prefix, 
+                                                                                 avebias, errbias, 
+                                                                                 avestd, errstd))
 
 
-                                patches.append(patch)
-                                labels.append('MXXL %s' % mxxlredshift)
 
-                                makePretty = True
+                                    if patch is None:
+                                        print 'Error. Skipped'
+                                        continue
 
-                            except AssertionError:
-                                print 'Skipping MXXL %s' % clustername
+
+                                    patches.append(patch)
+                                    labels.append('MXXL %s' % mxxlredshift)
+
+                                    makePretty = True
+
+                                except AssertionError:
+                                    print 'Skipping MXXL %s' % clustername
 
 
                             if makePretty:
