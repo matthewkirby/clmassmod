@@ -656,7 +656,7 @@ class NFW_Model(object):
 
 
         self.c200_low = 0.1
-        self.c200_high = 100.
+        self.c200_high = 30.
 
     def paramLimits(self):
 
@@ -945,9 +945,9 @@ class NFWFitter(object):
             runner.run(manager)
             runner.finalize(manager)
 
-            reducedchain = dict(cdelta = manager.chain['cdelta'][5000::2],
-                            mdelta = manager.chain['mdelta'][5000::2],
-                        likelihood = manager.chain['likelihood'][5000::2])
+            reducedchain = dict(cdelta = np.hstack(manager.chain['cdelta'][5000::2]),
+                                mdelta = np.hstack(manager.chain['mdelta'][5000::2]),
+                                likelihood = np.hstack(manager.chain['likelihood'][5000::2]))
 
             chains[delta] = reducedchain
 
