@@ -181,11 +181,11 @@ global_cosmology = CosmologySingleton()
 
 ##################################
 
-def deltaC(c):
+def deltaC(c, delta = 200.):
 
     c = float(c)
 
-    return (200./3.)*c**3/(np.log(1+c) - (c/(1+c)))
+    return (delta/3.)*c**3/(np.log(1+c) - (c/(1+c)))
 
 
 ###################################
@@ -325,11 +325,14 @@ def rdeltaConstM(mdelta,z, delta, cosmology = global_cosmology):
 #######################################
 
 
-def rscaleConstM(mdelta, c, z, delta, cosmology = global_cosmology):
+def rscaleConstM(mdelta, c200, z, delta, cosmology = global_cosmology):
 
     rho_c = cosmology.rho_crit(z)
 
     rdelta = (3*mdelta/(4*delta*np.pi*rho_c))**(1./3.)
+
+    if delta == 200.:
+        return rdelta / c200
 
     return rdelta2rs(rdelta, c, delta)
 

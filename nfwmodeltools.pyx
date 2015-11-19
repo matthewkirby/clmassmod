@@ -43,8 +43,8 @@ ctypedef np.double_t DTYPE_T
 # NFW Profile
 ############################
 
-cdef double deltaC(double c):
-    return (200./3.) * c**3 / (log(1+c) - c/(1+c))
+cdef double deltaC(double c, double delta = 200.):
+    return (delta/3.) * c**3 / (log(1+c) - c/(1+c))
 
 ##############
 
@@ -54,9 +54,10 @@ cdef double deltaC(double c):
 def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r, 
               double concentration, 
               double rs,
-              double rho_c_over_sigma_c):
+              double rho_c_over_sigma_c, 
+             double delta = 200.):
     
-    cdef double delta_c = deltaC(concentration)
+    cdef double delta_c = deltaC(concentration, delta = delta)
     cdef double amp = rs*delta_c*rho_c_over_sigma_c
 
     cdef double x,a,b,c
@@ -96,10 +97,11 @@ def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r,
 def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r, 
               double concentration, 
               double rs,
-              double rho_c_over_sigma_c):
+              double rho_c_over_sigma_c,
+             double delta = 200.):
 
     
-    cdef double delta_c = deltaC(concentration)
+    cdef double delta_c = deltaC(concentration, delta = delta)
     cdef double amp = 2*rs*delta_c*rho_c_over_sigma_c
 
     cdef Py_ssize_t i, npos
@@ -138,9 +140,10 @@ def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,
 def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r, 
                      double concentration, 
                      double rs,
-                     double rho_c_over_sigma_c):
+                     double rho_c_over_sigma_c,
+                     double delta = 200.):
 
-    cdef double delta_c = deltaC(concentration)
+    cdef double delta_c = deltaC(concentration, delta = delta)
     cdef double amp = 4*rs*delta_c*rho_c_over_sigma_c
 
     cdef Py_ssize_t i, npos
@@ -181,10 +184,10 @@ def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def rdelta2rs(double rdelta, 
-              double c, 
+              double c200, 
               double delta):
 
-    cdef double delta_c = deltaC(c)
+    cdef double delta_c = deltaC(c200)
     
     # x = r_delta / rs
     def f(x):
@@ -199,6 +202,7 @@ def rdelta2rs(double rdelta,
     return rs
 
 #####################
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -239,15 +243,16 @@ def massInsideR(double rs,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def shearprofile_like(double m200,
-                      double c200,
+def shearprofile_like(double mdelta,
+                      double cdelta,
                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_r_mpc not None,
                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_shear not None,
                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_shearerr not None,
                       np.ndarray[np.double_t, ndim=1, mode='c'] avebeta,
                       np.ndarray[np.double_t, ndim=1, mode='c'] avebeta2,
                       double rho_c,
-                      double rho_c_over_sigma_c):
+                      double rho_c_over_sigma_c,
+                      double massdelta):
 
 
     cdef Py_ssize_t nbins = bin_r_mpc.shape[0]
@@ -256,17 +261,18 @@ def shearprofile_like(double m200,
     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] kappa_inf
     cdef double rscale
 
-    if m200 == 0:
+    if mdelta == 0:
         gamma_inf = np.zeros(nbins)
         kappa_inf = np.zeros(nbins)
     else:
 
-        rscale = rscaleConstM(abs(m200), c200,rho_c, 200)
+        rdelta = (3*abs(mdelta)/(4*massdelta*np.pi*rho_c))**(1./3.)
+        rscale = rdelta / cdelta
 
-        gamma_inf = NFWShear(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
-        kappa_inf = NFWKappa(bin_r_mpc, c200, rscale, rho_c_over_sigma_c)
+        gamma_inf = NFWShear(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)
+        kappa_inf = NFWKappa(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)
 
-    if m200 < 0.:
+    if mdelta < 0.:
         gamma_inf = -gamma_inf
 
 

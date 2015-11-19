@@ -651,12 +651,12 @@ class NFW_Model(object):
             self.m200_low = 1e10
             self.m200_high = 1e17
         else:
-            self.m200_low = -1e18
-            self.m200_high = 1e18
+            self.m200_low = 0.0
+            self.m200_high = 1e16
 
 
-        self.c200_low = 1.
-        self.c200_high = 20.
+        self.c200_low = 0.1
+        self.c200_high = 100.
 
     def paramLimits(self):
 
@@ -683,30 +683,30 @@ class NFW_Model(object):
 
 
 
-    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster):
+    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, delta = 200):
 
         self.setData(beta_s, beta_s2, zcluster)
 
         parts = {}
-        
+
         if 'massprior' in self.config and self.config.massprior == 'linear':
-            parts['scaledm200'] = pymc.Uniform('scaledm200', self.m200_low/self.massScale, self.m200_high/self.massScale)
+            parts['scaledmdelta'] = pymc.Uniform('scaledmdelta', self.m200_low/self.massScale, self.m200_high/self.massScale)
             
             @pymc.deterministic(trace=True)
-            def m200(scaledm200 = parts['scaledm200']):
-                return self.massScale*scaledm200
-            parts['m200'] = m200
+            def mdelta(scaledmdelta = parts['scaledmdelta']):
+                return self.massScale*scaledmdelta
+            parts['mdelta'] = mdelta
 
         else:
-            parts['logM200'] = pymc.Uniform('logM200', np.log(self.m200_low), np.log(self.m200_high))
+            parts['logMdelta'] = pymc.Uniform('logMdelta', np.log(self.m200_low), np.log(self.m200_high))
             
             @pymc.deterministic(trace=True)
-            def m200(logM200 = parts['logM200']):
+            def mdelta(logMdelta = parts['logMdelta']):
 
-                return np.exp(logM200)
-            parts['m200'] = m200
+                return np.exp(logMdelta)
+            parts['mdelta'] = mdelta
 
-        parts['c200'] = pymc.Uniform('c200', self.c200_low, self.c200_high)
+        parts['cdelta'] = pymc.Uniform('cdelta', self.c200_low, self.c200_high)
 
         rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
         rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster) * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
@@ -720,20 +720,21 @@ class NFW_Model(object):
                  beta_s2 = beta_s2,
                  rho_c = rho_c,
                  rho_c_over_sigma_c = rho_c_over_sigma_c,
-                 m200 = parts['m200'],
-                 c200 = parts['c200']):
+                 mdelta = parts['mdelta'],
+                 cdelta = parts['cdelta']):
 
             try:
             
-                logp= tools.shearprofile_like(m200,
-                                              c200,
+                logp= tools.shearprofile_like(mdelta,
+                                              cdelta,
                                               r_mpc,
                                               ghat,
                                               sigma_ghat,
                                               beta_s,
                                               beta_s2,
                                               rho_c,
-                                              rho_c_over_sigma_c)
+                                              rho_c_over_sigma_c,
+                                              delta)
 
                 return logp
 
@@ -758,6 +759,7 @@ class NFW_Model(object):
         if isNegative:
             m200 = np.abs(m200)
 
+        
             
         r_scale = nfwutils.rscaleConstM(m200*self.massScale, c200, self.zcluster, self.overdensity)
     
@@ -909,40 +911,48 @@ class NFWFitter(object):
 
     ######
 
-    def explorePosterior(self, catalog):
+    def explorePosterior(self, catalog, deltas = [200, 500, 2500]):
 
         r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
 
-        mcmc_model = None
-        for i in range(10):
-            try:
-                mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
-                break
-            except pymc.ZeroProbability:
-                pass
-        if mcmc_model is None:
-            raise pymc.ZeroProbability
+        chains = {}
 
-        manager = varcontainer.VarContainer()
-        options = varcontainer.VarContainer()
-        manager.options = options
-        
-        options.singlecore = True
-        options.adapt_every = 100
-        options.adapt_after = 100
-        options.nsamples = 30000
-        if 'nsamples' in self.config:
-            options.nsamples = self.config.nsamples
-        manager.model = mcmc_model
-        
-        runner = pma.MyMCMemRunner()
-        runner.run(manager)
-        runner.finalize(manager)
+        for delta in deltas:
 
-        return dict(cdelta = manager.chain['cdelta'][5000::2],
-                    mdelta = manager.chain['mdelta'][5000::2],
-                    likelihood = manager.chain['likelihood'][5000::2])
+            mcmc_model = None
+            for i in range(20):
+                try:
+                    mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, delta = delta)
+                    break
+                except pymc.ZeroProbability:
+                    pass
+            if mcmc_model is None:
+                raise pymc.ZeroProbability
 
+            manager = varcontainer.VarContainer()
+            options = varcontainer.VarContainer()
+            manager.options = options
+
+            options.singlecore = True
+            options.adapt_every = 100
+            options.adapt_after = 100
+            options.nsamples = 30000
+            if 'nsamples' in self.config:
+                options.nsamples = self.config.nsamples
+            manager.model = mcmc_model
+
+            runner = pma.MyMCMemRunner()
+            runner.run(manager)
+            runner.finalize(manager)
+
+            reducedchain = dict(cdelta = manager.chain['cdelta'][5000::2],
+                            mdelta = manager.chain['mdelta'][5000::2],
+                        likelihood = manager.chain['likelihood'][5000::2])
+
+            chains[delta] = reducedchain
+
+
+        return chains
 
         
 
