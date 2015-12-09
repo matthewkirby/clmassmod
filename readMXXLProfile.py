@@ -28,6 +28,7 @@ class MXXLProfile(object):
         self.parseFile(filename)
         self._massEnclosed = None
         self._overdensitymass = None
+        self._overdensityradius = None
 
     ###
 
