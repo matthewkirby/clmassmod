@@ -26,9 +26,15 @@ class MXXLBinary(object):
             input = open(self.filename, 'rb')
 
             #double lower_bound[2];                          // lower bound of area represented by plane (in this case in comoving Mpc/h)
+            #NOTE: For "mass_map", units of Mpc/h
+            #NOTE: For convergence_map, units of arcsec
+
             self.lower_bound = binaryutils.readArray(input, 'd', (2,))
 
             #double upper_bound[2];                          // upper bound of area represented by plane (in this case in comoving Mpc/h)
+
+            #NOTE: For "mass_map", units of Mpc/h
+            #NOTE: For convergence_map, units of arcsec
             self.upper_bound = binaryutils.readArray(input, 'd', (2,))
 
             #double plane_angle;                             // angle of coordinate axes of plane (should be 0.5 * M_PI)
