@@ -429,6 +429,21 @@ def XrayLensingPeakVoigtOffset(sim, config):
 
     return centeroffsetx, centeroffsety
 
+###
+
+xray_magneticum_distro = asciireader.read('magneticum_offsets.dat')
+
+def XrayMagneticumOffset(sim, config):
+
+    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+
+    delta_kpc = xray_magneticum_distro['xrayoffset'][np.random.randint(0, len(xray_magneticum_distro), 1)]
+    
+    centeroffsetx, centeroffsety = (delta_kpc/(1000*dL))*(180./np.pi)*60 #arcmin
+
+    return centeroffsetx, centeroffsety
+    
+
     
 
 ###
@@ -466,6 +481,10 @@ def getCenterOffset(sim, config):
     elif 'xraycentering' in config and config['xraycentering'] == 'voigtlensingpeak':
 
         centeroffsetx, centeroffsety = XrayLensingPeakVoigtOffset(sim, config)
+
+    elif 'xraycentering' in config and config['xraycentering'] == 'magneticum':
+
+        centeroffsetx, centeroffsety = XrayMagneticumOffset(sim, config)
     
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
 

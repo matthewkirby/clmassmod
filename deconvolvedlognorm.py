@@ -20,67 +20,56 @@ import fitmodel
 class BadPDFException(Exception): pass
 
 
-def loadMCMCChains(chaindir, simtype, simreader, massedges=None, massbin=None, thin=1):
-
-    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
-
-    idpattern = consolidate_fits.idpatterns[simtype]
-
-    answers = cPickle.load(open('{0}_answers.pkl'.format(simtype), 'rb'))
-
-
-        
-    halos = []
-
-    for chainfile in glob.glob('%s/*.out' % chaindir):
-
-        filebase = os.path.basename(chainfile)
-
-        match = idpattern.match(filebase)
-        
-
-        try:
-            haloid = int(match.group(1))
-        except AttributeError as e:
-            print filebase
-            raise e
-        except ValueError:
-            haloid = match.group(1)
-
-        try:
-            truth = answers[haloid]
-        except KeyError:
-            print 'Failure at {0}'.format(output)
-            raise
-
-        if massedges is not None \
-                and massbin is not None \
-                and (truth['m200'] < massedges[massbin] \
-                         or truth['m200'] >= massedges[massbin+1]):
-                continue
-
-
-        with open(chainfile, 'rb') as input:
-            chain = cPickle.load(input)
-
-        m200s = np.array(chain['m200'][200::thin])*nfwutils.global_cosmology.h
-        
-        
-
-
-        halos.append(dict(id = haloid,
-                          true_m200 = truth['m200'],
-                          measured_m200s = m200s))
-
-    print 'Num Halos: ', len(halos)
-                         
-    return halos
-
-
 #######################
 
+def MCMCReader(inputfile, halo, delta, thin=1, cprior = None):
 
-def loadPDFs(pdfdir, simtype, simreader, delta, massedges=None, massbin=None):
+
+    with open(inputfile, 'rb') as input:
+        masschains = cPickle.load(input)
+
+
+    msamples = np.array(masschains[delta]['mdelta'][200::thin])*nfwutils.global_cosmology.h
+
+    if cprior is not None:
+        cfilter = masschains[delta]['cdelta'][200::thin] < cprior
+        msamples = msamples[cfilter]
+
+
+    halo['mass_samples'] = msamples
+    
+    return halo
+
+###
+
+
+
+def PDFReader(pdffile, halo, delta):
+
+    with open(pdffile, 'rb') as input:
+        masses, pdfs = cPickle.load(input)
+
+    if type(pdfs) != dict:
+        if delta != 200:
+            print 'Skipping ', filebase
+            raise BadPDFException(filebase)
+        pdfs = {200:pdfs}  #historical reasons. If it isn't a pdf, it was computed as 200.
+
+    if np.any(np.logical_not(np.isfinite(pdfs[delta]))):
+        raise BadPDFException(filebase)
+
+    halo['masses'] = masses*nfwutils.global_cosmology.h,
+    halo['pdf'] = pdfs[delta]/nfwutils.global_cosmology.h
+
+    return halo
+
+###
+
+
+
+
+def loadPosteriors(pdfdir, simtype, simreader, delta, massedges=None, massbin=None,
+                   reader = MCMCReader, **kwds):
 
     mass = 'm%d' % delta
 
@@ -92,6 +81,8 @@ def loadPDFs(pdfdir, simtype, simreader, delta, massedges=None, massbin=None):
 
         
     halos = []
+
+    
 
     for pdffile in glob.glob('%s/*.out' % pdfdir):
 
@@ -120,25 +111,17 @@ def loadPDFs(pdfdir, simtype, simreader, delta, massedges=None, massbin=None):
                          or truth[mass] >= massedges[massbin+1]):
                 continue
 
+        halo =  dict(id = haloid,
+                     true_mass = truth['m%d' % delta])
+                      
 
-        with open(pdffile, 'rb') as input:
-            masses, pdfs = cPickle.load(input)
-            
-        if type(pdfs) != dict:
-            if delta != 200:
-                print 'Skipping ', filebase
-                continue
-            pdfs = {200:pdfs}  #historical reasons. If it isn't a pdf, it was computed as 200.
+        try:
 
-        if np.any(np.logical_not(np.isfinite(pdfs[delta]))):
-            raise BadPDFException(filebase)
-        
-        
+            halos.append(reader(pdffile, halo, delta, **kwds))
 
-        halos.append(dict(id = haloid,
-                          true_mass = truth['m%d' % delta],
-                          masses = masses*nfwutils.global_cosmology.h,
-                          pdf = pdfs[delta]/nfwutils.global_cosmology.h))
+        except BadPDFException, e:
+            print e
+            continue
 
     print 'Num Halos: ', len(halos)
                          
@@ -419,7 +402,7 @@ def buildPDFModel(halos):
 
 ########################
 
-def buildMCMCModel(halos, maxsamples = 200):
+def buildMCMCModel(halos, maxsamples = 2000):
 
     massnorm = 1e15
 
@@ -439,15 +422,15 @@ def buildMCMCModel(halos, maxsamples = 200):
     delta_logmls = np.zeros((nclusters, maxsamples))
     ngoodsamples = np.zeros(nclusters, dtype=np.int)
     for i in range(nclusters):
-        m200s = halos[i]['measured_m200s']
-        positivem200s = m200s[m200s > 0]
-        navailablesamples = len(positivem200s)
+        mass_samples = halos[i]['mass_samples']
+        positive_samples = mass_samples[mass_samples > 0]
+        navailablesamples = len(positive_samples)
         takesamples = min(navailablesamples, maxsamples)
         if navailablesamples < 25:
             print 'Need more samples: ', halos[i]['id'], navailablesamples
 
-        ml_ints[i,:takesamples] = np.random.permutation(positivem200s)[:takesamples]
-        delta_logmls[i,:takesamples] = np.log(ml_ints[i,:takesamples]) - np.log(halos[i]['true_m200'])
+        ml_ints[i,:takesamples] = np.random.permutation(positive_samples)[:takesamples]
+        delta_logmls[i,:takesamples] = np.log(ml_ints[i,:takesamples]) - np.log(halos[i]['true_mass'])
         ngoodsamples[i] = takesamples
 
     

@@ -41,17 +41,25 @@ def defineMassEdges(simtype, delta):
 
     
 
-def run(simtype, chaindir, outfile, delta, massbin=0):
+def run(simtype, chaindir, outfile, delta, pdftype, massbin=0):
 
     config = nfwfit.readConfiguration('%s/config.sh' % chaindir)
     simreader = nfwfit.buildSimReader(config)
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
     massedges = defineMassEdges(simtype, delta)
+
+    isPDF = False
+    if pdftype == 'pdf':
+        isPDF = True
+        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, massedges, massbin,
+                                   reader = dln.PDFReader)
+    elif pdftype == 'mcmc':
+        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, massedges, massbin,
+                                   reader = dln.MCMCReader,
+                                   cprior = 100.)
         
-
-    halos = dln.loadPDFs(chaindir, simtype, simreader, delta, massedges, massbin)
-
+        
 
     if len(halos) < 10:
         sys.exit(0)
@@ -60,8 +68,12 @@ def run(simtype, chaindir, outfile, delta, massbin=0):
     for i in range(20):
 
         try:
-        
-            parts = dln.buildPDFModel(halos)
+            
+            if isPDF == True:
+                parts = dln.buildPDFModel(halos)
+            else:
+                parts = dln.buildMCMCModel(halos)
+
             success=True
             break
 
@@ -86,13 +98,15 @@ if __name__ == '__main__':
     chaindir=sys.argv[2]
     outfile=sys.argv[3]
     delta=int(sys.argv[4])
-    if len(sys.argv) > 5:
-        massbin=int(sys.argv[5])
+    pdftype=sys.argv[5]
+    if len(sys.argv) > 6:
+        massbin=int(sys.argv[6])
 
     print 'Called with:', dict(simtype=simtype, chaindir=chaindir, 
                                outfile=outfile, delta=delta, 
+                               pdftype = pdftype,
                                massbin=massbin)
 
     
-    run(simtype, chaindir, outfile, delta, massbin)
+    run(simtype, chaindir, outfile, delta, pdftype, massbin)
         
