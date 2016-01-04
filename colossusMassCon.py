@@ -5,8 +5,8 @@
 import numpy as np
 import nfwutils
 import nfwmodeltools as tools
-import colossus.Cosmology as cCosmo
-import colossus.HaloConcentration as chc
+import colossus.cosmology.cosmology as cCosmo
+import colossus.halo.concentration as chc
 
 
 class IterateC200(object):

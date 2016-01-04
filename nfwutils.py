@@ -334,7 +334,7 @@ def rscaleConstM(mdelta, c200, z, delta, cosmology = global_cosmology):
     if delta == 200.:
         return rdelta / c200
 
-    return rdelta2rs(rdelta, c, delta)
+    return rdelta2rs(rdelta, c200, delta)
 
 
 
