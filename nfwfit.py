@@ -379,7 +379,7 @@ def XrayXVPOffset(sim, config):
 
 
 
-    radial_offset_mpc = xvp_offsets_mpc[np.random.randint(0, len(xvp_offsets_mpc), 1)]
+    radial_offset_mpc = xvp_offsets_mpc[np.random.randint(0, len(xvp_offsets_mpc), 1)][0]
     radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
     phi_offset = np.random.uniform(0, 2*np.pi)
     centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
@@ -437,12 +437,18 @@ def XrayMagneticumOffset(sim, config):
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
-    delta_kpc = xray_magneticum_distro['xrayoffset'][np.random.randint(0, len(xray_magneticum_distro), 1)]
+    delta_kpc = xray_magneticum_distro['xrayoffset'][np.random.randint(0, len(xray_magneticum_distro), 1)][0]
+
+    radial_offset_arcmin = (delta_kpc/(1000*dL))*(180./np.pi)*60 #arcmin
+    phi_offset = np.random.uniform(0, 2*np.pi)
+
+    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
+    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
+
     
-    centeroffsetx, centeroffsety = (delta_kpc/(1000*dL))*(180./np.pi)*60 #arcmin
 
     return centeroffsetx, centeroffsety
-    
+
 
     
 
