@@ -431,7 +431,7 @@ def XrayLensingPeakVoigtOffset(sim, config):
 
 ###
 
-xray_magneticum_distro = asciireader.read('magneticum_offsets.dat')
+xray_magneticum_distro = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/magneticum_offsets.dat')
 
 def XrayMagneticumOffset(sim, config):
 

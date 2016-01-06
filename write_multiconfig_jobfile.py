@@ -78,7 +78,6 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_ra
         jobparams = createJobParams(catname,
                                     configfiles,
                                     inputfiles = inputfiles,
-                                    workbase = './',
                                     stripCatExt = False)
         writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, i))
 
@@ -130,7 +129,6 @@ def setupCondor_BK11(configs, jobdir, jobname,
             jobparams = createJobParams(catname,
                                         configfiles,
                                         inputfiles = inputfiles,
-                                        workbase = './',
                                         stripCatExt = True)
             writeJobfile(jobparams, '{0}/{1}.{2}.{3}.job'.format(jobdir, snap, jobname, j))
 
@@ -235,8 +233,6 @@ def createJobParams(catalogname, confignames, inputfiles, outputExt = '.out', wo
     catalogbase = os.path.basename(catalogname)
     if stripCatExt:
         catalogbase, ext = os.path.splitext(catalogbase)
-
-    workdir = None
 
 
     jobparams = dict(inputfiles = inputfiles, outputExt = outputExt, workbase = workbase, 
