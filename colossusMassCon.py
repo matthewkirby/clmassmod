@@ -65,7 +65,7 @@ def matchCosmo():
                                              Ob0 = 0.049,
                                              sigma8 = 0.81,
                                              ns = 0.95,
-                                             storage = False))
+                                             write_storage = False))
 
 
 
