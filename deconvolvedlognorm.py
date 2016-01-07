@@ -58,7 +58,8 @@ def PDFReader(pdffile, halo, delta):
     if np.any(np.logical_not(np.isfinite(pdfs[delta]))):
         raise BadPDFException(filebase)
 
-    halo['masses'] = masses*nfwutils.global_cosmology.h,
+    halo['masses'] = masses*nfwutils.global_cosmology.h
+    
     halo['pdf'] = pdfs[delta]/nfwutils.global_cosmology.h
 
     return halo
