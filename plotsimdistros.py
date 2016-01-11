@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('agg')
+
 import publication_plots as pp
 import pylab
 import numpy as np
@@ -2566,15 +2569,15 @@ def plotHST_MXXL_BK11_Summary():
                                200 : 1e14*np.array([4, 1.6])}}
 
     
-#    deltas = [200, 500]
-    deltas = [500]
-#    rss = 'r5 r16'.split()
-    rss = ['r5']
+    deltas = [200, 500]
+
+    rss = 'r5 r16'.split()
+
     mcs = 'c4 duffy diemer15'.split()
 
     
-#    centers = 'xrayNONE xrayXVP xraylensingpeak xraylensingvoigt core%d szlensingpeak szxvpbcg szanalytic'.split()
-    centers = ['xrayNONE']
+    centers = 'xrayNONE xraymag core%d szanalytic'.split()
+
 
 
     mxxlsnaps = [41, 54]
@@ -2590,7 +2593,7 @@ def plotHST_MXXL_BK11_Summary():
     for i in range(len(datafile)):
         nametranslator[datafile['name'][i]] = datafile['altname'][i]
 
-    clusters = ['SPT-CLJ0559-5249']
+    clusters = datafile['name']
 
 
     corefileindex = readtxtfile.readtxtfile('shearprofiles/coresizeindex.list')
@@ -2604,7 +2607,7 @@ def plotHST_MXXL_BK11_Summary():
     meansfigs = []
     stdsfigs = []
 
-    with open('hstbiassummary_dummy', 'w') as output:
+    with open('hstbiassummary', 'w') as output:
 
         output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
 
@@ -2656,6 +2659,8 @@ def plotHST_MXXL_BK11_Summary():
 
                             #first bk11
 
+                            curcolor = 0
+
                             for bk11snap, bk11redshift in zip(bk11snaps, bk11redshifts):
 
                                 chaindir = '/users/dapple/euclid1_2/rundlns/bk11snap%d/%s' % (bk11snap, curconfig)
@@ -2674,12 +2679,14 @@ def plotHST_MXXL_BK11_Summary():
 
                                     meansax.fill_between(bk11_snap_ranges[bk11snap][delta], 
                                                          mu-muerr[0], mu+muerr[1], 
-                                                         facecolor=c[0],alpha=0.8)
+                                                         facecolor=c[curcolor],alpha=0.8)
                                     stdax.fill_between(bk11_snap_ranges[bk11snap][delta], 
                                                        sig-sigerr[0], sig+sigerr[1], 
-                                                       facecolor=c[0], alpha=0.8)
+                                                       facecolor=c[curcolor], alpha=0.8)
 
-                                    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[0], alpha=0.8, hatch = None)
+                                    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[curcolor], alpha=0.8, hatch = None)
+
+                                    curcolor += 1
 
                                     patches.append(patch)
                                     labels.append('BK11 %s' % bk11redshift)
@@ -2699,6 +2706,8 @@ def plotHST_MXXL_BK11_Summary():
 
 
                             #then mxxl
+
+                            curcolor = 2
                             
                             for mxxlsnap, mxxlredshift in zip(mxxlsnaps, mxxlredshifts):
 
@@ -2708,12 +2717,12 @@ def plotHST_MXXL_BK11_Summary():
                                                                               delta,
                                                                               meansax,
                                                                               stdax,
-                                                                              colorindex = 2,
+                                                                              colorindex = curcolor,
                                                                               biaslabel = False)
 
                                     (avebias, errbias), (avestd, errstd) = summary
 
-
+                                    curcolor += 1
 
                                     output.write('%s MXXL%d %s %f %f %f %f\n' % (clusterinfo,
                                                                                  mxxlsnap, prefix, 
@@ -3000,3 +3009,8 @@ def plotWTG_MXXL_BK11_Summary():
 
 
 ########################
+
+
+if __name__ == '__main__':
+
+    plotHST_MXXL_BK11_Summary()
