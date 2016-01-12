@@ -311,7 +311,6 @@ class Likelihood(object):
 
         if c200 is None:
             c200 = self.model.massconRelation(np.abs(m200*nfwutils.global_cosmology.h), self.zcluster, 200)
-
         return tools.shearprofile_like(m200,
                                        c200,
                                        self.r_mpc,

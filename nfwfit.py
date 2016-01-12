@@ -676,7 +676,7 @@ class NFW_Model(object):
             self.m200_low = 1e10
             self.m200_high = 1e17
         else:
-            self.m200_low = 0.0
+            self.m200_low = -1e16
             self.m200_high = 1e16
 
 
