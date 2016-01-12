@@ -49,7 +49,7 @@ def likelihoodPlots():
 
         beta_s = 0.49 #median of megacam
 
-        g_truth = nfwnoise.createPerfectProfile(true_mass, c_duff, zcluster, r_mspc, beta_s)
+        g_truth = nfwnoise.createPerfectProfile(true_mass, c_duff, zcluster, r_mpc, beta_s)
 
         ngalsperarcmin = 9.7 #median of megacam set
         r_arcmin_edges = (r_mpc_edges/nfwutils.global_cosmology.angulardist(zcluster))*(180./np.pi)*60
@@ -84,7 +84,7 @@ def likelihoodPlots():
                    marker='None', linestyle=linestyle, 
                    color = 'k',
                    linewidth = 2., 
-                   label='$M_{200} = $%1.1f x $10^{15} M_{\odot}$' % (true_mass / 1e14))
+                   label='$M_{200} = $%1.1f x $10^{14} M_{\odot}$' % (true_mass / 1e14))
 
         linax.axvline(true_mass, c=(0.6, 0.6, 0.6), linewidth=2, linestyle=linestyle)
 
@@ -97,7 +97,7 @@ def likelihoodPlots():
                    marker='None', linestyle=linestyle, 
                    color = 'k',
                    linewidth = 2., 
-                   label='$M_{200} = $%1.1f x $10^{15} M_{\odot}$' % (true_mass / 1e14))
+                   label='$M_{200} = $%1.1f x $10^{14} M_{\odot}$' % (true_mass / 1e14))
 
         logax.axvline(np.log10(true_mass), c=(0.6, 0.6, 0.6), linewidth=2, linestyle=linestyle)
 
