@@ -50,6 +50,12 @@ def ConstantModel(x, a0):
 
 #######
 
+def RatioModel(x, a0):
+
+    return a0*x
+
+#######
+
 def LinearModel(x, a0, a1):
 
     return a0 + a1*x

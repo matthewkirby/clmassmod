@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-#data = asciireader.read('hstbiassummary_2040')
+data = asciireader.read('hstbiassummary')
 
 def plotOne(data, center, mc, rs, delta, fig = None):
 
@@ -135,7 +135,7 @@ def plotOne(data, center, mc, rs, delta, fig = None):
 ####
 
 
-centers = 'xrayNONE xrayXVP xraylensingpeak xraylensingvoigt core%d szlensingpeak szxvpbcg szanalytic'.split()
+centers = 'xrayNONE xraymag core%d szanalytic'.split()
 mcs = 'c4 duffy diemer15'.split()
 rss = 'r5 r16'.split()
 deltas = [500, 200]
@@ -299,8 +299,8 @@ def pubplots():
     szfig = pylab.figure()
     ax = szfig.add_subplot(1,1,1)
 
-    centers = 'xrayNONE szxvptcenter core%d'.split()
-    center_labels = ('Perfect', 'Empirical', 'Hydro Sim')
+    centers = 'xrayNONE core%d szanalytic'.split()
+    center_labels = ('Perfect', 'Hydro Sim', 'Model')
 
     mcs = 'c4 duffy'.split()
     mc_labels = ('c=4', 'Duffy et al. 2008')

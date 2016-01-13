@@ -9,8 +9,8 @@ import numpy as np
 
 golden_mean = (np.sqrt(5) - 1)/2.0
 screen_ratio = 0.75
-fig_width = 6
-fig_height = fig_width*screen_ratio
+fig_width = 8
+fig_height = fig_width*golden_mean
 fig_size = [fig_width,fig_height]
 
 

@@ -310,8 +310,7 @@ class Likelihood(object):
     def __call__(self, m200, c200 = None):
 
         if c200 is None:
-            c200 = self.model.massconRelation(m200*nfwutils.global_cosmology.h, self.zcluster, 200)
-
+            c200 = self.model.massconRelation(np.abs(m200*nfwutils.global_cosmology.h), self.zcluster, 200)
         return tools.shearprofile_like(m200,
                                        c200,
                                        self.r_mpc,
@@ -320,7 +319,8 @@ class Likelihood(object):
                                        self.beta_s*np.ones_like(self.r_mpc),
                                        self.beta_s2*np.ones_like(self.r_mpc),
                                        self.rho_c,
-                                       self.rho_c_over_sigma_c)
+                                       self.rho_c_over_sigma_c,
+                                       200.)
 
 
         
