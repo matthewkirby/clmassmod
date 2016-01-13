@@ -3000,3 +3000,114 @@ def plotWTG_MXXL_BK11_Summary():
 
 
 ########################
+
+def plotNoiseComp():
+    '''Compare bias & scatter results for 4 noise levels in the MXXL snap41 simulation. Noise levels are different gals/per arcmin density.'''
+
+    delta = 200    
+    rs = 'r6'
+    mc = 'diemer15'
+    center = 'xrayNONE'
+    
+    noiselevels='n0_0 n2_4 n3_4 n5_5'.split()
+
+    mxxlsnap = 41
+
+    config = 'general-{mc}-{rs}-{noiselevel}-{curcenter}'
+
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+    stdsfig = pylab.figure()
+    stdax = stdsfig.add_subplot(1,1,1)
+                            
+
+    curcolor = 0
+
+    for noiselevel in noiselevels:
+        print 'Noise: ', noiselevel
+
+        curconfig = config.format(mc = mc, rs = rs, 
+                                  noiselevel = noiselevel,
+                                  curcenter = curcenter)
+        
+        
+
+        patches = []
+        labels = []
+                            
+
+        
+
+
+                            
+        chaindir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/%s' % (mxxlsnap, curconfig)
+        try:
+            patch, summary = precomputedLogNormDistro(chaindir, 
+                                                      delta,
+                                                      meansax,
+                                                      stdax,
+                                                      colorindex = curcolor,
+                                                      biaslabel = False)
+
+            (avebias, errbias), (avestd, errstd) = summary
+
+            if patch is None:
+                print 'Error. Skipped'
+                continue
+
+
+            patches.append(patch)
+            labels.append('MXXL %s' % mxxlredshift)
+
+            makePretty = True
+            
+        except AssertionError:
+            print 'Chains empty. Skipped.'
+
+        curcolor += 1
+
+
+
+            
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(1e14, 4e15)
+        meansax.set_ylim(0.7, 1.15)
+        meansax.set_xticks([1e14, 1e15])
+        meansax.set_xticklabels(['1', '10'])
+        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        meansax.legend(patches[::-1], labels[::-1], loc='lower right')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        meansfig.savefig('figures/bias_differingnoiselevels.png')
+        meansfig.savefig('figures/bias_differingnoiselevels.eps')
+        meansfig.savefig('figures/bias_differingnoiselevels.pdf')
+
+        stdax.set_title(title)
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+        stdax.set_xlim(1e14, 4e15)
+        stdax.set_xticks([1e14, 1e15])
+        stdax.set_xticklabels(['1', '10'])
+        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        stdsfig.savefig('figures/scatter_differingnoiselevels.png')
+        stdsfig.savefig('figures/scatter_differingnoiselevels.eps')
+        stdsfig.savefig('figures/scatter_differingnoiselevels.pdf')
+
+
+
+
+    return meansfig, stdsfig
+
+
+
+
+
