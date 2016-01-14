@@ -209,6 +209,15 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
             print 'Skipping'
             continue
 
+        split = int((chain['logmu'].shape[1] + 1000)/2.)
+        splitlen = split - 1000
+        c1mean = np.mean(chain['logmu'][0,1000:split])
+        c1err = np.std(chain['logmu'][0,1000:split])/np.sqrt(splitlen)
+        c2mean = np.mean(chain['logmu'][0,split:])
+        c2err = np.std(chain['logmu'][0,split:])/np.sqrt(splitlen)
+        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 2.)
+
+
         massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % fileroot)]
 
         xpoints.append(massbinlow)
@@ -3014,13 +3023,19 @@ def plotNoiseComp():
     '''Compare bias & scatter results for 4 noise levels in the MXXL snap41 simulation. Noise levels are different gals/per arcmin density.'''
 
     delta = 200    
-    rs = 'r6'
-    mc = 'diemer15'
+    rs = 'r10'
+    mc = 'c4'
     center = 'xrayNONE'
     
-    noiselevels='n0_0 n2_4 n3_4 n5_5'.split()
+    noiselevels = ['n5_5', 'n3_4', 'n2_4']
+    noiselabels = ['1 gal / arcmin$^2$',
+                   '7 gals / arcmin$^2$',
+                   '20 gals / arcmin$^2$']
 
-    mxxlsnap = 41
+
+                   
+
+    mxxlsnap = 54
 
     config = 'general-{mc}-{rs}-{noiselevel}-{curcenter}'
 
@@ -3031,18 +3046,18 @@ def plotNoiseComp():
                             
 
     curcolor = 0
+    patches = []
+    labels = []
 
-    for noiselevel in noiselevels:
+    for noiselevel, noiselabel in zip(noiselevels, noiselabels):
         print 'Noise: ', noiselevel
 
         curconfig = config.format(mc = mc, rs = rs, 
                                   noiselevel = noiselevel,
-                                  curcenter = curcenter)
+                                  curcenter = center)
         
         
 
-        patches = []
-        labels = []
                             
 
         
@@ -3066,7 +3081,7 @@ def plotNoiseComp():
 
 
             patches.append(patch)
-            labels.append('MXXL %s' % mxxlredshift)
+            labels.append(noiselabel)
 
             makePretty = True
             
@@ -3078,38 +3093,38 @@ def plotNoiseComp():
 
 
             
-        meansax.set_xscale('log')
-        meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
-        meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
-        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
-        meansax.set_xlim(1e14, 4e15)
-        meansax.set_ylim(0.7, 1.15)
-        meansax.set_xticks([1e14, 1e15])
-        meansax.set_xticklabels(['1', '10'])
-        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
-        meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
-        meansax.legend(patches[::-1], labels[::-1], loc='lower right')
-        meansfig.canvas.draw()
-        meansfig.tight_layout()
-        meansfig.savefig('figures/bias_differingnoiselevels.png')
-        meansfig.savefig('figures/bias_differingnoiselevels.eps')
-        meansfig.savefig('figures/bias_differingnoiselevels.pdf')
+    meansax.set_xscale('log')
+    meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+    meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.set_xlim(1e14, 4e15)
+    meansax.set_ylim(0.7, 1.15)
+    meansax.set_xticks([1e14, 1e15])
+    meansax.set_xticklabels(['1', '10'])
+    meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+    meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+    meansax.legend(patches[::-1], labels[::-1], loc='lower right')
+    meansfig.canvas.draw()
+    meansfig.tight_layout()
+    meansfig.savefig('figures/bias_differingnoiselevels.png')
+    meansfig.savefig('figures/bias_differingnoiselevels.eps')
+    meansfig.savefig('figures/bias_differingnoiselevels.pdf')
 
-        stdax.set_title(title)
-        stdax.set_xscale('log')
-        stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
-        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
-        stdax.set_xlim(1e14, 4e15)
-        stdax.set_xticks([1e14, 1e15])
-        stdax.set_xticklabels(['1', '10'])
-        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
-        stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
-        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
-        stdsfig.canvas.draw()
-        stdsfig.tight_layout()
-        stdsfig.savefig('figures/scatter_differingnoiselevels.png')
-        stdsfig.savefig('figures/scatter_differingnoiselevels.eps')
-        stdsfig.savefig('figures/scatter_differingnoiselevels.pdf')
+
+    stdax.set_xscale('log')
+    stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+    stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+    stdax.set_xlim(1e14, 4e15)
+    stdax.set_xticks([1e14, 1e15])
+    stdax.set_xticklabels(['1', '10'])
+    stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+    stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+    stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+    stdsfig.savefig('figures/scatter_differingnoiselevels.png')
+    stdsfig.savefig('figures/scatter_differingnoiselevels.eps')
+    stdsfig.savefig('figures/scatter_differingnoiselevels.pdf')
 
 
 

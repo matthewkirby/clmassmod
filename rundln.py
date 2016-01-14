@@ -64,6 +64,10 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0):
     if len(halos) < 10:
         sys.exit(0)
 
+    if len(halos) > 500:
+        print 'Down sampling'
+        halos = random.sample(halos, 500)
+
     success = False
     for i in range(20):
 
