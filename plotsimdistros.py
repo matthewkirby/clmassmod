@@ -83,8 +83,8 @@ def createErrorbars(samples):
 
 #############
 
-c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25), 
-     (0, .45, .7), (.8, .4, 0), (.8, .6, .7)]
+c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), 
+     (0, .45, .7), (.8, .4, 0), (.8, .6, .7), (0.95, 0.9, 0.25)]
 
 ############
 
@@ -3049,10 +3049,11 @@ def plotNoiseComp():
     mc = 'c4'
     center = 'xrayNONE'
     
-    noiselevels = ['n5_5', 'n3_4', 'n2_4']
+    noiselevels = ['n5_5', 'n3_4', 'n2_4', 'n0_0']
     noiselabels = ['1 gal / arcmin$^2$',
                    '7 gals / arcmin$^2$',
-                   '20 gals / arcmin$^2$']
+                   '20 gals / arcmin$^2$',
+                   'No Noise']
 
     xoffsets = [0.97, 0.99, 1.01, 1.03]
 
@@ -3121,7 +3122,7 @@ def plotNoiseComp():
     meansax.set_xscale('log')
     meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
     meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
-    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.axhline(1.0, c='k', linewidth=1, linestyle='--')
     meansax.set_xlim(1e14, 4e15)
     meansax.set_ylim(0.7, 1.2)
     meansax.set_xticks([1e14, 1e15])
