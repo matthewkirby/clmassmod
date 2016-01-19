@@ -160,6 +160,9 @@ def gatherChainFiles(chaindir, delta):
     if len(chainfiles) == 0:
         chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
 
+    if len(chainfiles) == 0:
+        chainfiles = glob.glob('%s/dln_*.chain.0' % chaindir)
+
     return sorted(chainfiles)
 
 ################
@@ -173,7 +176,7 @@ def weightedaverage(means, errs):
 
     return mu, sig
 
-def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True, xoffset = 0.0):
+def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True, xoffset = 1.0):
 
 
 
@@ -251,6 +254,8 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         mu_err = (mu_high - mu_low)/2.
         std_center = (std_high + std_low)/2.
         std_err = (std_high - std_low)/2.
+
+        print mu_center, mu_err
 
 
         meanax.errorbar([x_center], [mu_center], [mu_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
@@ -1570,6 +1575,7 @@ def plotNoiseGradient():
 
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
+    meansax.axhline(1.0, c='k', linewidth=1, linestyle='--')
 
     stdsfig = pylab.figure()
     stdax = stdsfig.add_subplot(1,1,1)
@@ -1590,6 +1596,7 @@ def plotNoiseGradient():
     patches = []
     labels = []
 
+    xoffsets = [0.98, 1.0, 1.02]
 
     for i in range(len(chaindirs)-1, -1,-1):
 
@@ -1600,11 +1607,13 @@ def plotNoiseGradient():
 
         label = noisenames[i]
 
-        patch = precomputedLogNormDistro(chaindir, 
-                                         massedges,
-                                         meansax,
-                                         stdax,
-                                         colorindex = i, biaslabel=False)
+        patch, summary = precomputedLogNormDistro(chaindir, 
+                                                  200,
+                                                  meansax,
+                                                  stdax,
+                                                  colorindex = i, 
+                                                  biaslabel=False,
+                                                  xoffset = xoffsets[i])
 
         if patch is None:
             continue
@@ -1616,32 +1625,32 @@ def plotNoiseGradient():
     meansax.set_xscale('log')
     meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
     meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
-    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+
     meansax.set_xlim(2e14, 1.3e15)
-    meansax.set_ylim(0.65, 1.2)
+    meansax.set_ylim(0.70, 1.1)
     meansax.set_xticks([1e15])
     meansax.set_xticklabels(['10'])
     meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
     meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
-    meansax.legend(patches[::-1], labels[::-1], loc='upper left')
+    meansax.legend(patches[::-1], labels[::-1], loc='lower left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('hstnoisemxxl_logmean_noiseprofiles.png')
+    meansfig.savefig('figures/hstnoisemxxl_logmean_noiseprofiles.png')
 
     stdax.set_xscale('log')
     stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
     stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
-    stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+#    stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
     stdax.set_xlim(2e14, 1.3e15)
-#    stdax.set_ylim(0.85, 1.10)
+    stdax.set_ylim(0.0, 0.5)
     stdax.set_xticks([1e15])
     stdax.set_xticklabels(['10'])
     stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
     stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
-    stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+    stdax.legend(patches[::-1], labels[::-1], loc='lower left')
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
-    stdsfig.savefig('hstnoisemxxl_logstd_noiseprofiles.png')
+    stdsfig.savefig('figures/hstnoisemxxl_logstd_noiseprofiles.png')
 
 
     return meansfig, stdsfig
