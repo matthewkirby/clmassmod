@@ -4,11 +4,13 @@
 ###########################
 
 import sys
+import random
 import deconvolvedlognorm as dln
 import nfwfit
 import nfwutils
 import numpy as np
 import pymc
+import cPickle
 
 def defineMassEdges(simtype, delta):
 
@@ -41,7 +43,7 @@ def defineMassEdges(simtype, delta):
 
     
 
-def run(simtype, chaindir, outfile, delta, pdftype, massbin=0):
+def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = None):
 
     config = nfwfit.readConfiguration('%s/config.sh' % chaindir)
     simreader = nfwfit.buildSimReader(config)
@@ -68,13 +70,20 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0):
         print 'Down sampling'
         halos = random.sample(halos, 500)
 
+    sigmapriors = None
+    if sigmapriorfile is not None:
+        print 'Using Sigma Priors!'
+        sigmapriors = cPickle.load(open(sigmaprior, 'rb'))[massbin]
+
+
+
     success = False
     for i in range(20):
 
         try:
             
             if isPDF == True:
-                parts = dln.buildPDFModel(halos)
+                parts = dln.buildPDFModel(halos, sigmapriors = sigmapriors)
             else:
                 parts = dln.buildMCMCModel(halos)
 
@@ -87,6 +96,8 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0):
 
     assert(success is True)
 
+        
+
     with open('%s.massrange' % outfile, 'w') as output:
         output.write('%f\n%f\n' % (massedges[massbin], massedges[massbin+1]))
     dln.sample(parts, outfile, 10000, singlecore=True)
@@ -97,6 +108,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0):
 if __name__ == '__main__':
 
     massbin = 0
+    sigmaprior = None
 
     simtype=sys.argv[1]
     chaindir=sys.argv[2]
@@ -105,12 +117,15 @@ if __name__ == '__main__':
     pdftype=sys.argv[5]
     if len(sys.argv) > 6:
         massbin=int(sys.argv[6])
+    if len(sys.argv) > 7:
+        sigmaprior = sys.argv[7]
 
     print 'Called with:', dict(simtype=simtype, chaindir=chaindir, 
                                outfile=outfile, delta=delta, 
                                pdftype = pdftype,
-                               massbin=massbin)
+                               massbin=massbin,
+                               sigmaprior = sigmaprior)
 
     
-    run(simtype, chaindir, outfile, delta, pdftype, massbin)
+    run(simtype, chaindir, outfile, delta, pdftype, massbin, sigmaprior)
         

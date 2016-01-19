@@ -6,6 +6,7 @@ torun=$2
 snap=$3
 delta=$4
 nbins=$5
+sigmaprior=$6
 
 #chainbase=/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap$snap
 outputdir=/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap$snap/
@@ -36,7 +37,7 @@ for config in `cat $torun`; do
 
 	outfile=$workdir/rundln$snap.$delta.$massbin
 	    
-	sed -e "s|JOBDIR|$jobdir|g" -e "s|CHAINDIR|$chaindir|g" -e "s|OUTFILE|$outfile|g" -e "s|CONFIG|$config|g" -e "s|SNAP|$snap|g" -e "s|MASSBIN|$massbin|g" -e "s|DELTA|$delta|g" rundln.condor.template >> $jobfile
+	sed -e "s|JOBDIR|$jobdir|g" -e "s|CHAINDIR|$chaindir|g" -e "s|OUTFILE|$outfile|g" -e "s|CONFIG|$config|g" -e "s|SNAP|$snap|g" -e "s|MASSBIN|$massbin|g" -e "s|DELTA|$delta|g" -e "s|SIGMAPRIOR|$sigmaprior|g" rundln.condor.template >> $jobfile
 	
     done
  
