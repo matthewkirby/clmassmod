@@ -3062,7 +3062,7 @@ def plotNoiseComp():
     noiselabels = ['1 gal / arcmin$^2$',
                    '7 gals / arcmin$^2$',
                    '20 gals / arcmin$^2$',
-                   'No Noise']
+                   'Intrinsic Noise Only']
 
     xoffsets = [0.97, 0.99, 1.01, 1.03]
 
