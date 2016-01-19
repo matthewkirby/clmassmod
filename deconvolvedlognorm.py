@@ -347,12 +347,17 @@ def buildGaussMixture1DModel(halos, ngauss, modeltype='ratio'):
 #####################
 
 
-def buildPDFModel(halos):
+def buildPDFModel(halos, sigmapriors = None):
 
     parts = {}
 
     parts['logmu'] = pymc.Uniform('logmu', -1., 1.)
-    parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-2), np.log(10))
+
+
+    if sigmapriors is None:
+        parts['logsigma'] = pymc.Uniform('logsigma', np.log(1e-2), np.log(10))
+    else:
+        parts['logsigma'] = pymc.Normal('logsigma', sigmapriors[0], 1./sigmapriors[1]**2)
 
     @pymc.deterministic(trace=True)
     def sigma(logsigma = parts['logsigma']):
