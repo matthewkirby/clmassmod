@@ -324,6 +324,80 @@ def maxlikeComparePlots(inputfile = 'maxlikedistro_paperplot_highsn_large.pkl'):
     return fig
 
     
+############################
 
+def compareNoiseProfiles(data = None):
+    ''' Compare intrinsic noise levels to assumed shape noise'''
+
+    if data is None:
+        data = {}
+
+    if 'centers_mpc' not in data:
+
+        config = nfwfit.readConfiguration('/vol/euclid1/euclid1_1/dapple/mxxl_lensing/mxxlsnap54/general-c4-r10-n0_0-xrayNONE/config.sh')
+
+        simreader = nfwfit.buildSimReader(config)
+
+        nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+
+        fitter = nfwfit.buildFitter(config)
+
+        intrnoise_profiles = []
+
+        for haloid in range(800, 880):
+
+            catbase = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap54/halo_54_{}_0'.format(haloid)
+
+            catalog = nfwfit.readSimCatalog(catbase, simreader, config)
+
+            r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = fitter.prepData(catalog)
+
+            intrnoise_profiles.append(sigma_ghat)
+
+        intrnoise_profiles = np.row_stack(intrnoise_profiles)
+        intrnoise = np.mean(intrnoise_profiles, axis=0)
+        intrnoise_err = np.std(intrnoise_profiles, axis=0)
+
+        edges_mpc = np.linspace(config.profilemin, config.profilemax, config.nbins+1)
+        centers_mpc = (edges_mpc[1:] + edges_mpc[:-1])/2.
+        dL = nfwutils.global_cosmology.angulardist(zlens)
+        edges_arcmin = (edges_mpc/dL)*(180/np.pi)*60
+        bin_areas = np.pi*(edges_arcmin[1:]**2 - edges_arcmin[:-1]**2)
+
+        shapesigma = 0.25
+        galdensity = 20. # per sq arc min
+        shape_noise = shapesigma / np.sqrt(galdensity*bin_areas)
+
+        data['centers_mpc'] = centers_mpc
+        data['intrnoise'] = intrnoise
+        data['intrnoise_err'] = intrnoise_err
+        data['shape_noise'] = shape_noise
+
+    else:
+
+        centers_mpc = data['centers_mpc']
+        intrnoise = data['intrnoise']
+        intrnoise_err = data['intrnoise_err']
+        shape_noise = data['shape_noise']
     
 
+    fig = pylab.figure()
+    ax = pylab.gca()
+
+    ax.plot(centers_mpc, intrnoise/intrnoise[2], label='Intrinsic Noise [80 cluster avg]', marker='None', linestyle='-', linewidth = 2, color = pp.colors[0])
+    ax.plot(centers_mpc, shape_noise/shape_noise[2], marker='None', linestyle='-', linewidth = 3, color = pp.colors[1], label='Shape Noise')
+    
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Radius [Mpc]', fontsize=16)
+    ax.set_ylabel('Relative Shear Error [Arbit Norm]', fontsize=16)
+
+    fig.tight_layout()
+
+    fig.savefig('figures/relative_shear_noise.png')
+    fig.savefig('figures/relative_shear_noise.pdf')
+    fig.savefig('figures/relative_shear_noise.eps')
+
+
+    return fig, data
+
+    

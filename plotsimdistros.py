@@ -1,5 +1,3 @@
-import matplotlib
-matplotlib.use('agg')
 
 import publication_plots as pp
 import pylab
@@ -85,8 +83,8 @@ def createErrorbars(samples):
 
 #############
 
-c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), (0.95, 0.9, 0.25), 
-     (0, .45, .7), (.8, .4, 0), (.8, .6, .7)]
+c = [(.9,.6,0), (.35, .7, .9), (0,.6,.5), 
+     (0, .45, .7), (.8, .4, 0), (.8, .6, .7), (0.95, 0.9, 0.25)]
 
 ############
 
@@ -162,6 +160,9 @@ def gatherChainFiles(chaindir, delta):
     if len(chainfiles) == 0:
         chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
 
+    if len(chainfiles) == 0:
+        chainfiles = glob.glob('%s/dln_*.chain.0' % chaindir)
+
     return sorted(chainfiles)
 
 ################
@@ -175,7 +176,7 @@ def weightedaverage(means, errs):
 
     return mu, sig
 
-def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True):
+def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True, xoffset = 1.0):
 
 
 
@@ -212,10 +213,10 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         split = int((chain['logmu'].shape[1] + 1000)/2.)
         splitlen = split - 1000
         c1mean = np.mean(chain['logmu'][0,1000:split])
-        c1err = np.std(chain['logmu'][0,1000:split])/np.sqrt(splitlen)
+        c1err = np.std(chain['logmu'][0,1000:split])
         c2mean = np.mean(chain['logmu'][0,split:])
-        c2err = np.std(chain['logmu'][0,split:])/np.sqrt(splitlen)
-        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 2.)
+        c2err = np.std(chain['logmu'][0,split:])
+        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 3.)
 
 
         massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % fileroot)]
@@ -247,6 +248,31 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         ystdlows.append(std_low)
         ystdhighs.append(std_high)
         ystdhighs.append(std_high)
+
+        x_center = xoffset*(massbinlow + massbinhigh)/2.
+        mu_center = (mu_high + mu_low)/2.
+        mu_err = (mu_high - mu_low)/2.
+        std_center = (std_high + std_low)/2.
+        std_err = (std_high - std_low)/2.
+
+        print mu_center, mu_err
+
+
+        meanax.errorbar([x_center], [mu_center], [mu_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+        stdax.errorbar([x_center], [std_center], [std_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+
+
+#        meanax.fill_between([massbinlow, massbinhigh], 
+#                            [mu_low, mu_low], 
+#                            [mu_high, mu_high], 
+#                            alpha=alpha, color = c[colorindex], hatch = None)
+#        stdax.fill_between([massbinlow, massbinhigh],
+#                           [std_low, std_low],
+#                           [std_high, std_high],
+#                           alpha=alpha, color = c[colorindex], hatch = None)
+# 
+
+
                      
     if len(xpoints) == 0:
         return None
@@ -258,10 +284,9 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
 
     summary = weightedaverage(ave, aveerr), weightedaverage(stdev, stdeverr)
 
-    meanax.fill_between(xpoints, ylows, yhighs, alpha=alpha, color = c[colorindex], hatch = None)
     if biaslabel is True:
         meanax.text(2.5e14, 0.75 + float(colorindex)/10., '%1.2f +/- %1.2f' % (summary[0][0], summary[0][1]))
-    stdax.fill_between(xpoints, ystdlows, ystdhighs, alpha=alpha, color = c[colorindex], hatch = None)
+
     patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=alpha, hatch = None)
 
     return patch, summary
@@ -400,7 +425,7 @@ def plotRadiusMXXL():
     meansax.set_xscale('log')
     meansax.set_xlabel('Mass', fontsize=16)
     meansax.set_ylabel('Mean Log-Bias', fontsize=16)
-    meansax.legend()
+    meansax.legend(loc='lower left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
     meansfig.savefig('radiusmxxl_mean.png')
@@ -1550,6 +1575,7 @@ def plotNoiseGradient():
 
     meansfig = pylab.figure()
     meansax = meansfig.add_subplot(1,1,1)
+    meansax.axhline(1.0, c='k', linewidth=1, linestyle='--')
 
     stdsfig = pylab.figure()
     stdax = stdsfig.add_subplot(1,1,1)
@@ -1570,6 +1596,7 @@ def plotNoiseGradient():
     patches = []
     labels = []
 
+    xoffsets = [0.98, 1.0, 1.02]
 
     for i in range(len(chaindirs)-1, -1,-1):
 
@@ -1580,11 +1607,13 @@ def plotNoiseGradient():
 
         label = noisenames[i]
 
-        patch = precomputedLogNormDistro(chaindir, 
-                                         massedges,
-                                         meansax,
-                                         stdax,
-                                         colorindex = i, biaslabel=False)
+        patch, summary = precomputedLogNormDistro(chaindir, 
+                                                  200,
+                                                  meansax,
+                                                  stdax,
+                                                  colorindex = i, 
+                                                  biaslabel=False,
+                                                  xoffset = xoffsets[i])
 
         if patch is None:
             continue
@@ -1596,32 +1625,32 @@ def plotNoiseGradient():
     meansax.set_xscale('log')
     meansax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
     meansax.set_ylabel(r'Mean Bias in $Ln(M_{200})$', fontsize=16)
-    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+
     meansax.set_xlim(2e14, 1.3e15)
-    meansax.set_ylim(0.65, 1.2)
+    meansax.set_ylim(0.70, 1.1)
     meansax.set_xticks([1e15])
     meansax.set_xticklabels(['10'])
     meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
     meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
-    meansax.legend(patches[::-1], labels[::-1], loc='upper left')
+    meansax.legend(patches[::-1], labels[::-1], loc='lower left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
-    meansfig.savefig('hstnoisemxxl_logmean_noiseprofiles.png')
+    meansfig.savefig('figures/hstnoisemxxl_logmean_noiseprofiles.png')
 
     stdax.set_xscale('log')
     stdax.set_xlabel(r'Mass $M_{200} [10^{14} M_{\odot}]$', fontsize=16)
     stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
-    stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+#    stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
     stdax.set_xlim(2e14, 1.3e15)
-#    stdax.set_ylim(0.85, 1.10)
+    stdax.set_ylim(0.0, 0.5)
     stdax.set_xticks([1e15])
     stdax.set_xticklabels(['10'])
     stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 11e14, 12e14, 13e14], minor=True)
     stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '', '12', ''], minor=True)
-    stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+    stdax.legend(patches[::-1], labels[::-1], loc='lower left')
     stdsfig.canvas.draw()
     stdsfig.tight_layout()
-    stdsfig.savefig('hstnoisemxxl_logstd_noiseprofiles.png')
+    stdsfig.savefig('figures/hstnoisemxxl_logstd_noiseprofiles.png')
 
 
     return meansfig, stdsfig
@@ -2578,9 +2607,11 @@ def plotHST_MXXL_BK11_Summary():
                                200 : 1e14*np.array([4, 1.6])}}
 
     
-    deltas = [200, 500]
+#    deltas = [200, 500]
+    deltas = [2500]
 
-    rss = 'r5 r16'.split()
+#    rss = 'r5 r16'.split()
+    rss = ['r5']
 
     mcs = 'c4 duffy diemer15'.split()
 
@@ -2616,7 +2647,7 @@ def plotHST_MXXL_BK11_Summary():
     meansfigs = []
     stdsfigs = []
 
-    with open('hstbiassummary', 'w') as output:
+    with open('hstbiassummary_2500', 'w') as output:
 
         output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
 
@@ -3027,10 +3058,13 @@ def plotNoiseComp():
     mc = 'c4'
     center = 'xrayNONE'
     
-    noiselevels = ['n5_5', 'n3_4', 'n2_4']
+    noiselevels = ['n5_5', 'n3_4', 'n2_4', 'n0_0']
     noiselabels = ['1 gal / arcmin$^2$',
                    '7 gals / arcmin$^2$',
-                   '20 gals / arcmin$^2$']
+                   '20 gals / arcmin$^2$',
+                   'No Noise']
+
+    xoffsets = [0.97, 0.99, 1.01, 1.03]
 
 
                    
@@ -3071,7 +3105,8 @@ def plotNoiseComp():
                                                       meansax,
                                                       stdax,
                                                       colorindex = curcolor,
-                                                      biaslabel = False)
+                                                      biaslabel = False,
+                                                      xoffset = xoffsets[curcolor])
 
             (avebias, errbias), (avestd, errstd) = summary
 
@@ -3096,14 +3131,14 @@ def plotNoiseComp():
     meansax.set_xscale('log')
     meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
     meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
-    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.axhline(1.0, c='k', linewidth=1, linestyle='--')
     meansax.set_xlim(1e14, 4e15)
-    meansax.set_ylim(0.7, 1.15)
+    meansax.set_ylim(0.7, 1.2)
     meansax.set_xticks([1e14, 1e15])
     meansax.set_xticklabels(['1', '10'])
     meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
     meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
-    meansax.legend(patches[::-1], labels[::-1], loc='lower right')
+    meansax.legend(patches[::-1], labels[::-1], loc='lower left')
     meansfig.canvas.draw()
     meansfig.tight_layout()
     meansfig.savefig('figures/bias_differingnoiselevels.png')
@@ -3136,5 +3171,9 @@ def plotNoiseComp():
 
 
 if __name__ == '__main__':
+
+    import matplotlib
+    matplotlib.use('agg')
+
 
     plotHST_MXXL_BK11_Summary()
