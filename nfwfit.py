@@ -219,6 +219,8 @@ szsim_offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/S
 
 def SZSimOffset(sim, config):
 
+    print 'SZ Magneticum'
+
     matchingcoresize = szsim_offsetcat[szsim_offsetcat['coresize[arcmin]'] == config.coresize]
 
     m500 = sim.m500
@@ -255,6 +257,8 @@ def SZSimOffset(sim, config):
 
 def SZTheoryOffset(sim, config):
 
+    print 'SZ Theory'
+
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     
@@ -270,6 +274,8 @@ def SZTheoryOffset(sim, config):
 
 def SZLensingPeakOffset(sim, config):
 
+    print 'SZ Lensing Peak'
+
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     
@@ -283,6 +289,8 @@ def SZLensingPeakOffset(sim, config):
 
 
 def SZXVPTheoryOffset(sim, config):
+
+    print 'SZ XVP Theory'
 
     #physical scatter in arcmin, approp for target redshift
     xvp_offsetx, xvp_offsety = XrayXVPOffset(sim, config)
@@ -304,6 +312,8 @@ sz_xvp_bcg_offsets_deg = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dap
 
 def SZXVPBCGOffset(sim, config):
 
+    print 'SZ XVP BCG Offset'
+
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
     anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
@@ -321,6 +331,8 @@ def SZXVPBCGOffset(sim, config):
 ####
 
 def SZAnalytic(sim, config):
+
+    print 'SZ Analytic'
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
     targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
@@ -340,6 +352,8 @@ wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_r
 
 def XrayWTGOffset(sim, config):
 
+    print 'Xray WtG'
+
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
 
@@ -356,6 +370,8 @@ def XrayWTGOffset(sim, config):
 ###
 
 def XraySPTHSTOffset(sim, config):
+
+    print 'Xray SPT HST'
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -375,6 +391,8 @@ xvp_offsets_mpc = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxx
 
 def XrayXVPOffset(sim, config):
 
+    print 'Xray XVP'
+
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
 
@@ -392,6 +410,8 @@ def XrayXVPOffset(sim, config):
 
 
 def XrayCCCPOffset(sim, config):
+
+    print 'Xray CCCP'
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -411,6 +431,8 @@ def XrayCCCPOffset(sim, config):
 
 def XrayLensingPeakOffset(sim, config):
 
+    print 'Xray Lensing Peak'
+
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
     delta_mpc = 0.107*np.random.standard_normal(2)
@@ -420,6 +442,8 @@ def XrayLensingPeakOffset(sim, config):
     return centeroffsetx, centeroffsety
 
 def XrayLensingPeakVoigtOffset(sim, config):
+
+    print 'Xray Lensing Peak Voigt'
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -434,6 +458,8 @@ def XrayLensingPeakVoigtOffset(sim, config):
 xray_magneticum_distro = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/magneticum_offsets.dat')
 
 def XrayMagneticumOffset(sim, config):
+
+    print 'Xray Magneticum'
 
     dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -459,12 +485,9 @@ def getCenterOffset(sim, config):
 
     centeroffsetx = 0.
     centeroffsety = 0.
-    if 'coresize' in config:
-        
-        centeroffsetx, centeroffsety = SZSimOffset(sim, config)
         
 
-    elif 'xraycentering' in config and config['xraycentering'] == 'WTG':
+    if 'xraycentering' in config and config['xraycentering'] == 'WTG':
 
         centeroffsetx, centeroffsety = XrayWTGOffset(sim, config)
 
@@ -511,6 +534,11 @@ def getCenterOffset(sim, config):
     elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'analytic':
 
         centeroffsetx, centeroffsety = SZAnalytic(sim, config)
+
+    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'magneticum':
+        
+        centeroffsetx, centeroffsety = SZSimOffset(sim, config)
+
 
         
         
