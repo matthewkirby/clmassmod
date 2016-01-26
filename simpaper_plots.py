@@ -129,7 +129,7 @@ def likelihoodPlots():
 ##############
     
 
-def calcMaxlikeDistro(outputfile = 'maxlikedistro_paperplot_highsn.pkl'):
+def calcMaxlikeDistro(outputfile = 'maxlikedistro_paperplot_lowsn.pkl', ngalsperarcmin=5):
     '''show that using maximum likelihood estimators does not recover truth'''
 
     
@@ -147,7 +147,7 @@ def calcMaxlikeDistro(outputfile = 'maxlikedistro_paperplot_highsn.pkl'):
     duffy = basicMassCon.Duffy(None)
     c200 = 4.0
     beta_s = nfwutils.global_cosmology.beta_s([1.0], zcluster)[0]
-    ngalsperarcmin = 15 
+
     r_arcmin_edges = (r_mpc_edges/nfwutils.global_cosmology.angulardist(zcluster))*(180./np.pi)*60
     bin_areas = np.pi*(r_arcmin_edges[1:]**2 - r_arcmin_edges[:-1]**2)
     ngals_per_bin = ngalsperarcmin * bin_areas
@@ -287,15 +287,15 @@ def bootstrapdistro(distro, foo = np.mean, nboots=1000):
 
     return np.mean(booted), np.std(booted)
 
-def maxlikeComparePlots(inputfile = 'maxlikedistro_paperplot_highsn_large.pkl'):
+def maxlikeComparePlots(inputfile = 'maxlikedistro_paperplot_highsn_large.pkl', outputbase = 'maxlike_comparison'):
 
-    with open('maxlikedistro_paperplot_highsn.pkl', 'rb') as input:
+    with open(inputfile, 'rb') as input:
         distros = cPickle.load(input)
 
     fig = pylab.figure()
     ax = fig.add_subplot(1,1,1)
 
-    labels = [('unweightedbootstrapsmean',  'Bootstrap Geometric Mean', '*', 'r'),
+    labels = [('unweightedbootstrapsmean',  'Bootstrap Geometric Mean', '^', 'r'),
               ('weightedaverages',          'Weighted Geometric Mean', 's', 'r'),
               ('wlssaverage',               'Weighted+LSS Geometric Mean', 'p', 'r'),
               ('smithaverages',             'Absolute Err Geometric Mean', 'd', 'r'),
@@ -307,17 +307,38 @@ def maxlikeComparePlots(inputfile = 'maxlikedistro_paperplot_highsn_large.pkl'):
         bias, biaserr = bootstrapdistro(distros[key])
         stdev, stdeverr = bootstrapdistro(distros[key], np.std)
 
-        ax.errorbar(bias-1, stdev, stdeverr, biaserr, label=label, marker=marker, color=color, linestyle='none')
+        ax.errorbar(bias, stdev, stdeverr, biaserr, label=label, marker=marker, color=color, linestyle='none', markersize=10)
 
-    ax.set_xlabel('Bias', fontsize=18)
+
+    linearfit_bias = [bootstrapdistro(distros['linearfit'])[0]]
+    linearfit_precision = [bootstrapdistro(distros['linearfit'], np.std)[0]]
+    for inputfile in 'maxlikedistro_paperplot_lowsn.pkl maxlikedistro_paperplot_extralowsn.pkl'.split():
+        with open(inputfile, 'rb') as input:
+            distros = cPickle.load(input)
+        linearfit_bias.append(bootstrapdistro(distros['linearfit'])[0])
+        linearfit_precision.append(bootstrapdistro(distros['linearfit'], np.std)[0])
+        
+
+    ax.plot(np.array(linearfit_bias), linearfit_precision, 'k--')
+    ax.axvline(1.0, c='k', linestyle=':')
+    ax.set_xlim(0.8, 1.1)
+    ax.set_ylim(0.0, 0.15)
+    ax.set_xscale('log')
+    ax.set_xticks([0.8, 0.9, 1.0, 1.1])
+    ax.set_xticklabels('0.8 0.9 1.0 1.1'.split())
+    ax.set_xlabel('Bias [Lensing / True]', fontsize=18)
     ax.set_ylabel('Precision', fontsize=18)
-    ax.legend(numpoints=1)
+    ax.legend(numpoints=1, ncol=1, loc='lower left', frameon=False)
+
+
+        
+    
 
     fig.tight_layout()
 
-    fig.savefig('figures/maxlike_comparison.png')
-    fig.savefig('figures/maxlike_comparison.eps')
-    fig.savefig('figures/maxlike_comparison.pdf')
+    fig.savefig('figures/{}.png'.format(outputbase))
+    fig.savefig('figures/{}.eps'.format(outputbase))
+    fig.savefig('figures/{}.pdf'.format(outputbase))
 
 
 
