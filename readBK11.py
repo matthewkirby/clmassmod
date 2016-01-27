@@ -72,22 +72,18 @@ class BK11Sim(object):
         gamma1 = 0.5*(A11 - A00)
         gamma2 = -0.5*(A01+A10)
 
-        self.g1 = (gamma1/(1-kappa)).flatten()
-        self.g2 = (gamma2/(1-kappa)).flatten()
 
         self.x_arcmin = x_arcmin.flatten()
         self.y_arcmin = y_arcmin.flatten()
 
-        self.r_arcmin = radii_arcmin.flatten()
-        self.r_mpc = (self.r_arcmin/60.)*(np.pi/180.)*nfwutils.global_cosmology.angulardist(clusterz)
 
-        cosphi = cosphi.flatten()
-        sinphi = sinphi.flatten()
-        self.sin2phi = 2.0*sinphi*cosphi
-        self.cos2phi = 2.0*cosphi*cosphi-1.0
+        redshifts = np.ones(len(self.r_mpc))*float(sim['ZSOURCE'])
+        beta_s = nfwutils.global_cosmology.beta_s(self.redshifts, clusterz)
 
-        self.redshifts = np.ones(len(self.r_mpc))*float(sim['ZSOURCE'])
-        self.beta_s = nfwutils.global_cosmology.beta_s(self.redshifts, clusterz)
+        self.gamma1_inf = (gamma1/beta_s).flatten()
+        self.gamma2_inf = (gamma2/beta_s).flatten()
+        self.kappa_inf  = (kappa/beta_s).flatten()
+
 
         self.m500 = sim['M500C']
         self.m200 = sim['M200C']

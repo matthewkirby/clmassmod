@@ -58,6 +58,8 @@ class hstnoisebins(object):
         
         self.bincenters = [x[0] for x in profile]
         self.deltag = [x[2] for x in profile]
+        self.betas = [x[5] for x in profile]
+        self.beta2s = [x[6] for x in profile]
         self.magbinids = [x[-1] for x in profile]
 
         self.nbins = len(self.bincenters)
