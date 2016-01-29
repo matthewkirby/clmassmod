@@ -6,6 +6,7 @@ import numpy as np
 import binaryutils
 import nfwutils
 import astropy.io.ascii as asciireader
+import catalog
 
 #######################
 
@@ -98,7 +99,7 @@ class MXXLSimReader(object):
 ###############################
 
 
-class MXXLSim(object):
+class MXXLSim(catalog.Catalog):
 
 
     #########

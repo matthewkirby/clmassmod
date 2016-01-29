@@ -29,14 +29,14 @@ class BetaCalcer(object):
     def __call__(self, galaxies):
 
 
-        zlens = galaxies.hdu.header['ZLENS']
+        zlens = galaxies.zcluster
         if 'targetz' in self.config:
             zlens = self.config['targetz']
 
         beta_s = self.calcBetas(zlens, galaxies)
 
         if 'targetz' in self.config:
-            Dl_ref = nfwutils.global_cosmology.angulardist(galaxies.hdu.header['ZLENS'])
+            Dl_ref = nfwutils.global_cosmology.angulardist(galaxies.zcluster)
             Dl_target = nfwutils.global_cosmology.angulardist(self.config['targetz'])
             beta_s = beta_s*(Dl_target/Dl_ref)
 

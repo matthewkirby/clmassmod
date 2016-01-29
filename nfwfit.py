@@ -5,7 +5,7 @@
 # Options to explore radial fit range, mass-concentration relation, and binning scheme in fits.
 ########################
 
-import importlib, cPickle, sys, os
+import cPickle, sys, os
 import numpy as np
 import astropy.io.fits as pyfits
 import nfwutils, bashreader, ldac
@@ -16,37 +16,18 @@ import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
 import profilemaker
+import simutils
 
 
 #######################
 
 
-def readConfiguration(configname):
-
-    config = bashreader.parseFile(configname)
-    return config
-    
-
-########################
-
-def buildObject(modulename, classname, *args, **kwds):
-
-    if modulename.lower() == 'none' or classname.lower() == 'none':
-        return None
-
-    aModule = importlib.import_module(modulename)
-    aClass = getattr(aModule, classname)
-    anObject = aClass(*args, **kwds)
-
-    return anObject
-    
-#####
 
 def buildModel(config):
 
 
     try:
-        massconRelation = buildObject(config.massconmodule, config.massconrelation, config)
+        massconRelation = simutils.buildObject(config.massconmodule, config.massconrelation, config)
     except AttributeError:
         massconRelation = None
 
@@ -66,8 +47,6 @@ def buildFitter(config):
     
 
     fitter = NFWFitter(model = model, config = config)
-
-
 
     return fitter
 

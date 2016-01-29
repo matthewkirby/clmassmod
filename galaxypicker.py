@@ -54,11 +54,9 @@ class DensityPicker(GalaxyPicker):
 
     def mask(self, sim):
 
-        curselect = self.prevpicker(sim)
-
-        x_arcmin = curselect['x_arcmin']
-        y_arcmin = curselect['y_arcmin']
-        zcluster = curselect['zlens']
+        x_arcmin = sim.x_arcmin
+        y_arcmin = sim.y_arcmin
+        zcluster = sim.zlens
 
         targetdensity = self.config.nperarcmin        
 
@@ -198,10 +196,19 @@ squaremosaic = lambda x_arcmin,y_arcmin: np.logical_or(np.logical_or(acsmask(x_a
 
 def selectMask(config):
 
-    maskcase = {'squaremask' : lambda : squaremask(config.maskx, config.masky, config.masktheta, config.masksidelength),
-                'circlemask' : lambda : circlemask(config.maskx, config.masky, config.maskrad),
-                'acsmask' : lambda : acsmask(config.maskx, config.masky),
-                'wfc3mask' : lambda : wfc3mask(config.maskx, config.masky),
+    maskcase = {'squaremask' : lambda x_arcmin, y_arcmin: squaremask(x_arcmin, y_arcmin, 
+                                                                     config.maskx, 
+                                                                     config.masky, 
+                                                                     config.masktheta, 
+                                                                     config.masksidelength),
+                'circlemask' : lambda x_arcmin, y_arcmin: circlemask(x_arcmin, y_arcmin,
+                                                                     config.maskx, 
+                                                                     config.masky, 
+                                                                     config.maskrad),
+                'acsmask' : lambda x_arcmin, y_arcmin: acsmask(x_arcmin, y_arcmin,
+                                                               config.maskx, config.masky),
+                'wfc3mask' : lambda x_arcmin, y_arcmin: wfc3mask(x_arcmin, y_arcmin,
+                                                                 config.maskx, config.masky),
                 'acscentered' : acscentered,
                 'offsetpointing' : offsetpointing,
                 'rotatedoffset' : rotatedoffset,
@@ -221,9 +228,9 @@ class FoVPicker(GalaxyPicker):
 
     def mask(self, sim):
 
-        x_arcmin = sim['x_arcmin']
-        y_arcmin = sim['y_arcmin']
-        zcluster = sim.header['zcluster']
+        x_arcmin = sim.x_arcmin
+        y_arcmin = sim.y_arcmin
+        zcluster = sim.zcluster
 
         if 'targetz' in self.config:
             #adjust for different redshift
@@ -233,6 +240,6 @@ class FoVPicker(GalaxyPicker):
             x_arcmin = x_arcmin*ratio
             y_arcmin = y_arcmin*ratio
 
-        selected = selectMask(self.config)()
+        selected = selectMask(self.config)(x_arcmin, y_arcmin)
         
         return selected

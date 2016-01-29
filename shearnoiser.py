@@ -53,8 +53,8 @@ class GaussianShapeNoise(ShearNoiser):
 
         shapenoise = self.config.shapenoise
         ngals = len(sim)
-        newg1 = sim['g1'] + shapenoise*np.random.standard_normal(ngals)
-        newg2 = sim['g2'] + shapenoise*np.random.standard_normal(ngals)
+        newg1 = sim.g1 + shapenoise*np.random.standard_normal(ngals)
+        newg2 = sim.g2 + shapenoise*np.random.standard_normal(ngals)
 
         return newg1, newg2
         

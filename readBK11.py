@@ -5,6 +5,7 @@
 import astropy.io.fits as pyfits, ldac
 import nfwutils
 import numpy as np
+import catalog
 
 class BK11SimReader(object):
 
@@ -21,7 +22,7 @@ class BK11SimReader(object):
         return BK11Sim(filebase)
 
 
-class BK11Sim(object):
+class BK11Sim(catalog.Catalog):
 
     def __init__(self, filename):
 

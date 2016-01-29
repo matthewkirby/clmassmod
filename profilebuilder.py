@@ -8,6 +8,7 @@ import shearnoiser
 import betacalcer
 import centergenerator
 import binnoiser
+import catalog
 
 #########################
 
@@ -67,7 +68,7 @@ class ProfileBuilder(object):
         
         noisygalaxies = self.shearnoiser(galaxies3d)
 
-        centeroffsetx, centeroffsety = self.centergenerator(sim)
+        centeroffsetx, centeroffsety = self.centergenerator(noisygalaxies)
 
         delta_x = noisygalaxies.x_arcmin - centeroffsetx
         delta_y = noisygalaxies.y_arcmin - centeroffsety
@@ -94,29 +95,24 @@ class ProfileBuilder(object):
         b2 = -e1
         B = -(b1*cos2phi+b2*sin2phi)
 
-
-
-
-        cols = [pyfits.Column(name = 'r_arcmin', format = 'E', array = r_arcmin),
-                pyfits.Column(name = 'r_mpc', format='E', array = r_mpc),
-                pyfits.Column(name = 'ghat', format='E', array = E),
-                pyfits.Column(name = 'gcross', format='E', array = B),
-                pyfits.Column(name = 'z', format='E', array = noisygalaxies.redshifts),
-                pyfits.Column(name = 'beta_s', format = 'E', array = noisygalaxies.beta_s)]
-        catalog = ldac.LDACCat(pyfits.BinTableHDU.from_columns(pyfits.ColDefs(cols)))
-        catalog.hdu.header['ZLENS'] = sim.zcluster
-
         
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2 = [x.astype(np.float64) for x in self.binner(catalog)]
+        noisygalaxies.r_arcmin = r_arcmin
+        noisygalaxies.r_mpc = r_mpc
+        noisygalaxies.ghat = E
+        noisygalaxies.gcross = B
+        
+        
+        r_mpc, ghat, sigma_ghat, beta_s, beta_s2 = [x.astype(np.float64) for x in self.binner(noisygalaxies)]
         clean = sigma_ghat > 0
 
+        profile = catalog.Catalog()
+        profile.r_mpc = r_mpc[clean]
+        profile.ghat = ghat[clean]
+        profile.sigma_ghat = sigma_ghat[clean]
+        profile.beta_s = beta_s[clean]
+        profile.beta_s2 = beta_s2[clean]
+        profile.zcluster = sim.zcluster
 
-        profile = dict(r_mpc = r_mpc[clean], 
-                       ghat = ghat[clean], 
-                       sigma_ghat = sigma_ghat[clean], 
-                       beta_s = beta_s[clean], 
-                       beta_s2 = beta_s2[clean], 
-                       zlens = sim.zcluster)
 
         noisyprofile = self.binnoiser(profile)
 
