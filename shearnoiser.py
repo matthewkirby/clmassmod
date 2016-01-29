@@ -6,25 +6,8 @@ import simutils
 
 #############
 
-def ShearNoiserFactory(config):
-    '''Build a noiser object from a config file. Could be multiple, nested.'''
-
-    noiser = NoNoise()    
-    if 'shearnoisers' in config:
-        for nextnoiser in config['shearnoisers'].split(','):
-            noisermodule, noiserclass = nextpicker.split(':')
-            noiser = simutils.buildObject(noisermodule, noiserclass, prevnoiser = noiser, config = config)
-
-    return noiser
-
-###############
 
 class ShearNoiser(object):
-
-    def __init__(self, prevnoiser, config):
-        
-        self.prevnoiser = prevnoiser
-        self.config = config
 
     def __call__(self, sim):
 
@@ -49,12 +32,15 @@ class NoNoise(object):
 
 class GaussianShapeNoise(ShearNoiser):
 
+    def configure(self, config):
+
+        self.shapenoise = config['shapenoise']
+
     def addNoise(sim):
 
-        shapenoise = self.config.shapenoise
         ngals = len(sim)
-        newg1 = sim.g1 + shapenoise*np.random.standard_normal(ngals)
-        newg2 = sim.g2 + shapenoise*np.random.standard_normal(ngals)
+        newg1 = sim.g1 + self.shapenoise*np.random.standard_normal(ngals)
+        newg2 = sim.g2 + self.shapenoise*np.random.standard_normal(ngals)
 
         return newg1, newg2
         

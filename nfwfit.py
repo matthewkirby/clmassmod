@@ -22,62 +22,28 @@ import simutils
 #######################
 
 
-
-def buildModel(config):
-
-
-    try:
-        massconRelation = simutils.buildObject(config.massconmodule, config.massconrelation, config)
-    except AttributeError:
-        massconRelation = None
-
-    if massconRelation is None:
-        model = NFW_Model(config = config)
-    else:
-        model = NFW_MC_Model(massconRelation, config = config)
-
-    return model
-
-    
-
-def buildFitter(config):
-
-
-    model = buildModel(config)
-    
-
-    fitter = NFWFitter(model = model, config = config)
-
-    return fitter
-
-####
-
-def buildSimReader(config):
-
-   return buildObject(config.readermodule, config.readerclass, config = config)
-
-    
-        
-########################
-
 class NFW_Model(object):
 
-    def __init__(self, config = None):
+    def __init__(self):
 
         self.massScale = 1e14
         self.overdensity = 200
-        self.config = config
+        self.c200_low = 0.1
+        self.c200_high = 30.
+        
 
-        if config is not None and 'massprior' in config and config.massprior != 'linear':
+    def configure(self, config):
+
+        if 'massprior' in config and config['massprior'] == 'log':
+            self.massprior = 'log'
             self.m200_low = 1e10
             self.m200_high = 1e17
         else:
+            self.massprior = 'linear'
             self.m200_low = -1e16
             self.m200_high = 1e16
 
 
-        self.c200_low = 0.1
-        self.c200_high = 30.
 
     def paramLimits(self):
 
@@ -110,7 +76,7 @@ class NFW_Model(object):
 
         parts = {}
 
-        if 'massprior' in self.config and self.config.massprior == 'linear':
+        if self.massprior == 'linear':
             parts['scaledmdelta'] = pymc.Uniform('scaledmdelta', self.m200_low/self.massScale, self.m200_high/self.massScale)
             
             @pymc.deterministic(trace=True)
@@ -200,10 +166,10 @@ class NFW_Model(object):
 
 class NFW_MC_Model(NFW_Model):
 
-    def __init__(self, massconRelation, config = None):
+    def configure(self, config):
 
-        super(NFW_MC_Model, self).__init__(config = config)
-        self.massconRelation = massconRelation
+        super(NFW_MC_Model, self).configure(config)
+        self.massconRelation = config['massconRelation']
 
     def guess(self):
 
@@ -227,7 +193,7 @@ class NFW_MC_Model(NFW_Model):
 
         parts = {}
         
-        if 'massprior' in self.config and self.config.massprior == 'linear':
+        if  self.massprior == 'linear':
             parts['scaledm200'] = pymc.Uniform('scaledm200', self.m200_low/self.massScale, self.m200_high/self.massScale, value = self.guess()[0])
             
             @pymc.deterministic(trace=True)
@@ -308,20 +274,18 @@ class NFW_MC_Model(NFW_Model):
 ###############################
 
 
-class NFWFitter(object):
+class MCMCFitter(object):
 
-    def __init__(self, model, config):
+    def configure(self, config):
 
-        self.model = model
-        self.config = config
+        self.model = config['model']
+        self.nsamples = 30000
+        if 'nsamples' in config:
+            self.nsamples = config['nsamples']
+        
 
 
-    ######
-
-
-    def explorePosterior(self, catalog, deltas = [200, 500, 2500]):
-
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
+    def __call__(self, profile, deltas = [200, 500, 2500]):
 
         chains = {}
 
@@ -330,7 +294,7 @@ class NFWFitter(object):
             mcmc_model = None
             for i in range(20):
                 try:
-                    mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, delta = delta)
+                    mcmc_model = self.model.makeMCMCModel(profile, delta = delta)
                     break
                 except pymc.ZeroProbability:
                     pass
@@ -344,9 +308,7 @@ class NFWFitter(object):
             options.singlecore = True
             options.adapt_every = 100
             options.adapt_after = 100
-            options.nsamples = 30000
-            if 'nsamples' in self.config:
-                options.nsamples = self.config.nsamples
+            options.nsamples = self.nsamples
             manager.model = mcmc_model
 
             runner = pma.MyMCMemRunner()
@@ -362,22 +324,22 @@ class NFWFitter(object):
 
         return chains
 
+
+##########
+
+
+class MinChisqFitter(object):
         
-
-    ######
-
-    def minChisqMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, 
-                   guess = [],
-                   useSimplex=False):
+    def __call__(self, profile, guess = [], useSimplex=False):
 
         if guess == []:
             guess = self.model.guess()
 
         print 'GUESS: %f' % guess[0]
 
-        self.model.setData(beta_s, beta_s2, zcluster)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster)
 
-        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
+        fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = guess)
         fitter.m.limits = self.model.paramLimits()
         fitter.fit(useSimplex = useSimplex)
@@ -393,24 +355,34 @@ class NFWFitter(object):
 
     class BadPDFException(Exception): pass
 
-    def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 6e15, 1e13), deltas = [200, 500, 2500]):
+class PDFScanner(object):
 
+    def configure(self, config):
+
+        self.deltas = [200, 500, 2500]
+
+        self.masses = np.arange(-1.005e15, 6e15, 1e13)
         if 'scanpdf_minmass' in config:
-            masses = np.arange(config.scanpdf_minmass, config.scanpdf_maxmass, config.scanpdf_massstep)
+            masses = np.arange(config['scanpdf_minmass'], config['scanpdf_maxmass'], config['scanpdf_massstep'])
+
+
+
+    def __call__(self, profile):
+
 
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
 
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zlens)
 
-        self.model.setData(beta_s, beta_s2, zlens)
-
-        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
+        fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = self.model.guess())
 
         pdfs = {}
 
-        for delta in deltas:
+        masses = self.masses
+
+        for delta in self.deltas:
 
             chisqs = np.zeros(len(masses))
 
@@ -446,63 +418,6 @@ class NFWFitter(object):
 
     #######
 
-    def runUntilNotFail(self, catalog, config):
-
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
-
-        for i in range(config.nbootstraps):
-
-            try:
-                fitresult = self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
-
-
-                if fitresult is not None:
-                    return fitresult
-
-            except ValueError:
-                pass
-
-        #one last try with the SIMPLEX algorithm
-        return self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, useSimplex=True)
-
-
-    #####
-            
-
-    def bootstrapFit(self, catalog, config):
-
-        fitresults = []
-        nfail = 0
-
-
-        for i in range(config.nbootstraps):
-
-            if i == 0:
-                curCatalog = catalog
-            else:
-                curBootstrap = np.random.randint(0, len(catalog), size=len(catalog))
-                curCatalog = catalog.filter(curBootstrap)
-
-            r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(curCatalog, config)
-
-
-            try:
-                fitresult = self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
-
-                
-
-                if fitresult is None:
-                    nfail += 1
-                else:
-                    fitresults.append(fitresult)
-
-            except ValueError:
-                nfail += 1
-                
-
-
-
-        return fitresults, nfail
 
 
 

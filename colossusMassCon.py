@@ -74,9 +74,9 @@ def matchCosmo():
 
 class ColossusMC(IterateC200):
 
-    def __init__(self, config):
+    def configure(self, config):
 
-        self.modelname = config.colossusmcname
+        self.modelname = config['colossusmcname']
 
 
     ###

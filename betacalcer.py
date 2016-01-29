@@ -10,34 +10,29 @@ import nfwutils
 
 ##########
 
-def BetaCalcerFactory(config):
-
-
-
-    betamodule, betaclass = config['betacalcer'].split(':')
-    betacalcer = simutils.buildObject(betamodule, betaclass, config = config)
-
-    return betacalcer
-
-###########
 
 class BetaCalcer(object):
+    '''ABSTRACT'''
 
-    def __init__(self, config):
-        self.config = config
+    def configure(self, config):
+
+        self.targetz = None
+        if 'targetz' in config:
+            self.targetz = config['targetz']
+        
 
     def __call__(self, galaxies):
 
 
         zlens = galaxies.zcluster
-        if 'targetz' in self.config:
-            zlens = self.config['targetz']
+        if self.targetz is not None:
+            zlens = self.targetz
 
         beta_s = self.calcBetas(zlens, galaxies)
 
-        if 'targetz' in self.config:
+        if self.targetz is not None:
             Dl_ref = nfwutils.global_cosmology.angulardist(galaxies.zcluster)
-            Dl_target = nfwutils.global_cosmology.angulardist(self.config['targetz'])
+            Dl_target = nfwutils.global_cosmology.angulardist(self.targetz)
             beta_s = beta_s*(Dl_target/Dl_ref)
 
 
@@ -57,12 +52,15 @@ class OnlyRescaleLens(BetaCalcer):
 
 class FixedRedshift(BetaCalcer):
 
+    def configure(self, config):
+
+        super(FixedRedshift, self).configure(config)
+        self.z_source = config['zsource']
+
 
     def calcBetas(self, zlens, galaxies):
 
-        z_source = self.config.zsource
-
-        beta_s = nfwutils.global_cosmology.beta_s(np.ones(len(galaxies))*z_source, zlens)
+        beta_s = nfwutils.global_cosmology.beta_s(np.ones(len(galaxies))*self.z_source, zlens)
 
         return beta_s
 
@@ -71,10 +69,15 @@ class FixedRedshift(BetaCalcer):
 
 class FixedBeta(BetaCalcer):
 
+    def configure(self, config):
+
+        super(FixedBeta, self).configure(config)
+        self.beta_s = config['beta_s']
+
     def calcBetas(self, zlens, galaxies):
 
-        beta_s = self.config.beta_s
-        return beta_s*np.ones(len(galaxies))
+
+        return self.beta_s*np.ones(len(galaxies))
 
         
         

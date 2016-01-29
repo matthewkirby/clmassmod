@@ -2,7 +2,7 @@
 
 ############
 
-import importlib
+import imp
 
 ############
 
@@ -10,11 +10,19 @@ import importlib
 
 def readConfiguration(configname):
 
-    #can this take a file path?
-    configmodule = importlib.import_module(configname)
-    
-    
+    configmodule = imp.load_source('config', configname)
 
+    
+    
+    configure(configmodule.__dict__)
+
+#######################
+
+def configure(config):
+
+    for val in config.itervalues():
+        if hasattr(val, 'configure'):
+            val.configure(config)
     
 
 ########################
@@ -31,3 +39,22 @@ def buildObject(modulename, classname, *args, **kwds):
     return anObject
     
 #####
+
+class Composite(object):
+
+    def __init__(self, *pickers):
+        self.pickers = pickers
+
+    def configure(self, config):
+
+        for picker in self.pickers:
+            if hasattr(picker, 'configure'):
+                picker.configure(config)
+
+    def __call__(self, sim):
+
+        curcat = sim
+        for picker in self.pickers:
+            curcat = picker(curcat)
+
+        return curcat
