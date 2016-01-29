@@ -9,24 +9,6 @@ import numpy as np
 
 ###########
 
-class Composite(object):
-
-    def __init__(self, *pickers):
-        self.pickers = pickers
-
-    def configure(config):
-
-        for picker in self.pickers:
-            if hasattr(picker, 'configure'):
-                picker.configure(config)
-
-    def __call__(self, sim):
-
-        curcat = sim
-        for picker in self.pickers:
-            curcat = picker(curcat)
-
-        return curcat
 
 ##################
 
