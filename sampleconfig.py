@@ -31,8 +31,9 @@ maskname='squaremosaic'
 
 import galaxypicker
 fovpicker = galaxypicker.FoVPicker()
+maskname='acsmask'
 
-galaxypickers = galaxypicker,fovpicker
+galaxypicker = galaxypicker.Composite(galaxypicker,fovpicker)
 
 import betacalcer
 betacalcer = betacalcer.FixedBeta()
@@ -47,6 +48,12 @@ centergenerator = centergenerator.XrayMagneticumOffset()
 
 import basicBinning
 binner = basicBinning.gaussianfixedbins()
+profilemax = 1.5
+profilemin = 0.5
+binspacing = 'linear'
+nbins = 12
+profilecol = 'r_mpc'
+
 
 import binnoiser
 binnoiser = binnoiser.NoBinNoise()
