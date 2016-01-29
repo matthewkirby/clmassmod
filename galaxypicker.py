@@ -222,6 +222,8 @@ def selectMask(config):
                 'centerandrandoffset' : centerandrandoffset,
                 'squaremosaic' : squaremosaic}
 
+    return maskcase[config.maskname]
+
 
 
 class FoVPicker(GalaxyPicker):

@@ -15,7 +15,7 @@ import fitmodel
 import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
-import profilemaker
+import profilebuilder
 import simutils
 
 

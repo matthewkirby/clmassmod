@@ -5,43 +5,46 @@ import os.path
 
 #####################
 
-__lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_output_v3_ctim_bgq/massana/gb1_pofz_tim1_1p5m/{cluster}/massana_apera_c_x0/lssmocks'
+#__lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_output_v3_ctim_bgq/massana/gb1_pofz_tim1_1p5m/{cluster}/massana_apera_c_x0/lssmocks'
+#
+#
+#def loadLSSRealization(cluster, id = 'random'):
+#        
+#    clustermockdir = __lss_dir__.format(cluster = cluster)
+#
+#    if id == 'random':
+#
+#        lss_possible = readtxtfile.readtxtfile('{}/fit_lss.results'.format(clustermockdir))
+#        ids_available = lss_possible[:,0][lss_possible[:,7] > 1000]
+#
+#        id = int(ids_available[np.random.randint(0, len(ids_available), 1)])
+#
+#    print 'Loading LSS %d' % id
+#
+#    lssfile = '{mockdir}/mock{id}/shear.profile.all.beta2.unchanged'.format(mockdir = clustermockdir,
+#                                                                            id = id)
+#
+#    rawlssprofile = readtxtfile.readtxtfile(lssfile)
+#
+#    lssprofile = dict(r_mpc = rawlssprofile[:,0],
+#                      gt = rawlssprofile[:,1],
+#                      magbin = rawlssprofile[:,7])
+#                      
+#
+#    return lssprofile
+#
+#
+#
+######################
 
 
-def loadLSSRealization(cluster, id = 'random'):
-        
-    clustermockdir = __lss_dir__.format(cluster = cluster)
+class hstnoisebins(BinNoiser):
+    '''This is a combination of a binner and a binnoiser. Do not combine with a shearnoiser.'''
 
-    if id == 'random':
-
-        lss_possible = readtxtfile.readtxtfile('{}/fit_lss.results'.format(clustermockdir))
-        ids_available = lss_possible[:,0][lss_possible[:,7] > 1000]
-
-        id = int(ids_available[np.random.randint(0, len(ids_available), 1)])
-
-    print 'Loading LSS %d' % id
-
-    lssfile = '{mockdir}/mock{id}/shear.profile.all.beta2.unchanged'.format(mockdir = clustermockdir,
-                                                                            id = id)
-
-    rawlssprofile = readtxtfile.readtxtfile(lssfile)
-
-    lssprofile = dict(r_mpc = rawlssprofile[:,0],
-                      gt = rawlssprofile[:,1],
-                      magbin = rawlssprofile[:,7])
-                      
-
-    return lssprofile
-
-
-
-#####################
-
-
-class hstnoisebins(object):
-    ''' Note: This binning class adds noise, unlike the other binning classes. Should not be run with shape noise added at the catalog reader stage.'''
 
     def __init__(self, config):
+
+        super(hstnoisebins, self).__init__(config, *args, **kwds)
 
         if 'shapenoise' in config and config['shapenoise'] > 0.:
             raise ValueError
