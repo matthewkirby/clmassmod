@@ -2,7 +2,6 @@
 
 ############
 
-import bashreader
 import importlib
 
 ############
@@ -11,8 +10,11 @@ import importlib
 
 def readConfiguration(configname):
 
-    config = bashreader.parseFile(configname)
-    return config
+    #can this take a file path?
+    configmodule = importlib.import_module(configname)
+    
+    
+
     
 
 ########################

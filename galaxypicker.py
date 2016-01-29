@@ -9,16 +9,18 @@ import numpy as np
 
 ###########
 
-def GalaxyPickerFactory(config):
-    '''Build a picker object from a config file. Could be multiple, nested.'''
+class Composite(object):
 
-    picker = AllGalaxyPicker()    
-    if 'galaxypickers' in config:
-        for nextpicker in config['galaxypickers'].split(','):
-            pickermodule, pickerclass = nextpicker.split(':')
-            picker = simutils.buildObject(pickermodule, pickerclass, prevpicker = picker, config = config)
+    def __init__(self, *pickers):
+        self.pickers = pickers
 
-    return picker
+    def __call__(self, sim):
+
+        curcat = sim
+        for picker in self.pickers:
+            curcat = picker(curcat)
+
+        return curcat
 
 ##################
 
@@ -26,16 +28,13 @@ class GalaxyPicker(object):
 
     def __init__(self, prevpicker, config):
 
-        self.prevpicker = prevpicker
         self.config = config
 
     def __call__(self, sim):
 
-        prevselect = self.prevpicker(sim)
+        curmask = self.mask(sim)
 
-        curmask = self.mask(prevselect)
-
-        return curselect.filter(curmask)
+        return sim.filter(curmask)
 
 ###################
 
