@@ -19,8 +19,7 @@ massconRelation = colossusMassCon.ColossusMC()
 colossusMCname='diemer15'
 
 import nfwfit
-fitter = nfwfit.NFWFitter()
-fitmethod='pdf'
+fitter = nfwfit.PDFScanner()
 
 
 import galaxypicker

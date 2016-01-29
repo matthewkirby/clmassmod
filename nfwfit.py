@@ -279,17 +279,19 @@ class MCMCFitter(object):
     def configure(self, config):
 
         self.model = config['model']
+        self.deltas = [200, 500, 2500]
         self.nsamples = 30000
         if 'nsamples' in config:
             self.nsamples = config['nsamples']
+
         
 
 
-    def __call__(self, profile, deltas = [200, 500, 2500]):
+    def __call__(self, profile):
 
         chains = {}
 
-        for delta in deltas:
+        for delta in self.deltas:
 
             mcmc_model = None
             for i in range(20):
@@ -329,6 +331,10 @@ class MCMCFitter(object):
 
 
 class MinChisqFitter(object):
+
+    def configure(self, config):
+
+        self.model = config['model']
         
     def __call__(self, profile, guess = [], useSimplex=False):
 
@@ -359,6 +365,7 @@ class PDFScanner(object):
 
     def configure(self, config):
 
+        self.model = config['model']
         self.deltas = [200, 500, 2500]
 
         self.masses = np.arange(-1.005e15, 6e15, 1e13)
@@ -439,23 +446,19 @@ def runNFWFit(catalogname, configname, outputname):
 
     try:
 
-        config = readConfiguration(configname)
-
-        simreader = buildSimReader(config)
+        config = simutils.readConfiguration(configname)
+        simreader = config['simreader']
+        profilebuilder = config['profilebuilder']
+        fitter = config['fitter']
 
         nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
-        catalog = readSimCatalog(catalogname, simreader, config)
+        sim = simreader.load(catalogname)
 
-        fitter = buildFitter(config)
+        profile = profilebuilder(sim)
 
-        if 'fitter' in config and config.fitter == 'maxlike':
-            fitvals = fitter.runUntilNotFail(catalog, config)
-        elif 'fitter' in config and config.fitter == 'pdf':
-            fitvals = fitter.scanPDF(catalog, config)
-        else:
-            fitvals = fitter.explorePosterior(catalog)
-    
+        fitvals = fitter(profile)
+
         savefit(fitvals, outputname)
 
     except TypeError:

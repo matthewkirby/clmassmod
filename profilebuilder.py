@@ -3,56 +3,20 @@
 
 import numpy as np
 
-import galaxypicker
-import shearnoiser
-import betacalcer
-import centergenerator
-import binnoiser
-import catalog
 
 #########################
 
-def BinnerFactory(config):
-
-    binnermodule, binnerclass = config['binner'].split(':')
-    binner = simutils.buildObject(binnermodule, binnerclass, config = config)
-
-    return binnercalcer
-
-
-########################
-
-########################
-
-def ProfileBuilderFactory(config):
-
-    galaxypicker = galaxypicker.GalaxyPickerFactory(config) #could be multiple nested
-    betacalcer = betacalcer.BetaCalcerFactory(config)
-    shearnoiser = shearnoiser.ShearNoiserFactory(config) #could be multiple nested
-    centergenerator = centergenerator.CenterGeneratorFactory(config)    
-    binner = BinnerFactory(config)
-    binnoiser = binnoiser.BinNoiserFactory(config)  #could be multiple nested
-
-    
-
-    return ProfileBuilder(galaxypicker, betacalcer, 
-                          shearnoiser, centergenerator, 
-                          binner, binnoiser)
-
-###
 
 class ProfileBuilder(object):
 
-    def __init__(self, galaxypicker, betacalcer, 
-                 shearnoiser, centergenerator, 
-                 binner, binnoiser):
+    def configure(self, config):
 
-        self.galaxypicker = galaxypicker
-        self.betacalcer = betacalcer
-        self.shearnoiser = shearnoiser
-        self.centergenerator = centergenerator
-        self.binner = binner
-        self.binnoiser = binnoiser
+        self.galaxypicker = config['galaxypicker']
+        self.betacalcer = config['betacalcer']
+        self.shearnoiser = config['shearnoiser']
+        self.centergenerator = config['centergenerator']
+        self.binner = config['binner']
+        self.binnoiser = config['binnoiser']
 
 
     def __call__(self, sim):
@@ -102,19 +66,12 @@ class ProfileBuilder(object):
         noisygalaxies.gcross = B
         
         
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2 = [x.astype(np.float64) for x in self.binner(noisygalaxies)]
+        profile = self.binner(noisygalaxies)
         clean = sigma_ghat > 0
 
-        profile = catalog.Catalog()
-        profile.r_mpc = r_mpc[clean]
-        profile.ghat = ghat[clean]
-        profile.sigma_ghat = sigma_ghat[clean]
-        profile.beta_s = beta_s[clean]
-        profile.beta_s2 = beta_s2[clean]
-        profile.zcluster = sim.zcluster
-
-
-        noisyprofile = self.binnoiser(profile)
+        cleanprofile = profile.filter(clean)
+        cleanprofile.zcluster = sim.zcluster
+        noisyprofile = self.binnoiser(cleanprofile)
 
         return noisyprofile
         

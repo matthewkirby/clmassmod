@@ -12,9 +12,11 @@ def readConfiguration(configname):
 
     configmodule = imp.load_source('config', configname)
 
-    
-    
-    configure(configmodule.__dict__)
+    config = configmodule.__dict__
+
+    configure(config)
+
+    return config
 
 #######################
 
