@@ -188,13 +188,13 @@ class BootstrapFixedBins(object):
 
             
 
-            radii.append(np.mean(selected[self.profileCol]))
+            radii.append(np.mean(getattr(selected,self.profileCol)))
 
-            curmean, curerr = bootstrapmean(selected['ghat'])
+            curmean, curerr = bootstrapmean(selected.ghat)
             shear.append(curmean)
             shearerr.append(curerr)
-            avebeta.append(np.mean(selected['beta_s']))
-            avebeta2.append(np.mean(selected['beta_s']**2))
+            avebeta.append(np.mean(selected.beta_s))
+            avebeta2.append(np.mean(selected.beta_s**2))
             ngals.append(len(selected))
 
         profile = catalog.Catalog()

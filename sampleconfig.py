@@ -19,7 +19,7 @@ targetz=0.9
 import galaxypicker
 densitypicker = galaxypicker.DensityPicker()
 nperarcmin=50.
-maskname='squaremosaic'
+
 
 import galaxypicker
 fovpicker = galaxypicker.SquareMosaic()

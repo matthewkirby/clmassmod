@@ -1,7 +1,13 @@
-import readtxtfile
-import nfwutils
 import numpy as np
 import os.path
+
+
+import readtxtfile
+import nfwutils
+import basicBinning
+import betacalcer
+import shearnoiser
+import catalog
 
 #####################
 
@@ -37,33 +43,33 @@ import os.path
 #
 ######################
 
+class HSTBinning(object):
 
-class hstnoisebins(BinNoiser):
-    '''This is a combination of a binner and a binnoiser. Do not combine with a shearnoiser.'''
+    def configure(self, config):
 
+        assert(isinstance(config['betacalcer'], betacalcer.InfiniteRedshift))
+        assert(isinstance(config['shearnoiser'], shearnoiser.NoNoise))
 
-    def __init__(self, config):
-
-        super(hstnoisebins, self).__init__(config, *args, **kwds)
-
-        if 'shapenoise' in config and config['shapenoise'] > 0.:
-            raise ValueError
         
-        self.maxradii = config.profilemax
-        self.minradii = config.profilemin
 
-        self.profileCol = config.profilecol
-        self.binwidth = config.binwidth
-        self.profilefile = config.profilefile
+
+        self.profilefile = config['profilefile']
+
+        self.maxradii = config['profilemax']
+        self.minradii = config['profilemin']
+        self.binwidth = config['binwidth']
+
+        self.profileCol = config['profilecol']
+
 
 
         profile = readtxtfile.readtxtfile(self.profilefile)
         
-        self.bincenters = [x[0] for x in profile]
-        self.deltag = [x[2] for x in profile]
-        self.betas = [x[5] for x in profile]
-        self.beta2s = [x[6] for x in profile]
-        self.magbinids = [x[-1] for x in profile]
+        self.bincenters = np.array([x[0] for x in profile])
+        self.deltag = np.array([x[2] for x in profile])
+        self.betas = np.array([x[5] for x in profile]) #not scaled by beta_inf
+
+        self.magbinids = np.array([x[-1] for x in profile])
 
         self.nbins = len(self.bincenters)
 
@@ -71,62 +77,95 @@ class hstnoisebins(BinNoiser):
         if 'centerforbin' in config and config['centerforbin'] == 'ave':
             self.useAveForCenter = True
 
-        self.lssnoise = None
-        if 'lssnoise' in config and config.lssnoise != 'False':
-            self.lssnoise = config.lssnoise
-        
-            
 
-    def __call__(self, catalog, config):
+    ####
+
+    def doBinning(self, galaxies):
 
         radii = []
         shear = []
         shearerr = []
         avebeta = []
         avebeta2 = []
+        ngals = []
 
-        lssrealization = None
-        if self.lssnoise is not None:
-            lssrealization = loadLSSRealization(self.clustername, self.lssnoise)
-
+        profileCol = getattr(galaxies,self.profileCol)
 
         for i in range(self.nbins):
 
-            if self.bincenters[i] < self.minradii or self.bincenters[i] > self.maxradii:
-                continue
+            mintake = self.bincenters[i] - self.binwidth/2.
+            maxtake = self.bincenters[i] + self.binwidth/2.
+            selected = galaxies.filter(np.logical_and(profileCol >= mintake,
+                                                      profileCol < maxtake))
 
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= (self.bincenters[i] - self.binwidth/2.),
-                                                     catalog[self.profileCol] < (self.bincenters[i] + self.binwidth/2.)))
+        
+        
 
-            ngal = len(selected)            
-
-            if ngal == 0:
+            if len(selected) < 2:
+                radii.append(-1)
+                shear.append(-1)
+                shearerr.append(-1)
+                avebeta.append(-1)
+                avebeta2.append(-1)
+                ngals.append(-1)
                 continue
 
             
 
-            if self.useAveForCenter:
-                radii.append(np.mean(selected[self.profileCol]))
-            else:
-                radii.append(self.bincenters[i])
-                
-            #Take the mean shear and add noise
-            ghat = np.mean(selected['ghat']) + self.deltag[i]*np.random.standard_normal()
+            radii.append(np.mean(getattr(selected,self.profileCol)))
 
-            #if applicable, add LSS noise
-            if lssrealization is not None:
-                selectbin = np.logical_and(lssrealization['r_mpc'] == self.bincenters[i],
-                                           lssrealization['magbin'] == self.magbinids[i])
-                lss_gt = lssrealization['gt'][selectbin]
-                assert(lss_gt.shape == (1,))
-                ghat += float(lss_gt)
+            curmean, curerr = basicBinning.bootstrapmean(selected.ghat)
+            shear.append(curmean)
+            shearerr.append(curerr)
+            avebeta.append(np.mean(selected.beta_s))
+            avebeta2.append(np.mean(selected.beta_s**2))
+            ngals.append(len(selected))
 
-            shear.append(ghat)  
+        profile = catalog.Catalog()
+        setattr(profile, self.profileCol, np.array(radii))
+        profile.ghat = np.array(shear)
+        profile.sigma_ghat = np.array(shearerr)
+        profile.beta_s = np.array(avebeta)
+        profile.beta_s2 = np.array(avebeta2)
+        profile.ngals = np.array(ngals)
+
+        return profile
+
+
+    #####
+
+
+    def addNoise(self, profile):
+
+        noisy = profile.copy()
+
+        #rescale beta
+        beta_s = self.betas/nfwutils.global_cosmology.beta([1e6], profile.zlens)
+        newghat = profile.ghat*beta_s
         
-            shearerr.append(self.deltag[i])
-            avebeta.append(np.mean(selected['beta_s']))
-            avebeta2.append(np.mean(selected['beta_s']**2))
+        noisy.ghat = newghat + self.deltag[i]*np.random.standard_normal(self.nbins)
+        noisy.sigma_ghat = self.deltag
+        noisy.beta_s = beta_s
+        noisy.beta_s2 = beta_s**2
 
+        return noisy
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2)
-      
+####
+
+class HSTBinnerWrapper(HSTBinning):
+
+    def configure(self, config):
+        self.parent = config['hstbinning']
+
+    def __call__(self, *args, **kwds):
+        self.parent.doBinning(*args, **kwds)
+
+####
+
+class HSTBinNoiserWrapper(HSTBinning):
+
+    def configure(self, config):
+        self.parent = config['hstbinning']
+
+    def __call__(self, *args, **kwds):
+        self.parent.addNoise(*args, **kwds)
