@@ -40,7 +40,6 @@ class FixedRedshift(BetaCalcer):
 
     def configure(self, config):
 
-        super(FixedRedshift, self).configure(config)
         self.z_source = config['zsource']
 
 
@@ -57,7 +56,6 @@ class FixedBeta(BetaCalcer):
 
     def configure(self, config):
 
-        super(FixedBeta, self).configure(config)
         self.beta_s = config['beta_s']
 
     def calcBetas(self, zlens, galaxies):

@@ -45,7 +45,6 @@ class DensityPicker(GalaxyPicker):
 
         x_arcmin = sim.x_arcmin
         y_arcmin = sim.y_arcmin
-        zcluster = sim.zlens
 
         targetdensity = self.nperarcmin        
 

@@ -34,8 +34,8 @@ class RedshiftRescaler(object):
         newcat.zlens = self.targetz
 
 
-        refDL = nfwutils.global_cosmology.angulardist(sim.zcluster)
-        newDL = nfwutils.global_cosmology.angulardist(newcat.zlens)
+        refDl = nfwutils.global_cosmology.angulardist(sim.zcluster)
+        newDl = nfwutils.global_cosmology.angulardist(newcat.zlens)
         
         #rescale angle
         newcat.x_arcmin = (newcat.x_mpc/newDl)*(180.*60/np.pi)
@@ -44,7 +44,7 @@ class RedshiftRescaler(object):
         #rescale shear, kappa. Both are proportional to Dl. Beta_inf also changes.
         old_beta_inf = nfwutils.global_cosmology.beta([1e6], sim.zcluster)
         new_beta_inf = nfwutils.global_cosmology.beta([1e6], newcat.zlens)
-        ratio = (newDL/refDL)*(new_beta_inf/old_beta_inf)  #this is in effect rescaling sigma_crit
+        ratio = (newDl/refDl)*(new_beta_inf/old_beta_inf)  #this is in effect rescaling sigma_crit
         newcat.gamma1_inf = newcat.gamma1_inf*ratio
         newcat.gamma2_inf = newcat.gamma2_inf*ratio
         newcat.kappa_inf = newcat.kappa_inf*ratio

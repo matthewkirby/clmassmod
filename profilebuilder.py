@@ -25,7 +25,7 @@ class ProfileBuilder(object):
 
         rescaledsim = self.rescalecluster(sim)
 
-        galaxies = self.galaxypicker(sim)
+        galaxies = self.galaxypicker(rescaledsim)
 
         galaxies3d = self.betacalcer(galaxies)
         
@@ -44,7 +44,7 @@ class ProfileBuilder(object):
         r_arcmin = np.sqrt(delta_x**2 + delta_y**2)
 
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
+        dL = nfwutils.global_cosmology.angulardist(noisygalaxies.zlens)    
 
         deltax_mpc = (delta_x * dL * np.pi)/(180.*60)
         deltay_mpc = (delta_y * dL * np.pi)/(180.*60)
@@ -75,8 +75,9 @@ class ProfileBuilder(object):
         clean = profile.sigma_ghat > 0
 
         cleanprofile = profile.filter(clean)
-        cleanprofile.zcluster = sim.zcluster
-        cleanprofile.zlens = sim.zlens
+        cleanprofile.zcluster = noisygalaxies.zcluster
+        cleanprofile.zlens = noisygalaxies.zlens
+
         noisyprofile = self.binnoiser(cleanprofile)
 
         return noisyprofile
