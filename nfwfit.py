@@ -357,9 +357,9 @@ class MinChisqFitter(object):
         return None
 
 
-    #######
-
-    class BadPDFException(Exception): pass
+#######
+        
+class BadPDFException(Exception): pass
 
 class PDFScanner(object):
 
@@ -380,7 +380,12 @@ class PDFScanner(object):
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
 
-        self.model.setData(profile.beta_s, profile.beta_s2, profile.zlens)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster)
+        print profile.beta_s, profile.beta_s2, profile.zcluster
+
+        print profile.r_mpc, profile.ghat, profile.sigma_ghat
+
+        zlens = profile.zcluster
 
         fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = self.model.guess())
@@ -444,25 +449,23 @@ def savefit(bootstrap_vals, outputname):
 
 def runNFWFit(catalogname, configname, outputname):
 
-    try:
 
-        config = simutils.readConfiguration(configname)
-        simreader = config['simreader']
-        profilebuilder = config['profilebuilder']
-        fitter = config['fitter']
 
-        nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+    config = simutils.readConfiguration(configname)
+    simreader = config['simreader']
+    profilebuilder = config['profilebuilder']
+    fitter = config['fitter']
 
-        sim = simreader.load(catalogname)
+    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
-        profile = profilebuilder(sim)
+    sim = simreader.load(catalogname)
 
-        fitvals = fitter(profile)
+    profile = profilebuilder(sim)
 
-        savefit(fitvals, outputname)
+    fitvals = fitter(profile)
 
-    except TypeError:
-        raise TypeError(configname)
+    savefit(fitvals, outputname)
+
 
 ############################
 

@@ -14,17 +14,21 @@ def readConfiguration(configname):
 
     config = configmodule.__dict__
 
-    configure(config)
+    runConfigure(config)
 
     return config
 
 #######################
 
-def configure(config):
+def runConfigure(config):
 
+    toconfigure = []
     for val in config.itervalues():
         if hasattr(val, 'configure'):
-            val.configure(config)
+            toconfigure.append(val)
+
+    for val in toconfigure:
+        val.configure(config)
     
 
 ########################

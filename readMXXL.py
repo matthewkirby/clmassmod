@@ -106,6 +106,8 @@ class MXXLSim(catalog.Catalog):
 
     def __init__(self, filebase):
 
+        super(MXXLSim, self).__init__()
+
         # returns set of angle and mpc distances from the true center (flattened)
         # for each position, provide reduced shear g1 and g2, as well as z and beta for each source
 
@@ -121,11 +123,14 @@ class MXXLSim(catalog.Catalog):
 
         self.zcluster = kappa.redshift
 
+
         delta_mpc, delta_arcmin = kappa.grid()
         delta_mpc = [x.flatten() for x in delta_mpc]
         delta_arcmin = [x.flatten() for x in delta_arcmin]
 
 
+        self.x_mpc = delta_mpc[0]
+        self.y_mpc = delta_mpc[1]
         self.x_arcmin = delta_arcmin[0]
         self.y_arcmin = delta_arcmin[1]
 

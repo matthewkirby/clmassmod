@@ -1,8 +1,7 @@
 ''' Add noise & offsets to invidivual galaxy shear measurements'''
 #############
 
-import simutils
-
+import numpy as np
 
 #############
 
@@ -11,14 +10,14 @@ class ShearNoiser(object):
 
     def __call__(self, sim):
 
-        noisygals = self.prevnoiser(sim)
+        newg1, newg2 = self.addNoise(sim)
 
-        newg1, newg2 = self.addNoise(noisygals)
+        newcat = sim.copy()
 
-        noisygals.g1 = newg1
-        noisygals.g2 = newg2
+        newcat.g1 = newg1
+        newcat.g2 = newg2
 
-        return noisygals
+        return newcat
 
 ###############
 
@@ -36,7 +35,7 @@ class GaussianShapeNoise(ShearNoiser):
 
         self.shapenoise = config['shapenoise']
 
-    def addNoise(sim):
+    def addNoise(self, sim):
 
         ngals = len(sim)
         newg1 = sim.g1 + self.shapenoise*np.random.standard_normal(ngals)

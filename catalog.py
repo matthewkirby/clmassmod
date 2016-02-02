@@ -18,12 +18,23 @@ class Catalog(object):
         super(Catalog, self).__setattr__('header', {})
         super(Catalog, self).__setattr__('length', -1)
 
+    def copy(self):
+
+        newcat = Catalog()
+        newcat.header.update(self.header)
+        newcat.table.update(self.table)
+        newcat.length = self.length
+
+        return newcat
+
 
     def __getattr__(self, name):
 
-        if name in self.header:
-            return self.header[name]
-        return self.table[name]
+        header = Catalog.__getattribute__(self, 'header')
+        if name in header:
+            return header[name]
+        table = Catalog.__getattribute__(self, 'table')
+        return table[name]
 
     def __setattr__(self, name, val):
         
@@ -107,6 +118,30 @@ class TestCatalog(unittest.TestCase):
         self.assertTrue((redshifts[redshifts < 0.5] == newcat.redshifts).all())
         self.assertTrue((betas[redshifts < 0.5] == newcat.betas).all())
         self.assertEqual(cat.clusterz, 0.5)
+
+    ###
+
+    def testCopy(self):
+
+        redshifts = np.arange(0.0, 1.0, 0.01)
+        betas = np.arange(len(redshifts))
+
+        cat = Catalog()
+        cat.clusterz = 0.5
+        cat.redshifts = redshifts
+        cat.betas = betas
+
+        newcat = cat.copy()
+        newcat.redshifts = np.zeros_like(redshifts)
+        newcat.clusterz = 0.3
+
+        self.assertTrue((cat.redshifts == redshifts).all())
+        self.assertEqual(cat.clusterz, 0.5)
+        
+        self.assertTrue((newcat.redshifts == 0).all())
+        self.assertTrue(newcat.clusterz == 0.3)
+        self.assertTrue((newcat.betas == betas).all())
+        
 
 
 

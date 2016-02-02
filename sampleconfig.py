@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 import readMXXL
 simreader = readMXXL.MXXLSimReader()
 
@@ -16,7 +7,7 @@ massprior='linear'
 
 import colossusMassCon
 massconRelation = colossusMassCon.ColossusMC()
-colossusMCname='diemer15'
+colossusmcname='diemer15'
 
 import nfwfit
 fitter = nfwfit.PDFScanner()
@@ -24,29 +15,34 @@ fitter = nfwfit.PDFScanner()
 
 import galaxypicker
 densitypicker = galaxypicker.DensityPicker()
-nperarcmin=10.
-targetz=0.85
+nperarcmin=50.
 maskname='squaremosaic'
 
 import galaxypicker
-fovpicker = galaxypicker.FoVPicker()
-maskname='acsmask'
+fovpicker = galaxypicker.SquareMosaic()
 
-galaxypicker = galaxypicker.Composite(galaxypicker,fovpicker)
+
+import simutils
+galaxypicker = simutils.Composite(densitypicker,fovpicker)
 
 import betacalcer
 betacalcer = betacalcer.FixedBeta()
-beta_s = 0.5
+beta_s = 0.3
+
 
 import shearnoiser
 shearnoiser = shearnoiser.GaussianShapeNoise()
-shapenoise = 0.25
+shapenoise = 0.02
 
 import centergenerator
-centergenerator = centergenerator.XrayMagneticumOffset()
+centergenerator = centergenerator.SZAnalytic()
+szbeam=1.3
+coresize=1.25
+sz_xi=8.1
+targetz=1.0
 
 import basicBinning
-binner = basicBinning.gaussianfixedbins()
+binner = basicBinning.GaussianFixedBins()
 profilemax = 1.5
 profilemin = 0.5
 binspacing = 'linear'
@@ -59,14 +55,4 @@ binnoiser = binnoiser.NoBinNoise()
 
 import profilebuilder
 profilebuilder = profilebuilder.ProfileBuilder()
-
-
-
-
-
-
-
-
-
-
 

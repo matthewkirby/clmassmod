@@ -4,8 +4,10 @@ Select Galaxies from a simulation for analysis
 
 ############
 
-import simutils
 import numpy as np
+
+import simutils
+import nfwutils
 
 ###########
 
@@ -40,13 +42,13 @@ class DensityPicker(GalaxyPicker):
         self.nperarcmin = config['nperarcmin']
         self.targetz = None
         if 'targetz' in config:
-            config.targetz = config['targetz']
+            self.targetz = config['targetz']
 
     def mask(self, sim):
 
         x_arcmin = sim.x_arcmin
         y_arcmin = sim.y_arcmin
-        zcluster = sim.zlens
+        zcluster = sim.zcluster
 
         targetdensity = self.nperarcmin        
 
@@ -91,6 +93,42 @@ class DensityPicker(GalaxyPicker):
 ################################################
 #####################
 
+class FoVPicker(GalaxyPicker):
+
+    def configure(self, config):
+
+        self.targetz = None
+        if 'targetz' in config:
+            self.targetz = config['targetz']
+
+        self._configure(config)
+
+    ###
+
+    def _configure(self, config):
+        pass
+
+    def mask(self, sim):
+
+        x_arcmin = sim.x_arcmin
+        y_arcmin = sim.y_arcmin
+        zcluster = sim.zcluster
+
+        if self.targetz is not None:
+            #adjust for different redshift
+            curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
+            newangdist = nfwutils.global_cosmology.angulardist(self.targetz)
+            ratio = curr_angdist/newangdist
+            x_arcmin = x_arcmin*ratio
+            y_arcmin = y_arcmin*ratio
+
+        selected = self._mask(x_arcmin, y_arcmin)
+        
+        return selected
+
+
+###########
+
 class SquareMask(FoVPicker):
 
     def _configure(self, config):
@@ -109,7 +147,7 @@ class SquareMask(FoVPicker):
         if 'masksidelength' in config:
             self.sidelength = config['masksidelength']
 
-    def _mask(x_arcmin, y_arcmin, x = None, y = None, theta = None, sidelength = None):
+    def _mask(self, x_arcmin, y_arcmin, x = None, y = None, theta = None, sidelength = None):
 
         if x is None:
             x = self.x
@@ -193,7 +231,7 @@ class CircleMask(FoVPicker):
             self.x = config['maskx']
         if 'masky' in config:
             self.y = config['masky']
-        if 'maskrad' in config
+        if 'maskrad' in config:
             self.rad = config['maskrad']
 
 
@@ -219,18 +257,21 @@ class ACSMask(SquareMask):
 
     def _configure(self, config):
 
-        config['sidelength'] = 3.2
-        
         super(ACSMask, self)._configure(config)
+        self.sidelength = 3.2
+        
+
+
 
 ###
         
 class Wfc3Mask(SquareMask):
 
     def _configure(self, config):
-        config['theta'] = 45.
-        config['sidelength'] = 3.2*4./5.
         super(Wfc3Mask, self)._configure(config)
+        self.theta = 45.
+        self.sidelength = 3.2*4./5.
+
 
 ###
 
@@ -373,6 +414,7 @@ class SquareMosaic(FoVPicker):
     def _mask(self, x_arcmin,y_arcmin): 
 
         acsmask = ACSMask()
+        acsmask.configure({})
 
         return np.logical_or(np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=0., y=acsdiag),
                                            acsmask._mask(x_arcmin,y_arcmin,x=0.,y=-acsdiag)), 
@@ -380,32 +422,3 @@ class SquareMosaic(FoVPicker):
                                            acsmask._mask(x_arcmin,y_arcmin,x=acsdiag,y=0.)))
 
 
-class FoVPicker(GalaxyPicker):
-
-    def configure(self, config):
-
-        targetz = None
-        if 'targetz' in config:
-            self.targetz = config['targetz']
-
-        self._configure(config)
-
-    ###
-
-    def mask(self, sim):
-
-        x_arcmin = sim.x_arcmin
-        y_arcmin = sim.y_arcmin
-        zcluster = sim.zcluster
-
-        if self.targetz is not None:
-            #adjust for different redshift
-            curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
-            newangdist = nfwutils.global_cosmology.angulardist(self.targetz)
-            ratio = curr_angdist/newangdist
-            x_arcmin = x_arcmin*ratio
-            y_arcmin = y_arcmin*ratio
-
-        selected = self._mask(x_arcmin, y_arcmin)
-        
-        return selected

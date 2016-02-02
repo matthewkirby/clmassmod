@@ -3,6 +3,7 @@
 
 import numpy as np
 
+import nfwutils
 
 #########################
 
@@ -33,6 +34,7 @@ class ProfileBuilder(object):
         noisygalaxies = self.shearnoiser(galaxies3d)
 
         centeroffsetx, centeroffsety = self.centergenerator(noisygalaxies)
+        print 'Center Offset:', centeroffsetx, centeroffsety
 
         delta_x = noisygalaxies.x_arcmin - centeroffsetx
         delta_y = noisygalaxies.y_arcmin - centeroffsety
@@ -67,7 +69,7 @@ class ProfileBuilder(object):
         
         
         profile = self.binner(noisygalaxies)
-        clean = sigma_ghat > 0
+        clean = profile.sigma_ghat > 0
 
         cleanprofile = profile.filter(clean)
         cleanprofile.zcluster = sim.zcluster

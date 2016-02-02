@@ -35,9 +35,11 @@ class DumbEqualBins(object):
             self.profileCol = config['profilecol']
         
 
-    def __call__(self, catalog):
+    def __call__(self, cat):
 
-        sorted_cat = catalog.filter(np.argsort(catalog[self.profileCol]))
+        profileCol = getattr(cat, self.profileCol)
+
+        sorted_cat = cat.filter(np.argsort(profileCol))
         sorted_cat = sorted_cat.filter(np.logical_and(sorted_cat[self.profileCol] > self.minradii, 
                                                       sorted_cat[self.profileCol] < self.maxradii))
         radii = []
@@ -47,7 +49,7 @@ class DumbEqualBins(object):
         avebeta2 = []
         ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
-            maxtake = min(i+self.ngals, len(catalog))
+            maxtake = min(i+self.ngals, len(cat))
             radii.append(np.mean(sorted_cat[self.profileCol][i:maxtake]))
             shear.append(np.mean(sorted_cat['ghat'][i:maxtake]))
             shearerr.append(np.std(sorted_cat['ghat'][i:maxtake])/np.sqrt(maxtake-i))
@@ -94,9 +96,11 @@ class BootstrapEqualBins(object):
             self.profileCol = config['profilecol']
         
 
-    def __call__(self, catalog):
+    def __call__(self, cat):
 
-        sorted_cat = catalog.filter(np.argsort(catalog[self.profileCol]))
+        profileCol = getattr(cat, self.profileCol)
+
+        sorted_cat = cat.filter(np.argsort(profileCol))
         sorted_cat = sorted_cat.filter(np.logical_and(sorted_cat[self.profileCol] > self.minradii, 
                                                       sorted_cat[self.profileCol] < self.maxradii))
         radii = []
@@ -106,7 +110,7 @@ class BootstrapEqualBins(object):
         avebeta2 = []
         ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
-            maxtake = min(i+self.ngals, len(catalog))
+            maxtake = min(i+self.ngals, len(cat))
             radii.append(np.mean(sorted_cat[self.profileCol][i:maxtake]))
 
             curmean, curerr = bootstrapmean(sorted_cat['ghat'][i:maxtake])
@@ -149,7 +153,9 @@ class BootstrapFixedBins(object):
             self.profileCol = config['profilecol']
         
 
-    def __call__(self, catalog):
+    def __call__(self, cat):
+
+        profileCol = getattr(cat, self.profileCol)
 
         if self.binspacing == 'linear':
             binedges = np.linspace(self.minradii, self.maxradii, self.nbins+1)
@@ -165,8 +171,8 @@ class BootstrapFixedBins(object):
         for i in range(self.nbins):
             mintake = binedges[i]
             maxtake = binedges[i+1]
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
-                                                     catalog[self.profileCol] < maxtake))
+            selected = cat.filter(np.logical_and(profileCol >= mintake,
+                                                     profileCol < maxtake))
 
         
         
@@ -225,7 +231,9 @@ class GaussianFixedBins(object):
             self.shapenoise = config['shapenoise']
         
 
-    def __call__(self, catalog):
+    def __call__(self, cat):
+
+        profileCol = getattr(cat, self.profileCol)
 
         if self.binspacing == 'linear':
             binedges = np.linspace(self.minradii, self.maxradii, self.nbins+1)
@@ -241,19 +249,19 @@ class GaussianFixedBins(object):
         for i in range(self.nbins):
             mintake = binedges[i]
             maxtake = binedges[i+1]
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
-                                                     catalog[self.profileCol] < maxtake))
+            selected = cat.filter(np.logical_and(profileCol >= mintake,
+                                                     profileCol < maxtake))
 
             ngal = len(selected)            
 
             if ngal == 0:
                 continue
 
-            radii.append(np.mean(selected[self.profileCol]))
-            shear.append(np.mean(selected['ghat']))
+            radii.append(np.mean(getattr(selected, self.profileCol)))
+            shear.append(np.mean(selected.ghat))
             shearerr.append(self.shapenoise / np.sqrt(ngal))
-            avebeta.append(np.mean(selected['beta_s']))
-            avebeta2.append(np.mean(selected['beta_s']**2))
+            avebeta.append(np.mean(selected.beta_s))
+            avebeta2.append(np.mean(selected.beta_s**2))
             ngals.append(ngal)
 
 

@@ -77,8 +77,12 @@ class BK11Sim(catalog.Catalog):
         self.x_arcmin = x_arcmin.flatten()
         self.y_arcmin = y_arcmin.flatten()
 
+        Dl = nfwutils.global_cosmology.angulardist(sim['ZSOURCE'])
+        self.x_mpc = (self.x_arcmin/60.)*(np.pi/180.)*Dl
+        self.y_mpc = (self.y_arcmin/60.)*(np.pi/180.)*Dl
 
-        redshifts = np.ones(len(self.r_mpc))*float(sim['ZSOURCE'])
+
+        redshifts = np.ones(len(self.x_arcmin))*float(sim['ZSOURCE'])
         beta_s = nfwutils.global_cosmology.beta_s(self.redshifts, clusterz)
 
         self.gamma1_inf = (gamma1/beta_s).flatten()

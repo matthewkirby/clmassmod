@@ -11,6 +11,7 @@ import readtxtfile
 import nfwutils
 import voigt_tools as vt
 import globalconfig
+import nfwutils
 
 #############
 
@@ -33,9 +34,9 @@ class SZSimOffset(object):
         self.coresize = config['coresize']
         self.targetz = config['targetz']
 
-    def offset(sim):
+    def __call__(self, sim):
 
-        offsetingcoresize = self.szsim_offsetcat[self..szsim_offsetcat['coresize[arcmin]'] == self.coresize]
+        offsetingcoresize = self.szsim_offsetcat[self.szsim_offsetcat['coresize[arcmin]'] == self.coresize]
 
         selectedsim =np.random.uniform(0, len(offsetingcoresize))
 
@@ -62,7 +63,7 @@ class SZLensingPeakOffset(object):
     def configure(self, config):
         self.targetz = config['targetz']
 
-    def offset(sim):
+    def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
         targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
@@ -86,7 +87,7 @@ class SZXVPTheoryOffset(object):
         self.targetz = config['targetz']
         
 
-    def offset(sim):
+    def __call__(self, sim):
 
         #physical scatter in arcmin, approp for target redshift
         xvp_offsetx, xvp_offsety = self.xvpoffset(sim)
@@ -115,7 +116,7 @@ class SZXVPBCGOffset(object):
     def configure(self, config):
         self.targetz = config['targetz']
 
-    def offset(sim):
+    def __call__(self, sim):
 
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
@@ -142,7 +143,7 @@ class SZAnalytic(object):
         self.coresize = config['coresize']
         self.sz_xi = config['sz_xi']
 
-    def offset(sim):
+    def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
         targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
@@ -167,7 +168,7 @@ class XrayWTGOffset(object):
         self.wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('{}/wtg_offsets.dat'.format(globalconfig.offsetdistro_dir))]
 
 
-    def offset(sim):
+    def __call__(self, sim):
 
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
@@ -185,7 +186,7 @@ class XrayWTGOffset(object):
 
 class XraySPTHSTOffset(object):
 
-    def offset(sim):
+    def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -209,7 +210,7 @@ class XrayXVPOffset(object):
         self.xvp_offsets_mpc = readtxtfile.readtxtfile('{}/sptxvp_bcgxray'.format(globalconfig.offsetdistro_dir))[:,0]
 
 
-    def offset(sim):
+    def __call__(self, sim):
 
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
@@ -233,7 +234,7 @@ class XrayCCCPOffset(object):
 
         self.offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('{}/cccp_offsets.dat'.format(globalconfig.offsetdistro_dir))]
 
-    def offset(sim):
+    def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -253,7 +254,7 @@ class XrayCCCPOffset(object):
 
 class XrayLensingPeakOffset(object):
 
-    def offset(sim):
+    def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 
@@ -267,7 +268,7 @@ class XrayLensingPeakOffset(object):
 
 class XrayLensingPeakVoigtOffset(object):
 
-    def offset(sim):
+    def __call__(self, sim):
 
         print 'Xray Lensing Peak Voigt'
 
@@ -290,7 +291,7 @@ class XrayMagneticumOffset(object):
         self.xray_magneticum_distro = asciireader.read('{}/magneticum_offsets.dat'.format(globalconfig.offsetdistro_dir))
 
 
-    def offset(sim):
+    def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
 

@@ -44,7 +44,7 @@ class BetaCalcer(object):
 
 class OnlyRescaleLens(BetaCalcer):
 
-    def calcBetas(zlens, galaxies):
+    def calcBetas(self, zlens, galaxies):
         return np.ones(len(galaxies))
 
 #########
