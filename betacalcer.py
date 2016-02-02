@@ -27,6 +27,14 @@ class BetaCalcer(object):
 
 #########
 
+class InfiniteRedshift(BetaCalcer):
+
+    def calcBetas(self, zlens, galaxies):
+
+        return np.ones(len(galaxies))
+
+#########
+
 
 class FixedRedshift(BetaCalcer):
 

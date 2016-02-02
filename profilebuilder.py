@@ -12,6 +12,7 @@ class ProfileBuilder(object):
 
     def configure(self, config):
 
+        self.rescalecluster = config['rescalecluster']
         self.galaxypicker = config['galaxypicker']
         self.betacalcer = config['betacalcer']
         self.shearnoiser = config['shearnoiser']
@@ -21,6 +22,8 @@ class ProfileBuilder(object):
 
 
     def __call__(self, sim):
+
+        rescaledsim = self.rescalecluster(sim)
 
         galaxies = self.galaxypicker(sim)
 

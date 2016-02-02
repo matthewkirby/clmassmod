@@ -12,6 +12,9 @@ colossusmcname='diemer15'
 import nfwfit
 fitter = nfwfit.PDFScanner()
 
+import rescalecluster
+rescalecluster = rescalecluster.RedshiftRescaler()
+targetz=0.9
 
 import galaxypicker
 densitypicker = galaxypicker.DensityPicker()
@@ -39,7 +42,7 @@ centergenerator = centergenerator.SZAnalytic()
 szbeam=1.3
 coresize=1.25
 sz_xi=8.1
-targetz=1.0
+
 
 import basicBinning
 binner = basicBinning.GaussianFixedBins()
