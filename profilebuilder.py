@@ -41,7 +41,7 @@ class ProfileBuilder(object):
         r_arcmin = np.sqrt(delta_x**2 + delta_y**2)
 
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
         deltax_mpc = (delta_x * dL * np.pi)/(180.*60)
         deltay_mpc = (delta_y * dL * np.pi)/(180.*60)
@@ -73,6 +73,7 @@ class ProfileBuilder(object):
 
         cleanprofile = profile.filter(clean)
         cleanprofile.zcluster = sim.zcluster
+        cleanprofile.zlens = sim.zlens
         noisyprofile = self.binnoiser(cleanprofile)
 
         return noisyprofile

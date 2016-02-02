@@ -40,15 +40,12 @@ class DensityPicker(GalaxyPicker):
     def configure(self, config):
 
         self.nperarcmin = config['nperarcmin']
-        self.targetz = None
-        if 'targetz' in config:
-            self.targetz = config['targetz']
 
     def mask(self, sim):
 
         x_arcmin = sim.x_arcmin
         y_arcmin = sim.y_arcmin
-        zcluster = sim.zcluster
+        zcluster = sim.zlens
 
         targetdensity = self.nperarcmin        
 
@@ -61,21 +58,12 @@ class DensityPicker(GalaxyPicker):
         delta_y = max_y - min_y
 
         area = delta_x*delta_y
-        
-        if targetdensity == -1:
-        #take all
+
+        targetnumber = targetdensity*area        
+        if targetdensity == -1: # take all
             targetnumber = len(x_arcmin)
 
-        elif self.targetz is not None:
-        #adjust for different redshift
-            curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
-            newangdist = nfwutils.global_cosmology.angulardist(self.targetz)
-            ratio = curr_angdist/newangdist
-            newarea = area*ratio**2
-            targetnumber = targetdensity*newarea
-        else:
 
-            targetnumber = targetdensity*area
 
         availablenumber = len(x_arcmin)
 
@@ -96,31 +84,12 @@ class DensityPicker(GalaxyPicker):
 class FoVPicker(GalaxyPicker):
 
     def configure(self, config):
-
-        self.targetz = None
-        if 'targetz' in config:
-            self.targetz = config['targetz']
-
-        self._configure(config)
-
-    ###
-
-    def _configure(self, config):
         pass
 
     def mask(self, sim):
 
         x_arcmin = sim.x_arcmin
         y_arcmin = sim.y_arcmin
-        zcluster = sim.zcluster
-
-        if self.targetz is not None:
-            #adjust for different redshift
-            curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
-            newangdist = nfwutils.global_cosmology.angulardist(self.targetz)
-            ratio = curr_angdist/newangdist
-            x_arcmin = x_arcmin*ratio
-            y_arcmin = y_arcmin*ratio
 
         selected = self._mask(x_arcmin, y_arcmin)
         
@@ -131,7 +100,7 @@ class FoVPicker(GalaxyPicker):
 
 class SquareMask(FoVPicker):
 
-    def _configure(self, config):
+    def configure(self, config):
 
         self.x=0.
         self.y=0.
@@ -172,7 +141,7 @@ class SquareMask(FoVPicker):
 
 class RectangleMask(FoVPicker):
 
-    def _configure(self, config):
+    def configure(self, config):
 
 
 
@@ -221,7 +190,7 @@ class RectangleMask(FoVPicker):
 
 class CircleMask(FoVPicker):
 
-    def _configure(self, config):
+    def configure(self, config):
 
         self.x = 0.
         self.y = 0.
@@ -255,9 +224,9 @@ class CircleMask(FoVPicker):
 
 class ACSMask(SquareMask):
 
-    def _configure(self, config):
+    def configure(self, config):
 
-        super(ACSMask, self)._configure(config)
+        super(ACSMask, self).configure(config)
         self.sidelength = 3.2
         
 
@@ -267,8 +236,8 @@ class ACSMask(SquareMask):
         
 class Wfc3Mask(SquareMask):
 
-    def _configure(self, config):
-        super(Wfc3Mask, self)._configure(config)
+    def configure(self, config):
+        super(Wfc3Mask, self).configure(config)
         self.theta = 45.
         self.sidelength = 3.2*4./5.
 
@@ -277,64 +246,100 @@ class Wfc3Mask(SquareMask):
 
 class ACSCenteredMask(FoVPicker):
 
+    def configure(self, config):
+        self.acsmask = ACSMask()
+        self.wfc3mask = Wfc3Mask()
+        
+        self.acsmask.configure({})
+        self.wfc3mask.configure({})
+
+
     def _mask(self, x_arcmin,y_arcmin):
 
-        acsmask = ACSMask()
-        wfc3mask = Wfc3Mask()
-        return np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=0,y=0), 
-                             wfc3mask._mask(x_arcmin,y_arcmin,x=0, y=6.))
+        return np.logical_or(self.acsmask._mask(x_arcmin,y_arcmin,x=0,y=0), 
+                             self.wfc3mask._mask(x_arcmin,y_arcmin,x=0, y=6.))
 
 
 ###
 
 class OffsetPointing(FoVPicker):
 
+    def configure(self, config):
+        self.acsmask = ACSMask()
+        self.wfc3mask = Wfc3Mask()
+        
+        self.acsmask.configure({})
+        self.wfc3mask.configure({})
+        
+
     def _mask(self, x_arcmin,y_arcmin):
-        acsmask = ACSMask()
-        wfc3mask = Wfc3Mask()
-        return np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=0.,y=-3.), 
-                             wfc3mask._mask(x_arcmin,y_arcmin,x=0., y=3.0))
+        return np.logical_or(self.acsmask._mask(x_arcmin,y_arcmin,x=0.,y=-3.), 
+                             self.wfc3mask._mask(x_arcmin,y_arcmin,x=0., y=3.0))
         
 
 ###
 
 class RotatedOffset(FoVPicker):
 
-    def _mask(self, x_arcmin,y_arcmin): 
-        acsmask = ACSMask()
-        wfc3mask = Wfc3Mask()
+    def configure(self, config):
+        self.acsmask = ACSMask()
+        self.wfc3mask = Wfc3Mask()
         
-        return np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=-3.,y=0.), 
-                             wfc3mask._mask(x_arcmin,y_arcmin,x=3., y=0.0))
+        self.acsmask.configure({})
+        self.wfc3mask.configure({})
+
+
+    def _mask(self, x_arcmin,y_arcmin): 
+        
+        return np.logical_or(self.acsmask._mask(x_arcmin,y_arcmin,x=-3.,y=0.), 
+                             self.wfc3mask._mask(x_arcmin,y_arcmin,x=3., y=0.0))
 
 ###
 
 class OffsetMosaic(FoVPicker):
+    
+    def configure(self, config):
+
+        self.offsetpointing = OffsetPointing()
+        self.rotatedoffset = RotatedOffset()
+
+        self.offsetpointing.configure({})
+        self.rotatedoffset.configure({})
+
+        
 
     def _mask(self, x_arcmin,y_arcmin):
-        offsetpointing = OffsetPointing()
-        rotatedoffset = RotatedOffset()
 
-        return np.logical_or(offsetpointing._mask(x_arcmin,y_arcmin), 
-                             rotatedoffset._mask(x_arcmin,y_arcmin))
+        return np.logical_or(self.offsetpointing._mask(x_arcmin,y_arcmin), 
+                             self.rotatedoffset._mask(x_arcmin,y_arcmin))
 
 ###
 
 class Offset3(FoVPicker):
 
-    def _mask(self, x_arcmin,y_arcmin): 
-        offsetmosaic = OffsetMosaic()
-        acscentered = ACSCenteredMask()
+    def configure(self, config):
+        self.offsetmosaic = OffsetMosaic()
+        self.acscentered = ACSCenteredMask()
 
-        return np.logical_or(offsetmosaic._mask(x_arcmin,y_arcmin), 
-                             acscentered._mask(x_arcmin,y_arcmin))
+        self.offsetmosaic.configure({})
+        self.acscentered.configure({})
+
+    def _mask(self, x_arcmin,y_arcmin): 
+
+        return np.logical_or(self.offsetmosaic._mask(x_arcmin,y_arcmin), 
+                             self.acscentered._mask(x_arcmin,y_arcmin))
 
 ###
 
 class Pisco3(FoVPicker):
 
+    def configure(self, config):
+
+        self.rectanglemask = RectangleMask()
+        self.rectanglemask.configure({})
+
     def _mask(self, x_arcmin,y_arcmin): 
-        rectanglemask = RectangleMask()
+
 
         return np.logical_or(np.logical_or(rectanglemask._mask(x_arcmin,y_arcmin,x=0,y=0,theta=0,xlength=8,ylength=6), 
                                            rectanglemask._mask(x_arcmin,y_arcmin,x=0,y=7,theta=0,xlength=6,ylength=8)), 
@@ -344,18 +349,31 @@ class Pisco3(FoVPicker):
 
 class Pisco4(FoVPicker):
 
+    def configure(self, config):
+        self.rectanglemask = RectangleMask()
+        self.rectanglemask.configure({})
+
     def _mask(self, x_arcmin,y_arcmin): 
-        rectanglemask = RectangleMask()
+
         
-        return np.logical_or(np.logical_or(rectanglemask._mask(x_arcmin,y_arcmin,x=-5.5, y=0, theta=0, xlength=8, ylength=6), 
-                                           rectanglemask._mask(x_arcmin,y_arcmin,x=5.5, y=0, theta=0, xlength=8, ylength=6)), 
-                             np.logical_or(rectanglemask._mask(x_arcmin,y_arcmin,x=0, y=5.5, theta=0, xlength=6, ylength=8), 
-                                           rectanglemask._mask(x_arcmin,y_arcmin,x=0, y=-5.5, theta=0,xlength=6, ylength=8)))
+        return np.logical_or(np.logical_or(self.rectanglemask._mask(x_arcmin,y_arcmin,x=-5.5, y=0, theta=0, xlength=8, ylength=6), 
+                                           self.rectanglemask._mask(x_arcmin,y_arcmin,x=5.5, y=0, theta=0, xlength=8, ylength=6)), 
+                             np.logical_or(self.rectanglemask._mask(x_arcmin,y_arcmin,x=0, y=5.5, theta=0, xlength=6, ylength=8), 
+                                           self.rectanglemask._mask(x_arcmin,y_arcmin,x=0, y=-5.5, theta=0,xlength=6, ylength=8)))
 
 ###
 
 class RandomOffset(FoVPicker):
     '''Not sure this does what it is supposed to do'''
+
+    def configure(self, config):
+        self.acsmask = ACSMask()
+        self.wfc3mask = Wfc3Mask()
+
+        self.acsmask.configure({})
+        self.wfc3mask.configure({})
+
+        
 
     def _mask(self, x_arcmin,y_arcmin):
         posangle = np.random.uniform(0, 2*np.pi)
@@ -364,45 +382,63 @@ class RandomOffset(FoVPicker):
         acspos = np.dot(rotmatrix, np.array([0., -3]))
         wfc3pos = np.dot(rotmatrix, np.array([0., 3]))
 
-        acsmask = ACSMask()
-        wfc3mask = Wfc3Mask()
 
-        rotatedoffset = np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=acspos[0], y=acspos[1]), 
-                                      wfc3mask._mask(x_arcmin,y_arcmin,x=wfc3pos[0], y=wfc3pos[1]))
+        rotatedoffset = np.logical_or(self.acsmask._mask(x_arcmin,y_arcmin,x=acspos[0], y=acspos[1]), 
+                                      self.wfc3mask._mask(x_arcmin,y_arcmin,x=wfc3pos[0], y=wfc3pos[1]))
         return rotatedoffset
 
 ###
 
 class RandomOffsetMosaic(FoVPicker):
 
+    def configure(self, config):
+        self.randomoffset = RandomOffset()
+        self.randomoffset.configure({})
+
+        self.offsetpointing = OffsetPointing()
+        self.offsetpointing.configure({})
+
     def _mask(self, x_arcmin,y_arcmin): 
 
-        randomoffset = RandomOffset()
+        
 
-        return np.logical_or(randomoffset._mask(x_arcmin,y_arcmin), 
-                             offsetpointing._mask(x_arcmin,y_arcmin))
+        return np.logical_or(self.randomoffset._mask(x_arcmin,y_arcmin), 
+                             self.offsetpointing._mask(x_arcmin,y_arcmin))
 
 ###
 
 class CenterAndOffset(FoVPicker):
 
-    def _mask(self, x_arcmin,y_arcmin): 
-        acscentered = ACSCenteredMask()
-        offsetpointing = OffsetPointing()
+    def configure(self, config):
+        self.acscentered = ACSCenteredMask()
+        self.offsetpointing = OffsetPointing()
 
-        return np.logical_or(acscentered._mask(x_arcmin,y_arcmin), 
-                             offsetpointing._mask(x_arcmin,y_arcmin))
+        self.acscentered.configure({})
+        self.offsetpointing.configure({})
+
+
+    def _mask(self, x_arcmin,y_arcmin): 
+
+        return np.logical_or(self.acscentered._mask(x_arcmin,y_arcmin), 
+                             self.offsetpointing._mask(x_arcmin,y_arcmin))
 
 ###
 
 class CenterAndRandOffset(FoVPicker):
 
-    def _mask(self, x_arcmin,y_arcmin): 
-        acscentered = ACSCenteredMask()
-        randomoffset = RandomOffset()
+    def configure(self, config):
+
+        self.acscentered = ACSCenteredMask()
+        self.randomoffset = RandomOffset()
+
+        self.acscentered.configure({}) 
+        self.randomoffset.configure({}) 
         
-        return np.logical_or(acscentered._mask(x_arcmin,y_arcmin), 
-                             randomoffset._mask(x_arcmin,y_arcmin))
+
+    def _mask(self, x_arcmin,y_arcmin): 
+        
+        return np.logical_or(self.acscentered._mask(x_arcmin,y_arcmin), 
+                             self.randomoffset._mask(x_arcmin,y_arcmin))
 
 ###
 
@@ -411,14 +447,18 @@ acsdiag = np.sqrt(2.)*3.2/2.
 
 class SquareMosaic(FoVPicker):
 
+    def configure(self, config):
+
+        self.acsmask = ACSMask()
+        self.acsmask.configure({})
+
+
     def _mask(self, x_arcmin,y_arcmin): 
 
-        acsmask = ACSMask()
-        acsmask.configure({})
 
-        return np.logical_or(np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=0., y=acsdiag),
-                                           acsmask._mask(x_arcmin,y_arcmin,x=0.,y=-acsdiag)), 
-                             np.logical_or(acsmask._mask(x_arcmin,y_arcmin,x=-acsdiag,y=0.),
-                                           acsmask._mask(x_arcmin,y_arcmin,x=acsdiag,y=0.)))
+        return np.logical_or(np.logical_or(self.acsmask._mask(x_arcmin,y_arcmin,x=0., y=acsdiag),
+                                           self.acsmask._mask(x_arcmin,y_arcmin,x=0.,y=-acsdiag)), 
+                             np.logical_or(self.acsmask._mask(x_arcmin,y_arcmin,x=-acsdiag,y=0.),
+                                           self.acsmask._mask(x_arcmin,y_arcmin,x=acsdiag,y=0.)))
 
 

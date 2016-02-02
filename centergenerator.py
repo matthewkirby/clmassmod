@@ -32,7 +32,6 @@ class SZSimOffset(object):
     def configure(self, config):
 
         self.coresize = config['coresize']
-        self.targetz = config['targetz']
 
     def __call__(self, sim):
 
@@ -40,11 +39,9 @@ class SZSimOffset(object):
 
         selectedsim =np.random.uniform(0, len(offsetingcoresize))
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-        targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
-        anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-        offsetx = anglescale*(offsetingcoresize['peak_xpix[arcmin]'] - offsetingcoresize['cluster_xpix'])[selectedsim]  #arcmin
-        offsety = anglescale*(offsetingcoresize['peak_ypix'] - offsetingcoresize['cluster_ypix'])[selectedsim]
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
+        offsetx = (offsetingcoresize['peak_xpix[arcmin]'] - offsetingcoresize['cluster_xpix'])[selectedsim]  #arcmin
+        offsety = (offsetingcoresize['peak_ypix'] - offsetingcoresize['cluster_ypix'])[selectedsim]
 
 
         offset_phi = np.random.uniform(0, 2*np.pi)
@@ -60,15 +57,10 @@ class SZSimOffset(object):
 
 class SZLensingPeakOffset(object):
 
-    def configure(self, config):
-        self.targetz = config['targetz']
 
     def __call__(self, sim):
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-        targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
-
-        scatter = 0.237*targetDl/dL #arcmin, scaled
+        scatter = 0.237
         centeroffsetx, centeroffsety = scatter*np.random.standard_normal(2)
 
         return centeroffsetx, centeroffsety
@@ -82,21 +74,13 @@ class SZXVPTheoryOffset(object):
     def __init__(self):
         self.xvpoffset = XrayXVPOffset()
 
-    def configure(self, config):
-
-        self.targetz = config['targetz']
-        
 
     def __call__(self, sim):
 
         #physical scatter in arcmin, approp for target redshift
         xvp_offsetx, xvp_offsety = self.xvpoffset(sim)
 
-
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-        targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
-
-        sz_noisescatter = 0.3*targetDl/dL #arcmin, scaled
+        sz_noisescatter = 0.3
         centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
 
         return (centeroffsetx + xvp_offsetx, 
@@ -113,17 +97,12 @@ class SZXVPBCGOffset(object):
 
         self.sz_xvp_bcg_offsets_deg = readtxtfile.readtxtfile('{}/sptxvp_bcgsz'.format(self.config['offsetdistro_dir']))[:,1]
 
-    def configure(self, config):
-        self.targetz = config['targetz']
 
     def __call__(self, sim):
 
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-        targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
-        anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
 
-        offset = 60*anglescale*sz_xvp_bcg_offsets_deg[np.random.randint(0, len(sz_xvp_bcg_offsets_deg), 1)]
+        offset = 60*sz_xvp_bcg_offsets_deg[np.random.randint(0, len(sz_xvp_bcg_offsets_deg), 1)]
 
         offset_phi = np.random.uniform(0, 2*np.pi)
 
@@ -138,18 +117,15 @@ class SZXVPBCGOffset(object):
 class SZAnalytic(object):
 
     def configure(self, config):
-        self.targetz = config['targetz']
+
         self.szbeam = config['szbeam']
         self.coresize = config['coresize']
         self.sz_xi = config['sz_xi']
 
     def __call__(self, sim):
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-        targetDl = nfwutils.global_cosmology.angulardist(self.targetz)
-        anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
 
-        sz_noisescatter = anglescale*np.sqrt(self.szbeam**2 + self.coresize**2)/self.sz_xi
+        sz_noisescatter = np.sqrt(self.szbeam**2 + self.coresize**2)/self.sz_xi
 
         centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
 
@@ -171,7 +147,7 @@ class XrayWTGOffset(object):
     def __call__(self, sim):
 
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)
 
         radial_offset_mpc = self.wtg_offsets_mpc[np.random.randint(0, len(self.wtg_offsets_mpc), 1)]
         radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
@@ -188,7 +164,7 @@ class XraySPTHSTOffset(object):
 
     def __call__(self, sim):
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
         #offset distribution simple log delta r ~ N(mu, sig) fit to SPT-HST xray bcg offset distro (from Inon)
         centeroffset_mpc = np.exp(-2.625 + 1.413*np.random.standard_normal())
@@ -213,7 +189,7 @@ class XrayXVPOffset(object):
     def __call__(self, sim):
 
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
 
         radial_offset_mpc = self.xvp_offsets_mpc[np.random.randint(0, len(self.xvp_offsets_mpc), 1)][0]
@@ -236,7 +212,7 @@ class XrayCCCPOffset(object):
 
     def __call__(self, sim):
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
 
 
@@ -256,7 +232,7 @@ class XrayLensingPeakOffset(object):
 
     def __call__(self, sim):
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
         delta_mpc = 0.107*np.random.standard_normal(2)
 
@@ -272,7 +248,7 @@ class XrayLensingPeakVoigtOffset(object):
 
         print 'Xray Lensing Peak Voigt'
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
         delta_mpc = vt.voigtSamples(0.048, 0.0565, 2, limits=(-0.3, 0.3))
 
@@ -293,7 +269,7 @@ class XrayMagneticumOffset(object):
 
     def __call__(self, sim):
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
+        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
         delta_kpc = self.xray_magneticum_distro['xrayoffset'][np.random.randint(0, len(self.xray_magneticum_distro), 1)][0]
 

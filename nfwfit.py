@@ -60,19 +60,28 @@ class NFW_Model(object):
         return guess
 
 
-    def setData(self, beta_s, beta_s2, zcluster):
+    def setData(self, beta_s, beta_s2, zcluster, zlens = None):
+        
+        #handle cases where shear signal has been rescaled to a different cluster redshift
+        if zlens is None:
+            zlens = zcluster
         
         self.beta_s = beta_s
         self.beta_s2 = beta_s2
         self.zcluster = zcluster
-        self.rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        self.zlens = zlens
+        self.rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
+        #note the mixed usage of zlens and zcluster. Lensing properties were rescaled. Mass related properties (here H2, from rho_crit) were not.
+        self.rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zlens) * nfwutils.global_cosmology.beta([1e6], zlens)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
 
 
 
-    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, delta = 200):
 
-        self.setData(beta_s, beta_s2, zcluster)
+
+    def makeMCMCModel(self, profile, delta = 200):
+
+        self.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
         parts = {}
 
@@ -95,18 +104,16 @@ class NFW_Model(object):
 
         parts['cdelta'] = pymc.Uniform('cdelta', self.c200_low, self.c200_high)
 
-        rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
-        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster) * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
         @pymc.observed
         def data(value = 0.,
-                 r_mpc = r_mpc,
-                 ghat = ghat,
-                 sigma_ghat = sigma_ghat,
-                 beta_s = beta_s,
-                 beta_s2 = beta_s2,
-                 rho_c = rho_c,
-                 rho_c_over_sigma_c = rho_c_over_sigma_c,
+                 r_mpc = profile.r_mpc,
+                 ghat = profile.ghat,
+                 sigma_ghat = profile.sigma_ghat,
+                 beta_s = profile.beta_s,
+                 beta_s2 = profile.beta_s2,
+                 rho_c = self.rho_c,
+                 rho_c_over_sigma_c = self.rho_c_over_sigma_c,
                  mdelta = parts['mdelta'],
                  cdelta = parts['cdelta']):
 
@@ -187,9 +194,9 @@ class NFW_MC_Model(NFW_Model):
         return {'m200' : limits['m200']}
 
     
-    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster):
+    def makeMCMCModel(self, profile, delta = 200):
 
-        self.setData(beta_s, beta_s2, zcluster)
+        self.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
         parts = {}
         
@@ -223,18 +230,16 @@ class NFW_MC_Model(NFW_Model):
             return 0.
         parts['c200pot'] = c200pot
 
-        rho_c = np.float64(nfwutils.global_cosmology.rho_crit(zcluster))
-        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
         @pymc.observed
         def data(value = 0.,
-                 r_mpc = r_mpc,
-                 ghat = ghat,
-                 sigma_ghat = sigma_ghat,
-                 beta_s = beta_s,
-                 beta_s2 = beta_s2,
-                 rho_c = rho_c,
-                 rho_c_over_sigma_c = rho_c_over_sigma_c,
+                 r_mpc = profile.r_mpc,
+                 ghat = profile.ghat,
+                 sigma_ghat = profile.sigma_ghat,
+                 beta_s = profile.beta_s,
+                 beta_s2 = profile.beta_s2,
+                 rho_c = self.rho_c,
+                 rho_c_over_sigma_c = self.rho_c_over_sigma_c,
                  m200 = m200,
                  c200 = c200):
 
@@ -343,7 +348,7 @@ class MinChisqFitter(object):
 
         print 'GUESS: %f' % guess[0]
 
-        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
         fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = guess)
@@ -370,7 +375,7 @@ class PDFScanner(object):
 
         self.masses = np.arange(-1.005e15, 6e15, 1e13)
         if 'scanpdf_minmass' in config:
-            masses = np.arange(config['scanpdf_minmass'], config['scanpdf_maxmass'], config['scanpdf_massstep'])
+            self.masses = np.arange(config['scanpdf_minmass'], config['scanpdf_maxmass'], config['scanpdf_massstep'])
 
 
 
@@ -380,12 +385,10 @@ class PDFScanner(object):
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
 
-        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
+
         print profile.beta_s, profile.beta_s2, profile.zcluster
-
         print profile.r_mpc, profile.ghat, profile.sigma_ghat
-
-        zlens = profile.zcluster
 
         fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = self.model.guess())
@@ -404,9 +407,9 @@ class PDFScanner(object):
                 workingmasses = np.zeros_like(masses)
                 for i, curm in enumerate(masses):
                     c200 = self.model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
-                                                      zlens, float(delta))
-                    rscale = nfwutils.rscaleConstM(np.abs(curm), c200, zlens, float(delta))
-                    m200 = nfwutils.Mdelta(rscale, c200, zlens, 200)
+                                                      profile.zcluster, float(delta))
+                    rscale = nfwutils.rscaleConstM(np.abs(curm), c200, profile.zcluster, float(delta))
+                    m200 = nfwutils.Mdelta(rscale, c200, profile.zcluster, 200)
                     if curm < 0:
                         m200 = -m200
                     workingmasses[i] = m200
