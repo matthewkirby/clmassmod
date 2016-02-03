@@ -1,1 +1,1 @@
-massprior=log
+massprior='log'

@@ -30,8 +30,8 @@ class DumbEqualBins(object):
 
         if 'ngals' in config:
             self.ngals = config['ngals']
-            self.maxradii = config['profilemax']
-            self.minradii = config['profilemin']
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
             self.profileCol = config['profilecol']
         
 
@@ -91,8 +91,8 @@ class BootstrapEqualBins(object):
 
         if 'ngals' in config:
             self.ngals = config['ngals']
-            self.maxradii = config['profilemax']
-            self.minradii = config['profilemin']
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
             self.profileCol = config['profilecol']
         
 
@@ -146,8 +146,8 @@ class BootstrapFixedBins(object):
 
         if 'nbins' in config:
 
-            self.maxradii = config['profilemax']
-            self.minradii = config['profilemin']
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
             self.binspacing = config['binspacing']
             self.nbins = config['nbins']
             self.profileCol = config['profilecol']
@@ -223,8 +223,8 @@ class GaussianFixedBins(object):
         self.profileCol = 'r_mpc'
 
         if 'nbins' in config:
-            self.maxradii = config['profilemax']
-            self.minradii = config['profilemin']
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
             self.binspacing = config['binspacing']
             self.nbins = config['nbins']
             self.profileCol = config['profilecol']

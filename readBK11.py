@@ -26,6 +26,8 @@ class BK11Sim(catalog.Catalog):
 
     def __init__(self, filename):
 
+        super(BK11Sim, self).__init__()
+
 
         sim = ldac.LDACCat(pyfits.open(filename)[1])
 
@@ -77,21 +79,21 @@ class BK11Sim(catalog.Catalog):
         self.x_arcmin = x_arcmin.flatten()
         self.y_arcmin = y_arcmin.flatten()
 
-        Dl = nfwutils.global_cosmology.angulardist(sim['ZSOURCE'])
+        Dl = nfwutils.global_cosmology.angulardist(clusterz)
         self.x_mpc = (self.x_arcmin/60.)*(np.pi/180.)*Dl
         self.y_mpc = (self.y_arcmin/60.)*(np.pi/180.)*Dl
 
 
         redshifts = np.ones(len(self.x_arcmin))*float(sim['ZSOURCE'])
-        beta_s = nfwutils.global_cosmology.beta_s(self.redshifts, clusterz)
+        beta_s = nfwutils.global_cosmology.beta_s(redshifts, clusterz)
 
-        self.gamma1_inf = (gamma1/beta_s).flatten()
-        self.gamma2_inf = (gamma2/beta_s).flatten()
-        self.kappa_inf  = (kappa/beta_s).flatten()
+        self.gamma1_inf = gamma1.flatten()/beta_s
+        self.gamma2_inf = gamma2.flatten()/beta_s
+        self.kappa_inf  = kappa.flatten()/beta_s
 
 
-        self.m500 = sim['M500C']
-        self.m200 = sim['M200C']
-        self.c200 = sim['C200C']
+        self.m500 = sim['M500C'][0]
+        self.m200 = sim['M200C'][0]
+        self.c200 = sim['C200C'][0]
 
 

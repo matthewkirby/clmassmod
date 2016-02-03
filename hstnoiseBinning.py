@@ -55,8 +55,8 @@ class HSTBinning(object):
 
         self.profilefile = config['profilefile']
 
-        self.maxradii = config['profilemax']
-        self.minradii = config['profilemin']
+        self.maxradii = config['profileMax']
+        self.minradii = config['profileMin']
         self.binwidth = config['binwidth']
 
         self.profileCol = config['profilecol']

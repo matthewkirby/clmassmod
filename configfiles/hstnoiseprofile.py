@@ -1,3 +1,6 @@
+import rescalecluster
+rescalecluster=rescalecluster.RedshiftRescaler()
+
 import galaxypicker
 galaxypicker=galaxypicker.AllGalaxyPicker()
 

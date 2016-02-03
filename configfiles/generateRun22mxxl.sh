@@ -24,29 +24,29 @@ for snap in 41 54; do
 		    
 		    cat overhead.py mxxl.py hstnoiseprofile.py ${mc}.py linearprior.py scanpdf.py r${r}.py > $dir/config.py
 		 
-		    echo "targetz=$zcluster" >> $dir/config.sh
+		    echo "targetz=$zcluster" >> $dir/config.py
 
 
 
 		    if [ "$center" = "xrayNONE" ]; then
-			cat core_none.py >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh		
+			cat core_none.py >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile'" >> $dir/config.py		
 
 		    elif [ "$center" = "xraymag" ]; then
-			cat xraymagneticum.py >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.xraycenter.profile" >> $dir/config.sh		
+			cat xraymagneticum.py >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.xraycenter.profile'" >> $dir/config.py		
 
 		    elif [ "$center" = "szanalytic" ]; then
-			cat szanalytic.py >> $dir/config.sh
-			cat core_${coresizeindex}.py >> $dir/config.sh
-			echo "szbeam=1.2" >> $dir/config.sh
-			echo "sz_xi=$spt_xi" >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh		
+			cat szanalytic.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
+			echo "szbeam=1.2" >> $dir/config.py
+			echo "sz_xi=$spt_xi" >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile'" >> $dir/config.py		
 
 		    elif [ "$center" = "szmag" ]; then
-			cat szmagneticum.py >> $dir/config.sh
-			cat core_${coresizeindex}.py >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh		
+			cat szmagneticum.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile'" >> $dir/config.py		
 		    fi
 
 
@@ -90,27 +90,27 @@ for snap in 41 54; do
 		    cat megacam.py mxxl.py ${mc}.py scanpdf.py r${r}.py > $dir/config.py
 
 
-		    echo "targetz=$zcluster" >> $dir/config.sh
-		    echo "nperarcmin=$ndensity" >> $dir/config.sh
-		    echo "shapenoise=$shapenoise" >> $dir/config.sh
-		    echo "beta=$beta" >> $dir/config.sh
+		    echo "targetz=$zcluster" >> $dir/config.py
+		    echo "nperarcmin=$ndensity" >> $dir/config.py
+		    echo "shapenoise=$shapenoise" >> $dir/config.py
+		    echo "beta=$beta" >> $dir/config.py
 
 
 		    if [ "$center" = "xrayNONE" ]; then
-			cat core_none.py >> $dir/config.sh
+			cat core_none.py >> $dir/config.py
 
 		    elif [ "$center" = "xraymag" ]; then
-			cat xraymagneticum.py >> $dir/config.sh
+			cat xraymagneticum.py >> $dir/config.py
 
 		    elif [ "$center" = "szanalytic" ]; then
-			cat szanalytic.py >> $dir/config.sh
-			cat core_${coresizeindex}.py >> $dir/config.sh
-			echo "szbeam=1.2" >> $dir/config.sh
-			echo "sz_xi=$spt_xi" >> $dir/config.sh
+			cat szanalytic.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
+			echo "szbeam=1.2" >> $dir/config.py
+			echo "sz_xi=$spt_xi" >> $dir/config.py
 
 		    elif [ "$center" = "szmag" ]; then
-			cat szmagneticum.py >> $dir/config.sh
-			cat core_${coresizeindex}.py >> $dir/config.sh
+			cat szmagneticum.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
 
 		    fi
 

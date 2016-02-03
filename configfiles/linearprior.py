@@ -1,1 +1,1 @@
-massprior=linear
+massprior='linear'
