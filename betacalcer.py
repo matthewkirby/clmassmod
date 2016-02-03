@@ -56,12 +56,12 @@ class FixedBeta(BetaCalcer):
 
     def configure(self, config):
 
-        self.beta_s = config['beta_s']
+        self.beta = config['beta']
 
     def calcBetas(self, zlens, galaxies):
 
 
-        return self.beta_s*np.ones(len(galaxies))
+        return self.beta*np.ones(len(galaxies))/nfwutils.global_cosmology.beta([1e6], galaxies.zlens)
 
         
         
