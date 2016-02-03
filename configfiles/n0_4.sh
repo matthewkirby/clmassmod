@@ -1,8 +1,7 @@
 import galaxypicker
-densitypicker=galaxypicker.DensityPicker()
-nperarcmin=7
+densitypicker=galaxypicker.AllGalaxyPicker()
 
 import shearnoiser
 shearnoiser=shearnoiser.GaussianShapeNoise()
-shapenoise=0.5
+shapenoise=0.25
 
