@@ -143,7 +143,7 @@ class HSTBinning(object):
         beta_s = self.betas/nfwutils.global_cosmology.beta([1e6], profile.zlens)
         newghat = profile.ghat*beta_s
         
-        noisy.ghat = newghat + self.deltag[i]*np.random.standard_normal(self.nbins)
+        noisy.ghat = newghat + self.deltag*np.random.standard_normal(self.nbins)
         noisy.sigma_ghat = self.deltag
         noisy.beta_s = beta_s
         noisy.beta_s2 = beta_s**2
@@ -158,7 +158,7 @@ class HSTBinnerWrapper(HSTBinning):
         self.parent = config['hstbinning']
 
     def __call__(self, *args, **kwds):
-        self.parent.doBinning(*args, **kwds)
+        return self.parent.doBinning(*args, **kwds)
 
 ####
 
@@ -168,4 +168,4 @@ class HSTBinNoiserWrapper(HSTBinning):
         self.parent = config['hstbinning']
 
     def __call__(self, *args, **kwds):
-        self.parent.addNoise(*args, **kwds)
+        return self.parent.addNoise(*args, **kwds)
