@@ -1,3 +1,0 @@
-readermodule=readBCC
-readerclass=BCCSimReader
-

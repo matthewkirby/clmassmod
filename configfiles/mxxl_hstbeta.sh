@@ -1,3 +1,0 @@
-readermodule=readMXXL_HSTBeta
-readerclass=MXXLHSTSimReader
-

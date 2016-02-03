@@ -1,3 +1,2 @@
-readermodule=readBK11
-readerclass=BK11SimReader
-
+import readBK11
+simreader=readBK11.BK11SimReader()

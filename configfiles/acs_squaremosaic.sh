@@ -1,1 +1,2 @@
-maskname=squaremosaic
+import galaxypicker
+fovpicker=galaxypicker.SquareMosaic()

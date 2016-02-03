@@ -1,13 +1,5 @@
-nbootstraps=5
-profileCol=r_mpc
-
-profileModule=basicBinning
-profileBuilder=gaussianfixedbins
+import basicBinning
+binner=GaussianFixedBins()
+profileCol='r_mpc'
 binspacing='linear'
 nbins=12
-
-
-
-
-
-

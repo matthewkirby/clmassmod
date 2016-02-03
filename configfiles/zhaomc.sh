@@ -1,2 +1,0 @@
-massconModule=readZhao
-massconRelation=ZhaoMC

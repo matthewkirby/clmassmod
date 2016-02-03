@@ -1,3 +1,4 @@
+import nfwfit
+fitter=nfwfit.PDFScanner()
 
-fitter=pdf
 

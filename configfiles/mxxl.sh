@@ -1,3 +1,3 @@
-readermodule=readMXXL
-readerclass=MXXLSimReader
+import readMXXL
+simreader=readMXXL.MXXLSimReader()
 

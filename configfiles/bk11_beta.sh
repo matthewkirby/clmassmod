@@ -1,3 +1,0 @@
-readermodule=readBK11_beta
-readerclass=BK11SimReader
-

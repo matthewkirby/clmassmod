@@ -1,3 +1,3 @@
-
-fitter=maxlike
+import nfwfit
+fitter=nfwfit.MinChisqFitter()
 
