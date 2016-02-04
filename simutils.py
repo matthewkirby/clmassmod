@@ -33,18 +33,6 @@ def runConfigure(config):
 
 ########################
 
-def buildObject(modulename, classname, *args, **kwds):
-
-    if modulename.lower() == 'none' or classname.lower() == 'none':
-        return None
-
-    aModule = importlib.import_module(modulename)
-    aClass = getattr(aModule, classname)
-    anObject = aClass(*args, **kwds)
-
-    return anObject
-    
-#####
 
 class Composite(object):
 

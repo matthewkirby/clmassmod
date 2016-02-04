@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #######################
-# Runs a bootstrapped NFW model fit to simulated shear data.
+# Runs an NFW model fit to simulated shear data.
 # Galaxies are binned into an average shear profile before fitting to NFW model.
 # Options to explore radial fit range, mass-concentration relation, and binning scheme in fits.
 ########################
@@ -387,8 +387,6 @@ class PDFScanner(object):
 
         self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
-        print profile.beta_s, profile.beta_s2, profile.zcluster
-        print profile.r_mpc, profile.ghat, profile.sigma_ghat
 
         fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = self.model.guess())
