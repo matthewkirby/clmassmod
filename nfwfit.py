@@ -388,21 +388,21 @@ class PDFScanner(object):
         self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
 
-        fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
-                                   guess = self.model.guess())
-
         pdfs = {}
 
         masses = self.masses
 
         for delta in self.deltas:
 
-            chisqs = np.zeros(len(masses))
+            logprob = np.zeros(len(masses))
 
             if delta == 200:
                 workingmasses = masses
-            if delta != 200:
+                c200s = np.array([self.model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
+                                                      profile.zcluster, float(delta)) for curm in workingmasses])
+            elif delta != 200:
                 workingmasses = np.zeros_like(masses)
+                c200s = np.zeros_like(masses)
                 for i, curm in enumerate(masses):
                     c200 = self.model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
                                                       profile.zcluster, float(delta))
@@ -411,16 +411,27 @@ class PDFScanner(object):
                     if curm < 0:
                         m200 = -m200
                     workingmasses[i] = m200
+                    c200s[i] = c200
 
-            for i, mass in enumerate(workingmasses):
+            for i in range(len(workingmasses)):
+                mass = workingmasses[i]
+                c200 = c200s[i]
 
-                chisqs[i] = fitter.statfunc(fitter.ydata,
-                                                 fitter.yerr,
-                                                 fitter.model(fitter.xdata,
-                                                                   mass / self.model.massScale))
+                logprob[i] = tools.shearprofile_like(mass, c200,
+                                                    profile.r_mpc,
+                                                    profile.ghat,
+                                                    profile.sigma_ghat,
+                                                    self.model.beta_s,
+                                                    self.model.beta_s2,
+                                                    self.model.rho_c,
+                                                    self.model.rho_c_over_sigma_c,
+                                                    200.)
 
 
-            pdf = np.exp(-0.5*(chisqs - np.min(chisqs)))
+
+
+
+            pdf = np.exp(logprob - np.max(logprob))
             pdf = pdf/scipy.integrate.trapz(pdf, masses)
             pdfs[delta] = pdf
 
