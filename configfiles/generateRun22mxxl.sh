@@ -10,7 +10,7 @@ for snap in 41 54; do
 		    
 	    for center in xrayNONE xraymag szanalytic szmag; do
 		
-		for mc in duffy c4 diemer15; do
+		for mc in c4 diemer15; do
 		    
 		    config=hstnoisebins-${mc}-r${r}-${center}-${cluster}-feb2016
 		
@@ -73,7 +73,7 @@ for snap in 41 54; do
 		    
 	    for center in xrayNONE xraymag szanalytic szmag; do
 		
-		for mc in duffy c4 diemer15; do
+		for mc in c4 diemer15; do
 
 		    config=mega-${mc}-r${r}-${center}-${cluster}-feb2016
 		

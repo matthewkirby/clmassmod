@@ -2,7 +2,7 @@ import profilebuilder
 profilebuilder=profilebuilder.ProfileBuilder()
 
 
-massprior=linear
+massprior='linear'
 import rescalecluster
 rescalecluster=rescalecluster.RedshiftRescaler()
 
@@ -11,10 +11,14 @@ galaxypicker=galaxypicker.DensityPicker()
 import betacalcer
 betacalcer=betacalcer.FixedBeta()
 import shearnoiser
-shearnoiser=shearnosier.GaussianShapeNoise()
+shearnoiser=shearnoiser.GaussianShapeNoise()
 
 import basicBinning
-binner=GaussianFixedBins()
-profileCol='r_mpc'
+binner=basicBinning.GaussianFixedBins()
+profilecol='r_mpc'
 binspacing='linear'
 nbins=12
+
+import binnoiser
+binnoiser=binnoiser.NoBinNoise()
+

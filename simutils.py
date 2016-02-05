@@ -2,7 +2,7 @@
 
 ############
 
-import imp
+import imp, sys
 
 ############
 
@@ -10,7 +10,10 @@ import imp
 
 def readConfiguration(configname):
 
-    configmodule = imp.load_source('config', configname)
+    if 'currentconfig' in sys.modules:
+        del sys.modules['currentconfig']
+
+    configmodule = imp.load_source('currentconfig', configname)
 
     config = configmodule.__dict__
 

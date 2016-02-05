@@ -18,7 +18,7 @@ def setupCondor_MB(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/m
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
 
-    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+    configfiles = ['{0}/{1}/config.py'.format(simdir, config) for config in configs]
 
     simfiles = glob.glob('{0}/halo_*.info'.format(simdir))
 
@@ -58,7 +58,7 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_ra
     if outputdir is None:
         outputdir = simdir
 
-    configfiles = ['{0}/{1}/config.sh'.format(outputdir, config) for config in configs]
+    configfiles = ['{0}/{1}/config.py'.format(outputdir, config) for config in configs]
 
     input_extensions = 'convergence_map shear_1_map shear_2_map answer'.split()
 
@@ -118,7 +118,7 @@ def setupCondor_BK11(configs, jobdir, jobname,
 
         print simdir
 
-        configfiles = ['{0}/{1}/config.sh'.format(curoutputdir, config) for config in configs]
+        configfiles = ['{0}/{1}/config.py'.format(curoutputdir, config) for config in configs]
 
         simfiles = glob.glob('{0}/haloid*.fit'.format(simdir))
 
@@ -169,7 +169,7 @@ def setupCondor_BCC(configs, jobdir, jobname):
 
 def setupLSF(configs, jobdir, jobname, simdir, simfiles):
 
-    configfiles = ['{0}/{1}/config.sh'.format(simdir, config) for config in configs]
+    configfiles = ['{0}/{1}/config.py'.format(simdir, config) for config in configs]
 
     for simfile in simfiles:
 
