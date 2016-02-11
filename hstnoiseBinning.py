@@ -71,6 +71,14 @@ class HSTBinning(object):
 
         self.magbinids = np.array([x[-1] for x in profile])
 
+
+        mask = np.logical_and(self.bincenters >= self.minradii,
+                              self.bincenters < self.maxradii)
+        self.bincenters = self.bincenters[mask]
+        self.deltag = self.deltag[mask]
+        self.betas = self.betas[mask]
+        self.magbinids = self.magbinids[mask]
+
         self.nbins = len(self.bincenters)
 
         self.useAveForCenter = False
