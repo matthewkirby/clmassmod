@@ -93,6 +93,9 @@ class HSTBinning(object):
 
         for i in range(self.nbins):
 
+            if self.bincenters[i] < self.minradii or self.bincenters[i] > self.maxradii:
+                continue
+
             mintake = self.bincenters[i] - self.binwidth/2.
             maxtake = self.bincenters[i] + self.binwidth/2.
             selected = galaxies.filter(np.logical_and(profileCol >= mintake,

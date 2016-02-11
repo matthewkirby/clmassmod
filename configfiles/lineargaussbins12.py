@@ -1,5 +1,5 @@
 import basicBinning
-binner=GaussianFixedBins()
-profileCol='r_mpc'
+binner=basicBinning.GaussianFixedBins()
+profilecol='r_mpc'
 binspacing='linear'
 nbins=12

@@ -141,7 +141,7 @@ class BootstrapFixedBins(object):
         self.maxradii = 3.
         self.minradii = 0.
         self.binspacing = 'linear'
-        self.nbins = 12.
+        self.nbins = 12
         self.profileCol = 'r_mpc'
 
         if 'nbins' in config:

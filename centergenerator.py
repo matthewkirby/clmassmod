@@ -39,7 +39,6 @@ class SZSimOffset(object):
 
         selectedsim =np.random.uniform(0, len(offsetingcoresize))
 
-        dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
         offsetx = (offsetingcoresize['peak_xpix[arcmin]'] - offsetingcoresize['cluster_xpix'])[selectedsim]  #arcmin
         offsety = (offsetingcoresize['peak_ypix'] - offsetingcoresize['cluster_ypix'])[selectedsim]
 
@@ -127,10 +126,16 @@ class SZAnalytic(object):
 
         sz_noisescatter = np.sqrt(self.szbeam**2 + self.coresize**2)/self.sz_xi
 
-        centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
+        offset = sz_noisescatter*np.random.standard_normal()
 
-        return (centeroffsetx, 
-                centeroffsety)
+        offset_phi = np.random.uniform(0, 2*np.pi)
+
+        newoffsetx = offset*np.cos(offset_phi)
+        newoffsety = offset*np.sin(offset_phi)
+
+        return newoffsetx, newoffsety
+
+
     
 ####    
 
