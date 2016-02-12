@@ -2231,14 +2231,14 @@ def plotMegacamSZMiscenteringComp():
 #    deltas = [500,200]
     deltas = [500]
     rss = ['r9']
-#    mcs = ['c4', 'duffy', 'diemer15']
-    mcs = ['diemer15']
 
-    snaps = [124,141]
-#    snaps = [124]
+    mcs = ['c4', 'diemer15']
+
+#    snaps = [124,141]
+    snaps = [141]
 
 #    miscenterings = ['corenone', 'szxvptcenter', 'szanalytic', 'szxvpbcg', 'core%d', ]
-    miscenterings = ['core%d', 'szanalytic']
+    miscenterings = ['szanalytic', 'szmag']
 
 #    names = ['Perfect Centers',
 #             'XVP Xray Convolved (AM2)',
@@ -2247,38 +2247,38 @@ def plotMegacamSZMiscenteringComp():
 #             'Hydro Miscentering']
 #
 
-    names = ['Hydro Sims',
-             'Analytic']
+    names = ['Analytic',
+             'Hydro Sims']
 
 
 
-#    clusters = ['SPT-CLJ0234-5831',
-#               'SPT-CLJ0240-5946',
-#               'SPT-CLJ0254-5857',
-#               'SPT-CLJ0307-6225',
-#               'SPT-CLJ0317-5935',
-#               'SPT-CLJ0346-5438',
-#               'SPT-CLJ0348-4514',
-#               'SPT-CLJ0426-5455',
-#               'SPT-CLJ0509-5342',
-#               'SPT-CLJ0516-5430',
-#               'SPT-CLJ0551-5709',
-#               'SPT-CLJ2022-6324',
-#               'SPT-CLJ2031-5638',
-#               'SPT-CLJ2032-5627',
-#               'SPT-CLJ2136-5726',
-#               'SPT-CLJ2138-6008',
-#               'SPT-CLJ2145-5644',
-#               'SPT-CLJ2332-5358',
-#               'SPT-CLJ2355-5056']
-#
     clusters = ['SPT-CLJ0234-5831',
+               'SPT-CLJ0240-5946',
+               'SPT-CLJ0254-5857',
+               'SPT-CLJ0307-6225',
+               'SPT-CLJ0317-5935',
                'SPT-CLJ0346-5438',
+               'SPT-CLJ0348-4514',
                'SPT-CLJ0426-5455',
+               'SPT-CLJ0509-5342',
+               'SPT-CLJ0516-5430',
+               'SPT-CLJ0551-5709',
+               'SPT-CLJ2022-6324',
+               'SPT-CLJ2031-5638',
                'SPT-CLJ2032-5627',
                'SPT-CLJ2136-5726',
-               'SPT-CLJ2138-6008']
+               'SPT-CLJ2138-6008',
+               'SPT-CLJ2145-5644',
+               'SPT-CLJ2332-5358',
+               'SPT-CLJ2355-5056']
 
+#    clusters = ['SPT-CLJ0234-5831',
+#               'SPT-CLJ0346-5438',
+#               'SPT-CLJ0426-5455',
+#               'SPT-CLJ2032-5627',
+#               'SPT-CLJ2136-5726',
+#               'SPT-CLJ2138-6008']
+#
     offsets = [-0.005, 0.005]
     markers = ['o', 's']
 #    avebias = [0.956, 0.959]
@@ -2296,7 +2296,7 @@ def plotMegacamSZMiscenteringComp():
     redshifts = np.array([redshiftlookup[x] for x in clusters])
     cores = np.array([corelookup[x] for x in clusters])
 
-#    biasfile = open('megacam_sim_plots/megacam_SZMiscenter_compiled.dat', 'w')
+    biasfile = open('megacam_sim_plots_feb2016/megacam_SZMiscenter_compiled.dat', 'w')
 
     allmeanfigs = []
     allstdfigs = []
@@ -2306,12 +2306,11 @@ def plotMegacamSZMiscenteringComp():
             for mc in mcs:
                 for snap in snaps:
 
-#                    try:
 
- #                       biasfile.write('\nm%d %s %s snap%d\n' % (delta, rs, mc, snap))
-    #                    snapdir = '/users/dapple/euclid1raid1/bk11_lensing/snap%d/intlength400' % snap
+                        biasfile.write('\nm%d %s %s snap%d\n' % (delta, rs, mc, snap))
+
                         snapdir = '/vol/euclid1/euclid1_2/dapple/rundlns/bk11snap%d' % snap
-                        config = 'mega-%s-%s-sigma0.25' % (mc, rs)    
+                        config = 'mega-%s-%s' % (mc, rs)    
 
                         meansfig = pylab.figure()
                         allmeanfigs.append(meansfig)
@@ -2323,16 +2322,10 @@ def plotMegacamSZMiscenteringComp():
 
                         for curcenteri, curcenter in enumerate(miscenterings):
 
-                            if curcenter == 'core%d':
-                                chaindirs = ['%s/%s-%s-%s' % (snapdir, config, 
-                                                              curcenter % cores[i],
-                                                              clusters[i]) \
-                                             for i in range(len(clusters))]
-                            else:
-
-                                chaindirs = ['%s/%s-%s-%s' % (snapdir, config, curcenter, 
-                                                              clusters[i]) \
-                                             for i in range(len(clusters))]
+                            
+                            chaindirs = ['%s/%s-%s-%s-feb2016' % (snapdir, config, curcenter, 
+                                                                  clusters[i]) \
+                                         for i in range(len(clusters))]
 
                             patches = []
                             labels = []
@@ -2349,7 +2342,7 @@ def plotMegacamSZMiscenteringComp():
 
                                 print chaindir
 
-    #                            chainfile = '%s/dln_0.%d.chain.0' % (chaindir, delta)
+
                                 chainfile = '%s/rundln%d.%d.0.chain.0' % (chaindir, snap, delta)
                                 chain = load_chains.loadChains([chainfile], trim=True)
                                 print chainfile, len(chain['logmu'])
@@ -2373,12 +2366,12 @@ def plotMegacamSZMiscenteringComp():
                             meansax.errorbar(redshifts + offsets[curcenteri], biasmean, biaserrs, label=names[curcenteri], linestyle='none', c=c[curcenteri], linewidth=3, marker=markers[curcenteri])
                             stdax.errorbar(redshifts, stdmean, stderr, label=names[curcenteri], linestyle='none', c=c[curcenteri])
 
-#                            biasfile.write('%s %1.3f %1.3f %1.3f %1.3f %1.3f %1.3f\n' % (names[curcenteri], np.mean(biasmean), np.std(biasmean), np.mean(biaserrs[0,:]+biaserrs[1,:])/2., np.mean(stdmean), np.std(stdmean), np.mean(stderr[0,:]+stderr[1,:])/2.))
+                            biasfile.write('%s %1.3f %1.3f %1.3f %1.3f %1.3f %1.3f\n' % (names[curcenteri], np.mean(biasmean), np.std(biasmean), np.mean(biaserrs[0,:]+biaserrs[1,:])/2., np.mean(stdmean), np.std(stdmean), np.mean(stderr[0,:]+stderr[1,:])/2.))
 
 
 
 
-#                            meansax.set_title('%d %s %s %d' % (delta, rs, mc, snap))
+                            meansax.set_title('%d %s %s %d' % (delta, rs, mc, snap))
                     #        meansax.set_xscale('log')
                             meansax.set_xlabel('Cluster Redshift', fontsize=20)
                             meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=20)
@@ -2393,9 +2386,9 @@ def plotMegacamSZMiscenteringComp():
                             meansax.legend(loc='lower right', numpoints=1)
                             meansfig.canvas.draw()
                             meansfig.tight_layout()
-                            meansfig.savefig('megacam_sim_plots/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.png' % (delta, rs, mc, snap))
-                            meansfig.savefig('megacam_sim_plots/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.pdf' % (delta, rs, mc, snap))
-                            meansfig.savefig('megacam_sim_plots/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.eps' % (delta, rs, mc, snap))
+                            meansfig.savefig('megacam_sim_plots_feb2016/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.png' % (delta, rs, mc, snap))
+                            meansfig.savefig('megacam_sim_plots_feb2016/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.pdf' % (delta, rs, mc, snap))
+                            meansfig.savefig('megacam_sim_plots_feb2016/megacam_SZMiscenter_%d_%s_%s_snap%d_logmean.eps' % (delta, rs, mc, snap))
 
                             stdax.set_title('%d %s %s %d' % (delta, rs, mc, snap))
                     #        stdax.set_xscale('log')
@@ -2410,48 +2403,106 @@ def plotMegacamSZMiscenteringComp():
                             stdax.legend(loc='upper left')
                             stdsfig.canvas.draw()
                             stdsfig.tight_layout()
-                            stdsfig.savefig('megacam_sim_plots/megacam_SZMiscenter_%d_%s_%s_snap%d_logstd.png' % (delta, rs, mc, snap))
+                            stdsfig.savefig('megacam_sim_plots_feb2016/megacam_SZMiscenter_%d_%s_%s_snap%d_logstd.png' % (delta, rs, mc, snap))
 
-#                    except:
-#                        print 'SKIPPING {} {} {} {}'.format(delta, rs, mc, snap)
                         
-#    biasfile.close()
+    biasfile.close()
     
     return allmeanfigs, allstdfigs
 
 ###############################################################
 
-
-
-def plotHSTSZMiscenteringComp():
-
-    delta = 500
-    rs = 'r5'
-    mc = 'duffy'
-    snaps = [41, 54]
+def plotComparison(chaindirs, labels, delta, ylim=(0.8,1.1)):
 
     alphas = [0.8, 0.3]
 
-    miscenterings = ['xrayNONE', 'sztcenter', 'core%d']
+    meansfig = pylab.figure()
+    meansax = meansfig.add_subplot(1,1,1)
+        
+    stdsfig = pylab.figure()
+    stdax = stdsfig.add_subplot(1,1,1)
+
+    patches = []
+    legendlabels = []
+
+    for curi, chaindir, label in zip(range(len(labels)), chaindirs, labels):
+
+        print chaindir
+
+        patch,summary = precomputedLogNormDistro(chaindir, 
+                                                 delta,
+                                                 meansax,
+                                                 stdax,
+                                                 colorindex = curi,
+                                                 alpha = alphas[curi],
+                                                 biaslabel = False)
+
+
+        if patch is None:
+            continue
+
+
+        patches.append(patch)
+        legendlabels.append(label)
+
+    meansax.set_xscale('log')
+    meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+    meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+    meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+    meansax.set_xlim(1e14, 4e15)
+    meansax.set_ylim(ylim[0], ylim[1])
+    meansax.set_xticks([1e14, 1e15])
+    meansax.set_xticklabels(['1', '10'])
+    meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+    meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+    meansax.legend(patches[::-1], legendlabels[::-1], loc='upper left')
+    meansfig.canvas.draw()
+    meansfig.tight_layout()
+
+
+
+    stdax.set_xscale('log')
+    stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+    stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+
+    stdax.set_xlim(1e14, 4e15)
+
+    stdax.set_xticks([1e14, 1e15])
+    stdax.set_xticklabels(['1', '10'])
+    stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+    stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+    stdax.legend(patches[::-1], legendlabels[::-1], loc='upper left')
+    stdsfig.canvas.draw()
+    stdsfig.tight_layout()
+
+
+    return meansfig, stdsfig
+
+            
+
+    
+###
+
+def plotMiscenteringComp(clusters, prefix, suffix, outdir, ylim=(0.8, 1.1)):
+
+    delta = 500
+    rs = 'r5'
+    mc = 'diemer15'
+
+    snaps = ['bk11snap141']
+
+
+    alphas = [0.8, 0.3]
+
+#    miscenterings = ['xrayNONE', 'szanalytic', 'szmag']
+    miscenterings = ['xrayNONE']
 
     names = ['Perfect Centers',
-             'Approx Miscentering',
+             'Song+12 Miscentering',
              'Hydro Miscentering']
 
 
     
-    datafile = asciireader.read('sptdat')
-    redshift_sortorder = np.argsort(datafile['z_l'])
-    clusters = datafile['name'][redshift_sortorder]
-    altnames = datafile['altname'][redshift_sortorder]
-    redshifts = datafile['z_l'][redshift_sortorder]
-
-    corefileindex = readtxtfile.readtxtfile('shearprofiles/coresizeindex.list')
-    corelookup = {}
-    for line in corefileindex:
-        corelookup[line[0]] = int(line[1])
-    cores = np.array([corelookup[x] for x in altnames])
-
     meansfigs = []
     stdsfigs = []
 
@@ -2471,21 +2522,22 @@ def plotHSTSZMiscenteringComp():
 
         for cursnap, snap in enumerate(snaps):
 
-            snapdir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d' % snap
-            config = 'hstnoisebins-%s-%s' % (mc, rs)
+            snapdir = '/vol/euclid1/euclid1_2/dapple/rundlns/%s' % snap
+            config = '%s-%s-%s' % (prefix, mc, rs)
 
             for curcenter in range(len(miscenterings)):
 
-                chaindir = '%s/%s-%s-%s' % (snapdir, 
-                                            config, 
-                                            miscenterings[curcenter] % cores[curcluster],
-                                            cluster) 
+                chaindir = '%s/%s-%s-%s-%s' % (snapdir, 
+                                               config, 
+                                               miscenterings[curcenter],
+                                               cluster,
+                                               suffix) 
 
                 print chaindir
 
                 label = names[curcenter]
                 
-                patch = precomputedLogNormDistro(chaindir, 
+                patch,summary = precomputedLogNormDistro(chaindir, 
                                                  delta,
                                                  meansax,
                                                  stdax,
@@ -2500,40 +2552,41 @@ def plotHSTSZMiscenteringComp():
                 if cursnap == 0:
                     patches.append(patch)
                     labels.append(label)
-            
+#            
 
 
-        meansax.set_title('%s %1.2f' % (cluster, redshifts[curcluster]))
+        meansax.set_title(cluster)
         meansax.set_xscale('log')
         meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
         meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
         meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
-        meansax.set_xlim(3e14, 4e15)
-        meansax.set_ylim(0.5, 1.05)
-        meansax.set_xticks([1e15])
-        meansax.set_xticklabels(['10'])
-        meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
-        meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        meansax.set_xlim(1e14, 4e15)
+        meansax.set_ylim(ylim[0], ylim[1])
+        meansax.set_xticks([1e14, 1e15])
+        meansax.set_xticklabels(['1', '10'])
+        meansax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
         meansax.legend(patches[::-1], labels[::-1], loc='upper left')
         meansfig.canvas.draw()
         meansfig.tight_layout()
-        meansfig.savefig('hst_sim_plots/hstnoisemxxl_szcentercomp_logmean_%s.delta%d.%s.png' % (cluster, delta, mc) )
+        meansfig.savefig('%s/%s_szcentercomp_logmean_%s.delta%d.%s.png' % (outdir, prefix, cluster, delta, mc) )
 
-        stdax.set_title('%s %1.2f' % (cluster, redshifts[curcluster]))
+        stdax.set_title(cluster)
         stdax.set_xscale('log')
         stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
         stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
 #        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
-        stdax.set_xlim(3e14, 4e15)
-#        stdax.set_ylim(0.5, 1.05)
-        stdax.set_xticks([1e15])
-        stdax.set_xticklabels(['10'])
-        stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
-        stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        stdax.set_xlim(1e14, 4e15)
+
+        stdax.set_xticks([1e14, 1e15])
+        stdax.set_xticklabels(['1', '10'])
+        stdax.set_xticks([2e14, 3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticklabels(['2', '', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
         stdax.legend(patches[::-1], labels[::-1], loc='upper left')
         stdsfig.canvas.draw()
         stdsfig.tight_layout()
-        stdsfig.savefig('hst_sim_plots/hstnoisemxxl_szcentercomp_logstd_%s.delta%d.%s.png' % (cluster, delta, mc) )
+        stdsfig.savefig('%s/%s_szcentercomp_logstd_%s.delta%d.%s.png' % (outdir, prefix, cluster, delta, mc) )
+
 
         meansfigs.append(meansfig)
         stdsfigs.append(stdsfig)
