@@ -6,6 +6,7 @@ import numpy as np
 import binaryutils
 import nfwutils
 import astropy.io.ascii as asciireader
+import catalog
 
 #######################
 
@@ -98,12 +99,14 @@ class MXXLSimReader(object):
 ###############################
 
 
-class MXXLSim(object):
+class MXXLSim(catalog.Catalog):
 
 
     #########
 
     def __init__(self, filebase):
+
+        super(MXXLSim, self).__init__()
 
         # returns set of angle and mpc distances from the true center (flattened)
         # for each position, provide reduced shear g1 and g2, as well as z and beta for each source
@@ -120,38 +123,28 @@ class MXXLSim(object):
 
         self.zcluster = kappa.redshift
 
+
         delta_mpc, delta_arcmin = kappa.grid()
         delta_mpc = [x.flatten() for x in delta_mpc]
         delta_arcmin = [x.flatten() for x in delta_arcmin]
 
-        r_arcmin = np.sqrt(delta_arcmin[0]**2 + delta_arcmin[1]**2)
-        r_mpc = np.sqrt(delta_mpc[0]**2 + delta_mpc[1]**2)
 
-
-        cosphi = delta_mpc[0] / r_mpc
-        sinphi = delta_mpc[1] / r_mpc
-    
-        sin2phi = 2.0*sinphi*cosphi
-        cos2phi = 2.0*cosphi*cosphi-1.0
-
+        self.x_mpc = delta_mpc[0]
+        self.y_mpc = delta_mpc[1]
         self.x_arcmin = delta_arcmin[0]
         self.y_arcmin = delta_arcmin[1]
-        self.r_mpc = r_mpc
-        self.r_arcmin = r_arcmin
-        self.cos2phi = cos2phi
-        self.sin2phi = sin2phi
+
         self.m500 = answerfile['m500c'][0]
         self.m200 = answerfile['m200c'][0]
         self.c200 = answerfile['c200c'][0]
 
 
-        self.redshifts = 2*np.ones_like(kappa.data).flatten()
-        self.beta_s = nfwutils.global_cosmology.beta_s([2.], self.zcluster)*np.ones_like(self.redshifts)
-        
-        betas = nfwutils.global_cosmology.beta([2.], self.zcluster)*np.ones_like(self.redshifts)
+        beta_inf = nfwutils.global_cosmology.beta([1e6], self.zcluster)
 
-        self.g1 = betas*gamma1.data.flatten() / (1-betas*kappa.data.flatten())
-        self.g2 = betas*gamma2.data.flatten() / (1-betas*kappa.data.flatten())
+
+        self.gamma1_inf = beta_inf*gamma1.data.flatten()
+        self.gamma2_inf = beta_inf*gamma2.data.flatten()
+        self.kappa_inf = beta_inf*kappa.data.flatten()
 
 
 

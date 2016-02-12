@@ -1,5 +1,0 @@
-
-xraycentering=True
-
-
-

@@ -1,4 +1,0 @@
-massconModule=colossusMassCon
-massconRelation=ColossusMC
-colossusMCname=diemer15
-

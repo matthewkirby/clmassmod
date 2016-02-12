@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 #######################
-# Runs a bootstrapped NFW model fit to simulated shear data.
+# Runs an NFW model fit to simulated shear data.
 # Galaxies are binned into an average shear profile before fitting to NFW model.
 # Options to explore radial fit range, mass-concentration relation, and binning scheme in fits.
 ########################
 
-import importlib, cPickle, sys, os
+import cPickle, sys, os
 import numpy as np
 import astropy.io.fits as pyfits
-import astropy.io.ascii as asciireader
 import nfwutils, bashreader, ldac
 import nfwmodeltools as tools
 import varcontainer
@@ -16,700 +15,35 @@ import fitmodel
 import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
-import readtxtfile
-import voigt_tools as vt
+import profilebuilder
+import simutils
 
 
 #######################
 
-def applyMask(x_arcmin, y_arcmin, zcluster, config):
-
-    if 'targetz' in config:
-        #adjust for different redshift
-        curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
-        newangdist = nfwutils.global_cosmology.angulardist(config.targetz)
-        ratio = curr_angdist/newangdist
-        x_arcmin = x_arcmin*ratio
-        y_arcmin = y_arcmin*ratio
-
-
-    def squaremask(x=0,y=0,theta=0, sidelength = 1.):
-        #x,y in arcminutes
-
-        theta_rad = np.pi*theta/180.
-        
-        dX = x_arcmin - x   
-        dY = y_arcmin - y
-        
-        rdX = np.cos(theta_rad)*dX - np.sin(theta_rad)*dY
-        rdY = np.sin(theta_rad)*dX + np.cos(theta_rad)*dY
-
-        return (np.abs(rdX) + np.abs(rdY)) <= (np.sqrt(2)*sidelength/2.)
-
-    def rectanglemask(x=0,y=0,theta=0, xlength=1., ylength=1.):
-
-        #x,y in arcminutes
-
-        theta_rad = np.pi*theta/180.
-        
-        dX = x_arcmin - x   
-        dY = y_arcmin - y
-        
-        rdX = np.cos(theta_rad)*dX - np.sin(theta_rad)*dY
-        rdY = np.sin(theta_rad)*dX + np.cos(theta_rad)*dY
-
-        return np.logical_and(np.abs(rdX) < xlength/2., np.abs(rdY) < ylength/2.)
-
-
-        
-
-    def circlemask(x=0, y=0, rad=1.):
-        #arcmnutes
-        
-        dX = x_arcmin - x
-        dY = y_arcmin - y
-        
-        return np.sqrt(dX**2 + dY**2) < rad
-
-    acsmask = lambda x,y: squaremask(x,y,sidelength=3.2)
-    wfc3mask = lambda x,y: squaremask(x,y,theta=45.,sidelength=(3.2*4./5.))
-
-    acscentered = lambda : np.logical_or(acsmask(0,0), wfc3mask(0, 6.))
-
-    offsetpointing = lambda : np.logical_or(acsmask(0.,-3.), wfc3mask(0., 3.0))
-
-    rotatedoffset = lambda : np.logical_or(acsmask(-3.,0.), wfc3mask(3., 0.0))
-
-    offsetmosaic = lambda : np.logical_or(offsetpointing(), rotatedoffset())
-
-    offset3 = lambda : np.logical_or(offsetmosaic(), acscentered())
-
-    pisco3 = lambda: np.logical_or(np.logical_or(rectanglemask(0,0,0,8,6), rectanglemask(0,7,0,6,8)), rectanglemask(0,-7,0,6,8))
-
-    pisco4 = lambda: np.logical_or(np.logical_or(rectanglemask(-5.5, 0, 0, 8, 6), rectanglemask(5.5, 0, 0, 8, 6)), 
-                                   np.logical_or(rectanglemask(0, 5.5, 0, 6, 8), rectanglemask(0, -5.5, 0,6, 8)))
-
-    def randomoffset():
-        posangle = np.random.uniform(0, 2*np.pi)
-        rotmatrix = np.array([[np.cos(posangle), -np.sin(posangle)],
-                              [np.sin(posangle), np.cos(posangle)]])
-        acspos = np.dot(rotmatrix, np.array([0., -3]))
-        wfc3pos = np.dot(rotmatrix, np.array([0., 3]))
-
-        print acspos, wfc3pos
-
-        rotatedoffset = np.logical_or(acsmask(acspos[0], acspos[1]), wfc3mask(wfc3pos[0], wfc3pos[1]))
-        return rotatedoffset
-
-    randomoffsetmosaic = lambda : np.logical_or(randomoffset(), offsetpointing())
-
-    centerandoffset = lambda : np.logical_or(acscentered(), offsetpointing())
-
-    centerandrandoffset = lambda : np.logical_or(acscentered(), randomoffset())
-
-
-    acsdiag = np.sqrt(2.)*3.2/2.
-    squaremosaic = lambda : np.logical_or(np.logical_or(acsmask(0., acsdiag),acsmask(0.,-acsdiag)), 
-                                          np.logical_or(acsmask(-acsdiag,0.),acsmask(acsdiag,0.)))
-
-    maskcase = {'squaremask' : lambda : squaremask(config.maskx, config.masky, config.masktheta, config.masksidelength),
-                'circlemask' : lambda : circlemask(config.maskx, config.masky, config.maskrad),
-                'acsmask' : lambda : acsmask(config.maskx, config.masky),
-                'wfc3mask' : lambda : wfc3mask(config.maskx, config.masky),
-                'acscentered' : acscentered,
-                'offsetpointing' : offsetpointing,
-                'rotatedoffset' : rotatedoffset,
-                'offsetmosaic' : offsetmosaic,
-                'offset3' : offset3,
-                'pisco3' : pisco3,
-                'pisco4' : pisco4,
-                'randomoffset' : randomoffset,
-                'randomoffsetmosaic' : randomoffsetmosaic,
-                'centerandoffset' : centerandoffset,
-                'centerandrandoffset' : centerandrandoffset,
-                'squaremosaic' : squaremosaic}
-
-    mask = maskcase[config.maskname]()
-
-    return mask
-            
-
-########################
-
-class InsufficientGalaxiesException(Exception): pass
-
-def applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='full'):
-    #assumes that the input catalog is rectalinear
-
-    if mode == 'full' and 'density_transition_arcmin' in config:
-
-        target_angdist = nfwutils.global_cosmology.angulardist(config.targetz)
-        ref_angdist = nfwutils.global_cosmology.angulardist(zcluster)
-        target_transition_mpc = (config.density_transition_arcmin/60.)*(np.pi/180.)*target_angdist
-        ref_transition_arcmin = (target_transition_mpc/ref_angdist)*(180./np.pi)*60.
-
-        print ref_transition_arcmin
-
-        isInside = np.logical_and(np.abs(x_arcmin) < ref_transition_arcmin,
-                                  np.abs(y_arcmin) < ref_transition_arcmin)
-        insidemask = applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='inside')
-
-
-        isOutside = np.logical_not(isInside)
-        outsidemask = applyDensityMask(x_arcmin, y_arcmin, zcluster, config, mode='outside')
-
-        
-        
-
-        return np.logical_or(np.logical_and(isInside, insidemask), 
-                             np.logical_and(isOutside, outsidemask))
-
-    if mode == 'full':
-        targetdensity = config.nperarcmin
-    elif mode == 'inside':
-        targetdensity = config.nperarcmin_inside
-    elif mode == 'outside':
-        targetdensity = config.nperarcmin_outside
-    else:
-        raise ValueError
-
-    max_x = np.max(x_arcmin)
-    min_x = np.min(x_arcmin)
-    delta_x = max_x - min_x
-
-    max_y = np.max(y_arcmin)
-    min_y = np.min(y_arcmin)
-    delta_y = max_y - min_y
-
-    area = delta_x*delta_y
-        
-    if targetdensity == -1:
-        #take all
-        targetnumber = len(x_arcmin)
-
-    elif 'targetz' in config:
-        #adjust for different redshift
-        curr_angdist = nfwutils.global_cosmology.angulardist(zcluster)
-        newangdist = nfwutils.global_cosmology.angulardist(config.targetz)
-        ratio = curr_angdist/newangdist
-        newarea = area*ratio**2
-        targetnumber = targetdensity*newarea
-    else:
-
-        targetnumber = targetdensity*area
-
-    availablenumber = len(x_arcmin)
-
-    if targetnumber > availablenumber:
-        raise InsufficientGalaxiesException
-
-    accept = float(targetnumber) / availablenumber
-
-    randomthrow = np.random.random(len(x_arcmin))
-
-    selected = randomthrow < accept
-
-
-    return randomthrow < accept
-
-
-#######################
-
-szsim_offsetcat = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/SPT_SN_offset.dat')
-
-def SZSimOffset(sim, config):
-
-    print 'SZ Magneticum'
-
-    matchingcoresize = szsim_offsetcat[szsim_offsetcat['coresize[arcmin]'] == config.coresize]
-
-    m500 = sim.m500
-#    if m500 == 0:
-    selectedsim =np.random.uniform(0, len(matchingcoresize))
-#    else:
-#        #choose one of the 50 closest in mass at same core radius
-#        deltamass = matchingcoresize['M500c'] - m500
-#        closestsims = np.argsort(deltamass)
-#        selectedsim = closestsims[np.random.uniform(0, min(50, len(deltamass)))]  
-#
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-    anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-    offsetx = anglescale*(matchingcoresize['peak_xpix[arcmin]'] - matchingcoresize['cluster_xpix'])[selectedsim]  #arcmin
-    offsety = anglescale*(matchingcoresize['peak_ypix'] - matchingcoresize['cluster_ypix'])[selectedsim]
-
-#    offset_radial = np.sqrt(offsetx**2 + offsety**2)
-    offset_phi = np.random.uniform(0, 2*np.pi)
-
-    newoffsetx = offsetx*np.cos(offset_phi) - offsety*np.sin(offset_phi)
-    newoffsety = offsetx*np.sin(offset_phi) + offsety*np.cos(offset_phi)
-
-    return newoffsetx, newoffsety
-
-#
-#    centeroffsetx = offset_radial*np.cos(offset_phi)
-#    centeroffsety = offset_radial*np.sin(offset_phi)
-#
-
-#    return centeroffsetx, centeroffsety
-
-###
-
-def SZTheoryOffset(sim, config):
-
-    print 'SZ Theory'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-    
-    sz_noisescatter = 0.3*targetDl/dL #arcmin, scaled
-    physical_scatter = (0.1/dL)*(180./np.pi)*60 #fixed in kpc, converted to arcmin
-    scatter = np.sqrt(sz_noisescatter**2 + physical_scatter**2)/np.sqrt(2.)
-    centeroffsetx, centeroffsety = scatter*np.random.standard_normal(2)
-
-    return centeroffsetx, centeroffsety
-
-
-####
-
-def SZLensingPeakOffset(sim, config):
-
-    print 'SZ Lensing Peak'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-    
-    scatter = 0.237*targetDl/dL #arcmin, scaled
-    centeroffsetx, centeroffsety = scatter*np.random.standard_normal(2)
-
-    return centeroffsetx, centeroffsety
-
-
-####
-
-
-def SZXVPTheoryOffset(sim, config):
-
-    print 'SZ XVP Theory'
-
-    #physical scatter in arcmin, approp for target redshift
-    xvp_offsetx, xvp_offsety = XrayXVPOffset(sim, config)
-
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-    
-    sz_noisescatter = 0.3*targetDl/dL #arcmin, scaled
-    centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
-
-    return (centeroffsetx + xvp_offsetx, 
-            centeroffsety + xvp_offsety)
-
-
-####
-
-sz_xvp_bcg_offsets_deg = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgsz')[:,1]
-
-def SZXVPBCGOffset(sim, config):
-
-    print 'SZ XVP BCG Offset'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-    anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-
-    offset = 60*anglescale*sz_xvp_bcg_offsets_deg[np.random.randint(0, len(sz_xvp_bcg_offsets_deg), 1)]
-
-    offset_phi = np.random.uniform(0, 2*np.pi)
-
-    newoffsetx = offset*np.cos(offset_phi)
-    newoffsety = offset*np.sin(offset_phi)
-
-    return newoffsetx, newoffsety
-
-
-####
-
-def SZAnalytic(sim, config):
-
-    print 'SZ Analytic'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-    targetDl = nfwutils.global_cosmology.angulardist(config.targetz)
-    anglescale = targetDl/dL  #account for the fact that the fixed angular scatter turns into different effective r_mpc scatter
-
-    sz_noisescatter = anglescale*np.sqrt(config.szbeam**2 + config.coresize**2)/config.sz_xi
-
-    centeroffsetx, centeroffsety = sz_noisescatter*np.random.standard_normal(2)
-
-    return (centeroffsetx, 
-            centeroffsety)
-    
-    
-
-
-wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/wtg_offsets.dat')]
-
-def XrayWTGOffset(sim, config):
-
-    print 'Xray WtG'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-
-
-    radial_offset_mpc = wtg_offsets_mpc[np.random.randint(0, len(wtg_offsets_mpc), 1)]
-    radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
-    phi_offset = np.random.uniform(0, 2*np.pi)
-    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
-    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
- 
-    return centeroffsetx, centeroffsety
-
-
-###
-
-def XraySPTHSTOffset(sim, config):
-
-    print 'Xray SPT HST'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-    #offset distribution simple log delta r ~ N(mu, sig) fit to SPT-HST xray bcg offset distro (from Inon)
-    centeroffset_mpc = np.exp(-2.625 + 1.413*np.random.standard_normal())
-    offset_radial = (centeroffset_mpc/dL)*(180./np.pi)*60.
-    offset_phi = np.random.uniform(0, 2*np.pi)
-    
-    centeroffsetx = offset_radial*np.cos(offset_phi)
-    centeroffsety = offset_radial*np.sin(offset_phi)
-
-    return centeroffsetx, centeroffsety
-
-###
-
-xvp_offsets_mpc = readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/sptxvp_bcgxray')[:,0]
-
-def XrayXVPOffset(sim, config):
-
-    print 'Xray XVP'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-
-
-    radial_offset_mpc = xvp_offsets_mpc[np.random.randint(0, len(xvp_offsets_mpc), 1)][0]
-    radial_offset_arcmin = (radial_offset_mpc/(dL))*(180./np.pi)*60.
-    phi_offset = np.random.uniform(0, 2*np.pi)
-    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
-    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
- 
-    return centeroffsetx, centeroffsety
-
-
-###
-
-
-def XrayCCCPOffset(sim, config):
-
-    print 'Xray CCCP'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-    offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/cccp_offsets.dat')]
-
-    radial_offset_kpc = offsets_kpc[np.random.randint(0, len(offsets_kpc), 1)]
-    radial_offset_arcmin = (radial_offset_kpc/(1000.*dL))*(180./np.pi)*60.
-    phi_offset = np.random.uniform(0, 2*np.pi)
-    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
-    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
- 
-    return centeroffsetx, centeroffsety
-
-
-###
-
-
-def XrayLensingPeakOffset(sim, config):
-
-    print 'Xray Lensing Peak'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-    delta_mpc = 0.107*np.random.standard_normal(2)
-    
-    centeroffsetx, centeroffsety = (delta_mpc/dL)*(180./np.pi)*60 #arcmin
-
-    return centeroffsetx, centeroffsety
-
-def XrayLensingPeakVoigtOffset(sim, config):
-
-    print 'Xray Lensing Peak Voigt'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-    delta_mpc = vt.voigtSamples(0.048, 0.0565, 2, limits=(-0.3, 0.3))
-    
-    centeroffsetx, centeroffsety = (delta_mpc/dL)*(180./np.pi)*60 #arcmin
-
-    return centeroffsetx, centeroffsety
-
-###
-
-xray_magneticum_distro = asciireader.read('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/magneticum_offsets.dat')
-
-def XrayMagneticumOffset(sim, config):
-
-    print 'Xray Magneticum'
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-    delta_kpc = xray_magneticum_distro['xrayoffset'][np.random.randint(0, len(xray_magneticum_distro), 1)][0]
-
-    radial_offset_arcmin = (delta_kpc/(1000*dL))*(180./np.pi)*60 #arcmin
-    phi_offset = np.random.uniform(0, 2*np.pi)
-
-    centeroffsetx = radial_offset_arcmin*np.cos(phi_offset)
-    centeroffsety = radial_offset_arcmin*np.sin(phi_offset)
-
-    
-
-    return centeroffsetx, centeroffsety
-
-
-    
-
-###
-
-    
-def getCenterOffset(sim, config):
-
-    centeroffsetx = 0.
-    centeroffsety = 0.
-        
-
-    if 'xraycentering' in config and config['xraycentering'] == 'WTG':
-
-        centeroffsetx, centeroffsety = XrayWTGOffset(sim, config)
-
-    elif 'xraycentering' in config and config['xraycentering'] == 'CCCP':
-
-        centeroffsetx, centeroffsety = XrayCCCPOffset(sim, config)
-
-    elif 'xraycentering' in config and config['xraycentering'] == 'SPTHST':
-        
-        centeroffsetx, centeroffsety = XraySPTHSTOffset(sim, config)
-
-    elif 'xraycentering' in config and config['xraycentering'] == 'XVP':
-        
-        centeroffsetx, centeroffsety = XrayXVPOffset(sim, config)
-
-    elif 'xraycentering' in config and config['xraycentering'] == 'lensingpeak':
-
-        centeroffsetx, centeroffsety = XrayLensingPeakOffset(sim, config)
-
-    elif 'xraycentering' in config and config['xraycentering'] == 'voigtlensingpeak':
-
-        centeroffsetx, centeroffsety = XrayLensingPeakVoigtOffset(sim, config)
-
-    elif 'xraycentering' in config and config['xraycentering'] == 'magneticum':
-
-        centeroffsetx, centeroffsety = XrayMagneticumOffset(sim, config)
-    
-    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'True':
-
-        centeroffsetx, centeroffsety = SZTheoryOffset(sim, config)
-
-    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'xvp':
-
-        centeroffsetx, centeroffsety = SZXVPTheoryOffset(sim, config)
-    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'lensingpeak':
-        
-        centeroffsetx, centeroffsety = SZLensingPeakOffset(sim, config)
-
-    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'xvp_szbcg':
-
-        centeroffsetx, centeroffsety = SZXVPBCGOffset(sim, config)
-
-
-    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'analytic':
-
-        centeroffsetx, centeroffsety = SZAnalytic(sim, config)
-
-    elif 'sztheoreticalcentering' in config and config['sztheoreticalcentering'] == 'magneticum':
-        
-        centeroffsetx, centeroffsety = SZSimOffset(sim, config)
-
-
-        
-        
-    print 'Pointing Offset: %f %f' % (centeroffsetx, centeroffsety)
-
-
-    return centeroffsetx, centeroffsety
-
-
-
-########################
-
-def readSimCatalog(catalogname, simreader, config):
-
-    sim = simreader.load(catalogname)
-
-
-    e1 = sim.g1
-    e2 = sim.g2
-
-    dL = nfwutils.global_cosmology.angulardist(sim.zcluster)    
-
-
-    centeroffsetx, centeroffsety = getCenterOffset(sim, config)
-
-
-
-    delta_x = sim.x_arcmin - centeroffsetx
-    delta_y = sim.y_arcmin - centeroffsety
-
-
-    deltax_mpc = (delta_x * dL * np.pi)/(180.*60)
-    deltay_mpc = (delta_y * dL * np.pi)/(180.*60)
-    r_mpc = np.sqrt(deltax_mpc**2 + deltay_mpc**2)
-    cosphi = deltax_mpc / r_mpc
-    sinphi = deltay_mpc / r_mpc
-    
-    sin2phi = 2.0*sinphi*cosphi
-    cos2phi = 2.0*cosphi*cosphi-1.0
-
-     
-   
-        
-
-    E = -(e1*cos2phi+e2*sin2phi)
-
-    b1 =  e2
-    b2 = -e1
-    B = -(b1*cos2phi+b2*sin2phi)
-
-    if 'shapenoise' in config:
-        E = E + config.shapenoise*np.random.standard_normal(len(E))
-        B = B + config.shapenoise*np.random.standard_normal(len(B))
-
-    densitymask = np.ones(len(E)) == 1.
-    if 'nperarcmin' in config or 'nperarcmin_inside' in config:
-        densitymask = applyDensityMask(delta_x, delta_y, sim.zcluster, config)
-
-    visiblemask = np.ones(len(E)) == 1.
-    if 'maskname' in config:
-        visiblemask = applyMask(delta_x, delta_y, sim.zcluster, config)
-
-
-    mask = np.logical_and(visiblemask, densitymask)
-
-    r_arcmin = sim.r_arcmin
-    r_mpc = sim.r_mpc
-    redshifts = sim.redshifts
-    beta_s = sim.beta_s
-
-    cols = [pyfits.Column(name = 'r_arcmin', format = 'E', array = r_arcmin),
-            pyfits.Column(name = 'r_mpc', format='E', array = r_mpc),
-            pyfits.Column(name = 'ghat', format='E', array = E),
-            pyfits.Column(name = 'gcross', format='E', array = B),
-            pyfits.Column(name = 'z', format='E', array = redshifts),
-            pyfits.Column(name = 'beta_s', format = 'E', array = beta_s),
-            pyfits.Column(name = 'mask', format = 'L', array = mask)]
-    catalog = ldac.LDACCat(pyfits.BinTableHDU.from_columns(pyfits.ColDefs(cols)))
-    catalog.hdu.header['ZLENS'] = sim.zcluster
-
-
-    return catalog
-
-
-########################
-
-def readConfiguration(configname):
-
-    config = bashreader.parseFile(configname)
-    return config
-    
-
-########################
-
-def buildObject(modulename, classname, *args, **kwds):
-
-    if modulename.lower() == 'none' or classname.lower() == 'none':
-        return None
-
-    aModule = importlib.import_module(modulename)
-    aClass = getattr(aModule, classname)
-    anObject = aClass(*args, **kwds)
-
-    return anObject
-    
-#####
-
-def buildProfileBuilder(config):
-
-    return buildObject(config.profilemodule, config.profilebuilder, config)
-
-#####
-
-def buildModel(config):
-
-
-    try:
-        massconRelation = buildObject(config.massconmodule, config.massconrelation, config)
-    except AttributeError:
-        massconRelation = None
-
-    if massconRelation is None:
-        model = NFW_Model(config = config)
-    else:
-        model = NFW_MC_Model(massconRelation, config = config)
-
-    return model
-
-    
-
-def buildFitter(config):
-
-    profileBuilder = buildProfileBuilder(config)
-    model = buildModel(config)
-
-    
-
-    fitter = NFWFitter(profileBuilder = profileBuilder, model = model, config = config)
-
-
-
-    return fitter
-
-####
-
-def buildSimReader(config):
-
-   return buildObject(config.readermodule, config.readerclass, config = config)
-
-    
-        
-########################
 
 class NFW_Model(object):
 
-    def __init__(self, config = None):
+    def __init__(self):
 
         self.massScale = 1e14
         self.overdensity = 200
-        self.config = config
+        self.c200_low = 0.1
+        self.c200_high = 30.
+        
 
-        if config is not None and 'massprior' in config and config.massprior != 'linear':
+    def configure(self, config):
+
+        if 'massprior' in config and config['massprior'] == 'log':
+            self.massprior = 'log'
             self.m200_low = 1e10
             self.m200_high = 1e17
         else:
+            self.massprior = 'linear'
             self.m200_low = -1e16
             self.m200_high = 1e16
 
 
-        self.c200_low = 0.1
-        self.c200_high = 30.
 
     def paramLimits(self):
 
@@ -726,23 +60,32 @@ class NFW_Model(object):
         return guess
 
 
-    def setData(self, beta_s, beta_s2, zcluster):
+    def setData(self, beta_s, beta_s2, zcluster, zlens = None):
+        
+        #handle cases where shear signal has been rescaled to a different cluster redshift
+        if zlens is None:
+            zlens = zcluster
         
         self.beta_s = beta_s
         self.beta_s2 = beta_s2
         self.zcluster = zcluster
-        self.rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        self.zlens = zlens
+        self.rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
+        #note the mixed usage of zlens and zcluster. Lensing properties were rescaled. Mass related properties (here H2, from rho_crit) were not.
+        self.rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zlens) * nfwutils.global_cosmology.beta([1e6], zlens)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
 
 
 
-    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, delta = 200):
 
-        self.setData(beta_s, beta_s2, zcluster)
+
+    def makeMCMCModel(self, profile, delta = 200):
+
+        self.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
         parts = {}
 
-        if 'massprior' in self.config and self.config.massprior == 'linear':
+        if self.massprior == 'linear':
             parts['scaledmdelta'] = pymc.Uniform('scaledmdelta', self.m200_low/self.massScale, self.m200_high/self.massScale)
             
             @pymc.deterministic(trace=True)
@@ -761,18 +104,16 @@ class NFW_Model(object):
 
         parts['cdelta'] = pymc.Uniform('cdelta', self.c200_low, self.c200_high)
 
-        rho_c = nfwutils.global_cosmology.rho_crit(zcluster)
-        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster) * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
         @pymc.observed
         def data(value = 0.,
-                 r_mpc = r_mpc,
-                 ghat = ghat,
-                 sigma_ghat = sigma_ghat,
-                 beta_s = beta_s,
-                 beta_s2 = beta_s2,
-                 rho_c = rho_c,
-                 rho_c_over_sigma_c = rho_c_over_sigma_c,
+                 r_mpc = profile.r_mpc,
+                 ghat = profile.ghat,
+                 sigma_ghat = profile.sigma_ghat,
+                 beta_s = profile.beta_s,
+                 beta_s2 = profile.beta_s2,
+                 rho_c = self.rho_c,
+                 rho_c_over_sigma_c = self.rho_c_over_sigma_c,
                  mdelta = parts['mdelta'],
                  cdelta = parts['cdelta']):
 
@@ -832,10 +173,10 @@ class NFW_Model(object):
 
 class NFW_MC_Model(NFW_Model):
 
-    def __init__(self, massconRelation, config = None):
+    def configure(self, config):
 
-        super(NFW_MC_Model, self).__init__(config = config)
-        self.massconRelation = massconRelation
+        super(NFW_MC_Model, self).configure(config)
+        self.massconRelation = config['massconRelation']
 
     def guess(self):
 
@@ -853,13 +194,13 @@ class NFW_MC_Model(NFW_Model):
         return {'m200' : limits['m200']}
 
     
-    def makeMCMCModel(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster):
+    def makeMCMCModel(self, profile, delta = 200):
 
-        self.setData(beta_s, beta_s2, zcluster)
+        self.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
         parts = {}
         
-        if 'massprior' in self.config and self.config.massprior == 'linear':
+        if  self.massprior == 'linear':
             parts['scaledm200'] = pymc.Uniform('scaledm200', self.m200_low/self.massScale, self.m200_high/self.massScale, value = self.guess()[0])
             
             @pymc.deterministic(trace=True)
@@ -889,18 +230,16 @@ class NFW_MC_Model(NFW_Model):
             return 0.
         parts['c200pot'] = c200pot
 
-        rho_c = np.float64(nfwutils.global_cosmology.rho_crit(zcluster))
-        rho_c_over_sigma_c = 1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
 
         @pymc.observed
         def data(value = 0.,
-                 r_mpc = r_mpc,
-                 ghat = ghat,
-                 sigma_ghat = sigma_ghat,
-                 beta_s = beta_s,
-                 beta_s2 = beta_s2,
-                 rho_c = rho_c,
-                 rho_c_over_sigma_c = rho_c_over_sigma_c,
+                 r_mpc = profile.r_mpc,
+                 ghat = profile.ghat,
+                 sigma_ghat = profile.sigma_ghat,
+                 beta_s = profile.beta_s,
+                 beta_s2 = profile.beta_s2,
+                 rho_c = self.rho_c,
+                 rho_c_over_sigma_c = self.rho_c_over_sigma_c,
                  m200 = m200,
                  c200 = c200):
 
@@ -940,42 +279,29 @@ class NFW_MC_Model(NFW_Model):
 ###############################
 
 
-class NFWFitter(object):
+class MCMCFitter(object):
 
-    def __init__(self, profileBuilder, model, config):
+    def configure(self, config):
 
-        self.profileBuilder = profileBuilder
-        self.model = model
-        self.config = config
+        self.model = config['model']
+        self.deltas = [200, 500, 2500]
+        self.nsamples = 30000
+        if 'nsamples' in config:
+            self.nsamples = config['nsamples']
 
-
-    ######
-
-    def prepData(self, curCatalog):
         
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2 = [x.astype(np.float64) for x in self.profileBuilder(curCatalog, self.config)]
-
-        clean = sigma_ghat > 0
-
-        zlens = curCatalog.hdu.header['ZLENS']
-
-        return r_mpc[clean], ghat[clean], sigma_ghat[clean], beta_s[clean], beta_s2[clean], zlens
 
 
-    ######
-
-    def explorePosterior(self, catalog, deltas = [200, 500, 2500]):
-
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
+    def __call__(self, profile):
 
         chains = {}
 
-        for delta in deltas:
+        for delta in self.deltas:
 
             mcmc_model = None
             for i in range(20):
                 try:
-                    mcmc_model = self.model.makeMCMCModel(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, delta = delta)
+                    mcmc_model = self.model.makeMCMCModel(profile, delta = delta)
                     break
                 except pymc.ZeroProbability:
                     pass
@@ -989,9 +315,7 @@ class NFWFitter(object):
             options.singlecore = True
             options.adapt_every = 100
             options.adapt_after = 100
-            options.nsamples = 30000
-            if 'nsamples' in self.config:
-                options.nsamples = self.config.nsamples
+            options.nsamples = self.nsamples
             manager.model = mcmc_model
 
             runner = pma.MyMCMemRunner()
@@ -1007,22 +331,26 @@ class NFWFitter(object):
 
         return chains
 
+
+##########
+
+
+class MinChisqFitter(object):
+
+    def configure(self, config):
+
+        self.model = config['model']
         
-
-    ######
-
-    def minChisqMethod(self, r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zcluster, 
-                   guess = [],
-                   useSimplex=False):
+    def __call__(self, profile, guess = [], useSimplex=False):
 
         if guess == []:
             guess = self.model.guess()
 
         print 'GUESS: %f' % guess[0]
 
-        self.model.setData(beta_s, beta_s2, zcluster)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
-        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
+        fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
                                    guess = guess)
         fitter.m.limits = self.model.paramLimits()
         fitter.fit(useSimplex = useSimplex)
@@ -1034,53 +362,76 @@ class NFWFitter(object):
         return None
 
 
-    #######
+#######
+        
+class BadPDFException(Exception): pass
 
-    class BadPDFException(Exception): pass
+class PDFScanner(object):
 
-    def scanPDF(self, catalog, config, masses = np.arange(-1.005e15, 6e15, 1e13), deltas = [200, 500, 2500]):
+    def configure(self, config):
 
+        self.model = config['model']
+        self.deltas = [200, 500, 2500]
+
+        self.masses = np.arange(-1.005e15, 6e15, 1e13)
         if 'scanpdf_minmass' in config:
-            masses = np.arange(config.scanpdf_minmass, config.scanpdf_maxmass, config.scanpdf_massstep)
+            self.masses = np.arange(config['scanpdf_minmass'], config['scanpdf_maxmass'], config['scanpdf_massstep'])
+
+
+
+    def __call__(self, profile):
+
 
         #only want to define a scan for a 1d model at this point.
         assert(isinstance(self.model, NFW_MC_Model))
 
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
+        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
 
-        self.model.setData(beta_s, beta_s2, zlens)
-
-        fitter = fitmodel.FitModel(r_mpc, ghat, sigma_ghat, self.model,
-                                   guess = self.model.guess())
 
         pdfs = {}
 
-        for delta in deltas:
+        masses = self.masses
 
-            chisqs = np.zeros(len(masses))
+        for delta in self.deltas:
+
+            logprob = np.zeros(len(masses))
 
             if delta == 200:
                 workingmasses = masses
-            if delta != 200:
+                c200s = np.array([self.model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
+                                                      profile.zcluster, float(delta)) for curm in workingmasses])
+            elif delta != 200:
                 workingmasses = np.zeros_like(masses)
+                c200s = np.zeros_like(masses)
                 for i, curm in enumerate(masses):
                     c200 = self.model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
-                                                      zlens, float(delta))
-                    rscale = nfwutils.rscaleConstM(np.abs(curm), c200, zlens, float(delta))
-                    m200 = nfwutils.Mdelta(rscale, c200, zlens, 200)
+                                                      profile.zcluster, float(delta))
+                    rscale = nfwutils.rscaleConstM(np.abs(curm), c200, profile.zcluster, float(delta))
+                    m200 = nfwutils.Mdelta(rscale, c200, profile.zcluster, 200)
                     if curm < 0:
                         m200 = -m200
                     workingmasses[i] = m200
+                    c200s[i] = c200
 
-            for i, mass in enumerate(workingmasses):
+            for i in range(len(workingmasses)):
+                mass = workingmasses[i]
+                c200 = c200s[i]
 
-                chisqs[i] = fitter.statfunc(fitter.ydata,
-                                                 fitter.yerr,
-                                                 fitter.model(fitter.xdata,
-                                                                   mass / self.model.massScale))
+                logprob[i] = tools.shearprofile_like(mass, c200,
+                                                    profile.r_mpc,
+                                                    profile.ghat,
+                                                    profile.sigma_ghat,
+                                                    self.model.beta_s,
+                                                    self.model.beta_s2,
+                                                    self.model.rho_c,
+                                                    self.model.rho_c_over_sigma_c,
+                                                    200.)
 
 
-            pdf = np.exp(-0.5*(chisqs - np.min(chisqs)))
+
+
+
+            pdf = np.exp(logprob - np.max(logprob))
             pdf = pdf/scipy.integrate.trapz(pdf, masses)
             pdfs[delta] = pdf
 
@@ -1091,63 +442,6 @@ class NFWFitter(object):
 
     #######
 
-    def runUntilNotFail(self, catalog, config):
-
-        r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(catalog)
-
-        for i in range(config.nbootstraps):
-
-            try:
-                fitresult = self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
-
-
-                if fitresult is not None:
-                    return fitresult
-
-            except ValueError:
-                pass
-
-        #one last try with the SIMPLEX algorithm
-        return self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens, useSimplex=True)
-
-
-    #####
-            
-
-    def bootstrapFit(self, catalog, config):
-
-        fitresults = []
-        nfail = 0
-
-
-        for i in range(config.nbootstraps):
-
-            if i == 0:
-                curCatalog = catalog
-            else:
-                curBootstrap = np.random.randint(0, len(catalog), size=len(catalog))
-                curCatalog = catalog.filter(curBootstrap)
-
-            r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens = self.prepData(curCatalog, config)
-
-
-            try:
-                fitresult = self.minChisqMethod(r_mpc, ghat, sigma_ghat, beta_s, beta_s2, zlens)
-
-                
-
-                if fitresult is None:
-                    nfail += 1
-                else:
-                    fitresults.append(fitresult)
-
-            except ValueError:
-                nfail += 1
-                
-
-
-
-        return fitresults, nfail
 
 
 
@@ -1167,29 +461,23 @@ def savefit(bootstrap_vals, outputname):
 
 def runNFWFit(catalogname, configname, outputname):
 
-    try:
 
-        config = readConfiguration(configname)
 
-        simreader = buildSimReader(config)
+    config = simutils.readConfiguration(configname)
+    simreader = config['simreader']
+    profilebuilder = config['profilebuilder']
+    fitter = config['fitter']
 
-        nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+    nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
-        catalog = readSimCatalog(catalogname, simreader, config)
+    sim = simreader.load(catalogname)
 
-        fitter = buildFitter(config)
+    profile = profilebuilder(sim)
 
-        if 'fitter' in config and config.fitter == 'maxlike':
-            fitvals = fitter.runUntilNotFail(catalog, config)
-        elif 'fitter' in config and config.fitter == 'pdf':
-            fitvals = fitter.scanPDF(catalog, config)
-        else:
-            fitvals = fitter.explorePosterior(catalog)
-    
-        savefit(fitvals, outputname)
+    fitvals = fitter(profile)
 
-    except TypeError:
-        raise TypeError(configname)
+    savefit(fitvals, outputname)
+
 
 ############################
 

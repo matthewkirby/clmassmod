@@ -1,7 +1,5 @@
 #!/bin/bash -u
 
-
-binning=hstnoisebins
 r=5
 
 for snap in 124 141; do
@@ -12,9 +10,9 @@ for snap in 124 141; do
 		    
 	    for center in xrayNONE xraymag szanalytic szmag; do
 		
-		for mc in duffy c4 diemer15; do
+		for mc in c4 diemer15; do
 		    
-		    config=hstnoisebins-${mc}-r${r}-${center}-${cluster}	  	    
+		    config=hstnoisebins-${mc}-r${r}-${center}-${cluster}-feb2016
 		
 		    echo $config >> ../run22bk11$snap
 		
@@ -24,27 +22,31 @@ for snap in 124 141; do
 			mkdir $dir
 		    fi
 		    
-		   
+		    cat overhead.py bk11.py hstnoiseprofile.py ${mc}.py linearprior.py scanpdf.py r${r}.py > $dir/config.py
 		 
-		    cat scanpdf.sh bk11.sh ${mc}.sh r${r}.sh ${binning}.sh core_${coresizeindex}.sh > $dir/config.sh
+		    echo "targetz=$zcluster" >> $dir/config.py
 
-		    echo "targetz=$zcluster" >> $dir/config.sh
-		    echo "szbeam=1.2" >> $dir/config.sh
-		    echo "sz_xi=$spt_xi" >> $dir/config.sh
 
 
 		    if [ "$center" = "xrayNONE" ]; then
-			echo "xraycentering=None" >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh		
+			cat core_none.py >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile'" >> $dir/config.py		
+
 		    elif [ "$center" = "xraymag" ]; then
-			echo "xraycentering=magneticum" >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.xraycenter.profile" >> $dir/config.sh		
+			cat xraymagneticum.py >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.xraycenter.profile'" >> $dir/config.py		
+
 		    elif [ "$center" = "szanalytic" ]; then
-			echo "sztheoreticalcentering=analytic" >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh		
+			cat szanalytic.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
+			echo "szbeam=1.2" >> $dir/config.py
+			echo "sz_xi=$spt_xi" >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile'" >> $dir/config.py		
+
 		    elif [ "$center" = "szmag" ]; then
-			echo "sztheoreticalcentering=magneticum" >> $dir/config.sh
-			echo "profilefile=/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile" >> $dir/config.sh		
+			cat szmagneticum.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
+			echo "profilefile='/vol/euclid1/euclid1_raid1/dapple/mxxlsims/shearprofiles/${cluster}.szcenter.profile'" >> $dir/config.py		
 		    fi
 
 
@@ -71,9 +73,9 @@ for snap in 124 141; do
 		    
 	    for center in xrayNONE xraymag szanalytic szmag; do
 		
-		for mc in duffy c4 diemer15; do
+		for mc in c4 diemer15; do
 
-		    config=mega-${mc}-r${r}-sigma${shapenoise}-${center}-${cluster}	    
+		    config=mega-${mc}-r${r}-${center}-${cluster}-feb2016
 		
 		    echo $config >> ../run22bk11$snap
 		
@@ -83,34 +85,32 @@ for snap in 124 141; do
 			mkdir $dir
 		    fi
 		    
-		   
-		 
-		    cat scanpdf.sh bk11.sh ${mc}.sh r${r}.sh ${binning}.sh core_${coresizeindex}.sh > $dir/config.sh
+		    cat megacam.py bk11.py ${mc}.py scanpdf.py r${r}.py > $dir/config.py
 
-		    echo "targetz=$zcluster" >> $dir/config.sh
-		    echo "nperarcmin=$ndensity" >> $dir/config.sh
-		    echo "shapenoise=$shapenoise" >> $dir/config.sh
-		    echo "beta=$beta" >> $dir/config.sh
-		    echo "szbeam=1.2" >> $dir/config.sh
-		    echo "sz_xi=$spt_xi" >> $dir/config.sh
 
+		    echo "targetz=$zcluster" >> $dir/config.py
+		    echo "nperarcmin=$ndensity" >> $dir/config.py
+		    echo "shapenoise=$shapenoise" >> $dir/config.py
+		    echo "beta=$beta" >> $dir/config.py
 
 
 		    if [ "$center" = "xrayNONE" ]; then
-			echo "xraycentering=None" >> $dir/config.sh
+			cat core_none.py >> $dir/config.py
 
 		    elif [ "$center" = "xraymag" ]; then
-			echo "xraycentering=magneticum" >> $dir/config.sh
+			cat xraymagneticum.py >> $dir/config.py
 
 		    elif [ "$center" = "szanalytic" ]; then
-			echo "sztheoreticalcentering=analytic" >> $dir/config.sh
+			cat szanalytic.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
+			echo "szbeam=1.2" >> $dir/config.py
+			echo "sz_xi=$spt_xi" >> $dir/config.py
 
 		    elif [ "$center" = "szmag" ]; then
-			echo "sztheoreticalcentering=magneticum" >> $dir/config.sh
+			cat szmagneticum.py >> $dir/config.py
+			cat core_${coresizeindex}.py >> $dir/config.py
 
 		    fi
-
-
 
 
 		done

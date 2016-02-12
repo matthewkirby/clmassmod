@@ -1,64 +1,83 @@
-import readtxtfile
-import nfwutils
 import numpy as np
 import os.path
 
-#####################
 
-__lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_output_v3_ctim_bgq/massana/gb1_pofz_tim1_1p5m/{cluster}/massana_apera_c_x0/lssmocks'
-
-
-def loadLSSRealization(cluster, id = 'random'):
-        
-    clustermockdir = __lss_dir__.format(cluster = cluster)
-
-    if id == 'random':
-
-        lss_possible = readtxtfile.readtxtfile('{}/fit_lss.results'.format(clustermockdir))
-        ids_available = lss_possible[:,0][lss_possible[:,7] > 1000]
-
-        id = int(ids_available[np.random.randint(0, len(ids_available), 1)])
-
-    print 'Loading LSS %d' % id
-
-    lssfile = '{mockdir}/mock{id}/shear.profile.all.beta2.unchanged'.format(mockdir = clustermockdir,
-                                                                            id = id)
-
-    rawlssprofile = readtxtfile.readtxtfile(lssfile)
-
-    lssprofile = dict(r_mpc = rawlssprofile[:,0],
-                      gt = rawlssprofile[:,1],
-                      magbin = rawlssprofile[:,7])
-                      
-
-    return lssprofile
-
-
+import readtxtfile
+import nfwutils
+import basicBinning
+import betacalcer
+import shearnoiser
+import catalog
 
 #####################
 
+#__lss_dir__ = '/vol/euclid1/euclid1_raid1/schrabba/proj/spt/reduce201311/reduce_output_v3_ctim_bgq/massana/gb1_pofz_tim1_1p5m/{cluster}/massana_apera_c_x0/lssmocks'
+#
+#
+#def loadLSSRealization(cluster, id = 'random'):
+#        
+#    clustermockdir = __lss_dir__.format(cluster = cluster)
+#
+#    if id == 'random':
+#
+#        lss_possible = readtxtfile.readtxtfile('{}/fit_lss.results'.format(clustermockdir))
+#        ids_available = lss_possible[:,0][lss_possible[:,7] > 1000]
+#
+#        id = int(ids_available[np.random.randint(0, len(ids_available), 1)])
+#
+#    print 'Loading LSS %d' % id
+#
+#    lssfile = '{mockdir}/mock{id}/shear.profile.all.beta2.unchanged'.format(mockdir = clustermockdir,
+#                                                                            id = id)
+#
+#    rawlssprofile = readtxtfile.readtxtfile(lssfile)
+#
+#    lssprofile = dict(r_mpc = rawlssprofile[:,0],
+#                      gt = rawlssprofile[:,1],
+#                      magbin = rawlssprofile[:,7])
+#                      
+#
+#    return lssprofile
+#
+#
+#
+######################
 
-class hstnoisebins(object):
-    ''' Note: This binning class adds noise, unlike the other binning classes. Should not be run with shape noise added at the catalog reader stage.'''
+class HSTBinning(object):
 
-    def __init__(self, config):
+    def configure(self, config):
 
-        if 'shapenoise' in config and config['shapenoise'] > 0.:
-            raise ValueError
+        assert(isinstance(config['betacalcer'], betacalcer.InfiniteRedshift))
+        assert(isinstance(config['shearnoiser'], shearnoiser.NoNoise))
+
         
-        self.maxradii = config.profilemax
-        self.minradii = config.profilemin
 
-        self.profileCol = config.profilecol
-        self.binwidth = config.binwidth
-        self.profilefile = config.profilefile
+
+        self.profilefile = config['profilefile']
+
+        self.maxradii = config['profileMax']
+        self.minradii = config['profileMin']
+        self.binwidth = config['binwidth']
+
+        self.profileCol = config['profilecol']
+
 
 
         profile = readtxtfile.readtxtfile(self.profilefile)
         
-        self.bincenters = [x[0] for x in profile]
-        self.deltag = [x[2] for x in profile]
-        self.magbinids = [x[-1] for x in profile]
+        self.bincenters = np.array([x[0] for x in profile])
+        self.deltag = np.array([x[2] for x in profile])
+        self.betas = np.array([x[5] for x in profile]) #not scaled by beta_inf
+
+        self.magbinids = np.array([x[-1] for x in profile])
+
+
+        mask = np.logical_and(self.bincenters >= self.minradii,
+                              self.bincenters < self.maxradii)
+        self.bincenters = self.bincenters[mask]
+        self.deltag = self.deltag[mask]
+        self.betas = self.betas[mask]
+        self.magbinids = self.magbinids[mask]
 
         self.nbins = len(self.bincenters)
 
@@ -66,62 +85,98 @@ class hstnoisebins(object):
         if 'centerforbin' in config and config['centerforbin'] == 'ave':
             self.useAveForCenter = True
 
-        self.lssnoise = None
-        if 'lssnoise' in config and config.lssnoise != 'False':
-            self.lssnoise = config.lssnoise
-        
-            
 
-    def __call__(self, catalog, config):
+    ####
+
+    def doBinning(self, galaxies):
 
         radii = []
         shear = []
         shearerr = []
         avebeta = []
         avebeta2 = []
+        ngals = []
 
-        lssrealization = None
-        if self.lssnoise is not None:
-            lssrealization = loadLSSRealization(self.clustername, self.lssnoise)
-
+        profileCol = getattr(galaxies,self.profileCol)
 
         for i in range(self.nbins):
 
             if self.bincenters[i] < self.minradii or self.bincenters[i] > self.maxradii:
                 continue
 
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= (self.bincenters[i] - self.binwidth/2.),
-                                                     catalog[self.profileCol] < (self.bincenters[i] + self.binwidth/2.)))
+            mintake = self.bincenters[i] - self.binwidth/2.
+            maxtake = self.bincenters[i] + self.binwidth/2.
+            selected = galaxies.filter(np.logical_and(profileCol >= mintake,
+                                                      profileCol < maxtake))
 
-            ngal = len(selected)            
+        
+        
 
-            if ngal == 0:
+            if len(selected) < 2:
+                radii.append(-1)
+                shear.append(-1)
+                shearerr.append(-1)
+                avebeta.append(-1)
+                avebeta2.append(-1)
+                ngals.append(-1)
                 continue
 
             
 
-            if self.useAveForCenter:
-                radii.append(np.mean(selected[self.profileCol]))
-            else:
-                radii.append(self.bincenters[i])
-                
-            #Take the mean shear and add noise
-            ghat = np.mean(selected['ghat']) + self.deltag[i]*np.random.standard_normal()
+            radii.append(np.mean(getattr(selected,self.profileCol)))
 
-            #if applicable, add LSS noise
-            if lssrealization is not None:
-                selectbin = np.logical_and(lssrealization['r_mpc'] == self.bincenters[i],
-                                           lssrealization['magbin'] == self.magbinids[i])
-                lss_gt = lssrealization['gt'][selectbin]
-                assert(lss_gt.shape == (1,))
-                ghat += float(lss_gt)
+            curmean, curerr = basicBinning.bootstrapmean(selected.ghat)
+            shear.append(curmean)
+            shearerr.append(curerr)
+            avebeta.append(np.mean(selected.beta_s))
+            avebeta2.append(np.mean(selected.beta_s**2))
+            ngals.append(len(selected))
 
-            shear.append(ghat)  
+        profile = catalog.Catalog()
+        setattr(profile, self.profileCol, np.array(radii))
+        profile.ghat = np.array(shear)
+        profile.sigma_ghat = np.array(shearerr)
+        profile.beta_s = np.array(avebeta)
+        profile.beta_s2 = np.array(avebeta2)
+        profile.ngals = np.array(ngals)
+
+        return profile
+
+
+    #####
+
+
+    def addNoise(self, profile):
+
+        noisy = profile.copy()
+
+        #rescale beta
+        beta_s = self.betas/nfwutils.global_cosmology.beta([1e6], profile.zlens)
+        newghat = profile.ghat*beta_s
         
-            shearerr.append(self.deltag[i])
-            avebeta.append(np.mean(selected['beta_s']))
-            avebeta2.append(np.mean(selected['beta_s']**2))
+        noisy.ghat = newghat + self.deltag*np.random.standard_normal(self.nbins)
+        noisy.sigma_ghat = self.deltag
+        noisy.beta_s = beta_s
+        noisy.beta_s2 = beta_s**2
 
+        return noisy
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2)
-      
+####
+
+class HSTBinnerWrapper(HSTBinning):
+
+    def configure(self, config):
+        self.parent = config['hstbinning']
+
+    def __call__(self, *args, **kwds):
+        return self.parent.doBinning(*args, **kwds)
+
+####
+
+class HSTBinNoiserWrapper(HSTBinning):
+
+    def configure(self, config):
+        self.parent = config['hstbinning']
+
+    def __call__(self, *args, **kwds):
+        return self.parent.addNoise(*args, **kwds)

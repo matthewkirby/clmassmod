@@ -10,9 +10,9 @@ import nfwmodeltools as tools
 
 class constant(object):
 
-    def __init__(self, config):
+    def configure(self, config):
 
-        self.concentration = config.concentration
+        self.concentration = config['concentration']
 
     def __call__(self, mass, z, overdensity = 200):
 
@@ -21,10 +21,6 @@ class constant(object):
 #######################################################
 
 class OldDuffy(object):
-
-    def __init__(self, config):
-
-        pass
 
     def ratioResid(self, ratio, conc, deltaRatio):
         """Helper function for duffyConcentration."""
@@ -78,10 +74,6 @@ class OldDuffy(object):
 
 class Duffy(object):
 
-    def __init__(self, config):
-
-        pass
-
     def __call__(self, m, z, overdensity = 200):
 
         """Compute the Duffy et al. mass concentration relation for a halo
@@ -120,11 +112,6 @@ class Duffy(object):
 
 
 class Bhattacharya(object):
-
-    def __init__(self, config):
-
-        pass
-
 
     def __call__(self, m, z):
 

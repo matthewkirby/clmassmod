@@ -3,45 +3,43 @@
 ###########
 
 import numpy as np
+import catalog
 
 #################################
 
-class Binner(object):
+# Contents of a binnoiser
 
-    def __call__(self, catalog, config):
+#        if 'shearprofileerr' in config and config.shearprofileerr == 'gaussianapprox':
+#            allradii, allshear, allshearerr, allavebeta, allavebeta2, allnumber = self._makeProfile(catalog, config)
+#            assert(len(radii) == len(allradii))
+#            scalederr = allshearerr[numbermask]*np.sqrt(allnumber[numbermask]/number[numbermask])
+#            return radii[numbermask], shear[numbermask], scalederr
+#
 
-        maskedCat = catalog.filter(catalog['mask'])
-        radii, shear, shearerr, avebeta, avebeta2, number = self._makeProfile(maskedCat, config)
-        numbermask = number != -1
+#################################
 
-        if 'shearprofileerr' in config and config.shearprofileerr == 'gaussianapprox':
-            allradii, allshear, allshearerr, allavebeta, allavebeta2, allnumber = self._makeProfile(catalog, config)
-            assert(len(radii) == len(allradii))
-            scalederr = allshearerr[numbermask]*np.sqrt(allnumber[numbermask]/number[numbermask])
-            return radii[numbermask], shear[numbermask], scalederr
 
-        return radii, shear, shearerr, avebeta, avebeta2
+class DumbEqualBins(object):
 
-##################################
+    def configure(self, config):
 
-class dumbequalbins(Binner):
-
-    def __init__(self, config = None):
         self.ngals = 200
         self.maxradii = 2000
         self.minradii = 0
         self.profileCol = 'r_mpc'
 
-        if config is not None:
-            self.ngals = config.ngals
-            self.maxradii = config.profilemax
-            self.minradii = config.profilemin
-            self.profileCol = config.profilecol
+        if 'ngals' in config:
+            self.ngals = config['ngals']
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
+            self.profileCol = config['profilecol']
         
 
-    def _makeProfile(self, catalog, config):
+    def __call__(self, cat):
 
-        sorted_cat = catalog.filter(np.argsort(catalog[self.profileCol]))
+        profileCol = getattr(cat, self.profileCol)
+
+        sorted_cat = cat.filter(np.argsort(profileCol))
         sorted_cat = sorted_cat.filter(np.logical_and(sorted_cat[self.profileCol] > self.minradii, 
                                                       sorted_cat[self.profileCol] < self.maxradii))
         radii = []
@@ -51,15 +49,24 @@ class dumbequalbins(Binner):
         avebeta2 = []
         ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
-            maxtake = min(i+self.ngals, len(catalog))
-            radii.append(np.mean(sorted_cat['r_mpc'][i:maxtake]))
+            maxtake = min(i+self.ngals, len(cat))
+            radii.append(np.mean(sorted_cat[self.profileCol][i:maxtake]))
             shear.append(np.mean(sorted_cat['ghat'][i:maxtake]))
             shearerr.append(np.std(sorted_cat['ghat'][i:maxtake])/np.sqrt(maxtake-i))
             avebeta.append(np.mean(sorted_cat['beta_s'][i:maxtake]))
             avebeta2.append(np.mean(sorted_cat['beta_s'][i:maxtake]**2))
-            ngals.append(len(sorted_cat['r_mpc'][i:maxtake]))
+            ngals.append(len(sorted_cat[self.profileCol][i:maxtake]))
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
+        profile = catalog.Catalog()
+        setattr(profile, self.profileCol, np.array(radii))
+        profile.ghat = np.array(shear)
+        profile.sigma_ghat = np.array(shearerr)
+        profile.beta_s = np.array(avebeta)
+        profile.beta_s2 = np.array(avebeta2)
+        profile.ngals = np.array(ngals)
+        
+
+        return profile
 
 ############################
 
@@ -74,24 +81,26 @@ def bootstrapmean(distro, nboot=1000):
 
 ############################
 
-class bootstrapequalbins(Binner):
+class BootstrapEqualBins(object):
 
-    def __init__(self, config = None):
+    def configure(self, config):
         self.ngals = 200
         self.maxradii = 2000
         self.minradii = 0
         self.profileCol = 'r_mpc'
 
-        if config is not None:
-            self.ngals = config.ngals
-            self.maxradii = config.profilemax
-            self.minradii = config.profilemin
-            self.profileCol = config.profilecol
+        if 'ngals' in config:
+            self.ngals = config['ngals']
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
+            self.profileCol = config['profilecol']
         
 
-    def _makeProfile(self, catalog, config):
+    def __call__(self, cat):
 
-        sorted_cat = catalog.filter(np.argsort(catalog[self.profileCol]))
+        profileCol = getattr(cat, self.profileCol)
+
+        sorted_cat = cat.filter(np.argsort(profileCol))
         sorted_cat = sorted_cat.filter(np.logical_and(sorted_cat[self.profileCol] > self.minradii, 
                                                       sorted_cat[self.profileCol] < self.maxradii))
         radii = []
@@ -101,8 +110,8 @@ class bootstrapequalbins(Binner):
         avebeta2 = []
         ngals = []
         for i in range(0, len(sorted_cat), self.ngals):
-            maxtake = min(i+self.ngals, len(catalog))
-            radii.append(np.mean(sorted_cat['r_mpc'][i:maxtake]))
+            maxtake = min(i+self.ngals, len(cat))
+            radii.append(np.mean(sorted_cat[self.profileCol][i:maxtake]))
 
             curmean, curerr = bootstrapmean(sorted_cat['ghat'][i:maxtake])
             shear.append(curmean)
@@ -111,30 +120,42 @@ class bootstrapequalbins(Binner):
             avebeta2.append(np.mean(sorted_cat['beta_s'][i:maxtake]**2))
             ngals.append(len(sorted_cat['ghat'][i:maxtake]))
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
+        profile = catalog.Catalog()
+        setattr(profile, self.profileCol, np.array(radii))
+        profile.ghat = np.array(shear)
+        profile.sigma_ghat = np.array(shearerr)
+        profile.beta_s = np.array(avebeta)
+        profile.beta_s2 = np.array(avebeta2)
+        profile.ngals = np.array(ngals)
+
+        return profile
+
             
 
 ##############################
 
-class bootstrapfixedbins(Binner):
+class BootstrapFixedBins(object):
 
-    def __init__(self, config = None):
+    def configure(self, config):
         self.ngals = 200
         self.maxradii = 3.
         self.minradii = 0.
         self.binspacing = 'linear'
-        self.nbins = 12.
+        self.nbins = 12
         self.profileCol = 'r_mpc'
 
-        if config is not None:
-            self.maxradii = config.profilemax
-            self.minradii = config.profilemin
-            self.binspacing = config.binspacing
-            self.nbins = config.nbins
-            self.profileCol = config.profilecol
+        if 'nbins' in config:
+
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
+            self.binspacing = config['binspacing']
+            self.nbins = config['nbins']
+            self.profileCol = config['profilecol']
         
 
-    def _makeProfile(self, catalog, config):
+    def __call__(self, cat):
+
+        profileCol = getattr(cat, self.profileCol)
 
         if self.binspacing == 'linear':
             binedges = np.linspace(self.minradii, self.maxradii, self.nbins+1)
@@ -150,8 +171,8 @@ class bootstrapfixedbins(Binner):
         for i in range(self.nbins):
             mintake = binedges[i]
             maxtake = binedges[i+1]
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
-                                                     catalog[self.profileCol] < maxtake))
+            selected = cat.filter(np.logical_and(profileCol >= mintake,
+                                                     profileCol < maxtake))
 
         
         
@@ -167,24 +188,33 @@ class bootstrapfixedbins(Binner):
 
             
 
-            radii.append(np.mean(selected['r_mpc']))
+            radii.append(np.mean(getattr(selected,self.profileCol)))
 
-            curmean, curerr = bootstrapmean(selected['ghat'])
+            curmean, curerr = bootstrapmean(selected.ghat)
             shear.append(curmean)
             shearerr.append(curerr)
-            avebeta.append(np.mean(selected['beta_s']))
-            avebeta2.append(np.mean(selected['beta_s']**2))
+            avebeta.append(np.mean(selected.beta_s))
+            avebeta2.append(np.mean(selected.beta_s**2))
             ngals.append(len(selected))
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
+        profile = catalog.Catalog()
+        setattr(profile, self.profileCol, np.array(radii))
+        profile.ghat = np.array(shear)
+        profile.sigma_ghat = np.array(shearerr)
+        profile.beta_s = np.array(avebeta)
+        profile.beta_s2 = np.array(avebeta2)
+        profile.ngals = np.array(ngals)
+
+        return profile
+
       
 
 
 ####################
 
-class gaussianfixedbins(Binner):
+class GaussianFixedBins(object):
 
-    def __init__(self, config = None):
+    def configure(self, config):
         self.ngals = 200
         self.maxradii = 3.
         self.minradii = 0.
@@ -192,16 +222,18 @@ class gaussianfixedbins(Binner):
         self.nbins = 12.
         self.profileCol = 'r_mpc'
 
-        if config is not None:
-            self.maxradii = config.profilemax
-            self.minradii = config.profilemin
-            self.binspacing = config.binspacing
-            self.nbins = config.nbins
-            self.profileCol = config.profilecol
-            self.shapenoise = config.shapenoise
+        if 'nbins' in config:
+            self.maxradii = config['profileMax']
+            self.minradii = config['profileMin']
+            self.binspacing = config['binspacing']
+            self.nbins = config['nbins']
+            self.profileCol = config['profilecol']
+            self.shapenoise = config['shapenoise']
         
 
-    def _makeProfile(self, catalog, config):
+    def __call__(self, cat):
+
+        profileCol = getattr(cat, self.profileCol)
 
         if self.binspacing == 'linear':
             binedges = np.linspace(self.minradii, self.maxradii, self.nbins+1)
@@ -217,23 +249,34 @@ class gaussianfixedbins(Binner):
         for i in range(self.nbins):
             mintake = binedges[i]
             maxtake = binedges[i+1]
-            selected = catalog.filter(np.logical_and(catalog[self.profileCol] >= mintake,
-                                                     catalog[self.profileCol] < maxtake))
+            selected = cat.filter(np.logical_and(profileCol >= mintake,
+                                                     profileCol < maxtake))
 
             ngal = len(selected)            
 
             if ngal == 0:
                 continue
 
-            radii.append(np.mean(selected['r_mpc']))
-            shear.append(np.mean(selected['ghat']))
+            radii.append(np.mean(getattr(selected, self.profileCol)))
+            shear.append(np.mean(selected.ghat))
             shearerr.append(self.shapenoise / np.sqrt(ngal))
-            avebeta.append(np.mean(selected['beta_s']))
-            avebeta2.append(np.mean(selected['beta_s']**2))
+            avebeta.append(np.mean(selected.beta_s))
+            avebeta2.append(np.mean(selected.beta_s**2))
             ngals.append(ngal)
 
 
-        return np.array(radii), np.array(shear), np.array(shearerr), np.array(avebeta), np.array(avebeta2), np.array(ngals)
+
+        profile = catalog.Catalog()
+        setattr(profile, self.profileCol, np.array(radii))
+        profile.ghat = np.array(shear)
+        profile.sigma_ghat = np.array(shearerr)
+        profile.beta_s = np.array(avebeta)
+        profile.beta_s2 = np.array(avebeta2)
+        profile.ngals = np.array(ngals)
+
+        return profile
+
+
 
 
 
