@@ -371,7 +371,7 @@ class PDFScanner(object):
     def configure(self, config):
 
         self.model = config['model']
-        self.deltas = [200, 500, 2500]
+        self.deltas = [200]
 
         self.masses = np.arange(-1.005e15, 6e15, 1e13)
         if 'scanpdf_minmass' in config:

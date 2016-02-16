@@ -124,4 +124,37 @@ for snap in 41 54; do
     }
 
 done
+
+
+binning=lineargaussbins12
+r=10
+center=xrayNONE
+
+for snap in 41 54; do
+		    
+    for mc in c4 diemer15; do
+
+	config=general-${mc}-r${r}-${center}-n2_4-feb2016
+		
+	echo $config >> ../run22mxxl$snap
+		
+	dir=/vol/euclid1/euclid1_1/dapple/mxxl_lensing/mxxlsnap$snap/$config
+		
+	if [ ! -e $dir ]; then
+	    mkdir $dir
+	fi
+		    
+		   
+		 
+	cat overhead.py linearprior.py nozscaling.py fixedsourceredshift.py lineargaussbins12.py n2_4.py reassigndensitypicker.py nobinnoise.py mxxl.py ${mc}.py scanpdf.py r${r}.py core_none.py > $dir/config.py
+
+
+	echo "zsource=2.0" >> $dir/config.py
+
+
+
+    done
+   		
+done
+	    	
 	
