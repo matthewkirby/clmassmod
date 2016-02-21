@@ -197,7 +197,7 @@ if __name__ == '__main__':
                                outfile=outfile, delta=delta, 
                                pdftype = pdftype,
                                massbin=massbin,
-                               sigmaprior = sigmaprior)
+                               sigmapriorfile = sigmaprior)
 
     
     run(simtype, chaindir, outfile, delta, pdftype, massbin, sigmaprior)
