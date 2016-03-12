@@ -68,15 +68,42 @@ def defineBins(masses, minclusters = 56, maxclusters = 600, binstep=0.2):
 
 class NoDataException(Exception): pass
 
+###
+
+class Selector(object):
+
+    def __init__(self, mass, masslow, masshigh, otherselect = None):
+        self.mass = mass
+        self.masslow = masslow
+        self.masshigh = masshigh
+        self.otherselect = otherselect
+    def __call__(self, truth):
+        inbin = truth[self.mass] >= self.masslow and truth[self.mass] < self.masshigh
+        if self.otherselect is not None:
+            select = inbin and self.otherselect(truth)
+        else:
+            select = inbin
+        return select
+
+###
+
+def convertIntoSelectors(edges, mass):
+    selectors = []
+    for i in range(len(edges)-1):
+        selectors.append(Selector(mass, edges[i],edges[i+1]))
+    return selectors
+
 def defineMassEdges(simtype, delta):
 
     if simtype == 'bk11snap124':
         if delta == 500:
             #3 bins
             massedges = np.array([  1.5e+14,   2.2e+14,   3.5e+14,6.5e+14])
+            selectors = convertIntoSelectors(massedges, 'm500')
         elif delta == 200:
             #3 bins
             massedges = np.array([  3.0e+14,   3.5e+14,   5.0e+14, 9.9e+14])
+            selectors = convertIntoSelectors(massedges, 'm200')
         else:
             raise NoDataException
 
@@ -84,9 +111,11 @@ def defineMassEdges(simtype, delta):
         if delta == 500:
             #4 bins
             massedges = np.array([2.0e+14, 2.3e+14, 2.9e+14, 4.4e+14, 8.8e+14])
+            selectors = convertIntoSelectors(massedges, 'm500')
         elif delta == 200:
             #2 bins
             massedges = np.array([4.5e+14,   6.7e+14,  1.6e+15])
+            selectors = convertIntoSelectors(massedges, 'm200')
         else:
             raise NoDataException
 
@@ -94,23 +123,36 @@ def defineMassEdges(simtype, delta):
         if delta == 200:
             #5 bins
             massedges = np.array([3.5e+14, 3.9e+14, 4.5e+14, 6.4e+14, 9.1e+14, 1.4e+15])
+            selectors = convertIntoSelectors(massedges, 'm200')
         elif delta == 500:
             #4 bins
             massedges = np.array([3.0e+14, 3.2e+14, 4.6e+14, 6.5e+14, 1.2e+15])
+            selectors = convertIntoSelectors(massedges, 'm500')
         elif delta == 2500:
             #3 bins
             massedges = np.array([1.6e+14, 1.8e+14, 2.4e+14, 3.9e+14])
+            selectors = convertIntoSelectors(massedges, 'm2500')
 
     elif simtype == 'mxxlsnap54':
         if delta == 200:
-            massedges = np.logspace(np.log10(1.5e14), np.log10(4e15), 10)
+            #8 bins: suggested to run 0,1,2,5,14,16, 17, 18
+            massedges = np.array([1.6e14, 2.6e14, 5e14, 7.2e14, 7.4e14, 7.5e14, 7.7e14, 7.9e14, 8.1e14, 8.4e14, 8.6e14, 8.9e14, 9.3e14, 9.7e14, 1e15, 1.1e15, 1.2e15, 1.4e15, 2.3e15, 4e15])
+            allselectors = convertIntoSelectors(massedges, 'm200')
+            selectors = [allselectors[0],allselectors[1],allselectors[2],allselectors[5],allselectors[14],allselectors[16],allselectors[17],allselectors[18]]
         elif delta == 500:
-            massedges = np.logspace(np.log10(7.8e14), np.log10(3e15), 7)
+            #7 bins
+            highmassedges = np.array([6.2e14, 6.4e14, 6.6e14, 7e14, 7.5e14, 8.2e14, 9.8e14, 1.6e15, 2.7e15])
+            allselectors = [Selector('m500', 1.5e14, 3.5e14, lambda truth:truth['m200']  < 0),
+                            Selector('m500', 3.5e14, 5.5e14, lambda truth:truth['m200']  < 0)]
+            allselectors.extend(convertIntoSelectors(highmassedges, 'm500'))
+            selectors = [allselectors[0], allselectors[1], allselectors[2], allselectors[5], allselectors[7], allselectors[8], allselectors[9]]
         elif delta == 2500:
+            #1 bin
             massedges = np.array([3.15e14, 1.2e15])
+            selectors = convertIntoSelectors(massedges, 'm2500')
 
 
-    return massedges
+    return selectors
 
 #########
 
@@ -121,16 +163,18 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     config = simutils.readConfiguration('%s/config.py' % chaindir)
     simreader = config['simreader']
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
+    model = config['model']
 
-    massedges = defineMassEdges(simtype, delta)
+    selectors = defineMassEdges(simtype, delta)
+    selector = selectors[massbin]
 
     isPDF = False
     if pdftype == 'pdf':
         isPDF = True
-        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, massedges, massbin,
-                                   reader = dln.PDFReader)
+        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, selector,
+                                   reader = dln.PDFReader, model = model)
     elif pdftype == 'mcmc':
-        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, massedges, massbin,
+        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, selector,
                                    reader = dln.MCMCReader,
                                    cprior = 100.)
         
@@ -172,7 +216,8 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
         
 
     with open('%s.massrange' % outfile, 'w') as output:
-        output.write('%f\n%f\n' % (massedges[massbin], massedges[massbin+1]))
+        output.write('%f\n%f\n' % (selector.masslow, selector.masshigh))
+                
     dln.sample(parts, outfile, 10000, singlecore=True)
 
 

@@ -6,6 +6,7 @@
 
 import sys, json, os, shutil, glob
 import nfwfit
+import simutils
 
 
 def runMultiConfigs(jobparams, jobname=''):
@@ -40,6 +41,10 @@ def runMultiConfigs(jobparams, jobname=''):
 
         inputname = '{0}/{1}'.format(workdir, inputbase)
 
+        
+
+    simreader = None
+
 
 
     for configfile in jobparams['configurations']:
@@ -50,7 +55,15 @@ def runMultiConfigs(jobparams, jobname=''):
 
         print configfile, outputname
 
-        nfwfit.runNFWFit(inputname, configfile, outputname)
+        if simreader is None:
+
+            config, simreader = nfwfit.preloadNFWFit(configfile)
+
+        else:
+
+            config = simutils.readConfiguration(configfile)
+
+        nfwfit.runNFWFit_Preloaded(simreader, inputname, config, outputname)
 
 
 

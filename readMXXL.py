@@ -81,7 +81,8 @@ class MXXLSimReader(object):
 
     def __init__(self, *args, **keywords):
 
-        pass
+        self._sim = None
+        self._filebase = None
 
     #########
 
@@ -93,8 +94,11 @@ class MXXLSimReader(object):
 
     def load(self, filebase):
 
-        return MXXLSim(filebase)
-
+        if self._sim is None or self._filebase != filebase:
+            self._sim = MXXLSim(filebase)
+            self._filebase = filebase
+        
+        return self._sim.copy()
     
 ###############################
 
@@ -105,6 +109,8 @@ class MXXLSim(catalog.Catalog):
     #########
 
     def __init__(self, filebase):
+
+        print 'Loading %s' % filebase
 
         super(MXXLSim, self).__init__()
 
@@ -119,7 +125,7 @@ class MXXLSim(catalog.Catalog):
         kappa = MXXLBinary(kappafile)
         gamma1 = MXXLBinary(gamma1file)
         gamma2 = MXXLBinary(gamma2file)
-        answerfile = asciireader.read(answerfile)
+#        answerfile = asciireader.read(answerfile)
 
         self.zcluster = kappa.redshift
 
@@ -134,10 +140,10 @@ class MXXLSim(catalog.Catalog):
         self.x_arcmin = delta_arcmin[0]
         self.y_arcmin = delta_arcmin[1]
 
-        self.m500 = answerfile['m500c'][0]
-        self.m200 = answerfile['m200c'][0]
-        self.c200 = answerfile['c200c'][0]
-
+#        self.m500 = answerfile['m500c'][0]
+#        self.m200 = answerfile['m200c'][0]
+#        self.c200 = answerfile['c200c'][0]
+#
 
         beta_inf = nfwutils.global_cosmology.beta([1e6], self.zcluster)
 

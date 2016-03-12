@@ -442,7 +442,31 @@ class PDFScanner(object):
 
     #######
 
+def convertLikelihoodScan(model, delta, masses, pdf200, zcluster):
 
+    #treats input pdf as a likelihood scan & rescales axis. Does not transform like a PDF!!!
+
+    targetmasses = np.zeros_like(masses)
+    for i, curm in enumerate(masses):
+        c200 = model.massconRelation(np.abs(curm)*nfwutils.global_cosmology.h, 
+                                     zcluster, 200.)
+        r200 = nfwutils.rdeltaConstM(np.abs(curm), zcluster, 200.)
+        rscale = r200/c200
+        m_target = nfwutils.Mdelta(rscale, c200, zcluster, delta)
+        if curm < 0:
+            m_target = -m_target
+        targetmasses[i] = m_target
+    
+
+    targetpdf = np.interp(masses, targetmasses, pdf200)
+
+    targetpdf = targetpdf / np.trapz(targetpdf, masses)
+
+    return targetpdf
+
+    
+    
+    
 
 
 
@@ -461,16 +485,29 @@ def savefit(bootstrap_vals, outputname):
 
 def runNFWFit(catalogname, configname, outputname):
 
+    config, sim = preloadNFWFit(catalogname, configname)
 
+    runNFWFit_Preloaded(sim, config, outputname)
+
+##########################
+
+def preloadNFWFit(configname):
 
     config = simutils.readConfiguration(configname)
     simreader = config['simreader']
-    profilebuilder = config['profilebuilder']
-    fitter = config['fitter']
 
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
 
+    return config, simreader
+
+###########################
+
+def runNFWFit_Preloaded(simreader, catalogname, config, outputname):
+
     sim = simreader.load(catalogname)
+
+    profilebuilder = config['profilebuilder']
+    fitter = config['fitter']
 
     profile = profilebuilder(sim)
 
@@ -478,8 +515,8 @@ def runNFWFit(catalogname, configname, outputname):
 
     savefit(fitvals, outputname)
 
-
 ############################
+
 
 class FailedCreationException(Exception): pass
 

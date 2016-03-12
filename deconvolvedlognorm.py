@@ -22,7 +22,7 @@ class BadPDFException(Exception): pass
 
 #######################
 
-def MCMCReader(inputfile, halo, delta, thin=1, cprior = None):
+def MCMCReader(inputfile, halo, delta, truth, thin=1, cprior = None):
 
 
     with open(inputfile, 'rb') as input:
@@ -44,7 +44,7 @@ def MCMCReader(inputfile, halo, delta, thin=1, cprior = None):
 
 
 
-def PDFReader(pdffile, halo, delta):
+def PDFReader(pdffile, halo, delta, truth, model=None):
 
     with open(pdffile, 'rb') as input:
         masses, pdfs = cPickle.load(input)
@@ -55,12 +55,17 @@ def PDFReader(pdffile, halo, delta):
             raise BadPDFException(filebase)
         pdfs = {200:pdfs}  #historical reasons. If it isn't a pdf, it was computed as 200.
 
-    if np.any(np.logical_not(np.isfinite(pdfs[delta]))):
+    if delta in pdfs:
+        pdf = pdfs[delta]
+    else:
+        pdf = nfwfit.convertLikelihoodScan(model, delta, masses, pdfs[200], truth['redshift'])
+
+    if np.any(np.logical_not(np.isfinite(pdf))):
         raise BadPDFException(filebase)
 
     halo['masses'] = masses*nfwutils.global_cosmology.h
     
-    halo['pdf'] = pdfs[delta]/nfwutils.global_cosmology.h
+    halo['pdf'] = pdf/nfwutils.global_cosmology.h
 
     return halo
 
@@ -69,7 +74,7 @@ def PDFReader(pdffile, halo, delta):
 
 
 
-def loadPosteriors(pdfdir, simtype, simreader, delta, massedges=None, massbin=None,
+def loadPosteriors(pdfdir, simtype, simreader, delta, selector,
                    reader = MCMCReader, **kwds):
 
     mass = 'm%d' % delta
@@ -106,11 +111,8 @@ def loadPosteriors(pdfdir, simtype, simreader, delta, massedges=None, massbin=No
             print 'Failure at {0}'.format(output)
             raise
 
-        if massedges is not None \
-                and massbin is not None \
-                and (truth[mass] < massedges[massbin] \
-                         or truth[mass] >= massedges[massbin+1]):
-                continue
+        if not selector(truth):
+            continue
 
         halo =  dict(id = haloid,
                      true_mass = truth['m%d' % delta])
@@ -118,7 +120,7 @@ def loadPosteriors(pdfdir, simtype, simreader, delta, massedges=None, massbin=No
 
         try:
 
-            halos.append(reader(pdffile, halo, delta, **kwds))
+            halos.append(reader(pdffile, halo, delta, truth, **kwds))
 
         except BadPDFException, e:
             print e
