@@ -27,7 +27,9 @@ class SZSimOffset(object):
 
     def __init__(self):
 
-        self.szsim_offsetcat = asciireader.read('{}/SPT_SN_offset.dat'.format(globalconfig.offsetdistro_dir))
+        szsim_offsetcat = asciireader.read('{}/SPT_SN_offset.dat'.format(globalconfig.offsetdistro_dir))
+
+        self.szsim_offsetcat = szsim_offsetcat[szsim_offsetcat['SN'] >= 5]
 
     def configure(self, config):
 
@@ -269,14 +271,14 @@ class XrayMagneticumOffset(object):
 
     def __init__(self):
 
-        self.xray_magneticum_distro = asciireader.read('{}/magneticum_offsets.dat'.format(globalconfig.offsetdistro_dir))
+        self.xray_magneticum_distro = asciireader.read('{}/xray_offsets_may2016.txt'.format(globalconfig.offsetdistro_dir))
 
 
     def __call__(self, sim):
 
         dL = nfwutils.global_cosmology.angulardist(sim.zlens)    
 
-        delta_kpc = self.xray_magneticum_distro['xrayoffset'][np.random.randint(0, len(self.xray_magneticum_distro), 1)][0]
+        delta_kpc = self.xray_magneticum_distro['xray_offset_kpc'][np.random.randint(0, len(self.xray_magneticum_distro), 1)][0]
 
         radial_offset_arcmin = (delta_kpc/(1000*dL))*(180./np.pi)*60 #arcmin
         phi_offset = np.random.uniform(0, 2*np.pi)
