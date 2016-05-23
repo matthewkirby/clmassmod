@@ -125,7 +125,7 @@ class MXXLSim(catalog.Catalog):
         kappa = MXXLBinary(kappafile)
         gamma1 = MXXLBinary(gamma1file)
         gamma2 = MXXLBinary(gamma2file)
-#        answerfile = asciireader.read(answerfile)
+
 
         self.zcluster = kappa.redshift
 
@@ -140,10 +140,7 @@ class MXXLSim(catalog.Catalog):
         self.x_arcmin = delta_arcmin[0]
         self.y_arcmin = delta_arcmin[1]
 
-#        self.m500 = answerfile['m500c'][0]
-#        self.m200 = answerfile['m200c'][0]
-#        self.c200 = answerfile['c200c'][0]
-#
+
 
         beta_inf = nfwutils.global_cosmology.beta([1e6], self.zcluster)
 
