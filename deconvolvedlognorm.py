@@ -625,6 +625,9 @@ def memsample(parts, samples, adaptevery = 100, adaptafter = 100):
     manager.options = options
     manager.model = pymc.Model(parts)
 
+    assert(np.isfinite(manager.model.logp))
+
+
     runner = pma.MyMCMemRunner()
 
     runner.run(manager)
