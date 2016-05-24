@@ -218,7 +218,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     with open('%s.massrange' % outfile, 'w') as output:
         output.write('%f\n%f\n' % (selector.masslow, selector.masshigh))
                 
-    dln.sample(parts, outfile, 10000, singlecore=True)
+    dln.memsample(parts, 10000, outputFile = outfile)
 
 
 

@@ -613,13 +613,15 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
 
 ##############################
 
-def memsample(parts, samples, adaptevery = 100, adaptafter = 100):
+def memsample(parts, samples, adaptevery = 100, adaptafter = 100, outputFile = None):
 
     options = varcontainer.VarContainer()
     options.singlecore = True
     options.nsamples = samples
     options.adapt_every = adaptevery
     options.adapt_after = adaptafter
+    if outputFile:
+        options.outputFile = outputFile
 
     manager = varcontainer.VarContainer()
     manager.options = options
@@ -631,6 +633,9 @@ def memsample(parts, samples, adaptevery = 100, adaptafter = 100):
     runner = pma.MyMCMemRunner()
 
     runner.run(manager)
+
+    if outputFile:
+        runner.dump(manager)
 
     runner.finalize(manager)
 
