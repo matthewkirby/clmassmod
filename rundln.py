@@ -204,6 +204,10 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
             else:
                 parts = dln.buildMCMCModel(halos)
 
+            model = pymc.Model(parts)
+            assert(np.isfinite(manager.model.logp))
+
+
             success=True
             break
 
@@ -218,7 +222,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     with open('%s.massrange' % outfile, 'w') as output:
         output.write('%f\n%f\n' % (selector.masslow, selector.masshigh))
                 
-    dln.memsample(parts, 10000, outputFile = outfile)
+    dln.memsample(model, 10000, outputFile = outfile)
 
 
 

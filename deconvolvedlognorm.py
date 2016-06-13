@@ -613,7 +613,7 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
 
 ##############################
 
-def memsample(parts, samples, adaptevery = 100, adaptafter = 100, outputFile = None):
+def memsample(model, samples, adaptevery = 100, adaptafter = 100, outputFile = None):
 
     options = varcontainer.VarContainer()
     options.singlecore = True
@@ -625,10 +625,7 @@ def memsample(parts, samples, adaptevery = 100, adaptafter = 100, outputFile = N
 
     manager = varcontainer.VarContainer()
     manager.options = options
-    manager.model = pymc.Model(parts)
-
-    assert(np.isfinite(manager.model.logp))
-
+    manager.model = model
 
     runner = pma.MyMCMemRunner()
 
