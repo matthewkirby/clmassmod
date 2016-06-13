@@ -4,5 +4,6 @@ Error = JOBDIR/rundlnSNAP.CONFIG.DELTA.MASSBIN.stderr
 Output = JOBDIR/rundlnSNAP.CONFIG.DELTA.MASSBIN.stdout
 Log = JOBDIR/rundlnSNAP.CONFIG.DELTA.MASSBIN.batch.log
 Arguments = mxxlsnapSNAP CHAINDIR OUTFILE DELTA pdf MASSBIN SIGMAPRIOR
-priority = 0
+priority = 5
+Requirements = (Machine != "euclid1.astro.uni-bonn.de")
 queue

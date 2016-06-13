@@ -14,7 +14,7 @@ for snap in 41 54; do
 		    
 		    config=hstnoisebins-${mc}-r${r}-${center}-${cluster}-feb2016
 		
-		    echo $config >> ../run22mxxl$snap
+		    echo $config >> ../run22bmxxl$snap
 		
 		    dir=/vol/euclid1/euclid1_1/dapple/mxxl_lensing/mxxlsnap$snap/$config
 		
@@ -77,7 +77,7 @@ for snap in 41 54; do
 
 		    config=mega-${mc}-r${r}-${center}-${cluster}-feb2016
 		
-		    echo $config >> ../run22mxxl$snap
+		    echo $config >> ../run22bmxxl$snap
 		
 		    dir=/vol/euclid1/euclid1_1/dapple/mxxl_lensing/mxxlsnap$snap/$config
 		
@@ -136,7 +136,7 @@ for snap in 41 54; do
 
 	config=general-${mc}-r${r}-${center}-n2_4-feb2016
 		
-	echo $config >> ../run22mxxl$snap
+	echo $config >> ../run22bmxxl$snap
 		
 	dir=/vol/euclid1/euclid1_1/dapple/mxxl_lensing/mxxlsnap$snap/$config
 		

@@ -12,6 +12,7 @@ except ImportError:
 import pymc, mymc
 import cPickle, os
 import load_chains
+import csv, sys
 
 
 ###############################
@@ -331,7 +332,32 @@ class MyMCMemRunner(object):
 
     def dump(self, manager):
 
-        pass
+        options = manager.options
+        if not 'outputFile' in options:
+            return
+
+        with open(options.outputFile, 'w') as output:
+
+            chain = manager.chain
+
+            fields = chain.keys()
+            nrows = len(chain[fields[0]])
+
+            writer = csv.DictWriter(output, fields, restval = '!', delimiter = ' ', quoting=csv.QUOTE_MINIMAL, )
+
+            if sys.version_info < (2,7):
+                writer.writer.writerow(self.writer.fieldnames)
+            else:
+                writer.writeheader()
+
+            for i in range(nrows):
+                towrite = {}
+                for field in fields:
+                    towrite[field] = chain[field][i]
+                writer.writerow(towrite)
+
+
+
 
     
     #############
