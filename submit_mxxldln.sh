@@ -17,6 +17,11 @@ if [ -e $jobfile ]; then
     rm $jobfile
 fi
 
+startbin=0
+if "$nbins" -eq "-1"; then
+    startbin=-1
+fi
+
 for config in `cat $torun`; do
 	
 
@@ -33,7 +38,7 @@ for config in `cat $torun`; do
     mkdir -p $workdir
 
 
-    for massbin in `seq 0 $nbins`; do
+    for massbin in `seq $startbin $nbins`; do
 
 	outfile=$workdir/rundln$snap.$delta.$massbin
 	    

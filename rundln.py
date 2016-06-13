@@ -93,6 +93,72 @@ def convertIntoSelectors(edges, mass):
         selectors.append(Selector(mass, edges[i],edges[i+1]))
     return selectors
 
+###
+
+def takeAllMasses(simtype, delta):
+
+    if simtype == 'bk11snap124':
+        if delta == 500:
+
+            massedges = np.array([  1.5e+14, 6.5e+14])
+            selectors = convertIntoSelectors(massedges, 'm500')
+        elif delta == 200:
+
+            massedges = np.array([  3.0e+14,  9.9e+14])
+            selectors = convertIntoSelectors(massedges, 'm200')
+        else:
+            raise NoDataException
+
+    elif simtype == 'bk11snap141':
+        if delta == 500:
+
+            massedges = np.array([2.0e+14, 8.8e+14])
+            selectors = convertIntoSelectors(massedges, 'm500')
+        elif delta == 200:
+
+            massedges = np.array([4.5e+14, 1.6e+15])
+            selectors = convertIntoSelectors(massedges, 'm200')
+        else:
+            raise NoDataException
+
+    elif simtype == 'mxxlsnap41':
+        if delta == 200:
+
+            massedges = np.array([3.5e+14, 1.4e+15])
+            selectors = convertIntoSelectors(massedges, 'm200')
+        elif delta == 500:
+
+            massedges = np.array([3.0e+14, 1.2e+15])
+            selectors = convertIntoSelectors(massedges, 'm500')
+        elif delta == 2500:
+
+            massedges = np.array([1.6e+14, 3.9e+14])
+            selectors = convertIntoSelectors(massedges, 'm2500')
+
+    elif simtype == 'mxxlsnap54':
+        if delta == 200:
+
+            massedges = np.array([7.4e14, 4e15])
+            selectors = convertIntoSelectors(massedges, 'm200')
+
+        elif delta == 500:
+
+            massedges = np.array([6.2e14, 2.7e15])
+            selectors = convertIntoSelectors(highmassedges, 'm500')
+
+        elif delta == 2500:
+            #1 bin
+            massedges = np.array([3.15e14, 1.2e15])
+            selectors = convertIntoSelectors(massedges, 'm2500')
+
+
+    return selectors
+
+
+    
+
+###
+
 def defineMassEdges(simtype, delta):
 
     if simtype == 'bk11snap124':
@@ -165,8 +231,12 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
     model = config['model']
 
-    selectors = defineMassEdges(simtype, delta)
-    selector = selectors[massbin]
+
+    if massbin == -1:
+        selector = takeAllMasses(simtype, delta)
+    else:
+        selectors = defineMassEdges(simtype, delta)
+        selector = selectors[massbin]
 
     isPDF = False
     if pdftype == 'pdf':
