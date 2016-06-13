@@ -12,6 +12,8 @@ import nfwutils
 import rundln
 import astropy.io.ascii as asciireader
 
+
+
 #############
 
 def bootstrapMean(sample, nboots=1000):
@@ -2569,22 +2571,17 @@ def dumpConfigList():
 
 def plotHST_MXXL_BK11_Summary():
 
-    bk11_snap_ranges = {124 : {500 : 1e14*np.array([1.5, 6.4]),
-                               200 : 1e14*np.array([4, 10])},
-                        141 : {500 : 1e14*np.array([2, 9]),
-                               200 : 1e14*np.array([4, 1.6])}}
 
     
-#    deltas = [200, 500]
-    deltas = [2500]
+    deltas = [200, 500, 2500]
 
 #    rss = 'r5 r16'.split()
     rss = ['r5']
 
-    mcs = 'c4 duffy diemer15'.split()
+    mcs = 'c4 diemer15'.split()
 
     
-    centers = 'xrayNONE xraymag core%d szanalytic'.split()
+    centers = 'xrayNONE xraymag szmag szanalytic'.split()
 
 
 
@@ -2593,7 +2590,7 @@ def plotHST_MXXL_BK11_Summary():
     bk11snaps = [124, 141]
     bk11redshifts = ['z=0.5', 'z=0.25']
 
-    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{clustername}'
+    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{clustername}-feb2016'
 
 
     datafile = asciireader.read('sptdat')
@@ -2615,7 +2612,7 @@ def plotHST_MXXL_BK11_Summary():
     meansfigs = []
     stdsfigs = []
 
-    with open('hstbiassummary_2500', 'w') as output:
+    with open('hstbiassummary_june2016', 'w') as output:
 
         output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
 
@@ -2648,8 +2645,6 @@ def plotHST_MXXL_BK11_Summary():
                             print 'CLUSTER: ', clusterinfo
 
                             curcenter = center
-                            if center == 'core%d':
-                                curcenter = center % cores[curcluster]
 
                             curconfig = config.format(mc = mc, rs = rs, 
                                                       curcenter = curcenter, 
@@ -2672,45 +2667,42 @@ def plotHST_MXXL_BK11_Summary():
                             for bk11snap, bk11redshift in zip(bk11snaps, bk11redshifts):
 
                                 chaindir = '/users/dapple/euclid1_2/rundlns/bk11snap%d/%s' % (bk11snap, curconfig)
-                                chainfile = '%s/rundln%d.%d.0.chain.0' % (chaindir, bk11snap, delta)
+
                                 try:
-                                    chain = load_chains.loadChains([chainfile], trim=True)
-                                    print chainfile, len(chain['logmu'])
-                                    if len(chain['logmu'][0,:]) < 5000:
-                                        print 'Skipping'
+                                    patch, summary = precomputedLogNormDistro(chaindir, 
+                                                                              delta,
+                                                                              meansax,
+                                                                              stdax,
+                                                                              colorindex = curcolor,
+                                                                              biaslabel = False)
+
+                                    (avebias, errbias), (avestd, errstd) = summary
+
+
+                                    output.write('%s BK11%d %s %f %f %f %f\n' % (clusterinfo,
+                                                                                 bk11snap, prefix, 
+                                                                                 avebias, errbias, 
+                                                                                 avestd, errstd))
+
+
+
+                                    if patch is None:
+                                        print 'Error. Skipped'
                                         continue
 
-                                    mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
-                                    sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
-
-
-
-                                    meansax.fill_between(bk11_snap_ranges[bk11snap][delta], 
-                                                         mu-muerr[0], mu+muerr[1], 
-                                                         facecolor=c[curcolor],alpha=0.8)
-                                    stdax.fill_between(bk11_snap_ranges[bk11snap][delta], 
-                                                       sig-sigerr[0], sig+sigerr[1], 
-                                                       facecolor=c[curcolor], alpha=0.8)
-
-                                    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[curcolor], alpha=0.8, hatch = None)
-
-                                    curcolor += 1
 
                                     patches.append(patch)
                                     labels.append('BK11 %s' % bk11redshift)
 
-
-                                    output.write('%s BK11%d %s %f %f %f %f\n' % (clusterinfo, 
-                                                                                 bk11snap, prefix, 
-                                                                                 mu,np.mean(muerr),
-                                                                                 sig, np.mean(sigerr)))
-
                                     makePretty = True
 
+
                                     
-                                except IOError:
+                                except AssertionError, IOError:
                                     print 'Skipping BK11 %s' % clustername
 
+
+                                curcolor += 1
 
 
                             #then mxxl
@@ -2730,7 +2722,7 @@ def plotHST_MXXL_BK11_Summary():
 
                                     (avebias, errbias), (avestd, errstd) = summary
 
-                                    curcolor += 1
+
 
                                     output.write('%s MXXL%d %s %f %f %f %f\n' % (clusterinfo,
                                                                                  mxxlsnap, prefix, 
@@ -2752,6 +2744,8 @@ def plotHST_MXXL_BK11_Summary():
                                 except AssertionError:
                                     print 'Skipping MXXL %s' % clustername
 
+                                curcolor += 1
+
 
                             if makePretty:
 
@@ -2772,7 +2766,7 @@ def plotHST_MXXL_BK11_Summary():
                                     meansax.legend(patches[::-1], labels[::-1], loc='lower left')
                                 meansfig.canvas.draw()
                                 meansfig.tight_layout()
-                                meansfig.savefig('hst_sim_plots/hst_mxxlbk11_comp_logmean_%s.%s.delta%d.%s.%s.png' % (clustername, rs, delta, mc, curcenter) )
+                                meansfig.savefig('hst_sim_plots_june2016/hst_mxxlbk11_comp_logmean_%s.%s.delta%d.%s.%s.png' % (clustername, rs, delta, mc, curcenter) )
 
                                 stdax.set_title('%s' % (clusterinfo))
                                 stdax.set_xscale('log')
@@ -2788,7 +2782,7 @@ def plotHST_MXXL_BK11_Summary():
                                 stdax.legend(patches[::-1], labels[::-1], loc='upper left')
                                 stdsfig.canvas.draw()
                                 stdsfig.tight_layout()
-                                stdsfig.savefig('hst_sim_plots/hst_mxxlbk11_comp_logstd_%s.%s.delta%d.%s.%s.png' % (clustername, rs, delta, mc, curcenter) )
+                                stdsfig.savefig('hst_sim_plots_june2016/hst_mxxlbk11_comp_logstd_%s.%s.delta%d.%s.%s.png' % (clustername, rs, delta, mc, curcenter) )
 
 
                                 meansfigs.append(meansfig)
