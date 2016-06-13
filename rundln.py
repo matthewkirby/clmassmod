@@ -253,9 +253,9 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     if len(halos) < 10:
         sys.exit(0)
 
-    if len(halos) > 500:
+    if len(halos) > 1000:
         print 'Down sampling'
-        halos = random.sample(halos, 500)
+        halos = random.sample(halos, 1000)
 
     sigmapriors = None
     if sigmapriorfile is not None:
