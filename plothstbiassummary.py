@@ -2,7 +2,7 @@ import pylab
 import matplotlib.patches as mpatches
 import astropy.io.ascii as asciireader
 import numpy as np
-
+import sys
 
 
 
@@ -142,16 +142,16 @@ deltas = [500, 200]
 
 
 
-def doAll():
+def doAll(workdir):
 
     outputheader = 'cluster zcluster rad mc delta center b b_err b_delta sig sig_err sig_delta\n'
     outputtemplate = '{cluster} {redshift:.2f} {rs} {mc} {delta:d} {center} {bias:.4f} {biaserr:.4f} {deltabias:.4f} {sig:.4f} {sigerr:.4f} {deltasig:.4f}\n'
 
-    data = asciireader.read('hstbiassummary_nocomments')
+    data = asciireader.read('{}/hstbiassummary_nocomments'.format(workdir))
 
     figs = []
 
-    with open('hstbiassummary_reduced', 'w') as output:
+    with open('{}/hstbiassummary_reduced'.format(workdir), 'w') as output:
 
         output.write(outputheader)
 
@@ -183,7 +183,7 @@ def doAll():
                                                        
 
 
-                        fig.savefig('hstbiassummary_plots/summary.%s.%s.%s.%d.png' % (rs, center, mc, delta))
+                        fig.savefig('%s/summary.%s.%s.%s.%d.png' % (workdir, rs, center, mc, delta))
 
                         figs.append(fig)
 
@@ -398,7 +398,11 @@ def pubplots():
         
 
             
-        
+if __name__ == '__main__':
+
+    workdir = sys.argv[1]
+
+    doAll(workdir)
 
 
                 
