@@ -7,7 +7,8 @@ import sys
 
 
 
-data = asciireader.read('hstbiassummary')
+
+#data = asciireader.read('hstbiassummary')
 
 def plotOne(data, center, mc, rs, delta, fig = None):
 
@@ -135,9 +136,9 @@ def plotOne(data, center, mc, rs, delta, fig = None):
 ####
 
 
-centers = 'xrayNONE xraymag core%d szanalytic'.split()
-mcs = 'c4 duffy diemer15'.split()
-rss = 'r5 r16'.split()
+centers = 'xrayNONE xraymag szmag szanalytic'.split()
+mcs = 'c4 diemer15'.split()
+rss = 'r5'.split()
 deltas = [500, 200]
 
 
@@ -288,10 +289,10 @@ def pubplots():
     ax.add_artist(mclegend) #add back first legend
 
     xrayfig.tight_layout()
-    xrayfig.savefig('hstbiassummary_plots/xray_bias_summary.png')
-    xrayfig.savefig('hstbiassummary_plots/xray_bias_summary.eps')
-    xrayfig.savefig('hstbiassummary_plots/xray_bias_summary.ps')
-    xrayfig.savefig('hstbiassummary_plots/xray_bias_summary.pdf')
+    xrayfig.savefig('hstbiassummary_plots_june2016/xray_bias_summary.png')
+    xrayfig.savefig('hstbiassummary_plots_june2016/xray_bias_summary.eps')
+    xrayfig.savefig('hstbiassummary_plots_june2016/xray_bias_summary.ps')
+    xrayfig.savefig('hstbiassummary_plots_june2016/xray_bias_summary.pdf')
 
 
     #SZ
@@ -387,18 +388,28 @@ def pubplots():
 
 
     szfig.tight_layout()
-    szfig.savefig('hstbiassummary_plots/sz_bias_summary.png')
-    szfig.savefig('hstbiassummary_plots/sz_bias_summary.eps')
-    szfig.savefig('hstbiassummary_plots/sz_bias_summary.ps')
-    szfig.savefig('hstbiassummary_plots/sz_bias_summary.pdf')
+    szfig.savefig('hstbiassummary_plots_june2016/sz_bias_summary.png')
+    szfig.savefig('hstbiassummary_plots_june2016/sz_bias_summary.eps')
+    szfig.savefig('hstbiassummary_plots_june2016/sz_bias_summary.ps')
+    szfig.savefig('hstbiassummary_plots_june2016/sz_bias_summary.pdf')
 
 
 
     return xrayfig, szfig
         
 
-            
+
+
+
+################
+
+
 if __name__ == '__main__':
+
+    import matplotlib
+    matplotlib.use('agg')
+
+           
 
     workdir = sys.argv[1]
 
