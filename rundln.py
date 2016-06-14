@@ -233,7 +233,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
 
 
     if massbin == -1:
-        selector = takeAllMasses(simtype, delta)
+        selector = takeAllMasses(simtype, delta)[0]
     else:
         selectors = defineMassEdges(simtype, delta)
         selector = selectors[massbin]
@@ -275,7 +275,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
                 parts = dln.buildMCMCModel(halos)
 
             model = pymc.Model(parts)
-            assert(np.isfinite(manager.model.logp))
+            assert(np.isfinite(model.logp))
 
 
             success=True

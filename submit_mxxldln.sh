@@ -18,7 +18,7 @@ if [ -e $jobfile ]; then
 fi
 
 startbin=0
-if "$nbins" -eq "-1"; then
+if [ "$nbins" -eq "-1" ]; then
     startbin=-1
 fi
 
