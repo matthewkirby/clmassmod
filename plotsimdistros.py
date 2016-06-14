@@ -11,6 +11,7 @@ import readtxtfile
 import nfwutils
 import rundln
 import astropy.io.ascii as asciireader
+import sys
 
 
 
@@ -154,16 +155,22 @@ def fitLogNormDistro(truemass, measuredmass, measuredmasserr, massedges, meanax,
 
 ################
 
-def gatherChainFiles(chaindir, delta):
+def gatherChainFiles(chaindir, delta, binnum = None):
 
-    #may 2015 style
-    chainfiles = glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta))
+    if binnum is None:
 
-    if len(chainfiles) == 0:
-        chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
+        #may 2015 style
+        chainfiles = glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta))
 
-    if len(chainfiles) == 0:
-        chainfiles = glob.glob('%s/dln_*.chain.0' % chaindir)
+        if len(chainfiles) == 0:
+            chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
+
+        if len(chainfiles) == 0:
+            chainfiles = glob.glob('%s/dln_*.chain.0' % chaindir)
+
+    else:
+        chainfiles = glob.glob('%s/rundln*.%d.%d.chain.0' % (chaindir, delta, binnum))
+        
 
     return sorted(chainfiles)
 
@@ -178,7 +185,7 @@ def weightedaverage(means, errs):
 
     return mu, sig
 
-def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True, xoffset = 1.0):
+def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True, xoffset = 1.0, binnum=None):
 
 
 
@@ -194,7 +201,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
     ystdlows = []
     ystdhighs = []
 
-    chainfiles = gatherChainFiles(chaindir, delta)
+    chainfiles = gatherChainFiles(chaindir, delta, binnum = binnum)
 
     assert(len(chainfiles) > 0)
 
@@ -2569,7 +2576,7 @@ def dumpConfigList():
 ###############################################################
 
 
-def plotHST_MXXL_BK11_Summary():
+def plotHST_MXXL_BK11_Summary(outputdir, binnum = None):
 
 
     
@@ -2612,7 +2619,7 @@ def plotHST_MXXL_BK11_Summary():
     meansfigs = []
     stdsfigs = []
 
-    with open('hstbiassummary_june2016', 'w') as output:
+    with open('{}/hstbiassummary'.format(outputdir), 'w') as output:
 
         output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
 
@@ -2674,7 +2681,8 @@ def plotHST_MXXL_BK11_Summary():
                                                                               meansax,
                                                                               stdax,
                                                                               colorindex = curcolor,
-                                                                              biaslabel = False)
+                                                                              biaslabel = False,
+                                                                              binnum = binnum)
 
                                     (avebias, errbias), (avestd, errstd) = summary
 
@@ -2718,7 +2726,8 @@ def plotHST_MXXL_BK11_Summary():
                                                                               meansax,
                                                                               stdax,
                                                                               colorindex = curcolor,
-                                                                              biaslabel = False)
+                                                                              biaslabel = False,
+                                                                              binnum = binnum)
 
                                     (avebias, errbias), (avestd, errstd) = summary
 
@@ -2766,7 +2775,7 @@ def plotHST_MXXL_BK11_Summary():
                                     meansax.legend(patches[::-1], labels[::-1], loc='lower left')
                                 meansfig.canvas.draw()
                                 meansfig.tight_layout()
-                                meansfig.savefig('hst_sim_plots_june2016/hst_mxxlbk11_comp_logmean_%s.%s.delta%d.%s.%s.png' % (clustername, rs, delta, mc, curcenter) )
+                                meansfig.savefig('%s/hst_mxxlbk11_comp_logmean_%s.%s.delta%d.%s.%s.png' % (outputdir, clustername, rs, delta, mc, curcenter) )
 
                                 stdax.set_title('%s' % (clusterinfo))
                                 stdax.set_xscale('log')
@@ -2782,7 +2791,7 @@ def plotHST_MXXL_BK11_Summary():
                                 stdax.legend(patches[::-1], labels[::-1], loc='upper left')
                                 stdsfig.canvas.draw()
                                 stdsfig.tight_layout()
-                                stdsfig.savefig('hst_sim_plots_june2016/hst_mxxlbk11_comp_logstd_%s.%s.delta%d.%s.%s.png' % (clustername, rs, delta, mc, curcenter) )
+                                stdsfig.savefig('%s/hst_mxxlbk11_comp_logstd_%s.%s.delta%d.%s.%s.png' % (outputdir, clustername, rs, delta, mc, curcenter) )
 
 
                                 meansfigs.append(meansfig)
@@ -3137,5 +3146,10 @@ if __name__ == '__main__':
     import matplotlib
     matplotlib.use('agg')
 
+    outputdir = sys.argv[1]
 
-    plotHST_MXXL_BK11_Summary()
+    binnum = None
+    if len(sys.argv) > 3:
+        binnum = int(sys.argv[2])
+
+    plotHST_MXXL_BK11_Summary(outputdir, binnum = binnum)
