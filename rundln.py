@@ -144,7 +144,7 @@ def takeAllMasses(simtype, delta):
         elif delta == 500:
 
             massedges = np.array([6.2e14, 2.7e15])
-            selectors = convertIntoSelectors(highmassedges, 'm500')
+            selectors = convertIntoSelectors(massedges, 'm500')
 
         elif delta == 2500:
             #1 bin
