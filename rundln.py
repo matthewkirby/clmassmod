@@ -144,7 +144,7 @@ def takeAllMasses(simtype, delta):
         elif delta == 500:
 
             massedges = np.array([6.2e14, 2.7e15])
-            selectors = convertIntoSelectors(highmassedges, 'm500')
+            selectors = convertIntoSelectors(massedges, 'm500')
 
         elif delta == 2500:
             #1 bin
@@ -233,7 +233,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
 
 
     if massbin == -1:
-        selector = takeAllMasses(simtype, delta)
+        selector = takeAllMasses(simtype, delta)[0]
     else:
         selectors = defineMassEdges(simtype, delta)
         selector = selectors[massbin]
@@ -274,6 +274,10 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
             else:
                 parts = dln.buildMCMCModel(halos)
 
+            model = pymc.Model(parts)
+            assert(np.isfinite(model.logp))
+
+
             success=True
             break
 
@@ -288,7 +292,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     with open('%s.massrange' % outfile, 'w') as output:
         output.write('%f\n%f\n' % (selector.masslow, selector.masshigh))
                 
-    dln.memsample(parts, 10000, outputFile = outfile)
+    dln.memsample(model, 10000, outputFile = outfile)
 
 
 
