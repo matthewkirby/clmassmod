@@ -159,7 +159,7 @@ def gatherChainFiles(chaindir, delta, binnum = None):
     if binnum is None:
 
         #may 2015 style
-        chainfiles = glob.glob('%s/rundln*.%d.[0-9]' % (chaindir, delta))
+        chainfiles = glob.glob('%s/rundln*.%d.[0-9].chain.0' % (chaindir, delta))
 
         if len(chainfiles) == 0:
             chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
@@ -2634,10 +2634,10 @@ def plotMega_MXXL_BK11_Summary(outputdir, binnum = None):
 
                         for curcluster, clustername in enumerate(clusters):
 
-                            curaltname = nametranslator[clustername]
+                            curaltname = clustername
 
                             clusterinfo = '%s %1.2f %1.2f' % (curaltname,
-                                                              datafile['z_l'][curcluster],
+                                                              datafile['zcluster'][curcluster],
                                                               cores[curcluster])
 
                             print 'CLUSTER: ', clusterinfo

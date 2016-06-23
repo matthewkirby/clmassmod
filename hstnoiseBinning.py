@@ -47,7 +47,7 @@ class HSTBinning(object):
 
     def configure(self, config):
 
-        assert(isinstance(config['betacalcer'], betacalcer.InfiniteRedshift))
+        assert(isinstance(config['betacalcer'], betacalcer.FixedBeta))
         assert(isinstance(config['shearnoiser'], shearnoiser.NoNoise))
 
         
@@ -152,12 +152,13 @@ class HSTBinning(object):
 
         #rescale beta
         beta_s = self.betas/nfwutils.global_cosmology.beta([1e6], profile.zlens)
-        newghat = profile.ghat*beta_s
+
+        effective_deltag = self.deltag*profile.beta_s/beta_s
         
-        noisy.ghat = newghat + self.deltag*np.random.standard_normal(self.nbins)
-        noisy.sigma_ghat = self.deltag
-        noisy.beta_s = beta_s
-        noisy.beta_s2 = beta_s**2
+        noisy.ghat = profile.ghat + effective_deltag*np.random.standard_normal(self.nbins)
+        noisy.sigma_ghat = effective_deltag
+#        noisy.beta_s = beta_s
+#        noisy.beta_s2 = beta_s**2
 
         return noisy
 
