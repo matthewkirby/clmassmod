@@ -2576,6 +2576,229 @@ def dumpConfigList():
 
 ###############################################################
 
+def plotMega_MXXL_BK11_Summary(outputdir, binnum = None):
+
+
+    
+    deltas = [200]
+
+    rss = ['r9']
+
+    mcs = ['c4']
+
+    
+    centers = ['xrayNONE'] # xraymag szmag szanalytic'.split()
+
+
+
+    mxxlsnaps = [41, 54]
+    mxxlredshifts = ['z=1.0', 'z=0.25']
+    bk11snaps = [124, 141]
+    bk11redshifts = ['z=0.5', 'z=0.25']
+
+    config = 'mega-{mc}-{rs}-{curcenter}-{clustername}-feb2016'
+
+
+    datafile = asciireader.read('configfiles/megacam_siminput.list')
+    clusters = datafile['cluster']
+    cores = datafile['core']
+
+
+
+    meansfigs = []
+    stdsfigs = []
+
+    with open('{}/megabiassummary'.format(outputdir), 'w') as output:
+
+        output.write('cluster zcluster core sim rad mc delta center b b_err sig sig_err\n')
+
+        for delta in deltas:
+
+            for rs in rss:
+
+                for mc in mcs:
+
+                    print 'MC: ', mc
+
+                    for center in centers:
+
+                        print 'CENTER: ', center
+
+                        prefix = '%s %s %d %s' % (rs, mc, delta, center)
+                        output.write('# %s\n' % prefix )
+
+                        makePretty = False
+
+
+                        for curcluster, clustername in enumerate(clusters):
+
+                            curaltname = nametranslator[clustername]
+
+                            clusterinfo = '%s %1.2f %1.2f' % (curaltname,
+                                                              datafile['z_l'][curcluster],
+                                                              cores[curcluster])
+
+                            print 'CLUSTER: ', clusterinfo
+
+                            curcenter = center
+
+                            curconfig = config.format(mc = mc, rs = rs, 
+                                                      curcenter = curcenter, 
+                                                      clustername = curaltname)
+
+                            meansfig = pylab.figure()
+                            meansax = meansfig.add_subplot(1,1,1)
+
+                            stdsfig = pylab.figure()
+                            stdax = stdsfig.add_subplot(1,1,1)
+
+                            patches = []
+                            labels = []
+
+
+                            #first bk11
+
+                            curcolor = 0
+
+                            for bk11snap, bk11redshift in zip(bk11snaps, bk11redshifts):
+
+                                chaindir = '/users/dapple/euclid1_2/rundlns/bk11snap%d/%s' % (bk11snap, curconfig)
+
+                                try:
+                                    patch, summary = precomputedLogNormDistro(chaindir, 
+                                                                              delta,
+                                                                              meansax,
+                                                                              stdax,
+                                                                              colorindex = curcolor,
+                                                                              biaslabel = False,
+                                                                              binnum = binnum)
+
+                                    (avebias, errbias), (avestd, errstd) = summary
+
+
+                                    output.write('%s BK11%d %s %f %f %f %f\n' % (clusterinfo,
+                                                                                 bk11snap, prefix, 
+                                                                                 avebias, errbias, 
+                                                                                 avestd, errstd))
+
+
+
+                                    if patch is None:
+                                        print 'Error. Skipped'
+                                        continue
+
+
+                                    patches.append(patch)
+                                    labels.append('BK11 %s' % bk11redshift)
+
+                                    makePretty = True
+
+
+                                    
+                                except AssertionError, IOError:
+                                    print 'Skipping BK11 %s' % clustername
+
+
+                                curcolor += 1
+
+
+                            #then mxxl
+
+                            curcolor = 2
+                            
+                            for mxxlsnap, mxxlredshift in zip(mxxlsnaps, mxxlredshifts):
+
+                                chaindir = '/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap%d/%s' % (mxxlsnap, curconfig)
+                                try:
+                                    patch, summary = precomputedLogNormDistro(chaindir, 
+                                                                              delta,
+                                                                              meansax,
+                                                                              stdax,
+                                                                              colorindex = curcolor,
+                                                                              biaslabel = False,
+                                                                              binnum = binnum)
+
+                                    (avebias, errbias), (avestd, errstd) = summary
+
+
+
+                                    output.write('%s MXXL%d %s %f %f %f %f\n' % (clusterinfo,
+                                                                                 mxxlsnap, prefix, 
+                                                                                 avebias, errbias, 
+                                                                                 avestd, errstd))
+
+
+
+                                    if patch is None:
+                                        print 'Error. Skipped'
+                                        continue
+
+
+                                    patches.append(patch)
+                                    labels.append('MXXL %s' % mxxlredshift)
+
+                                    makePretty = True
+
+                                except AssertionError:
+                                    print 'Skipping MXXL %s' % clustername
+
+                                curcolor += 1
+
+
+                            if makePretty:
+
+                                meansax.set_title('%s' % (clusterinfo))
+                                meansax.set_xscale('log')
+                                meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+                                meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+                                meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+                                meansax.set_xlim(3e14, 4e15)
+                                meansax.set_ylim(0.5, 1.3)
+                                meansax.set_xticks([1e15])
+                                meansax.set_xticklabels(['10'])
+                                meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+                                meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+                                if mc == 'c4':
+                                    meansax.legend(patches[::-1], labels[::-1], loc='upper right')
+                                else:
+                                    meansax.legend(patches[::-1], labels[::-1], loc='lower left')
+                                meansfig.canvas.draw()
+                                meansfig.tight_layout()
+                                meansfig.savefig('%s/mega_mxxlbk11_comp_logmean_%s.%s.delta%d.%s.%s.png' % (outputdir, clustername, rs, delta, mc, curcenter) )
+
+                                stdax.set_title('%s' % (clusterinfo))
+                                stdax.set_xscale('log')
+                                stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+                                stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+                        #        stdax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+                                stdax.set_xlim(3e14, 4e15)
+                        #        stdax.set_ylim(0.5, 1.05)
+                                stdax.set_xticks([1e15])
+                                stdax.set_xticklabels(['10'])
+                                stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+                                stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+                                stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+                                stdsfig.canvas.draw()
+                                stdsfig.tight_layout()
+                                stdsfig.savefig('%s/mega_mxxlbk11_comp_logstd_%s.%s.delta%d.%s.%s.png' % (outputdir, clustername, rs, delta, mc, curcenter) )
+
+
+                                meansfigs.append(meansfig)
+                                stdsfigs.append(stdsfig)
+
+
+
+
+    return meansfigs, stdsfigs
+
+
+
+
+
+
+
+###############################################################
+
 
 def plotHST_MXXL_BK11_Summary(outputdir, binnum = None):
 
@@ -3153,4 +3376,4 @@ if __name__ == '__main__':
     if len(sys.argv) >= 3:
         binnum = int(sys.argv[2])
 
-    plotHST_MXXL_BK11_Summary(outputdir, binnum = binnum)
+    plotMega_MXXL_BK11_Summary(outputdir, binnum = binnum)
