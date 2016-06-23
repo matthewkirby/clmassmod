@@ -1,4 +1,3 @@
-
 import publication_plots as pp
 import pylab
 import numpy as np
@@ -169,8 +168,10 @@ def gatherChainFiles(chaindir, delta, binnum = None):
             chainfiles = glob.glob('%s/dln_*.chain.0' % chaindir)
 
     else:
-        chainfiles = glob.glob('%s/rundln*.%d.%d.chain.0' % (chaindir, delta, binnum))
+        chainfiles = glob.glob('%s/rundln*.%d.%d' % (chaindir, delta, binnum))
         
+
+
 
     return sorted(chainfiles)
 
@@ -3149,7 +3150,7 @@ if __name__ == '__main__':
     outputdir = sys.argv[1]
 
     binnum = None
-    if len(sys.argv) > 3:
+    if len(sys.argv) >= 3:
         binnum = int(sys.argv[2])
 
     plotHST_MXXL_BK11_Summary(outputdir, binnum = binnum)

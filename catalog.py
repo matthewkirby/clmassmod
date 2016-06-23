@@ -23,7 +23,7 @@ class Catalog(object):
         newcat = Catalog()
         newcat.header.update(self.header)
         newcat.table.update(self.table)
-        newcat.length = self.length
+        super(Catalog, newcat).__setattr__('length', self.length)
 
         return newcat
 
