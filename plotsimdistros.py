@@ -159,7 +159,7 @@ def gatherChainFiles(chaindir, delta, binnum = None):
     if binnum is None:
 
         #may 2015 style
-        chainfiles = glob.glob('%s/rundln*.%d.*.chain.0' % (chaindir, delta))
+        chainfiles = glob.glob('%s/rundln*.%d.[0-9]' % (chaindir, delta))
 
         if len(chainfiles) == 0:
             chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
@@ -171,6 +171,8 @@ def gatherChainFiles(chaindir, delta, binnum = None):
         chainfiles = glob.glob('%s/rundln*.%d.%d' % (chaindir, delta, binnum))
         
 
+
+#    print chainfiles
 
 
     return sorted(chainfiles)
@@ -3152,5 +3154,6 @@ if __name__ == '__main__':
     binnum = None
     if len(sys.argv) >= 3:
         binnum = int(sys.argv[2])
+        print 'Bin Number:', binnum
 
     plotHST_MXXL_BK11_Summary(outputdir, binnum = binnum)
