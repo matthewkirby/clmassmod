@@ -8,6 +8,6 @@ syntax: glob
 *.bbl
 *.blg
 *.toc
-megacam_sim_plots/*
-hst_sim_plots/*
+megacam_sim_plots*/*
+hst_sim_plots*/*
 
