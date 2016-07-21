@@ -50,7 +50,7 @@ queue {njobs}
 
 #########################################################
 
-def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41', outputdir=None):
+def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41', outputdir=None, simfiles = None):
     
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
@@ -62,8 +62,10 @@ def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_ra
 
     input_extensions = 'convergence_map shear_1_map shear_2_map answer'.split()
 
+    if simfiles is None:
+        simfiles = glob.glob('{0}/halo_*.convergence_map'.format(simdir))
 
-    simfiles = glob.glob('{0}/halo_*.convergence_map'.format(simdir))
+        
         
     for i, halofile in enumerate(simfiles):
 
