@@ -16,7 +16,7 @@ import rundln
 
 ########    
 
-def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = None):
+def run(simtype, chaindir, outfile, delta, massbin=0):
 
     config = simutils.readConfiguration('%s/config.py' % chaindir)
     simreader = config['simreader']
@@ -26,16 +26,10 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
     selectors = rundln.defineMassEdges(simtype, delta)
     selector = selectors[massbin]
 
-    isPDF = False
-    if pdftype == 'pdf':
-        isPDF = True
-        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, selector,
-                                   reader = dln.PDFReader, model = model)
-    elif pdftype == 'mcmc':
-        halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, selector,
-                                   reader = dln.MCMCReader,
-                                   cprior = 100.)
-        
+
+    isPDF = True
+    halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, selector,
+                               reader = dln.PDFReader, model = model)
         
 
     if len(halos) < 10:
@@ -59,24 +53,18 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
 if __name__ == '__main__':
 
     massbin = 0
-    sigmaprior = None
 
     simtype=sys.argv[1]
     chaindir=sys.argv[2]
     outfile=sys.argv[3]
     delta=int(sys.argv[4])
-    pdftype=sys.argv[5]
-    if len(sys.argv) > 6:
-        massbin=int(sys.argv[6])
-    if len(sys.argv) > 7:
-        sigmaprior = sys.argv[7]
+    if len(sys.argv) > 5:
+        massbin=int(sys.argv[5])
 
     print 'Called with:', dict(simtype=simtype, chaindir=chaindir, 
                                outfile=outfile, delta=delta, 
-                               pdftype = pdftype,
-                               massbin=massbin,
-                               sigmapriorfile = sigmaprior)
+                               massbin=massbin)
 
     
-    run(simtype, chaindir, outfile, delta, pdftype, massbin, sigmaprior)
+    run(simtype, chaindir, outfile, delta, massbin)
         
