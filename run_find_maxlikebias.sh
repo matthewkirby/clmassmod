@@ -1,14 +1,13 @@
 #!/bin/bash -u
 #############
 
-jobdir=$1
-torun=$2
-snap=$3
-delta=$4
-nbins=$5
+torun=$1
+snap=$2
+delta=$3
+nbins=$4
 
 #chainbase=/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap$snap
-outputdir=/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap$snap/
+outputdir=/vol/euclid1/euclid1_2/dapple/rundlns/$snap
 
 
 startbin=0
@@ -20,7 +19,7 @@ for config in `cat $torun`; do
 	
 
 
-    chaindir=`grep "mxxlsnap$snap $config" haloprocessed | awk '{print $3}'`
+    chaindir=`grep "$snap $config" haloprocessed | awk '{print $3}'`
 	
     if [ -z "$chaindir" ]; then
 	echo "Cannot find $config"
@@ -36,7 +35,7 @@ for config in `cat $torun`; do
 
 	outfile=$workdir/rundln$snap.$delta.$massbin
 
-	python ./find_maxlikebias.py mxxlsnap${snap} $chaindir $outfile $delta $massbin
+	python ./find_maxlikebias.py ${snap} $chaindir $outfile $delta $massbin
 	    
 	
     done
