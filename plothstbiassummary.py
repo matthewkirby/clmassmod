@@ -137,7 +137,7 @@ def plotOne(data, center, mc, rs, delta, fig = None):
 
 
 centers = 'xrayNONE xraymag szmag szanalytic'.split()
-mcs = 'c4 diemer15'.split()
+mcs = 'c4 diemer15 c3 c5'.split()
 rss = 'r5'.split()
 deltas = [500, 200]
 

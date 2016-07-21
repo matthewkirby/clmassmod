@@ -2811,7 +2811,7 @@ def plotHST_MXXL_BK11_Summary(outputdir, binnum = None):
 #    rss = 'r5 r16'.split()
     rss = ['r5']
 
-    mcs = 'c4 diemer15'.split()
+    mcs = 'c4 diemer15 c3 c5'.split()
 
     
     centers = 'xrayNONE xraymag szmag szanalytic'.split()
@@ -2823,7 +2823,7 @@ def plotHST_MXXL_BK11_Summary(outputdir, binnum = None):
     bk11snaps = [124, 141]
     bk11redshifts = ['z=0.5', 'z=0.25']
 
-    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{clustername}-feb2016'
+    config = 'hstnoisebins-{mc}-{rs}-{curcenter}-{clustername}-june2016'
 
 
     datafile = asciireader.read('sptdat')
@@ -3379,4 +3379,4 @@ if __name__ == '__main__':
         binnum = int(sys.argv[2])
         print 'Bin Number:', binnum
 
-    plotMega_MXXL_BK11_Summary(outputdir, binnum = binnum)
+    plotHST_MXXL_BK11_Summary(outputdir, binnum = binnum)
