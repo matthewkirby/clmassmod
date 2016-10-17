@@ -224,8 +224,8 @@ void __Pyx_call_destructor(T* x) {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__deconvolvedlognormtools
-#define __PYX_HAVE_API__deconvolvedlognormtools
+#define __PYX_HAVE__nfwfitter__deconvolvedlognormtools
+#define __PYX_HAVE_API__nfwfitter__deconvolvedlognormtools
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -435,7 +435,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "deconvolvedlognormtools.pyx",
+  "nfwfitter/deconvolvedlognormtools.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -1045,24 +1045,24 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from 'deconvolvedlognormtools' */
+/* Module declarations from 'nfwfitter.deconvolvedlognormtools' */
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_double_t = { "double_t", NULL, sizeof(__pyx_t_5numpy_double_t), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_int_t = { "int_t", NULL, sizeof(__pyx_t_5numpy_int_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_5numpy_int_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_5numpy_int_t), 0 };
-#define __Pyx_MODULE_NAME "deconvolvedlognormtools"
-int __pyx_module_is_main_deconvolvedlognormtools = 0;
+#define __Pyx_MODULE_NAME "nfwfitter.deconvolvedlognormtools"
+int __pyx_module_is_main_nfwfitter__deconvolvedlognormtools = 0;
 
-/* Implementation of 'deconvolvedlognormtools' */
+/* Implementation of 'nfwfitter.deconvolvedlognormtools' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
-static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mlens, double __pyx_v_merr, double __pyx_v_mtrue, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdf, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_ngoodsamples, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdfs, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_outlier_ml_ints, CYTHON_UNUSED PyArrayObject *__pyx_v_outlier_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma, double __pyx_v_fracoutliers); /* proto */
-static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_delta_mls, PyArrayObject *__pyx_v_delta_masses, PyArrayObject *__pyx_v_pdfs, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mlens, double __pyx_v_merr, double __pyx_v_mtrue, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdf, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_ngoodsamples, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdfs, double __pyx_v_logmu, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_12outlierloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_outlier_ml_ints, CYTHON_UNUSED PyArrayObject *__pyx_v_outlier_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma, double __pyx_v_fracoutliers); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_delta_mls, PyArrayObject *__pyx_v_delta_masses, PyArrayObject *__pyx_v_pdfs, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static char __pyx_k_B[] = "B";
@@ -1153,23 +1153,22 @@ static char __pyx_k_pdfloglinearlike[] = "pdfloglinearlike";
 static char __pyx_k_mcmcloglinearlike[] = "mcmcloglinearlike";
 static char __pyx_k_outlier_delta_logmls[] = "outlier_delta_logmls";
 static char __pyx_k_outlierloglinearlike[] = "outlierloglinearlike";
-static char __pyx_k_deconvolvedlognormtools[] = "deconvolvedlognormtools";
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
-static char __pyx_k_Users_dapple_astro_mxxlsims_dec[] = "/Users/dapple/astro/mxxlsims/deconvolvedlognormtools.pyx";
+static char __pyx_k_Users_dapple_astro_mxxlsims_nfw[] = "/Users/dapple/astro/mxxlsims/nfwfitter/deconvolvedlognormtools.pyx";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
 static char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte order not supported";
 static char __pyx_k_ndarray_is_not_Fortran_contiguou[] = "ndarray is not Fortran contiguous";
+static char __pyx_k_nfwfitter_deconvolvedlognormtool[] = "nfwfitter.deconvolvedlognormtools";
 static char __pyx_k_Format_string_allocated_too_shor_2[] = "Format string allocated too short.";
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor_2;
 static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_s_RuntimeError;
-static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_dec;
+static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_altintegral;
 static PyObject *__pyx_n_s_cdf;
-static PyObject *__pyx_n_s_deconvolvedlognormtools;
 static PyObject *__pyx_n_s_delta_logmls;
 static PyObject *__pyx_n_s_delta_masses;
 static PyObject *__pyx_n_s_delta_mls;
@@ -1200,6 +1199,7 @@ static PyObject *__pyx_n_s_nclusters;
 static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
 static PyObject *__pyx_kp_u_ndarray_is_not_Fortran_contiguou;
 static PyObject *__pyx_n_s_neg2sigma2;
+static PyObject *__pyx_n_s_nfwfitter_deconvolvedlognormtool;
 static PyObject *__pyx_n_s_ngauss;
 static PyObject *__pyx_n_s_ngoodsamples;
 static PyObject *__pyx_n_s_nmasses;
@@ -1276,7 +1276,7 @@ static PyObject *__pyx_codeobj__26;
 static PyObject *__pyx_codeobj__28;
 static PyObject *__pyx_codeobj__30;
 
-/* "deconvolvedlognormtools.pyx":37
+/* "nfwfitter/deconvolvedlognormtools.pyx":37
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def integral(double mlens,             # <<<<<<<<<<<<<<
@@ -1285,9 +1285,9 @@ static PyObject *__pyx_codeobj__30;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_1integral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_1integral = {"integral", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_1integral, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_1integral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_1integral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_1integral = {"integral", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_1integral, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_1integral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_mlens;
   double __pyx_v_merr;
   double __pyx_v_mtrue;
@@ -1362,18 +1362,18 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_1integral(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("integral", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.integral", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.integral", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_integral(__pyx_self, __pyx_v_mlens, __pyx_v_merr, __pyx_v_mtrue, __pyx_v_logmu, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_integral(__pyx_self, __pyx_v_mlens, __pyx_v_merr, __pyx_v_mtrue, __pyx_v_logmu, __pyx_v_sigma);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mlens, double __pyx_v_merr, double __pyx_v_mtrue, double __pyx_v_logmu, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mlens, double __pyx_v_merr, double __pyx_v_mtrue, double __pyx_v_logmu, double __pyx_v_sigma) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nsamples;
   PyArrayObject *__pyx_v_randomdeviates = 0;
@@ -1403,7 +1403,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
   __pyx_pybuffernd_randomdeviates.data = NULL;
   __pyx_pybuffernd_randomdeviates.rcbuffer = &__pyx_pybuffer_randomdeviates;
 
-  /* "deconvolvedlognormtools.pyx":44
+  /* "nfwfitter/deconvolvedlognormtools.pyx":44
  * 
  *     cdef Py_ssize_t i, nsamples
  *     nsamples = 50             # <<<<<<<<<<<<<<
@@ -1412,7 +1412,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
  */
   __pyx_v_nsamples = 50;
 
-  /* "deconvolvedlognormtools.pyx":46
+  /* "nfwfitter/deconvolvedlognormtools.pyx":46
  *     nsamples = 50
  * 
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] randomdeviates = np.random.standard_normal(nsamples)             # <<<<<<<<<<<<<<
@@ -1469,7 +1469,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
   __pyx_v_randomdeviates = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":49
+  /* "nfwfitter/deconvolvedlognormtools.pyx":49
  * 
  *     cdef double thesum, logmtrue, ml_int, normpart
  *     logmtrue = log(mtrue)             # <<<<<<<<<<<<<<
@@ -1478,7 +1478,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
  */
   __pyx_v_logmtrue = log(__pyx_v_mtrue);
 
-  /* "deconvolvedlognormtools.pyx":50
+  /* "nfwfitter/deconvolvedlognormtools.pyx":50
  *     cdef double thesum, logmtrue, ml_int, normpart
  *     logmtrue = log(mtrue)
  *     thesum = 0.             # <<<<<<<<<<<<<<
@@ -1487,7 +1487,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
  */
   __pyx_v_thesum = 0.;
 
-  /* "deconvolvedlognormtools.pyx":52
+  /* "nfwfitter/deconvolvedlognormtools.pyx":52
  *     thesum = 0.
  * 
  *     for i from nsamples > i >= 0:             # <<<<<<<<<<<<<<
@@ -1496,7 +1496,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
  */
   for (__pyx_v_i = __pyx_v_nsamples-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":54
+    /* "nfwfitter/deconvolvedlognormtools.pyx":54
  *     for i from nsamples > i >= 0:
  * 
  *         ml_int = exp(logmu + logmtrue + sigma*randomdeviates[i])             # <<<<<<<<<<<<<<
@@ -1506,7 +1506,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
     __pyx_t_7 = __pyx_v_i;
     __pyx_v_ml_int = exp(((__pyx_v_logmu + __pyx_v_logmtrue) + (__pyx_v_sigma * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_randomdeviates.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_randomdeviates.diminfo[0].strides)))));
 
-    /* "deconvolvedlognormtools.pyx":56
+    /* "nfwfitter/deconvolvedlognormtools.pyx":56
  *         ml_int = exp(logmu + logmtrue + sigma*randomdeviates[i])
  * 
  *         normpart = exp(-0.5*(ml_int-mlens)**2/merr**2)/(sqrt2pi*merr)             # <<<<<<<<<<<<<<
@@ -1543,7 +1543,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_normpart = __pyx_t_9;
 
-    /* "deconvolvedlognormtools.pyx":59
+    /* "nfwfitter/deconvolvedlognormtools.pyx":59
  * 
  * 
  *         thesum += normpart             # <<<<<<<<<<<<<<
@@ -1553,7 +1553,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
     __pyx_v_thesum = (__pyx_v_thesum + __pyx_v_normpart);
   }
 
-  /* "deconvolvedlognormtools.pyx":61
+  /* "nfwfitter/deconvolvedlognormtools.pyx":61
  *         thesum += normpart
  * 
  *     thesum = thesum / nsamples             # <<<<<<<<<<<<<<
@@ -1572,7 +1572,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
   }
   __pyx_v_thesum = (__pyx_v_thesum / __pyx_v_nsamples);
 
-  /* "deconvolvedlognormtools.pyx":63
+  /* "nfwfitter/deconvolvedlognormtools.pyx":63
  *     thesum = thesum / nsamples
  * 
  *     return thesum             # <<<<<<<<<<<<<<
@@ -1586,7 +1586,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":37
+  /* "nfwfitter/deconvolvedlognormtools.pyx":37
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def integral(double mlens,             # <<<<<<<<<<<<<<
@@ -1605,7 +1605,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
     __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_randomdeviates.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.integral", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.integral", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -1617,7 +1617,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":67
+/* "nfwfitter/deconvolvedlognormtools.pyx":67
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -1626,9 +1626,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_integral(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_3altintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_3altintegral = {"altintegral", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_3altintegral, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_3altintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_3altintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_3altintegral = {"altintegral", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_3altintegral, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_3altintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ml_ints = 0;
   PyArrayObject *__pyx_v_delta_logmls = 0;
   double __pyx_v_logmu;
@@ -1694,13 +1694,13 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_3altintegral(PyObject *__pyx
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("altintegral", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.altintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.altintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ml_ints), __pyx_ptype_5numpy_ndarray, 1, "ml_ints", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_2altintegral(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_logmu, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_2altintegral(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_logmu, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1711,7 +1711,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_3altintegral(PyObject *__pyx
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nsamples;
   double __pyx_v_thesum;
@@ -1755,7 +1755,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
   }
   __pyx_pybuffernd_delta_logmls.diminfo[0].strides = __pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_delta_logmls.diminfo[0].shape = __pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer.shape[0];
 
-  /* "deconvolvedlognormtools.pyx":73
+  /* "nfwfitter/deconvolvedlognormtools.pyx":73
  * 
  *     cdef Py_ssize_t i, nsamples
  *     nsamples = ml_ints.shape[0]             # <<<<<<<<<<<<<<
@@ -1764,7 +1764,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
  */
   __pyx_v_nsamples = (__pyx_v_ml_ints->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":76
+  /* "nfwfitter/deconvolvedlognormtools.pyx":76
  * 
  *     cdef double thesum, lognormpart
  *     thesum = 0.             # <<<<<<<<<<<<<<
@@ -1773,7 +1773,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
  */
   __pyx_v_thesum = 0.;
 
-  /* "deconvolvedlognormtools.pyx":79
+  /* "nfwfitter/deconvolvedlognormtools.pyx":79
  * 
  *     cdef double sigma2, sigmasqrt2pi
  *     neg2sigma2 = -2*(sigma**2)             # <<<<<<<<<<<<<<
@@ -1782,7 +1782,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
  */
   __pyx_v_neg2sigma2 = (-2.0 * pow(__pyx_v_sigma, 2.0));
 
-  /* "deconvolvedlognormtools.pyx":80
+  /* "nfwfitter/deconvolvedlognormtools.pyx":80
  *     cdef double sigma2, sigmasqrt2pi
  *     neg2sigma2 = -2*(sigma**2)
  *     sigmasqrt2pi = sigma*sqrt2pi             # <<<<<<<<<<<<<<
@@ -1801,7 +1801,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_sigmasqrt2pi = __pyx_t_4;
 
-  /* "deconvolvedlognormtools.pyx":82
+  /* "nfwfitter/deconvolvedlognormtools.pyx":82
  *     sigmasqrt2pi = sigma*sqrt2pi
  * 
  *     for i from nsamples > i >= 0:             # <<<<<<<<<<<<<<
@@ -1810,7 +1810,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
  */
   for (__pyx_v_i = __pyx_v_nsamples-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":84
+    /* "nfwfitter/deconvolvedlognormtools.pyx":84
  *     for i from nsamples > i >= 0:
  * 
  *         lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])             # <<<<<<<<<<<<<<
@@ -1844,7 +1844,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
     }
     __pyx_v_lognormpart = (__pyx_t_6 / __pyx_t_8);
 
-    /* "deconvolvedlognormtools.pyx":86
+    /* "nfwfitter/deconvolvedlognormtools.pyx":86
  *         lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
  * 
  *         thesum += lognormpart             # <<<<<<<<<<<<<<
@@ -1854,7 +1854,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
     __pyx_v_thesum = (__pyx_v_thesum + __pyx_v_lognormpart);
   }
 
-  /* "deconvolvedlognormtools.pyx":88
+  /* "nfwfitter/deconvolvedlognormtools.pyx":88
  *         thesum += lognormpart
  * 
  *     thesum = thesum / nsamples             # <<<<<<<<<<<<<<
@@ -1873,7 +1873,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
   }
   __pyx_v_thesum = (__pyx_v_thesum / __pyx_v_nsamples);
 
-  /* "deconvolvedlognormtools.pyx":90
+  /* "nfwfitter/deconvolvedlognormtools.pyx":90
  *     thesum = thesum / nsamples
  * 
  *     return thesum             # <<<<<<<<<<<<<<
@@ -1887,7 +1887,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":67
+  /* "nfwfitter/deconvolvedlognormtools.pyx":67
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -1905,7 +1905,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ml_ints.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.altintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.altintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -1917,7 +1917,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":96
+/* "nfwfitter/deconvolvedlognormtools.pyx":96
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -1926,9 +1926,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_2altintegral(CYTHON_UNUSED P
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_5pdfintegral = {"pdfintegral", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_5pdfintegral, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_5pdfintegral = {"pdfintegral", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_5pdfintegral, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ml_ints = 0;
   PyArrayObject *__pyx_v_deltamasses = 0;
   PyArrayObject *__pyx_v_delta_logmls = 0;
@@ -2012,7 +2012,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("pdfintegral", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.pdfintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.pdfintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -2020,7 +2020,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_deltamasses), __pyx_ptype_5numpy_ndarray, 1, "deltamasses", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pdf), __pyx_ptype_5numpy_ndarray, 1, "pdf", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_4pdfintegral(__pyx_self, __pyx_v_ml_ints, __pyx_v_deltamasses, __pyx_v_delta_logmls, __pyx_v_pdf, __pyx_v_logmu, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_4pdfintegral(__pyx_self, __pyx_v_ml_ints, __pyx_v_deltamasses, __pyx_v_delta_logmls, __pyx_v_pdf, __pyx_v_logmu, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2031,7 +2031,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_5pdfintegral(PyObject *__pyx
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdf, double __pyx_v_logmu, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdf, double __pyx_v_logmu, double __pyx_v_sigma) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nsamples;
   double __pyx_v_thesum;
@@ -2119,7 +2119,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   }
   __pyx_pybuffernd_pdf.diminfo[0].strides = __pyx_pybuffernd_pdf.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_pdf.diminfo[0].shape = __pyx_pybuffernd_pdf.rcbuffer->pybuffer.shape[0];
 
-  /* "deconvolvedlognormtools.pyx":107
+  /* "nfwfitter/deconvolvedlognormtools.pyx":107
  * 
  *     cdef Py_ssize_t i, nsamples
  *     nsamples = ml_ints.shape[0]             # <<<<<<<<<<<<<<
@@ -2128,7 +2128,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
  */
   __pyx_v_nsamples = (__pyx_v_ml_ints->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":110
+  /* "nfwfitter/deconvolvedlognormtools.pyx":110
  * 
  *     cdef double thesum
  *     thesum = 0.             # <<<<<<<<<<<<<<
@@ -2137,7 +2137,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
  */
   __pyx_v_thesum = 0.;
 
-  /* "deconvolvedlognormtools.pyx":113
+  /* "nfwfitter/deconvolvedlognormtools.pyx":113
  * 
  *     cdef double sigma2, sigmasqrt2pi
  *     neg2sigma2 = -2*(sigma**2)             # <<<<<<<<<<<<<<
@@ -2146,7 +2146,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
  */
   __pyx_v_neg2sigma2 = (-2.0 * pow(__pyx_v_sigma, 2.0));
 
-  /* "deconvolvedlognormtools.pyx":114
+  /* "nfwfitter/deconvolvedlognormtools.pyx":114
  *     cdef double sigma2, sigmasqrt2pi
  *     neg2sigma2 = -2*(sigma**2)
  *     sigmasqrt2pi = sigma*sqrt2pi             # <<<<<<<<<<<<<<
@@ -2165,7 +2165,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_sigmasqrt2pi = __pyx_t_4;
 
-  /* "deconvolvedlognormtools.pyx":116
+  /* "nfwfitter/deconvolvedlognormtools.pyx":116
  *     sigmasqrt2pi = sigma*sqrt2pi
  * 
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] lognormpart = np.zeros(nsamples)             # <<<<<<<<<<<<<<
@@ -2219,7 +2219,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   __pyx_v_lognormpart = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "deconvolvedlognormtools.pyx":118
+  /* "nfwfitter/deconvolvedlognormtools.pyx":118
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] lognormpart = np.zeros(nsamples)
  * 
  *     lognormpart[0] = exp((delta_logmls[0]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[0])             # <<<<<<<<<<<<<<
@@ -2254,7 +2254,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   __pyx_t_12 = 0;
   *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_lognormpart.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_lognormpart.diminfo[0].strides) = (__pyx_t_9 / __pyx_t_11);
 
-  /* "deconvolvedlognormtools.pyx":119
+  /* "nfwfitter/deconvolvedlognormtools.pyx":119
  * 
  *     lognormpart[0] = exp((delta_logmls[0]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[0])
  *     thesum += 0.5*ml_ints[0]*lognormpart[0]*pdf[0]  #ml_ints[0] is deltamasses[-1]; integrand @ ml=0 is 0             # <<<<<<<<<<<<<<
@@ -2266,7 +2266,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   __pyx_t_15 = 0;
   __pyx_v_thesum = (__pyx_v_thesum + (((0.5 * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_ml_ints.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_ml_ints.diminfo[0].strides))) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_lognormpart.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_lognormpart.diminfo[0].strides))) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_pdf.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_pdf.diminfo[0].strides))));
 
-  /* "deconvolvedlognormtools.pyx":121
+  /* "nfwfitter/deconvolvedlognormtools.pyx":121
  *     thesum += 0.5*ml_ints[0]*lognormpart[0]*pdf[0]  #ml_ints[0] is deltamasses[-1]; integrand @ ml=0 is 0
  * 
  *     for i from 1 <= i < nsamples:             # <<<<<<<<<<<<<<
@@ -2276,7 +2276,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   __pyx_t_16 = __pyx_v_nsamples;
   for (__pyx_v_i = 1; __pyx_v_i < __pyx_t_16; __pyx_v_i++) {
 
-    /* "deconvolvedlognormtools.pyx":123
+    /* "nfwfitter/deconvolvedlognormtools.pyx":123
  *     for i from 1 <= i < nsamples:
  * 
  *         lognormpart[i] = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])             # <<<<<<<<<<<<<<
@@ -2311,7 +2311,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
     __pyx_t_19 = __pyx_v_i;
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_lognormpart.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_lognormpart.diminfo[0].strides) = (__pyx_t_4 / __pyx_t_11);
 
-    /* "deconvolvedlognormtools.pyx":125
+    /* "nfwfitter/deconvolvedlognormtools.pyx":125
  *         lognormpart[i] = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
  * 
  *         thesum += 0.5*deltamasses[i-1]*(lognormpart[i]*pdf[i] + lognormpart[i-1]*pdf[i-1])             # <<<<<<<<<<<<<<
@@ -2326,7 +2326,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
     __pyx_v_thesum = (__pyx_v_thesum + ((0.5 * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_deltamasses.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_deltamasses.diminfo[0].strides))) * (((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_lognormpart.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_lognormpart.diminfo[0].strides)) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_pdf.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_pdf.diminfo[0].strides))) + ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_lognormpart.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_lognormpart.diminfo[0].strides)) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_pdf.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_pdf.diminfo[0].strides))))));
   }
 
-  /* "deconvolvedlognormtools.pyx":128
+  /* "nfwfitter/deconvolvedlognormtools.pyx":128
  * 
  * 
  *     return thesum             # <<<<<<<<<<<<<<
@@ -2340,7 +2340,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":96
+  /* "nfwfitter/deconvolvedlognormtools.pyx":96
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -2363,7 +2363,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ml_ints.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pdf.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.pdfintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.pdfintegral", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2379,7 +2379,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":137
+/* "nfwfitter/deconvolvedlognormtools.pyx":137
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -2388,9 +2388,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_4pdfintegral(CYTHON_UNUSED P
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_7loglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_7loglinearlike = {"loglinearlike", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_7loglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_7loglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_7loglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_7loglinearlike = {"loglinearlike", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_7loglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_7loglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ml_ints = 0;
   PyArrayObject *__pyx_v_delta_logmls = 0;
   double __pyx_v_logmu;
@@ -2456,13 +2456,13 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_7loglinearlike(PyObject *__p
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("loglinearlike", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.loglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.loglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ml_ints), __pyx_ptype_5numpy_ndarray, 1, "ml_ints", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 138; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_6loglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_logmu, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_6loglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_logmu, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2473,7 +2473,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_7loglinearlike(PyObject *__p
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nclusters;
   double __pyx_v_sumlogprob;
@@ -2517,7 +2517,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
   }
   __pyx_pybuffernd_delta_logmls.diminfo[0].strides = __pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_delta_logmls.diminfo[0].shape = __pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_delta_logmls.diminfo[1].strides = __pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_delta_logmls.diminfo[1].shape = __pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer.shape[1];
 
-  /* "deconvolvedlognormtools.pyx":144
+  /* "nfwfitter/deconvolvedlognormtools.pyx":144
  * 
  *     cdef Py_ssize_t i, nclusters
  *     nclusters = ml_ints.shape[0]             # <<<<<<<<<<<<<<
@@ -2526,7 +2526,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
  */
   __pyx_v_nclusters = (__pyx_v_ml_ints->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":146
+  /* "nfwfitter/deconvolvedlognormtools.pyx":146
  *     nclusters = ml_ints.shape[0]
  * 
  *     cdef double sumlogprob = 0.             # <<<<<<<<<<<<<<
@@ -2535,7 +2535,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
  */
   __pyx_v_sumlogprob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":147
+  /* "nfwfitter/deconvolvedlognormtools.pyx":147
  * 
  *     cdef double sumlogprob = 0.
  *     cdef double prob = 0.             # <<<<<<<<<<<<<<
@@ -2544,7 +2544,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
  */
   __pyx_v_prob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":151
+  /* "nfwfitter/deconvolvedlognormtools.pyx":151
  * 
  * 
  *     for i from nclusters > i >= 0:             # <<<<<<<<<<<<<<
@@ -2553,7 +2553,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
  */
   for (__pyx_v_i = __pyx_v_nclusters-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":155
+    /* "nfwfitter/deconvolvedlognormtools.pyx":155
  * 
  * 
  *         prob = altintegral(ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -2576,7 +2576,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "deconvolvedlognormtools.pyx":156
+    /* "nfwfitter/deconvolvedlognormtools.pyx":156
  * 
  *         prob = altintegral(ml_ints[i,:],
  *                            delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -2597,7 +2597,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "deconvolvedlognormtools.pyx":157
+    /* "nfwfitter/deconvolvedlognormtools.pyx":157
  *         prob = altintegral(ml_ints[i,:],
  *                            delta_logmls[i,:],
  *                            logmu,             # <<<<<<<<<<<<<<
@@ -2607,7 +2607,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __pyx_t_5 = PyFloat_FromDouble(__pyx_v_logmu); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
 
-    /* "deconvolvedlognormtools.pyx":158
+    /* "nfwfitter/deconvolvedlognormtools.pyx":158
  *                            delta_logmls[i,:],
  *                            logmu,
  *                            sigma)             # <<<<<<<<<<<<<<
@@ -2650,7 +2650,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "deconvolvedlognormtools.pyx":155
+    /* "nfwfitter/deconvolvedlognormtools.pyx":155
  * 
  * 
  *         prob = altintegral(ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -2661,7 +2661,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_prob = __pyx_t_10;
 
-    /* "deconvolvedlognormtools.pyx":162
+    /* "nfwfitter/deconvolvedlognormtools.pyx":162
  * 
  * 
  *         sumlogprob += log(prob)             # <<<<<<<<<<<<<<
@@ -2671,7 +2671,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __pyx_v_sumlogprob = (__pyx_v_sumlogprob + log(__pyx_v_prob));
   }
 
-  /* "deconvolvedlognormtools.pyx":164
+  /* "nfwfitter/deconvolvedlognormtools.pyx":164
  *         sumlogprob += log(prob)
  * 
  *     return sumlogprob             # <<<<<<<<<<<<<<
@@ -2685,7 +2685,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":137
+  /* "nfwfitter/deconvolvedlognormtools.pyx":137
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -2708,7 +2708,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_delta_logmls.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ml_ints.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.loglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.loglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2720,7 +2720,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":170
+/* "nfwfitter/deconvolvedlognormtools.pyx":170
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -2729,9 +2729,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_6loglinearlike(CYTHON_UNUSED
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_9mcmcloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_9mcmcloglinearlike = {"mcmcloglinearlike", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_9mcmcloglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_9mcmcloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_9mcmcloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_9mcmcloglinearlike = {"mcmcloglinearlike", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_9mcmcloglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_9mcmcloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ml_ints = 0;
   PyArrayObject *__pyx_v_delta_logmls = 0;
   PyArrayObject *__pyx_v_ngoodsamples = 0;
@@ -2806,14 +2806,14 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_9mcmcloglinearlike(PyObject 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("mcmcloglinearlike", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.mcmcloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.mcmcloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ml_ints), __pyx_ptype_5numpy_ndarray, 1, "ml_ints", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 171; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_ngoodsamples), __pyx_ptype_5numpy_ndarray, 1, "ngoodsamples", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_ngoodsamples, __pyx_v_logmu, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_8mcmcloglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_ngoodsamples, __pyx_v_logmu, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2824,7 +2824,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_9mcmcloglinearlike(PyObject 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_ngoodsamples, double __pyx_v_logmu, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_ngoodsamples, double __pyx_v_logmu, double __pyx_v_sigma) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nclusters;
   Py_ssize_t __pyx_v_nsamples;
@@ -2881,7 +2881,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
   }
   __pyx_pybuffernd_ngoodsamples.diminfo[0].strides = __pyx_pybuffernd_ngoodsamples.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ngoodsamples.diminfo[0].shape = __pyx_pybuffernd_ngoodsamples.rcbuffer->pybuffer.shape[0];
 
-  /* "deconvolvedlognormtools.pyx":178
+  /* "nfwfitter/deconvolvedlognormtools.pyx":178
  * 
  *     cdef Py_ssize_t i, nclusters, nsamples
  *     nclusters = ml_ints.shape[0]             # <<<<<<<<<<<<<<
@@ -2890,7 +2890,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
  */
   __pyx_v_nclusters = (__pyx_v_ml_ints->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":180
+  /* "nfwfitter/deconvolvedlognormtools.pyx":180
  *     nclusters = ml_ints.shape[0]
  * 
  *     cdef double sumlogprob = 0.             # <<<<<<<<<<<<<<
@@ -2899,7 +2899,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
  */
   __pyx_v_sumlogprob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":181
+  /* "nfwfitter/deconvolvedlognormtools.pyx":181
  * 
  *     cdef double sumlogprob = 0.
  *     cdef double prob = 0.             # <<<<<<<<<<<<<<
@@ -2908,7 +2908,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
  */
   __pyx_v_prob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":185
+  /* "nfwfitter/deconvolvedlognormtools.pyx":185
  * 
  * 
  *     for i from nclusters > i >= 0:             # <<<<<<<<<<<<<<
@@ -2917,7 +2917,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
  */
   for (__pyx_v_i = __pyx_v_nclusters-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":187
+    /* "nfwfitter/deconvolvedlognormtools.pyx":187
  *     for i from nclusters > i >= 0:
  * 
  *         nsamples = ngoodsamples[i]             # <<<<<<<<<<<<<<
@@ -2927,7 +2927,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __pyx_t_1 = __pyx_v_i;
     __pyx_v_nsamples = (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_int_t *, __pyx_pybuffernd_ngoodsamples.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_ngoodsamples.diminfo[0].strides));
 
-    /* "deconvolvedlognormtools.pyx":189
+    /* "nfwfitter/deconvolvedlognormtools.pyx":189
  *         nsamples = ngoodsamples[i]
  * 
  *         prob = altintegral(ml_ints[i,:nsamples],             # <<<<<<<<<<<<<<
@@ -2955,7 +2955,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "deconvolvedlognormtools.pyx":190
+    /* "nfwfitter/deconvolvedlognormtools.pyx":190
  * 
  *         prob = altintegral(ml_ints[i,:nsamples],
  *                            delta_logmls[i,:nsamples],             # <<<<<<<<<<<<<<
@@ -2981,7 +2981,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "deconvolvedlognormtools.pyx":191
+    /* "nfwfitter/deconvolvedlognormtools.pyx":191
  *         prob = altintegral(ml_ints[i,:nsamples],
  *                            delta_logmls[i,:nsamples],
  *                            logmu,             # <<<<<<<<<<<<<<
@@ -2991,7 +2991,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __pyx_t_4 = PyFloat_FromDouble(__pyx_v_logmu); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
 
-    /* "deconvolvedlognormtools.pyx":192
+    /* "nfwfitter/deconvolvedlognormtools.pyx":192
  *                            delta_logmls[i,:nsamples],
  *                            logmu,
  *                            sigma)             # <<<<<<<<<<<<<<
@@ -3034,7 +3034,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "deconvolvedlognormtools.pyx":189
+    /* "nfwfitter/deconvolvedlognormtools.pyx":189
  *         nsamples = ngoodsamples[i]
  * 
  *         prob = altintegral(ml_ints[i,:nsamples],             # <<<<<<<<<<<<<<
@@ -3045,7 +3045,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_prob = __pyx_t_11;
 
-    /* "deconvolvedlognormtools.pyx":196
+    /* "nfwfitter/deconvolvedlognormtools.pyx":196
  * 
  * 
  *         sumlogprob += log(prob)             # <<<<<<<<<<<<<<
@@ -3055,7 +3055,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __pyx_v_sumlogprob = (__pyx_v_sumlogprob + log(__pyx_v_prob));
   }
 
-  /* "deconvolvedlognormtools.pyx":198
+  /* "nfwfitter/deconvolvedlognormtools.pyx":198
  *         sumlogprob += log(prob)
  * 
  *     return sumlogprob             # <<<<<<<<<<<<<<
@@ -3069,7 +3069,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":170
+  /* "nfwfitter/deconvolvedlognormtools.pyx":170
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -3093,7 +3093,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ml_ints.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ngoodsamples.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.mcmcloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.mcmcloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3106,7 +3106,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":206
+/* "nfwfitter/deconvolvedlognormtools.pyx":206
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -3115,9 +3115,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_8mcmcloglinearlike(CYTHON_UN
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_11pdfloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_11pdfloglinearlike = {"pdfloglinearlike", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_11pdfloglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_11pdfloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_11pdfloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_11pdfloglinearlike = {"pdfloglinearlike", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_11pdfloglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_11pdfloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ml_ints = 0;
   PyArrayObject *__pyx_v_deltamasses = 0;
   PyArrayObject *__pyx_v_delta_logmls = 0;
@@ -3201,7 +3201,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_11pdfloglinearlike(PyObject 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("pdfloglinearlike", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.pdfloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.pdfloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -3209,7 +3209,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_11pdfloglinearlike(PyObject 
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_deltamasses), __pyx_ptype_5numpy_ndarray, 1, "deltamasses", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 207; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pdfs), __pyx_ptype_5numpy_ndarray, 1, "pdfs", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_deltamasses, __pyx_v_delta_logmls, __pyx_v_pdfs, __pyx_v_logmu, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_10pdfloglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_deltamasses, __pyx_v_delta_logmls, __pyx_v_pdfs, __pyx_v_logmu, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3220,7 +3220,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_11pdfloglinearlike(PyObject 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdfs, double __pyx_v_logmu, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_deltamasses, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_pdfs, double __pyx_v_logmu, double __pyx_v_sigma) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nclusters;
   double __pyx_v_sumlogprob;
@@ -3286,7 +3286,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
   }
   __pyx_pybuffernd_pdfs.diminfo[0].strides = __pyx_pybuffernd_pdfs.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_pdfs.diminfo[0].shape = __pyx_pybuffernd_pdfs.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_pdfs.diminfo[1].strides = __pyx_pybuffernd_pdfs.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_pdfs.diminfo[1].shape = __pyx_pybuffernd_pdfs.rcbuffer->pybuffer.shape[1];
 
-  /* "deconvolvedlognormtools.pyx":215
+  /* "nfwfitter/deconvolvedlognormtools.pyx":215
  * 
  *     cdef Py_ssize_t i, nclusters
  *     nclusters = pdfs.shape[0]             # <<<<<<<<<<<<<<
@@ -3295,7 +3295,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
  */
   __pyx_v_nclusters = (__pyx_v_pdfs->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":218
+  /* "nfwfitter/deconvolvedlognormtools.pyx":218
  * 
  * 
  *     cdef double sumlogprob = 0.             # <<<<<<<<<<<<<<
@@ -3304,7 +3304,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
  */
   __pyx_v_sumlogprob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":219
+  /* "nfwfitter/deconvolvedlognormtools.pyx":219
  * 
  *     cdef double sumlogprob = 0.
  *     cdef double prob = 0.             # <<<<<<<<<<<<<<
@@ -3313,7 +3313,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
  */
   __pyx_v_prob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":223
+  /* "nfwfitter/deconvolvedlognormtools.pyx":223
  * 
  * 
  *     for i from nclusters > i >= 0:             # <<<<<<<<<<<<<<
@@ -3322,7 +3322,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
  */
   for (__pyx_v_i = __pyx_v_nclusters-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":225
+    /* "nfwfitter/deconvolvedlognormtools.pyx":225
  *     for i from nclusters > i >= 0:
  * 
  *         prob = pdfintegral(ml_ints,             # <<<<<<<<<<<<<<
@@ -3332,7 +3332,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_pdfintegral); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
 
-    /* "deconvolvedlognormtools.pyx":227
+    /* "nfwfitter/deconvolvedlognormtools.pyx":227
  *         prob = pdfintegral(ml_ints,
  *                            deltamasses,
  *                            delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -3353,7 +3353,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "deconvolvedlognormtools.pyx":228
+    /* "nfwfitter/deconvolvedlognormtools.pyx":228
  *                            deltamasses,
  *                            delta_logmls[i,:],
  *                            pdfs[i,:],             # <<<<<<<<<<<<<<
@@ -3374,7 +3374,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "deconvolvedlognormtools.pyx":229
+    /* "nfwfitter/deconvolvedlognormtools.pyx":229
  *                            delta_logmls[i,:],
  *                            pdfs[i,:],
  *                            logmu,             # <<<<<<<<<<<<<<
@@ -3384,7 +3384,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __pyx_t_5 = PyFloat_FromDouble(__pyx_v_logmu); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 229; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
 
-    /* "deconvolvedlognormtools.pyx":230
+    /* "nfwfitter/deconvolvedlognormtools.pyx":230
  *                            pdfs[i,:],
  *                            logmu,
  *                            sigma)             # <<<<<<<<<<<<<<
@@ -3433,7 +3433,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "deconvolvedlognormtools.pyx":225
+    /* "nfwfitter/deconvolvedlognormtools.pyx":225
  *     for i from nclusters > i >= 0:
  * 
  *         prob = pdfintegral(ml_ints,             # <<<<<<<<<<<<<<
@@ -3444,7 +3444,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_prob = __pyx_t_10;
 
-    /* "deconvolvedlognormtools.pyx":234
+    /* "nfwfitter/deconvolvedlognormtools.pyx":234
  * 
  * 
  *         sumlogprob += log(prob)             # <<<<<<<<<<<<<<
@@ -3454,7 +3454,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __pyx_v_sumlogprob = (__pyx_v_sumlogprob + log(__pyx_v_prob));
   }
 
-  /* "deconvolvedlognormtools.pyx":236
+  /* "nfwfitter/deconvolvedlognormtools.pyx":236
  *         sumlogprob += log(prob)
  * 
  *     return sumlogprob             # <<<<<<<<<<<<<<
@@ -3468,7 +3468,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":206
+  /* "nfwfitter/deconvolvedlognormtools.pyx":206
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -3493,7 +3493,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_ml_ints.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pdfs.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.pdfloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.pdfloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3507,7 +3507,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":243
+/* "nfwfitter/deconvolvedlognormtools.pyx":243
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -3516,9 +3516,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_10pdfloglinearlike(CYTHON_UN
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_13outlierloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_13outlierloglinearlike = {"outlierloglinearlike", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_13outlierloglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_13outlierloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_13outlierloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_13outlierloglinearlike = {"outlierloglinearlike", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_13outlierloglinearlike, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_13outlierloglinearlike(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ml_ints = 0;
   PyArrayObject *__pyx_v_delta_logmls = 0;
   PyArrayObject *__pyx_v_outlier_ml_ints = 0;
@@ -3611,7 +3611,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_13outlierloglinearlike(PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("outlierloglinearlike", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.outlierloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.outlierloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -3619,7 +3619,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_13outlierloglinearlike(PyObj
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 244; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_outlier_ml_ints), __pyx_ptype_5numpy_ndarray, 1, "outlier_ml_ints", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 245; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_outlier_delta_logmls), __pyx_ptype_5numpy_ndarray, 1, "outlier_delta_logmls", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 246; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_outlier_ml_ints, __pyx_v_outlier_delta_logmls, __pyx_v_logmu, __pyx_v_sigma, __pyx_v_fracoutliers);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_12outlierloglinearlike(__pyx_self, __pyx_v_ml_ints, __pyx_v_delta_logmls, __pyx_v_outlier_ml_ints, __pyx_v_outlier_delta_logmls, __pyx_v_logmu, __pyx_v_sigma, __pyx_v_fracoutliers);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3630,7 +3630,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_13outlierloglinearlike(PyObj
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_outlier_ml_ints, CYTHON_UNUSED PyArrayObject *__pyx_v_outlier_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma, double __pyx_v_fracoutliers) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_12outlierloglinearlike(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ml_ints, PyArrayObject *__pyx_v_delta_logmls, PyArrayObject *__pyx_v_outlier_ml_ints, CYTHON_UNUSED PyArrayObject *__pyx_v_outlier_delta_logmls, double __pyx_v_logmu, double __pyx_v_sigma, double __pyx_v_fracoutliers) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nclusters;
   double __pyx_v_sumlogprob;
@@ -3697,7 +3697,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
   }
   __pyx_pybuffernd_outlier_delta_logmls.diminfo[0].strides = __pyx_pybuffernd_outlier_delta_logmls.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_outlier_delta_logmls.diminfo[0].shape = __pyx_pybuffernd_outlier_delta_logmls.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_outlier_delta_logmls.diminfo[1].strides = __pyx_pybuffernd_outlier_delta_logmls.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_outlier_delta_logmls.diminfo[1].shape = __pyx_pybuffernd_outlier_delta_logmls.rcbuffer->pybuffer.shape[1];
 
-  /* "deconvolvedlognormtools.pyx":253
+  /* "nfwfitter/deconvolvedlognormtools.pyx":253
  * 
  *     cdef Py_ssize_t i, nclusters
  *     nclusters = ml_ints.shape[0]             # <<<<<<<<<<<<<<
@@ -3706,7 +3706,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
  */
   __pyx_v_nclusters = (__pyx_v_ml_ints->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":255
+  /* "nfwfitter/deconvolvedlognormtools.pyx":255
  *     nclusters = ml_ints.shape[0]
  * 
  *     cdef double sumlogprob = 0.             # <<<<<<<<<<<<<<
@@ -3715,7 +3715,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
  */
   __pyx_v_sumlogprob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":256
+  /* "nfwfitter/deconvolvedlognormtools.pyx":256
  * 
  *     cdef double sumlogprob = 0.
  *     cdef double prob = 0.             # <<<<<<<<<<<<<<
@@ -3724,7 +3724,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
  */
   __pyx_v_prob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":257
+  /* "nfwfitter/deconvolvedlognormtools.pyx":257
  *     cdef double sumlogprob = 0.
  *     cdef double prob = 0.
  *     cdef outlierprob = 0.             # <<<<<<<<<<<<<<
@@ -3734,7 +3734,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
   __Pyx_INCREF(__pyx_float_0_);
   __pyx_v_outlierprob = __pyx_float_0_;
 
-  /* "deconvolvedlognormtools.pyx":260
+  /* "nfwfitter/deconvolvedlognormtools.pyx":260
  * 
  * 
  *     for i from nclusters > i >= 0:             # <<<<<<<<<<<<<<
@@ -3743,7 +3743,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
  */
   for (__pyx_v_i = __pyx_v_nclusters-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":264
+    /* "nfwfitter/deconvolvedlognormtools.pyx":264
  * 
  * 
  *         prob = altintegral(ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -3766,7 +3766,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "deconvolvedlognormtools.pyx":265
+    /* "nfwfitter/deconvolvedlognormtools.pyx":265
  * 
  *         prob = altintegral(ml_ints[i,:],
  *                            delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -3787,7 +3787,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "deconvolvedlognormtools.pyx":266
+    /* "nfwfitter/deconvolvedlognormtools.pyx":266
  *         prob = altintegral(ml_ints[i,:],
  *                            delta_logmls[i,:],
  *                            logmu,             # <<<<<<<<<<<<<<
@@ -3797,7 +3797,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __pyx_t_5 = PyFloat_FromDouble(__pyx_v_logmu); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 266; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
 
-    /* "deconvolvedlognormtools.pyx":267
+    /* "nfwfitter/deconvolvedlognormtools.pyx":267
  *                            delta_logmls[i,:],
  *                            logmu,
  *                            sigma)             # <<<<<<<<<<<<<<
@@ -3840,7 +3840,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "deconvolvedlognormtools.pyx":264
+    /* "nfwfitter/deconvolvedlognormtools.pyx":264
  * 
  * 
  *         prob = altintegral(ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -3851,7 +3851,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_prob = __pyx_t_10;
 
-    /* "deconvolvedlognormtools.pyx":269
+    /* "nfwfitter/deconvolvedlognormtools.pyx":269
  *                            sigma)
  * 
  *         outlierprob = altintegral(outlier_ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -3874,7 +3874,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "deconvolvedlognormtools.pyx":270
+    /* "nfwfitter/deconvolvedlognormtools.pyx":270
  * 
  *         outlierprob = altintegral(outlier_ml_ints[i,:],
  *                                   delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -3895,7 +3895,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "deconvolvedlognormtools.pyx":271
+    /* "nfwfitter/deconvolvedlognormtools.pyx":271
  *         outlierprob = altintegral(outlier_ml_ints[i,:],
  *                                   delta_logmls[i,:],
  *                                   logmu,             # <<<<<<<<<<<<<<
@@ -3905,7 +3905,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __pyx_t_5 = PyFloat_FromDouble(__pyx_v_logmu); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 271; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
 
-    /* "deconvolvedlognormtools.pyx":272
+    /* "nfwfitter/deconvolvedlognormtools.pyx":272
  *                                   delta_logmls[i,:],
  *                                   logmu,
  *                                   sigma)             # <<<<<<<<<<<<<<
@@ -3950,7 +3950,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_DECREF_SET(__pyx_v_outlierprob, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "deconvolvedlognormtools.pyx":276
+    /* "nfwfitter/deconvolvedlognormtools.pyx":276
  * 
  * 
  *         sumlogprob += log((1-fracoutliers)*prob + fracoutliers*outlierprob)             # <<<<<<<<<<<<<<
@@ -3973,7 +3973,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __pyx_v_sumlogprob = (__pyx_v_sumlogprob + log(__pyx_t_10));
   }
 
-  /* "deconvolvedlognormtools.pyx":278
+  /* "nfwfitter/deconvolvedlognormtools.pyx":278
  *         sumlogprob += log((1-fracoutliers)*prob + fracoutliers*outlierprob)
  * 
  *     return sumlogprob             # <<<<<<<<<<<<<<
@@ -3987,7 +3987,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":243
+  /* "nfwfitter/deconvolvedlognormtools.pyx":243
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -4012,7 +4012,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_outlier_delta_logmls.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_outlier_ml_ints.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.outlierloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.outlierloglinearlike", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -4027,7 +4027,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
   return __pyx_r;
 }
 
-/* "deconvolvedlognormtools.pyx":286
+/* "nfwfitter/deconvolvedlognormtools.pyx":286
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,             # <<<<<<<<<<<<<<
@@ -4036,9 +4036,9 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_12outlierloglinearlike(CYTHO
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_23deconvolvedlognormtools_15pdfGaussMix1D = {"pdfGaussMix1D", (PyCFunction)__pyx_pw_23deconvolvedlognormtools_15pdfGaussMix1D, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_23deconvolvedlognormtools_15pdfGaussMix1D = {"pdfGaussMix1D", (PyCFunction)__pyx_pw_9nfwfitter_23deconvolvedlognormtools_15pdfGaussMix1D, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_delta_mls = 0;
   PyArrayObject *__pyx_v_delta_masses = 0;
   PyArrayObject *__pyx_v_pdfs = 0;
@@ -4122,7 +4122,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("pdfGaussMix1D", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("deconvolvedlognormtools.pdfGaussMix1D", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.pdfGaussMix1D", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -4132,7 +4132,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pis), __pyx_ptype_5numpy_ndarray, 1, "pis", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 289; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mus), __pyx_ptype_5numpy_ndarray, 1, "mus", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 290; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tau2), __pyx_ptype_5numpy_ndarray, 1, "tau2", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 291; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(__pyx_self, __pyx_v_delta_mls, __pyx_v_delta_masses, __pyx_v_pdfs, __pyx_v_pis, __pyx_v_mus, __pyx_v_tau2);
+  __pyx_r = __pyx_pf_9nfwfitter_23deconvolvedlognormtools_14pdfGaussMix1D(__pyx_self, __pyx_v_delta_mls, __pyx_v_delta_masses, __pyx_v_pdfs, __pyx_v_pis, __pyx_v_mus, __pyx_v_tau2);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4143,7 +4143,7 @@ static PyObject *__pyx_pw_23deconvolvedlognormtools_15pdfGaussMix1D(PyObject *__
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_delta_mls, PyArrayObject *__pyx_v_delta_masses, PyArrayObject *__pyx_v_pdfs, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2) {
+static PyObject *__pyx_pf_9nfwfitter_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_delta_mls, PyArrayObject *__pyx_v_delta_masses, PyArrayObject *__pyx_v_pdfs, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_j;
   Py_ssize_t __pyx_v_nclusters;
@@ -4271,7 +4271,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
   }
   __pyx_pybuffernd_tau2.diminfo[0].strides = __pyx_pybuffernd_tau2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_tau2.diminfo[0].shape = __pyx_pybuffernd_tau2.rcbuffer->pybuffer.shape[0];
 
-  /* "deconvolvedlognormtools.pyx":296
+  /* "nfwfitter/deconvolvedlognormtools.pyx":296
  * 
  *     cdef Py_ssize_t i, j, nclusters, ngauss, nmasses
  *     nclusters = pdfs.shape[0]             # <<<<<<<<<<<<<<
@@ -4280,7 +4280,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
   __pyx_v_nclusters = (__pyx_v_pdfs->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":297
+  /* "nfwfitter/deconvolvedlognormtools.pyx":297
  *     cdef Py_ssize_t i, j, nclusters, ngauss, nmasses
  *     nclusters = pdfs.shape[0]
  *     ngauss = pis.shape[0]             # <<<<<<<<<<<<<<
@@ -4289,7 +4289,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
   __pyx_v_ngauss = (__pyx_v_pis->dimensions[0]);
 
-  /* "deconvolvedlognormtools.pyx":298
+  /* "nfwfitter/deconvolvedlognormtools.pyx":298
  *     nclusters = pdfs.shape[0]
  *     ngauss = pis.shape[0]
  *     nmasses = delta_mls.shape[1]             # <<<<<<<<<<<<<<
@@ -4298,7 +4298,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
   __pyx_v_nmasses = (__pyx_v_delta_mls->dimensions[1]);
 
-  /* "deconvolvedlognormtools.pyx":303
+  /* "nfwfitter/deconvolvedlognormtools.pyx":303
  * 
  *     #normalization
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] norms = np.zeros(ngauss)             # <<<<<<<<<<<<<<
@@ -4352,7 +4352,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
   __pyx_v_norms = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":306
+  /* "nfwfitter/deconvolvedlognormtools.pyx":306
  *     cdef double zeroboundrenorm
  *     cdef double tau
  *     for j from ngauss > j >= 0:             # <<<<<<<<<<<<<<
@@ -4361,7 +4361,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
   for (__pyx_v_j = __pyx_v_ngauss-1; __pyx_v_j >= 0; __pyx_v_j--) {
 
-    /* "deconvolvedlognormtools.pyx":307
+    /* "nfwfitter/deconvolvedlognormtools.pyx":307
  *     cdef double tau
  *     for j from ngauss > j >= 0:
  *         tau = sqrt(tau2[j])             # <<<<<<<<<<<<<<
@@ -4371,7 +4371,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __pyx_t_7 = __pyx_v_j;
     __pyx_v_tau = sqrt((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_tau2.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_tau2.diminfo[0].strides)));
 
-    /* "deconvolvedlognormtools.pyx":308
+    /* "nfwfitter/deconvolvedlognormtools.pyx":308
  *     for j from ngauss > j >= 0:
  *         tau = sqrt(tau2[j])
  *         zeroboundrenorm = 1. - scipy.stats.norm.cdf(-mus[j]/tau)             # <<<<<<<<<<<<<<
@@ -4436,7 +4436,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_zeroboundrenorm = __pyx_t_10;
 
-    /* "deconvolvedlognormtools.pyx":309
+    /* "nfwfitter/deconvolvedlognormtools.pyx":309
  *         tau = sqrt(tau2[j])
  *         zeroboundrenorm = 1. - scipy.stats.norm.cdf(-mus[j]/tau)
  *         if zeroboundrenorm < 1e-4:  #avoid divide by 0 by making it zero probability             # <<<<<<<<<<<<<<
@@ -4446,7 +4446,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __pyx_t_11 = ((__pyx_v_zeroboundrenorm < 1e-4) != 0);
     if (__pyx_t_11) {
 
-      /* "deconvolvedlognormtools.pyx":310
+      /* "nfwfitter/deconvolvedlognormtools.pyx":310
  *         zeroboundrenorm = 1. - scipy.stats.norm.cdf(-mus[j]/tau)
  *         if zeroboundrenorm < 1e-4:  #avoid divide by 0 by making it zero probability
  *             return -np.inf             # <<<<<<<<<<<<<<
@@ -4467,7 +4467,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
       goto __pyx_L0;
     }
 
-    /* "deconvolvedlognormtools.pyx":311
+    /* "nfwfitter/deconvolvedlognormtools.pyx":311
  *         if zeroboundrenorm < 1e-4:  #avoid divide by 0 by making it zero probability
  *             return -np.inf
  *         norms[j] = 1./(zeroboundrenorm*sqrt2pi*tau)   #truncate at 0, boost normalization             # <<<<<<<<<<<<<<
@@ -4497,7 +4497,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_norms.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_norms.diminfo[0].strides) = __pyx_t_9;
   }
 
-  /* "deconvolvedlognormtools.pyx":327
+  /* "nfwfitter/deconvolvedlognormtools.pyx":327
  *     ### convolve with pdfs
  * 
  *     cdef double sumlogprob = 0.             # <<<<<<<<<<<<<<
@@ -4506,7 +4506,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
   __pyx_v_sumlogprob = 0.;
 
-  /* "deconvolvedlognormtools.pyx":329
+  /* "nfwfitter/deconvolvedlognormtools.pyx":329
  *     cdef double sumlogprob = 0.
  *     cdef double deltamass_mu2, gausseval
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] integrand = np.zeros(nmasses)             # <<<<<<<<<<<<<<
@@ -4560,7 +4560,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
   __pyx_v_integrand = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":331
+  /* "nfwfitter/deconvolvedlognormtools.pyx":331
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] integrand = np.zeros(nmasses)
  * 
  *     for i from nclusters > i >= 0:             # <<<<<<<<<<<<<<
@@ -4569,7 +4569,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
   for (__pyx_v_i = __pyx_v_nclusters-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "deconvolvedlognormtools.pyx":333
+    /* "nfwfitter/deconvolvedlognormtools.pyx":333
  *     for i from nclusters > i >= 0:
  * 
  *         for j from nmasses > j >= 0:             # <<<<<<<<<<<<<<
@@ -4578,7 +4578,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
     for (__pyx_v_j = __pyx_v_nmasses-1; __pyx_v_j >= 0; __pyx_v_j--) {
 
-      /* "deconvolvedlognormtools.pyx":334
+      /* "nfwfitter/deconvolvedlognormtools.pyx":334
  * 
  *         for j from nmasses > j >= 0:
  *             integrand[j] = 0.             # <<<<<<<<<<<<<<
@@ -4589,7 +4589,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
       *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_integrand.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_integrand.diminfo[0].strides) = 0.;
     }
 
-    /* "deconvolvedlognormtools.pyx":336
+    /* "nfwfitter/deconvolvedlognormtools.pyx":336
  *             integrand[j] = 0.
  * 
  *         for j from nmasses > j >= 0:             # <<<<<<<<<<<<<<
@@ -4598,7 +4598,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
     for (__pyx_v_j = __pyx_v_nmasses-1; __pyx_v_j >= 0; __pyx_v_j--) {
 
-      /* "deconvolvedlognormtools.pyx":338
+      /* "nfwfitter/deconvolvedlognormtools.pyx":338
  *         for j from nmasses > j >= 0:
  * 
  *             for k from ngauss > k >= 0:             # <<<<<<<<<<<<<<
@@ -4607,7 +4607,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
       for (__pyx_v_k = __pyx_v_ngauss-1; __pyx_v_k >= 0; __pyx_v_k--) {
 
-        /* "deconvolvedlognormtools.pyx":340
+        /* "nfwfitter/deconvolvedlognormtools.pyx":340
  *             for k from ngauss > k >= 0:
  * 
  *                 deltamass_mu2 = (delta_mls[i,j] - mus[k])**2             # <<<<<<<<<<<<<<
@@ -4619,7 +4619,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
         __pyx_t_17 = __pyx_v_k;
         __pyx_v_deltamass_mu2 = pow(((*__Pyx_BufPtrCContig2d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_delta_mls.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_delta_mls.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_delta_mls.diminfo[1].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_mus.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_mus.diminfo[0].strides))), 2.0);
 
-        /* "deconvolvedlognormtools.pyx":341
+        /* "nfwfitter/deconvolvedlognormtools.pyx":341
  * 
  *                 deltamass_mu2 = (delta_mls[i,j] - mus[k])**2
  *                 gausseval = pis[k]*exp(-0.5*deltamass_mu2/tau2[k])*norms[k]             # <<<<<<<<<<<<<<
@@ -4643,7 +4643,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
         __pyx_t_20 = __pyx_v_k;
         __pyx_v_gausseval = (((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_pis.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_pis.diminfo[0].strides)) * exp((__pyx_t_10 / __pyx_t_9))) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_norms.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_norms.diminfo[0].strides)));
 
-        /* "deconvolvedlognormtools.pyx":342
+        /* "nfwfitter/deconvolvedlognormtools.pyx":342
  *                 deltamass_mu2 = (delta_mls[i,j] - mus[k])**2
  *                 gausseval = pis[k]*exp(-0.5*deltamass_mu2/tau2[k])*norms[k]
  *                 integrand[j] += gausseval             # <<<<<<<<<<<<<<
@@ -4654,7 +4654,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
         *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_integrand.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_integrand.diminfo[0].strides) += __pyx_v_gausseval;
       }
 
-      /* "deconvolvedlognormtools.pyx":344
+      /* "nfwfitter/deconvolvedlognormtools.pyx":344
  *                 integrand[j] += gausseval
  * 
  *             integrand[j] *= pdfs[i,j]             # <<<<<<<<<<<<<<
@@ -4667,7 +4667,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
       *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_integrand.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_integrand.diminfo[0].strides) *= (*__Pyx_BufPtrCContig2d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_pdfs.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_pdfs.diminfo[0].strides, __pyx_t_23, __pyx_pybuffernd_pdfs.diminfo[1].strides));
     }
 
-    /* "deconvolvedlognormtools.pyx":347
+    /* "nfwfitter/deconvolvedlognormtools.pyx":347
  * 
  *         #trapezoid rule
  *         prob = 0.             # <<<<<<<<<<<<<<
@@ -4677,7 +4677,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __Pyx_INCREF(__pyx_float_0_);
     __Pyx_XDECREF_SET(__pyx_v_prob, __pyx_float_0_);
 
-    /* "deconvolvedlognormtools.pyx":348
+    /* "nfwfitter/deconvolvedlognormtools.pyx":348
  *         #trapezoid rule
  *         prob = 0.
  *         for j from nmasses-1 > j >= 0:             # <<<<<<<<<<<<<<
@@ -4686,7 +4686,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
  */
     for (__pyx_v_j = (__pyx_v_nmasses - 1)-1; __pyx_v_j >= 0; __pyx_v_j--) {
 
-      /* "deconvolvedlognormtools.pyx":349
+      /* "nfwfitter/deconvolvedlognormtools.pyx":349
  *         prob = 0.
  *         for j from nmasses-1 > j >= 0:
  *             prob += delta_masses[i,j]*(integrand[j+1] + integrand[j])             # <<<<<<<<<<<<<<
@@ -4706,7 +4706,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
       __pyx_t_4 = 0;
     }
 
-    /* "deconvolvedlognormtools.pyx":350
+    /* "nfwfitter/deconvolvedlognormtools.pyx":350
  *         for j from nmasses-1 > j >= 0:
  *             prob += delta_masses[i,j]*(integrand[j+1] + integrand[j])
  *         prob *= 0.5             # <<<<<<<<<<<<<<
@@ -4718,7 +4718,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __Pyx_DECREF_SET(__pyx_v_prob, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "deconvolvedlognormtools.pyx":352
+    /* "nfwfitter/deconvolvedlognormtools.pyx":352
  *         prob *= 0.5
  * 
  *         sumlogprob += log(prob)             # <<<<<<<<<<<<<<
@@ -4729,7 +4729,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __pyx_v_sumlogprob = (__pyx_v_sumlogprob + log(__pyx_t_10));
   }
 
-  /* "deconvolvedlognormtools.pyx":354
+  /* "nfwfitter/deconvolvedlognormtools.pyx":354
  *         sumlogprob += log(prob)
  * 
  *     return sumlogprob             # <<<<<<<<<<<<<<
@@ -4742,7 +4742,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "deconvolvedlognormtools.pyx":286
+  /* "nfwfitter/deconvolvedlognormtools.pyx":286
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,             # <<<<<<<<<<<<<<
@@ -4768,7 +4768,7 @@ static PyObject *__pyx_pf_23deconvolvedlognormtools_14pdfGaussMix1D(CYTHON_UNUSE
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pis.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_tau2.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("deconvolvedlognormtools.pdfGaussMix1D", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.deconvolvedlognormtools.pdfGaussMix1D", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -6830,11 +6830,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_Format_string_allocated_too_shor_2, __pyx_k_Format_string_allocated_too_shor_2, sizeof(__pyx_k_Format_string_allocated_too_shor_2), 0, 1, 0, 0},
   {&__pyx_kp_u_Non_native_byte_order_not_suppor, __pyx_k_Non_native_byte_order_not_suppor, sizeof(__pyx_k_Non_native_byte_order_not_suppor), 0, 1, 0, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
-  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_k_Users_dapple_astro_mxxlsims_dec, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_dec), 0, 0, 1, 0},
+  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_k_Users_dapple_astro_mxxlsims_nfw, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_nfw), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_altintegral, __pyx_k_altintegral, sizeof(__pyx_k_altintegral), 0, 0, 1, 1},
   {&__pyx_n_s_cdf, __pyx_k_cdf, sizeof(__pyx_k_cdf), 0, 0, 1, 1},
-  {&__pyx_n_s_deconvolvedlognormtools, __pyx_k_deconvolvedlognormtools, sizeof(__pyx_k_deconvolvedlognormtools), 0, 0, 1, 1},
   {&__pyx_n_s_delta_logmls, __pyx_k_delta_logmls, sizeof(__pyx_k_delta_logmls), 0, 0, 1, 1},
   {&__pyx_n_s_delta_masses, __pyx_k_delta_masses, sizeof(__pyx_k_delta_masses), 0, 0, 1, 1},
   {&__pyx_n_s_delta_mls, __pyx_k_delta_mls, sizeof(__pyx_k_delta_mls), 0, 0, 1, 1},
@@ -6865,6 +6864,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_ndarray_is_not_C_contiguous, __pyx_k_ndarray_is_not_C_contiguous, sizeof(__pyx_k_ndarray_is_not_C_contiguous), 0, 1, 0, 0},
   {&__pyx_kp_u_ndarray_is_not_Fortran_contiguou, __pyx_k_ndarray_is_not_Fortran_contiguou, sizeof(__pyx_k_ndarray_is_not_Fortran_contiguou), 0, 1, 0, 0},
   {&__pyx_n_s_neg2sigma2, __pyx_k_neg2sigma2, sizeof(__pyx_k_neg2sigma2), 0, 0, 1, 1},
+  {&__pyx_n_s_nfwfitter_deconvolvedlognormtool, __pyx_k_nfwfitter_deconvolvedlognormtool, sizeof(__pyx_k_nfwfitter_deconvolvedlognormtool), 0, 0, 1, 1},
   {&__pyx_n_s_ngauss, __pyx_k_ngauss, sizeof(__pyx_k_ngauss), 0, 0, 1, 1},
   {&__pyx_n_s_ngoodsamples, __pyx_k_ngoodsamples, sizeof(__pyx_k_ngoodsamples), 0, 0, 1, 1},
   {&__pyx_n_s_nmasses, __pyx_k_nmasses, sizeof(__pyx_k_nmasses), 0, 0, 1, 1},
@@ -6921,7 +6921,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "deconvolvedlognormtools.pyx":155
+  /* "nfwfitter/deconvolvedlognormtools.pyx":155
  * 
  * 
  *         prob = altintegral(ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -6932,7 +6932,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
-  /* "deconvolvedlognormtools.pyx":156
+  /* "nfwfitter/deconvolvedlognormtools.pyx":156
  * 
  *         prob = altintegral(ml_ints[i,:],
  *                            delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -6943,7 +6943,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__2);
   __Pyx_GIVEREF(__pyx_slice__2);
 
-  /* "deconvolvedlognormtools.pyx":227
+  /* "nfwfitter/deconvolvedlognormtools.pyx":227
  *         prob = pdfintegral(ml_ints,
  *                            deltamasses,
  *                            delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -6954,7 +6954,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
 
-  /* "deconvolvedlognormtools.pyx":228
+  /* "nfwfitter/deconvolvedlognormtools.pyx":228
  *                            deltamasses,
  *                            delta_logmls[i,:],
  *                            pdfs[i,:],             # <<<<<<<<<<<<<<
@@ -6965,7 +6965,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__4);
   __Pyx_GIVEREF(__pyx_slice__4);
 
-  /* "deconvolvedlognormtools.pyx":264
+  /* "nfwfitter/deconvolvedlognormtools.pyx":264
  * 
  * 
  *         prob = altintegral(ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -6976,7 +6976,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__5);
   __Pyx_GIVEREF(__pyx_slice__5);
 
-  /* "deconvolvedlognormtools.pyx":265
+  /* "nfwfitter/deconvolvedlognormtools.pyx":265
  * 
  *         prob = altintegral(ml_ints[i,:],
  *                            delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -6987,7 +6987,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__6);
   __Pyx_GIVEREF(__pyx_slice__6);
 
-  /* "deconvolvedlognormtools.pyx":269
+  /* "nfwfitter/deconvolvedlognormtools.pyx":269
  *                            sigma)
  * 
  *         outlierprob = altintegral(outlier_ml_ints[i,:],             # <<<<<<<<<<<<<<
@@ -6998,7 +6998,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__7);
   __Pyx_GIVEREF(__pyx_slice__7);
 
-  /* "deconvolvedlognormtools.pyx":270
+  /* "nfwfitter/deconvolvedlognormtools.pyx":270
  * 
  *         outlierprob = altintegral(outlier_ml_ints[i,:],
  *                                   delta_logmls[i,:],             # <<<<<<<<<<<<<<
@@ -7075,7 +7075,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
 
-  /* "deconvolvedlognormtools.pyx":37
+  /* "nfwfitter/deconvolvedlognormtools.pyx":37
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def integral(double mlens,             # <<<<<<<<<<<<<<
@@ -7085,9 +7085,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__15 = PyTuple_Pack(12, __pyx_n_s_mlens, __pyx_n_s_merr, __pyx_n_s_mtrue, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nsamples, __pyx_n_s_randomdeviates, __pyx_n_s_thesum, __pyx_n_s_logmtrue, __pyx_n_s_ml_int, __pyx_n_s_normpart); if (unlikely(!__pyx_tuple__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_integral, 37, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_integral, 37, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":67
+  /* "nfwfitter/deconvolvedlognormtools.pyx":67
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -7097,9 +7097,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__17 = PyTuple_Pack(11, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nsamples, __pyx_n_s_thesum, __pyx_n_s_lognormpart, __pyx_n_s_sigma2, __pyx_n_s_sigmasqrt2pi, __pyx_n_s_neg2sigma2); if (unlikely(!__pyx_tuple__17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__17);
   __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(4, 0, 11, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_altintegral, 67, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(4, 0, 11, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_altintegral, 67, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":96
+  /* "nfwfitter/deconvolvedlognormtools.pyx":96
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -7109,9 +7109,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__19 = PyTuple_Pack(13, __pyx_n_s_ml_ints, __pyx_n_s_deltamasses, __pyx_n_s_delta_logmls, __pyx_n_s_pdf, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nsamples, __pyx_n_s_thesum, __pyx_n_s_sigma2, __pyx_n_s_sigmasqrt2pi, __pyx_n_s_neg2sigma2, __pyx_n_s_lognormpart); if (unlikely(!__pyx_tuple__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(6, 0, 13, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_pdfintegral, 96, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(6, 0, 13, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_pdfintegral, 96, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":137
+  /* "nfwfitter/deconvolvedlognormtools.pyx":137
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -7121,9 +7121,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__21 = PyTuple_Pack(8, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_sumlogprob, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__21)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_loglinearlike, 137, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_loglinearlike, 137, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":170
+  /* "nfwfitter/deconvolvedlognormtools.pyx":170
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -7133,9 +7133,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__23 = PyTuple_Pack(10, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_ngoodsamples, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_nsamples, __pyx_n_s_sumlogprob, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__23)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_mcmcloglinearlike, 170, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_mcmcloglinearlike, 170, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":206
+  /* "nfwfitter/deconvolvedlognormtools.pyx":206
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -7145,9 +7145,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__25 = PyTuple_Pack(10, __pyx_n_s_ml_ints, __pyx_n_s_deltamasses, __pyx_n_s_delta_logmls, __pyx_n_s_pdfs, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_sumlogprob, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__25)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_pdfloglinearlike, 206, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_pdfloglinearlike, 206, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":243
+  /* "nfwfitter/deconvolvedlognormtools.pyx":243
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
@@ -7157,9 +7157,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__27 = PyTuple_Pack(12, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_outlier_ml_ints, __pyx_n_s_outlier_delta_logmls, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_fracoutliers, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_sumlogprob, __pyx_n_s_prob, __pyx_n_s_outlierprob); if (unlikely(!__pyx_tuple__27)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(7, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_outlierloglinearlike, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(7, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_outlierloglinearlike, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "deconvolvedlognormtools.pyx":286
+  /* "nfwfitter/deconvolvedlognormtools.pyx":286
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,             # <<<<<<<<<<<<<<
@@ -7169,7 +7169,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__29 = PyTuple_Pack(20, __pyx_n_s_delta_mls, __pyx_n_s_delta_masses, __pyx_n_s_pdfs, __pyx_n_s_pis, __pyx_n_s_mus, __pyx_n_s_tau2, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_nclusters, __pyx_n_s_ngauss, __pyx_n_s_nmasses, __pyx_n_s_norms, __pyx_n_s_zeroboundrenorm, __pyx_n_s_tau, __pyx_n_s_sumlogprob, __pyx_n_s_deltamass_mu2, __pyx_n_s_gausseval, __pyx_n_s_integrand, __pyx_n_s_k, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__29)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(6, 0, 20, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_dec, __pyx_n_s_pdfGaussMix1D, 286, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(6, 0, 20, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_pdfGaussMix1D, 286, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -7251,14 +7251,14 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_deconvolvedlognormtools) {
+  if (__pyx_module_is_main_nfwfitter__deconvolvedlognormtools) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "deconvolvedlognormtools")) {
-      if (unlikely(PyDict_SetItemString(modules, "deconvolvedlognormtools", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "nfwfitter.deconvolvedlognormtools")) {
+      if (unlikely(PyDict_SetItemString(modules, "nfwfitter.deconvolvedlognormtools", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -7287,7 +7287,7 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "deconvolvedlognormtools.pyx":14
+  /* "nfwfitter/deconvolvedlognormtools.pyx":14
  * # cython: profile=False
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -7299,7 +7299,7 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":18
+  /* "nfwfitter/deconvolvedlognormtools.pyx":18
  * cimport cython
  * 
  * import scipy.stats             # <<<<<<<<<<<<<<
@@ -7311,7 +7311,7 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_scipy, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":26
+  /* "nfwfitter/deconvolvedlognormtools.pyx":26
  *     double sqrt(double)
  * 
  * sqrt2pi = sqrt(2*np.pi)             # <<<<<<<<<<<<<<
@@ -7333,7 +7333,7 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_sqrt2pi, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":27
+  /* "nfwfitter/deconvolvedlognormtools.pyx":27
  * 
  * sqrt2pi = sqrt(2*np.pi)
  * twopi = 2*np.pi             # <<<<<<<<<<<<<<
@@ -7351,103 +7351,103 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_twopi, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":37
+  /* "nfwfitter/deconvolvedlognormtools.pyx":37
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def integral(double mlens,             # <<<<<<<<<<<<<<
  *               double merr,
  *               double mtrue,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_1integral, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_1integral, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_integral, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":67
+  /* "nfwfitter/deconvolvedlognormtools.pyx":67
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def altintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
  *                 np.ndarray[np.double_t, ndim=1, mode='c'] delta_logmls,
  *               double logmu,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_3altintegral, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_3altintegral, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_altintegral, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":96
+  /* "nfwfitter/deconvolvedlognormtools.pyx":96
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfintegral(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
  *                 np.ndarray[np.double_t, ndim=1, mode='c'] deltamasses,
  *                 np.ndarray[np.double_t, ndim=1, mode='c'] delta_logmls,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_5pdfintegral, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_5pdfintegral, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pdfintegral, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":137
+  /* "nfwfitter/deconvolvedlognormtools.pyx":137
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def loglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
  *                   np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
  *                   double logmu,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_7loglinearlike, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_7loglinearlike, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_loglinearlike, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":170
+  /* "nfwfitter/deconvolvedlognormtools.pyx":170
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def mcmcloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
  *                       np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
  *                       np.ndarray[np.int_t, ndim=1, mode='c'] ngoodsamples,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_9mcmcloglinearlike, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_9mcmcloglinearlike, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_mcmcloglinearlike, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":206
+  /* "nfwfitter/deconvolvedlognormtools.pyx":206
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfloglinearlike(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
  *                       np.ndarray[np.double_t, ndim=1, mode='c'] deltamasses,
  *                       np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_11pdfloglinearlike, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_11pdfloglinearlike, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pdfloglinearlike, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":243
+  /* "nfwfitter/deconvolvedlognormtools.pyx":243
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def outlierloglinearlike(np.ndarray[np.double_t, ndim=2, mode='c'] ml_ints,             # <<<<<<<<<<<<<<
  *                          np.ndarray[np.double_t, ndim=2, mode='c'] delta_logmls,
  *                          np.ndarray[np.double_t, ndim=2, mode='c'] outlier_ml_ints,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_13outlierloglinearlike, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_13outlierloglinearlike, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_outlierloglinearlike, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":286
+  /* "nfwfitter/deconvolvedlognormtools.pyx":286
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def pdfGaussMix1D(np.ndarray[np.double_t, ndim=2, mode='c'] delta_mls,             # <<<<<<<<<<<<<<
  *                   np.ndarray[np.double_t, ndim=2, mode='c'] delta_masses,
  *                   np.ndarray[np.double_t, ndim=2, mode='c'] pdfs,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_23deconvolvedlognormtools_15pdfGaussMix1D, NULL, __pyx_n_s_deconvolvedlognormtools); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_23deconvolvedlognormtools_15pdfGaussMix1D, NULL, __pyx_n_s_nfwfitter_deconvolvedlognormtool); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pdfGaussMix1D, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "deconvolvedlognormtools.pyx":1
+  /* "nfwfitter/deconvolvedlognormtools.pyx":1
  * ################################             # <<<<<<<<<<<<<<
  * # Likelihood for lognormal scatter with normal noise
  * ################################
@@ -7473,12 +7473,12 @@ PyMODINIT_FUNC PyInit_deconvolvedlognormtools(void)
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init deconvolvedlognormtools", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init nfwfitter.deconvolvedlognormtools", __pyx_clineno, __pyx_lineno, __pyx_filename);
       Py_DECREF(__pyx_d); __pyx_d = 0;
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init deconvolvedlognormtools");
+    PyErr_SetString(PyExc_ImportError, "init nfwfitter.deconvolvedlognormtools");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

@@ -224,8 +224,8 @@ void __Pyx_call_destructor(T* x) {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__stats
-#define __PYX_HAVE_API__stats
+#define __PYX_HAVE__nfwfitter__stats
+#define __PYX_HAVE_API__nfwfitter__stats
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -435,7 +435,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "stats.pyx",
+  "nfwfitter/stats.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -1127,23 +1127,23 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from 'stats' */
-static double __pyx_v_5stats_sqrt2pi;
-static double __pyx_v_5stats_twopi;
-static double __pyx_v_5stats_invtwopi;
+/* Module declarations from 'nfwfitter.stats' */
+static double __pyx_v_9nfwfitter_5stats_sqrt2pi;
+static double __pyx_v_9nfwfitter_5stats_twopi;
+static double __pyx_v_9nfwfitter_5stats_invtwopi;
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_double_t = { "double_t", NULL, sizeof(__pyx_t_5numpy_double_t), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "stats"
-int __pyx_module_is_main_stats = 0;
+#define __Pyx_MODULE_NAME "nfwfitter.stats"
+int __pyx_module_is_main_nfwfitter__stats = 0;
 
-/* Implementation of 'stats' */
+/* Implementation of 'nfwfitter.stats' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
-static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig); /* proto */
-static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig); /* proto */
-static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_samples0, PyArrayObject *__pyx_v_samples1, PyArrayObject *__pyx_v_weights, double __pyx_v_mu0, double __pyx_v_mu1, PyArrayObject *__pyx_v_invcovar, double __pyx_v_invsqrtdetcovar); /* proto */
-static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_logx, double __pyx_v_mu, double __pyx_v_sig); /* proto */
-static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_xerr2, PyArrayObject *__pyx_v_y, PyArrayObject *__pyx_v_yerr2, PyArrayObject *__pyx_v_xycovar, double __pyx_v_alpha, double __pyx_v_beta, double __pyx_v_sigint2, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_samples0, PyArrayObject *__pyx_v_samples1, PyArrayObject *__pyx_v_weights, double __pyx_v_mu0, double __pyx_v_mu1, PyArrayObject *__pyx_v_invcovar, double __pyx_v_invsqrtdetcovar); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_logx, double __pyx_v_mu, double __pyx_v_sig); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_xerr2, PyArrayObject *__pyx_v_y, PyArrayObject *__pyx_v_yerr2, PyArrayObject *__pyx_v_xycovar, double __pyx_v_alpha, double __pyx_v_beta, double __pyx_v_sigint2, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static char __pyx_k_B[] = "B";
@@ -1194,7 +1194,6 @@ static char __pyx_k_chisq[] = "chisq";
 static char __pyx_k_dtype[] = "dtype";
 static char __pyx_k_numpy[] = "numpy";
 static char __pyx_k_range[] = "range";
-static char __pyx_k_stats[] = "stats";
 static char __pyx_k_xerr2[] = "xerr2";
 static char __pyx_k_yerr2[] = "yerr2";
 static char __pyx_k_zeros[] = "zeros";
@@ -1225,10 +1224,11 @@ static char __pyx_k_RuntimeError[] = "RuntimeError";
 static char __pyx_k_LogSumGaussian[] = "LogSumGaussian";
 static char __pyx_k_LogSumLogNormal[] = "LogSumLogNormal";
 static char __pyx_k_invsqrtdetcovar[] = "invsqrtdetcovar";
+static char __pyx_k_nfwfitter_stats[] = "nfwfitter.stats";
 static char __pyx_k_LogSum2DGaussian[] = "LogSum2DGaussian";
 static char __pyx_k_beta2tau2pSigint2[] = "beta2tau2pSigint2";
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
-static char __pyx_k_Users_dapple_astro_mxxlsims_sta[] = "/Users/dapple/astro/mxxlsims/stats.pyx";
+static char __pyx_k_Users_dapple_astro_mxxlsims_nfw[] = "/Users/dapple/astro/mxxlsims/nfwfitter/stats.pyx";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
 static char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte order not supported";
@@ -1242,7 +1242,7 @@ static PyObject *__pyx_n_s_LogSumGaussian;
 static PyObject *__pyx_n_s_LogSumLogNormal;
 static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_s_RuntimeError;
-static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_sta;
+static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw;
 static PyObject *__pyx_n_s_V00;
 static PyObject *__pyx_n_s_V01;
 static PyObject *__pyx_n_s_V11;
@@ -1280,6 +1280,7 @@ static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
 static PyObject *__pyx_kp_u_ndarray_is_not_Fortran_contiguou;
 static PyObject *__pyx_n_s_ndat;
 static PyObject *__pyx_n_s_ndim;
+static PyObject *__pyx_n_s_nfwfitter_stats;
 static PyObject *__pyx_n_s_ngauss;
 static PyObject *__pyx_n_s_nmax;
 static PyObject *__pyx_n_s_norm;
@@ -1294,7 +1295,6 @@ static PyObject *__pyx_n_s_samples0;
 static PyObject *__pyx_n_s_samples1;
 static PyObject *__pyx_n_s_sig;
 static PyObject *__pyx_n_s_sigint2;
-static PyObject *__pyx_n_s_stats;
 static PyObject *__pyx_n_s_sum;
 static PyObject *__pyx_n_s_tau2;
 static PyObject *__pyx_n_s_test;
@@ -1324,7 +1324,7 @@ static PyObject *__pyx_codeobj__12;
 static PyObject *__pyx_codeobj__14;
 static PyObject *__pyx_codeobj__16;
 
-/* "stats.pyx":31
+/* "nfwfitter/stats.pyx":31
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def Gaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -1333,9 +1333,9 @@ static PyObject *__pyx_codeobj__16;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5stats_1Gaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5stats_1Gaussian = {"Gaussian", (PyCFunction)__pyx_pw_5stats_1Gaussian, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5stats_1Gaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_5stats_1Gaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_5stats_1Gaussian = {"Gaussian", (PyCFunction)__pyx_pw_9nfwfitter_5stats_1Gaussian, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_5stats_1Gaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   double __pyx_v_mu;
   double __pyx_v_sig;
@@ -1392,12 +1392,12 @@ static PyObject *__pyx_pw_5stats_1Gaussian(PyObject *__pyx_self, PyObject *__pyx
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("Gaussian", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("stats.Gaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.Gaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_5stats_Gaussian(__pyx_self, __pyx_v_x, __pyx_v_mu, __pyx_v_sig);
+  __pyx_r = __pyx_pf_9nfwfitter_5stats_Gaussian(__pyx_self, __pyx_v_x, __pyx_v_mu, __pyx_v_sig);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1408,7 +1408,7 @@ static PyObject *__pyx_pw_5stats_1Gaussian(PyObject *__pyx_self, PyObject *__pyx
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig) {
+static PyObject *__pyx_pf_9nfwfitter_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nmax;
   PyArrayObject *__pyx_v_result = 0;
@@ -1449,7 +1449,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0];
 
-  /* "stats.pyx":37
+  /* "nfwfitter/stats.pyx":37
  *     cdef Py_ssize_t i, nmax
  * 
  *     nmax = x.shape[0]             # <<<<<<<<<<<<<<
@@ -1458,7 +1458,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
  */
   __pyx_v_nmax = (__pyx_v_x->dimensions[0]);
 
-  /* "stats.pyx":39
+  /* "nfwfitter/stats.pyx":39
  *     nmax = x.shape[0]
  * 
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] result = np.zeros(nmax, dtype = np.float64)             # <<<<<<<<<<<<<<
@@ -1505,7 +1505,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
   __pyx_v_result = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "stats.pyx":41
+  /* "nfwfitter/stats.pyx":41
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] result = np.zeros(nmax, dtype = np.float64)
  * 
  *     for i from nmax > i >= 0:             # <<<<<<<<<<<<<<
@@ -1514,7 +1514,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
  */
   for (__pyx_v_i = __pyx_v_nmax-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "stats.pyx":42
+    /* "nfwfitter/stats.pyx":42
  * 
  *     for i from nmax > i >= 0:
  *         result[i] = exp(-0.5*(x[i]-mu)**2/sig**2)/(sqrt2pi*sig)             # <<<<<<<<<<<<<<
@@ -1535,7 +1535,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 42; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __pyx_t_10 = exp((__pyx_t_8 / __pyx_t_9));
-    __pyx_t_9 = (__pyx_v_5stats_sqrt2pi * __pyx_v_sig);
+    __pyx_t_9 = (__pyx_v_9nfwfitter_5stats_sqrt2pi * __pyx_v_sig);
     if (unlikely(__pyx_t_9 == 0)) {
       #ifdef WITH_THREAD
       PyGILState_STATE __pyx_gilstate_save = PyGILState_Ensure();
@@ -1550,7 +1550,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_result.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_result.diminfo[0].strides) = (__pyx_t_10 / __pyx_t_9);
   }
 
-  /* "stats.pyx":44
+  /* "nfwfitter/stats.pyx":44
  *         result[i] = exp(-0.5*(x[i]-mu)**2/sig**2)/(sqrt2pi*sig)
  * 
  *     return result             # <<<<<<<<<<<<<<
@@ -1562,7 +1562,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
   __pyx_r = ((PyObject *)__pyx_v_result);
   goto __pyx_L0;
 
-  /* "stats.pyx":31
+  /* "nfwfitter/stats.pyx":31
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def Gaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -1582,7 +1582,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_result.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("stats.Gaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.Gaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -1596,7 +1596,7 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
   return __pyx_r;
 }
 
-/* "stats.pyx":52
+/* "nfwfitter/stats.pyx":52
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -1605,9 +1605,9 @@ static PyObject *__pyx_pf_5stats_Gaussian(CYTHON_UNUSED PyObject *__pyx_self, Py
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5stats_3LogSumGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5stats_3LogSumGaussian = {"LogSumGaussian", (PyCFunction)__pyx_pw_5stats_3LogSumGaussian, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5stats_3LogSumGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_5stats_3LogSumGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_5stats_3LogSumGaussian = {"LogSumGaussian", (PyCFunction)__pyx_pw_9nfwfitter_5stats_3LogSumGaussian, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_5stats_3LogSumGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   double __pyx_v_mu;
   double __pyx_v_sig;
@@ -1664,12 +1664,12 @@ static PyObject *__pyx_pw_5stats_3LogSumGaussian(PyObject *__pyx_self, PyObject 
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("LogSumGaussian", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("stats.LogSumGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.LogSumGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_5stats_2LogSumGaussian(__pyx_self, __pyx_v_x, __pyx_v_mu, __pyx_v_sig);
+  __pyx_r = __pyx_pf_9nfwfitter_5stats_2LogSumGaussian(__pyx_self, __pyx_v_x, __pyx_v_mu, __pyx_v_sig);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1680,7 +1680,7 @@ static PyObject *__pyx_pw_5stats_3LogSumGaussian(PyObject *__pyx_self, PyObject 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig) {
+static PyObject *__pyx_pf_9nfwfitter_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_mu, double __pyx_v_sig) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nmax;
   double __pyx_v_sum;
@@ -1709,7 +1709,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0];
 
-  /* "stats.pyx":58
+  /* "nfwfitter/stats.pyx":58
  *     cdef Py_ssize_t i, nmax
  * 
  *     nmax = x.shape[0]             # <<<<<<<<<<<<<<
@@ -1718,7 +1718,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
  */
   __pyx_v_nmax = (__pyx_v_x->dimensions[0]);
 
-  /* "stats.pyx":60
+  /* "nfwfitter/stats.pyx":60
  *     nmax = x.shape[0]
  * 
  *     cdef double sum = 0.             # <<<<<<<<<<<<<<
@@ -1727,7 +1727,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
  */
   __pyx_v_sum = 0.;
 
-  /* "stats.pyx":62
+  /* "nfwfitter/stats.pyx":62
  *     cdef double sum = 0.
  * 
  *     for i from nmax > i >= 0:             # <<<<<<<<<<<<<<
@@ -1736,7 +1736,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
  */
   for (__pyx_v_i = __pyx_v_nmax-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "stats.pyx":63
+    /* "nfwfitter/stats.pyx":63
  * 
  *     for i from nmax > i >= 0:
  *         sum += exp(-0.5*(x[i]-mu)**2/sig**2)/(sqrt2pi*sig)             # <<<<<<<<<<<<<<
@@ -1757,7 +1757,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __pyx_t_4 = exp((__pyx_t_2 / __pyx_t_3));
-    __pyx_t_3 = (__pyx_v_5stats_sqrt2pi * __pyx_v_sig);
+    __pyx_t_3 = (__pyx_v_9nfwfitter_5stats_sqrt2pi * __pyx_v_sig);
     if (unlikely(__pyx_t_3 == 0)) {
       #ifdef WITH_THREAD
       PyGILState_STATE __pyx_gilstate_save = PyGILState_Ensure();
@@ -1771,7 +1771,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
     __pyx_v_sum = (__pyx_v_sum + (__pyx_t_4 / __pyx_t_3));
   }
 
-  /* "stats.pyx":65
+  /* "nfwfitter/stats.pyx":65
  *         sum += exp(-0.5*(x[i]-mu)**2/sig**2)/(sqrt2pi*sig)
  * 
  *     return log(sum)             # <<<<<<<<<<<<<<
@@ -1785,7 +1785,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "stats.pyx":52
+  /* "nfwfitter/stats.pyx":52
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -1800,7 +1800,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
     __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("stats.LogSumGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.LogSumGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -1812,7 +1812,7 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
   return __pyx_r;
 }
 
-/* "stats.pyx":72
+/* "nfwfitter/stats.pyx":72
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSum2DGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] samples0,             # <<<<<<<<<<<<<<
@@ -1821,9 +1821,9 @@ static PyObject *__pyx_pf_5stats_2LogSumGaussian(CYTHON_UNUSED PyObject *__pyx_s
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5stats_5LogSum2DGaussian = {"LogSum2DGaussian", (PyCFunction)__pyx_pw_5stats_5LogSum2DGaussian, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_5stats_5LogSum2DGaussian = {"LogSum2DGaussian", (PyCFunction)__pyx_pw_9nfwfitter_5stats_5LogSum2DGaussian, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_samples0 = 0;
   PyArrayObject *__pyx_v_samples1 = 0;
   PyArrayObject *__pyx_v_weights = 0;
@@ -1916,7 +1916,7 @@ static PyObject *__pyx_pw_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObjec
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("LogSum2DGaussian", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("stats.LogSum2DGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.LogSum2DGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -1924,7 +1924,7 @@ static PyObject *__pyx_pw_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObjec
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_samples1), __pyx_ptype_5numpy_ndarray, 1, "samples1", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_weights), __pyx_ptype_5numpy_ndarray, 1, "weights", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_invcovar), __pyx_ptype_5numpy_ndarray, 1, "invcovar", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_5stats_4LogSum2DGaussian(__pyx_self, __pyx_v_samples0, __pyx_v_samples1, __pyx_v_weights, __pyx_v_mu0, __pyx_v_mu1, __pyx_v_invcovar, __pyx_v_invsqrtdetcovar);
+  __pyx_r = __pyx_pf_9nfwfitter_5stats_4LogSum2DGaussian(__pyx_self, __pyx_v_samples0, __pyx_v_samples1, __pyx_v_weights, __pyx_v_mu0, __pyx_v_mu1, __pyx_v_invcovar, __pyx_v_invsqrtdetcovar);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1935,7 +1935,7 @@ static PyObject *__pyx_pw_5stats_5LogSum2DGaussian(PyObject *__pyx_self, PyObjec
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_samples0, PyArrayObject *__pyx_v_samples1, PyArrayObject *__pyx_v_weights, double __pyx_v_mu0, double __pyx_v_mu1, PyArrayObject *__pyx_v_invcovar, double __pyx_v_invsqrtdetcovar) {
+static PyObject *__pyx_pf_9nfwfitter_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_samples0, PyArrayObject *__pyx_v_samples1, PyArrayObject *__pyx_v_weights, double __pyx_v_mu0, double __pyx_v_mu1, PyArrayObject *__pyx_v_invcovar, double __pyx_v_invsqrtdetcovar) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nmax;
   double __pyx_v_norm;
@@ -2009,7 +2009,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
   }
   __pyx_pybuffernd_invcovar.diminfo[0].strides = __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_invcovar.diminfo[0].shape = __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_invcovar.diminfo[1].strides = __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_invcovar.diminfo[1].shape = __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.shape[1];
 
-  /* "stats.pyx":82
+  /* "nfwfitter/stats.pyx":82
  *     cdef Py_ssize_t i, nmax, ndim
  * 
  *     nmax = samples0.shape[0]             # <<<<<<<<<<<<<<
@@ -2018,16 +2018,16 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
  */
   __pyx_v_nmax = (__pyx_v_samples0->dimensions[0]);
 
-  /* "stats.pyx":84
+  /* "nfwfitter/stats.pyx":84
  *     nmax = samples0.shape[0]
  * 
  *     cdef double norm = invtwopi*invsqrtdetcovar             # <<<<<<<<<<<<<<
  *     cdef double delta1, delta2
  *     cdef double sum = 0.
  */
-  __pyx_v_norm = (__pyx_v_5stats_invtwopi * __pyx_v_invsqrtdetcovar);
+  __pyx_v_norm = (__pyx_v_9nfwfitter_5stats_invtwopi * __pyx_v_invsqrtdetcovar);
 
-  /* "stats.pyx":86
+  /* "nfwfitter/stats.pyx":86
  *     cdef double norm = invtwopi*invsqrtdetcovar
  *     cdef double delta1, delta2
  *     cdef double sum = 0.             # <<<<<<<<<<<<<<
@@ -2036,7 +2036,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
  */
   __pyx_v_sum = 0.;
 
-  /* "stats.pyx":87
+  /* "nfwfitter/stats.pyx":87
  *     cdef double delta1, delta2
  *     cdef double sum = 0.
  *     cdef double chisq = 0.             # <<<<<<<<<<<<<<
@@ -2045,7 +2045,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
  */
   __pyx_v_chisq = 0.;
 
-  /* "stats.pyx":90
+  /* "nfwfitter/stats.pyx":90
  * 
  *     cdef double invcovar00, invcovar11, invcovar01
  *     invcovar00 = invcovar[0,0]             # <<<<<<<<<<<<<<
@@ -2056,7 +2056,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_2 = 0;
   __pyx_v_invcovar00 = (*__Pyx_BufPtrCContig2d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_invcovar.diminfo[0].strides, __pyx_t_2, __pyx_pybuffernd_invcovar.diminfo[1].strides));
 
-  /* "stats.pyx":91
+  /* "nfwfitter/stats.pyx":91
  *     cdef double invcovar00, invcovar11, invcovar01
  *     invcovar00 = invcovar[0,0]
  *     invcovar11 = invcovar[1,1]             # <<<<<<<<<<<<<<
@@ -2067,7 +2067,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_4 = 1;
   __pyx_v_invcovar11 = (*__Pyx_BufPtrCContig2d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_invcovar.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_invcovar.diminfo[1].strides));
 
-  /* "stats.pyx":92
+  /* "nfwfitter/stats.pyx":92
  *     invcovar00 = invcovar[0,0]
  *     invcovar11 = invcovar[1,1]
  *     invcovar01 = invcovar[0,1]             # <<<<<<<<<<<<<<
@@ -2078,7 +2078,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_6 = 1;
   __pyx_v_invcovar01 = (*__Pyx_BufPtrCContig2d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_invcovar.rcbuffer->pybuffer.buf, __pyx_t_5, __pyx_pybuffernd_invcovar.diminfo[0].strides, __pyx_t_6, __pyx_pybuffernd_invcovar.diminfo[1].strides));
 
-  /* "stats.pyx":95
+  /* "nfwfitter/stats.pyx":95
  * 
  * 
  *     for i from nmax > i >= 0:             # <<<<<<<<<<<<<<
@@ -2087,7 +2087,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
  */
   for (__pyx_v_i = __pyx_v_nmax-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "stats.pyx":96
+    /* "nfwfitter/stats.pyx":96
  * 
  *     for i from nmax > i >= 0:
  *         delta1 = samples0[i] - mu0             # <<<<<<<<<<<<<<
@@ -2097,7 +2097,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
     __pyx_t_7 = __pyx_v_i;
     __pyx_v_delta1 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_samples0.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_samples0.diminfo[0].strides)) - __pyx_v_mu0);
 
-    /* "stats.pyx":97
+    /* "nfwfitter/stats.pyx":97
  *     for i from nmax > i >= 0:
  *         delta1 = samples0[i] - mu0
  *         delta2 = samples1[i] - mu1             # <<<<<<<<<<<<<<
@@ -2107,7 +2107,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
     __pyx_t_8 = __pyx_v_i;
     __pyx_v_delta2 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_samples1.rcbuffer->pybuffer.buf, __pyx_t_8, __pyx_pybuffernd_samples1.diminfo[0].strides)) - __pyx_v_mu1);
 
-    /* "stats.pyx":98
+    /* "nfwfitter/stats.pyx":98
  *         delta1 = samples0[i] - mu0
  *         delta2 = samples1[i] - mu1
  *         chisq = invcovar00*delta1*delta1 + invcovar11*delta2*delta2 + 2*invcovar01*delta1*delta2             # <<<<<<<<<<<<<<
@@ -2116,7 +2116,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
  */
     __pyx_v_chisq = ((((__pyx_v_invcovar00 * __pyx_v_delta1) * __pyx_v_delta1) + ((__pyx_v_invcovar11 * __pyx_v_delta2) * __pyx_v_delta2)) + (((2.0 * __pyx_v_invcovar01) * __pyx_v_delta1) * __pyx_v_delta2));
 
-    /* "stats.pyx":99
+    /* "nfwfitter/stats.pyx":99
  *         delta2 = samples1[i] - mu1
  *         chisq = invcovar00*delta1*delta1 + invcovar11*delta2*delta2 + 2*invcovar01*delta1*delta2
  *         sum += weights[i]*exp(-0.5*chisq)*norm             # <<<<<<<<<<<<<<
@@ -2127,7 +2127,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
     __pyx_v_sum = (__pyx_v_sum + (((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_weights.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_weights.diminfo[0].strides)) * exp((-0.5 * __pyx_v_chisq))) * __pyx_v_norm));
   }
 
-  /* "stats.pyx":101
+  /* "nfwfitter/stats.pyx":101
  *         sum += weights[i]*exp(-0.5*chisq)*norm
  * 
  *     return log(sum)             # <<<<<<<<<<<<<<
@@ -2141,7 +2141,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_10 = 0;
   goto __pyx_L0;
 
-  /* "stats.pyx":72
+  /* "nfwfitter/stats.pyx":72
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSum2DGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] samples0,             # <<<<<<<<<<<<<<
@@ -2159,7 +2159,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_samples1.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_weights.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("stats.LogSum2DGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.LogSum2DGaussian", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2174,7 +2174,7 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
   return __pyx_r;
 }
 
-/* "stats.pyx":109
+/* "nfwfitter/stats.pyx":109
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumLogNormal(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -2183,9 +2183,9 @@ static PyObject *__pyx_pf_5stats_4LogSum2DGaussian(CYTHON_UNUSED PyObject *__pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5stats_7LogSumLogNormal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5stats_7LogSumLogNormal = {"LogSumLogNormal", (PyCFunction)__pyx_pw_5stats_7LogSumLogNormal, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5stats_7LogSumLogNormal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_5stats_7LogSumLogNormal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_5stats_7LogSumLogNormal = {"LogSumLogNormal", (PyCFunction)__pyx_pw_9nfwfitter_5stats_7LogSumLogNormal, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_5stats_7LogSumLogNormal(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_logx = 0;
   double __pyx_v_mu;
@@ -2251,13 +2251,13 @@ static PyObject *__pyx_pw_5stats_7LogSumLogNormal(PyObject *__pyx_self, PyObject
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("LogSumLogNormal", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("stats.LogSumLogNormal", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.LogSumLogNormal", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_logx), __pyx_ptype_5numpy_ndarray, 1, "logx", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_5stats_6LogSumLogNormal(__pyx_self, __pyx_v_x, __pyx_v_logx, __pyx_v_mu, __pyx_v_sig);
+  __pyx_r = __pyx_pf_9nfwfitter_5stats_6LogSumLogNormal(__pyx_self, __pyx_v_x, __pyx_v_logx, __pyx_v_mu, __pyx_v_sig);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2268,7 +2268,7 @@ static PyObject *__pyx_pw_5stats_7LogSumLogNormal(PyObject *__pyx_self, PyObject
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_logx, double __pyx_v_mu, double __pyx_v_sig) {
+static PyObject *__pyx_pf_9nfwfitter_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_logx, double __pyx_v_mu, double __pyx_v_sig) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_nmax;
   double __pyx_v_sum;
@@ -2310,7 +2310,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
   }
   __pyx_pybuffernd_logx.diminfo[0].strides = __pyx_pybuffernd_logx.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_logx.diminfo[0].shape = __pyx_pybuffernd_logx.rcbuffer->pybuffer.shape[0];
 
-  /* "stats.pyx":116
+  /* "nfwfitter/stats.pyx":116
  *     cdef Py_ssize_t i, nmax
  * 
  *     nmax = x.shape[0]             # <<<<<<<<<<<<<<
@@ -2319,7 +2319,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
  */
   __pyx_v_nmax = (__pyx_v_x->dimensions[0]);
 
-  /* "stats.pyx":118
+  /* "nfwfitter/stats.pyx":118
  *     nmax = x.shape[0]
  * 
  *     cdef double sum = 0.             # <<<<<<<<<<<<<<
@@ -2328,7 +2328,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
  */
   __pyx_v_sum = 0.;
 
-  /* "stats.pyx":120
+  /* "nfwfitter/stats.pyx":120
  *     cdef double sum = 0.
  * 
  *     for i from nmax > i >= 0:             # <<<<<<<<<<<<<<
@@ -2337,7 +2337,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
  */
   for (__pyx_v_i = __pyx_v_nmax-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "stats.pyx":121
+    /* "nfwfitter/stats.pyx":121
  * 
  *     for i from nmax > i >= 0:
  *         sum += exp(-0.5*(logx[i]-mu)**2/sig**2)/(sqrt2pi*sig*x[i])             # <<<<<<<<<<<<<<
@@ -2359,7 +2359,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
     }
     __pyx_t_4 = exp((__pyx_t_2 / __pyx_t_3));
     __pyx_t_5 = __pyx_v_i;
-    __pyx_t_6 = ((__pyx_v_5stats_sqrt2pi * __pyx_v_sig) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_5, __pyx_pybuffernd_x.diminfo[0].strides)));
+    __pyx_t_6 = ((__pyx_v_9nfwfitter_5stats_sqrt2pi * __pyx_v_sig) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_5, __pyx_pybuffernd_x.diminfo[0].strides)));
     if (unlikely(__pyx_t_6 == 0)) {
       #ifdef WITH_THREAD
       PyGILState_STATE __pyx_gilstate_save = PyGILState_Ensure();
@@ -2373,7 +2373,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
     __pyx_v_sum = (__pyx_v_sum + (__pyx_t_4 / __pyx_t_6));
   }
 
-  /* "stats.pyx":124
+  /* "nfwfitter/stats.pyx":124
  * 
  * 
  *     return log(sum)             # <<<<<<<<<<<<<<
@@ -2387,7 +2387,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
   __pyx_t_7 = 0;
   goto __pyx_L0;
 
-  /* "stats.pyx":109
+  /* "nfwfitter/stats.pyx":109
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumLogNormal(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -2403,7 +2403,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_logx.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("stats.LogSumLogNormal", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.LogSumLogNormal", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2416,7 +2416,7 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
   return __pyx_r;
 }
 
-/* "stats.pyx":133
+/* "nfwfitter/stats.pyx":133
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def kelly_like(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -2425,9 +2425,9 @@ static PyObject *__pyx_pf_5stats_6LogSumLogNormal(CYTHON_UNUSED PyObject *__pyx_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5stats_9kelly_like = {"kelly_like", (PyCFunction)__pyx_pw_5stats_9kelly_like, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_5stats_9kelly_like = {"kelly_like", (PyCFunction)__pyx_pw_9nfwfitter_5stats_9kelly_like, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   PyArrayObject *__pyx_v_xerr2 = 0;
   PyArrayObject *__pyx_v_y = 0;
@@ -2556,7 +2556,7 @@ static PyObject *__pyx_pw_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__p
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("kelly_like", 1, 11, 11, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("stats.kelly_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.kelly_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -2568,7 +2568,7 @@ static PyObject *__pyx_pw_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__p
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_pis), __pyx_ptype_5numpy_ndarray, 1, "pis", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mus), __pyx_ptype_5numpy_ndarray, 1, "mus", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tau2), __pyx_ptype_5numpy_ndarray, 1, "tau2", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 143; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_5stats_8kelly_like(__pyx_self, __pyx_v_x, __pyx_v_xerr2, __pyx_v_y, __pyx_v_yerr2, __pyx_v_xycovar, __pyx_v_alpha, __pyx_v_beta, __pyx_v_sigint2, __pyx_v_pis, __pyx_v_mus, __pyx_v_tau2);
+  __pyx_r = __pyx_pf_9nfwfitter_5stats_8kelly_like(__pyx_self, __pyx_v_x, __pyx_v_xerr2, __pyx_v_y, __pyx_v_yerr2, __pyx_v_xycovar, __pyx_v_alpha, __pyx_v_beta, __pyx_v_sigint2, __pyx_v_pis, __pyx_v_mus, __pyx_v_tau2);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2579,7 +2579,7 @@ static PyObject *__pyx_pw_5stats_9kelly_like(PyObject *__pyx_self, PyObject *__p
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_xerr2, PyArrayObject *__pyx_v_y, PyArrayObject *__pyx_v_yerr2, PyArrayObject *__pyx_v_xycovar, double __pyx_v_alpha, double __pyx_v_beta, double __pyx_v_sigint2, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2) {
+static PyObject *__pyx_pf_9nfwfitter_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, PyArrayObject *__pyx_v_xerr2, PyArrayObject *__pyx_v_y, PyArrayObject *__pyx_v_yerr2, PyArrayObject *__pyx_v_xycovar, double __pyx_v_alpha, double __pyx_v_beta, double __pyx_v_sigint2, PyArrayObject *__pyx_v_pis, PyArrayObject *__pyx_v_mus, PyArrayObject *__pyx_v_tau2) {
   Py_ssize_t __pyx_v_ngauss;
   Py_ssize_t __pyx_v_ndat;
   double __pyx_v_logp;
@@ -2738,7 +2738,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
   }
   __pyx_pybuffernd_tau2.diminfo[0].strides = __pyx_pybuffernd_tau2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_tau2.diminfo[0].shape = __pyx_pybuffernd_tau2.rcbuffer->pybuffer.shape[0];
 
-  /* "stats.pyx":149
+  /* "nfwfitter/stats.pyx":149
  * 
  * 
  *     cdef Py_ssize_t ngauss = pis.shape[0]             # <<<<<<<<<<<<<<
@@ -2747,7 +2747,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
   __pyx_v_ngauss = (__pyx_v_pis->dimensions[0]);
 
-  /* "stats.pyx":150
+  /* "nfwfitter/stats.pyx":150
  * 
  *     cdef Py_ssize_t ngauss = pis.shape[0]
  *     cdef Py_ssize_t ndat = x.shape[0]             # <<<<<<<<<<<<<<
@@ -2756,7 +2756,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
   __pyx_v_ndat = (__pyx_v_x->dimensions[0]);
 
-  /* "stats.pyx":152
+  /* "nfwfitter/stats.pyx":152
  *     cdef Py_ssize_t ndat = x.shape[0]
  * 
  *     cdef double logp = 0.             # <<<<<<<<<<<<<<
@@ -2765,7 +2765,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
   __pyx_v_logp = 0.;
 
-  /* "stats.pyx":158
+  /* "nfwfitter/stats.pyx":158
  *     cdef Py_ssize_t curgauss, curdat
  * 
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] predictions = np.zeros(ngauss)             # <<<<<<<<<<<<<<
@@ -2819,7 +2819,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
   __pyx_v_predictions = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "stats.pyx":159
+  /* "nfwfitter/stats.pyx":159
  * 
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] predictions = np.zeros(ngauss)
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] betatau2 = np.zeros(ngauss)             # <<<<<<<<<<<<<<
@@ -2873,7 +2873,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
   __pyx_v_betatau2 = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "stats.pyx":160
+  /* "nfwfitter/stats.pyx":160
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] predictions = np.zeros(ngauss)
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] betatau2 = np.zeros(ngauss)
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] beta2tau2pSigint2 = np.zeros(ngauss)             # <<<<<<<<<<<<<<
@@ -2927,7 +2927,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
   __pyx_v_beta2tau2pSigint2 = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "stats.pyx":161
+  /* "nfwfitter/stats.pyx":161
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] betatau2 = np.zeros(ngauss)
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] beta2tau2pSigint2 = np.zeros(ngauss)
  *     for curgauss from ngauss > curgauss >= 0:             # <<<<<<<<<<<<<<
@@ -2936,7 +2936,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
   for (__pyx_v_curgauss = __pyx_v_ngauss-1; __pyx_v_curgauss >= 0; __pyx_v_curgauss--) {
 
-    /* "stats.pyx":162
+    /* "nfwfitter/stats.pyx":162
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] beta2tau2pSigint2 = np.zeros(ngauss)
  *     for curgauss from ngauss > curgauss >= 0:
  *         predictions[curgauss] = alpha + beta*mus[curgauss]             # <<<<<<<<<<<<<<
@@ -2947,7 +2947,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
     __pyx_t_10 = __pyx_v_curgauss;
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_predictions.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_predictions.diminfo[0].strides) = (__pyx_v_alpha + (__pyx_v_beta * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_mus.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_mus.diminfo[0].strides))));
 
-    /* "stats.pyx":163
+    /* "nfwfitter/stats.pyx":163
  *     for curgauss from ngauss > curgauss >= 0:
  *         predictions[curgauss] = alpha + beta*mus[curgauss]
  *         betatau2[curgauss] = beta*tau2[curgauss]             # <<<<<<<<<<<<<<
@@ -2958,7 +2958,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
     __pyx_t_12 = __pyx_v_curgauss;
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_betatau2.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_betatau2.diminfo[0].strides) = (__pyx_v_beta * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_tau2.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_tau2.diminfo[0].strides)));
 
-    /* "stats.pyx":164
+    /* "nfwfitter/stats.pyx":164
  *         predictions[curgauss] = alpha + beta*mus[curgauss]
  *         betatau2[curgauss] = beta*tau2[curgauss]
  *         beta2tau2pSigint2[curgauss] = beta*beta*tau2[curgauss] + sigint2             # <<<<<<<<<<<<<<
@@ -2970,7 +2970,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
     *__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_beta2tau2pSigint2.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_beta2tau2pSigint2.diminfo[0].strides) = (((__pyx_v_beta * __pyx_v_beta) * (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_tau2.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_tau2.diminfo[0].strides))) + __pyx_v_sigint2);
   }
 
-  /* "stats.pyx":167
+  /* "nfwfitter/stats.pyx":167
  * 
  * 
  *     for curdat from ndat > curdat >= 0:             # <<<<<<<<<<<<<<
@@ -2979,7 +2979,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
   for (__pyx_v_curdat = __pyx_v_ndat-1; __pyx_v_curdat >= 0; __pyx_v_curdat--) {
 
-    /* "stats.pyx":169
+    /* "nfwfitter/stats.pyx":169
  *     for curdat from ndat > curdat >= 0:
  * 
  *         curp = 0.             # <<<<<<<<<<<<<<
@@ -2988,7 +2988,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
     __pyx_v_curp = 0.;
 
-    /* "stats.pyx":171
+    /* "nfwfitter/stats.pyx":171
  *         curp = 0.
  * 
  *         for curgauss from ngauss > curgauss >= 0:             # <<<<<<<<<<<<<<
@@ -2997,7 +2997,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
     for (__pyx_v_curgauss = __pyx_v_ngauss-1; __pyx_v_curgauss >= 0; __pyx_v_curgauss--) {
 
-      /* "stats.pyx":173
+      /* "nfwfitter/stats.pyx":173
  *         for curgauss from ngauss > curgauss >= 0:
  * 
  *             delta0 = y[curdat] - predictions[curgauss]             # <<<<<<<<<<<<<<
@@ -3008,7 +3008,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       __pyx_t_16 = __pyx_v_curgauss;
       __pyx_v_delta0 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_y.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_y.diminfo[0].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_predictions.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_predictions.diminfo[0].strides)));
 
-      /* "stats.pyx":174
+      /* "nfwfitter/stats.pyx":174
  * 
  *             delta0 = y[curdat] - predictions[curgauss]
  *             delta1 = x[curdat] - mus[curgauss]             # <<<<<<<<<<<<<<
@@ -3019,7 +3019,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       __pyx_t_18 = __pyx_v_curgauss;
       __pyx_v_delta1 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_x.diminfo[0].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_mus.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_mus.diminfo[0].strides)));
 
-      /* "stats.pyx":176
+      /* "nfwfitter/stats.pyx":176
  *             delta1 = x[curdat] - mus[curgauss]
  * 
  *             V00 = beta2tau2pSigint2[curgauss] + yerr2[curdat]             # <<<<<<<<<<<<<<
@@ -3030,7 +3030,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       __pyx_t_20 = __pyx_v_curdat;
       __pyx_v_V00 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_beta2tau2pSigint2.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_beta2tau2pSigint2.diminfo[0].strides)) + (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_yerr2.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_yerr2.diminfo[0].strides)));
 
-      /* "stats.pyx":177
+      /* "nfwfitter/stats.pyx":177
  * 
  *             V00 = beta2tau2pSigint2[curgauss] + yerr2[curdat]
  *             V01 = betatau2[curgauss] + xycovar[curdat]             # <<<<<<<<<<<<<<
@@ -3041,7 +3041,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       __pyx_t_22 = __pyx_v_curdat;
       __pyx_v_V01 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_betatau2.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_betatau2.diminfo[0].strides)) + (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_xycovar.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_xycovar.diminfo[0].strides)));
 
-      /* "stats.pyx":178
+      /* "nfwfitter/stats.pyx":178
  *             V00 = beta2tau2pSigint2[curgauss] + yerr2[curdat]
  *             V01 = betatau2[curgauss] + xycovar[curdat]
  *             V11 = tau2[curgauss] + xerr2[curdat]             # <<<<<<<<<<<<<<
@@ -3052,7 +3052,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       __pyx_t_24 = __pyx_v_curdat;
       __pyx_v_V11 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_tau2.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_tau2.diminfo[0].strides)) + (*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_xerr2.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_xerr2.diminfo[0].strides)));
 
-      /* "stats.pyx":180
+      /* "nfwfitter/stats.pyx":180
  *             V11 = tau2[curgauss] + xerr2[curdat]
  * 
  *             detV = (V00*V11) - (V01*V01)             # <<<<<<<<<<<<<<
@@ -3061,7 +3061,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
       __pyx_v_detV = ((__pyx_v_V00 * __pyx_v_V11) - (__pyx_v_V01 * __pyx_v_V01));
 
-      /* "stats.pyx":182
+      /* "nfwfitter/stats.pyx":182
  *             detV = (V00*V11) - (V01*V01)
  * 
  *             chisq = (V11*delta0*delta0 - 2*V01*delta0*delta1 + V00*delta1*delta1)/detV             # <<<<<<<<<<<<<<
@@ -3081,7 +3081,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       }
       __pyx_v_chisq = (__pyx_t_25 / __pyx_v_detV);
 
-      /* "stats.pyx":184
+      /* "nfwfitter/stats.pyx":184
  *             chisq = (V11*delta0*delta0 - 2*V01*delta0*delta1 + V00*delta1*delta1)/detV
  * 
  *             curp = curp + pis[curgauss]*exp(-0.5*chisq)/(twopi*sqrt(detV))             # <<<<<<<<<<<<<<
@@ -3090,7 +3090,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
  */
       __pyx_t_26 = __pyx_v_curgauss;
       __pyx_t_25 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_pis.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_pis.diminfo[0].strides)) * exp((-0.5 * __pyx_v_chisq)));
-      __pyx_t_27 = (__pyx_v_5stats_twopi * sqrt(__pyx_v_detV));
+      __pyx_t_27 = (__pyx_v_9nfwfitter_5stats_twopi * sqrt(__pyx_v_detV));
       if (unlikely(__pyx_t_27 == 0)) {
         #ifdef WITH_THREAD
         PyGILState_STATE __pyx_gilstate_save = PyGILState_Ensure();
@@ -3104,7 +3104,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
       __pyx_v_curp = (__pyx_v_curp + (__pyx_t_25 / __pyx_t_27));
     }
 
-    /* "stats.pyx":186
+    /* "nfwfitter/stats.pyx":186
  *             curp = curp + pis[curgauss]*exp(-0.5*chisq)/(twopi*sqrt(detV))
  * 
  *         logp = logp + log(curp)             # <<<<<<<<<<<<<<
@@ -3114,7 +3114,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
     __pyx_v_logp = (__pyx_v_logp + log(__pyx_v_curp));
   }
 
-  /* "stats.pyx":189
+  /* "nfwfitter/stats.pyx":189
  * 
  * 
  *     return logp             # <<<<<<<<<<<<<<
@@ -3128,7 +3128,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "stats.pyx":133
+  /* "nfwfitter/stats.pyx":133
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def kelly_like(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -3157,7 +3157,7 @@ static PyObject *__pyx_pf_5stats_8kelly_like(CYTHON_UNUSED PyObject *__pyx_self,
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_y.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_yerr2.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("stats.kelly_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.stats.kelly_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5257,7 +5257,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_LogSumLogNormal, __pyx_k_LogSumLogNormal, sizeof(__pyx_k_LogSumLogNormal), 0, 0, 1, 1},
   {&__pyx_kp_u_Non_native_byte_order_not_suppor, __pyx_k_Non_native_byte_order_not_suppor, sizeof(__pyx_k_Non_native_byte_order_not_suppor), 0, 1, 0, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
-  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_sta, __pyx_k_Users_dapple_astro_mxxlsims_sta, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_sta), 0, 0, 1, 0},
+  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_k_Users_dapple_astro_mxxlsims_nfw, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_nfw), 0, 0, 1, 0},
   {&__pyx_n_s_V00, __pyx_k_V00, sizeof(__pyx_k_V00), 0, 0, 1, 1},
   {&__pyx_n_s_V01, __pyx_k_V01, sizeof(__pyx_k_V01), 0, 0, 1, 1},
   {&__pyx_n_s_V11, __pyx_k_V11, sizeof(__pyx_k_V11), 0, 0, 1, 1},
@@ -5295,6 +5295,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_ndarray_is_not_Fortran_contiguou, __pyx_k_ndarray_is_not_Fortran_contiguou, sizeof(__pyx_k_ndarray_is_not_Fortran_contiguou), 0, 1, 0, 0},
   {&__pyx_n_s_ndat, __pyx_k_ndat, sizeof(__pyx_k_ndat), 0, 0, 1, 1},
   {&__pyx_n_s_ndim, __pyx_k_ndim, sizeof(__pyx_k_ndim), 0, 0, 1, 1},
+  {&__pyx_n_s_nfwfitter_stats, __pyx_k_nfwfitter_stats, sizeof(__pyx_k_nfwfitter_stats), 0, 0, 1, 1},
   {&__pyx_n_s_ngauss, __pyx_k_ngauss, sizeof(__pyx_k_ngauss), 0, 0, 1, 1},
   {&__pyx_n_s_nmax, __pyx_k_nmax, sizeof(__pyx_k_nmax), 0, 0, 1, 1},
   {&__pyx_n_s_norm, __pyx_k_norm, sizeof(__pyx_k_norm), 0, 0, 1, 1},
@@ -5309,7 +5310,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_samples1, __pyx_k_samples1, sizeof(__pyx_k_samples1), 0, 0, 1, 1},
   {&__pyx_n_s_sig, __pyx_k_sig, sizeof(__pyx_k_sig), 0, 0, 1, 1},
   {&__pyx_n_s_sigint2, __pyx_k_sigint2, sizeof(__pyx_k_sigint2), 0, 0, 1, 1},
-  {&__pyx_n_s_stats, __pyx_k_stats, sizeof(__pyx_k_stats), 0, 0, 1, 1},
   {&__pyx_n_s_sum, __pyx_k_sum, sizeof(__pyx_k_sum), 0, 0, 1, 1},
   {&__pyx_n_s_tau2, __pyx_k_tau2, sizeof(__pyx_k_tau2), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
@@ -5402,7 +5402,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "stats.pyx":31
+  /* "nfwfitter/stats.pyx":31
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def Gaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -5412,9 +5412,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__7 = PyTuple_Pack(6, __pyx_n_s_x, __pyx_n_s_mu, __pyx_n_s_sig, __pyx_n_s_i, __pyx_n_s_nmax, __pyx_n_s_result); if (unlikely(!__pyx_tuple__7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_sta, __pyx_n_s_Gaussian, 31, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_Gaussian, 31, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "stats.pyx":52
+  /* "nfwfitter/stats.pyx":52
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -5424,9 +5424,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__9 = PyTuple_Pack(6, __pyx_n_s_x, __pyx_n_s_mu, __pyx_n_s_sig, __pyx_n_s_i, __pyx_n_s_nmax, __pyx_n_s_sum); if (unlikely(!__pyx_tuple__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_sta, __pyx_n_s_LogSumGaussian, 52, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_LogSumGaussian, 52, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "stats.pyx":72
+  /* "nfwfitter/stats.pyx":72
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSum2DGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] samples0,             # <<<<<<<<<<<<<<
@@ -5436,9 +5436,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__11 = PyTuple_Pack(18, __pyx_n_s_samples0, __pyx_n_s_samples1, __pyx_n_s_weights, __pyx_n_s_mu0, __pyx_n_s_mu1, __pyx_n_s_invcovar, __pyx_n_s_invsqrtdetcovar, __pyx_n_s_i, __pyx_n_s_nmax, __pyx_n_s_ndim, __pyx_n_s_norm, __pyx_n_s_delta1, __pyx_n_s_delta2, __pyx_n_s_sum, __pyx_n_s_chisq, __pyx_n_s_invcovar00, __pyx_n_s_invcovar11, __pyx_n_s_invcovar01); if (unlikely(!__pyx_tuple__11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(7, 0, 18, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_sta, __pyx_n_s_LogSum2DGaussian, 72, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(7, 0, 18, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_LogSum2DGaussian, 72, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "stats.pyx":109
+  /* "nfwfitter/stats.pyx":109
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumLogNormal(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -5448,9 +5448,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__13 = PyTuple_Pack(7, __pyx_n_s_x, __pyx_n_s_logx, __pyx_n_s_mu, __pyx_n_s_sig, __pyx_n_s_i, __pyx_n_s_nmax, __pyx_n_s_sum); if (unlikely(!__pyx_tuple__13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_sta, __pyx_n_s_LogSumLogNormal, 109, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_LogSumLogNormal, 109, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "stats.pyx":133
+  /* "nfwfitter/stats.pyx":133
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def kelly_like(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -5460,7 +5460,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__15 = PyTuple_Pack(27, __pyx_n_s_x, __pyx_n_s_xerr2, __pyx_n_s_y, __pyx_n_s_yerr2, __pyx_n_s_xycovar, __pyx_n_s_alpha, __pyx_n_s_beta, __pyx_n_s_sigint2, __pyx_n_s_pis, __pyx_n_s_mus, __pyx_n_s_tau2, __pyx_n_s_ngauss, __pyx_n_s_ndat, __pyx_n_s_logp, __pyx_n_s_V00, __pyx_n_s_V01, __pyx_n_s_V11, __pyx_n_s_delta0, __pyx_n_s_delta1, __pyx_n_s_detV, __pyx_n_s_chisq, __pyx_n_s_curp, __pyx_n_s_curgauss, __pyx_n_s_curdat, __pyx_n_s_predictions, __pyx_n_s_betatau2, __pyx_n_s_beta2tau2pSigint2); if (unlikely(!__pyx_tuple__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(11, 0, 27, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_sta, __pyx_n_s_kelly_like, 133, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(11, 0, 27, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_kelly_like, 133, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5540,14 +5540,14 @@ PyMODINIT_FUNC PyInit_stats(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_stats) {
+  if (__pyx_module_is_main_nfwfitter__stats) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "stats")) {
-      if (unlikely(PyDict_SetItemString(modules, "stats", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "nfwfitter.stats")) {
+      if (unlikely(PyDict_SetItemString(modules, "nfwfitter.stats", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -5576,7 +5576,7 @@ PyMODINIT_FUNC PyInit_stats(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "stats.pyx":12
+  /* "nfwfitter/stats.pyx":12
  * # cython: profile=True
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -5588,7 +5588,7 @@ PyMODINIT_FUNC PyInit_stats(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "stats.pyx":23
+  /* "nfwfitter/stats.pyx":23
  *     double pow(double, double)
  * 
  * cdef double sqrt2pi = sqrt(2*np.pi)             # <<<<<<<<<<<<<<
@@ -5605,9 +5605,9 @@ PyMODINIT_FUNC PyInit_stats(void)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_5stats_sqrt2pi = sqrt(__pyx_t_3);
+  __pyx_v_9nfwfitter_5stats_sqrt2pi = sqrt(__pyx_t_3);
 
-  /* "stats.pyx":24
+  /* "nfwfitter/stats.pyx":24
  * 
  * cdef double sqrt2pi = sqrt(2*np.pi)
  * cdef double twopi = 2*np.pi             # <<<<<<<<<<<<<<
@@ -5624,9 +5624,9 @@ PyMODINIT_FUNC PyInit_stats(void)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 24; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_5stats_twopi = __pyx_t_3;
+  __pyx_v_9nfwfitter_5stats_twopi = __pyx_t_3;
 
-  /* "stats.pyx":25
+  /* "nfwfitter/stats.pyx":25
  * cdef double sqrt2pi = sqrt(2*np.pi)
  * cdef double twopi = 2*np.pi
  * cdef double invtwopi = 1./2*np.pi             # <<<<<<<<<<<<<<
@@ -5646,69 +5646,69 @@ PyMODINIT_FUNC PyInit_stats(void)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 25; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_5stats_invtwopi = __pyx_t_3;
+  __pyx_v_9nfwfitter_5stats_invtwopi = __pyx_t_3;
 
-  /* "stats.pyx":31
+  /* "nfwfitter/stats.pyx":31
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def Gaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
  *              double mu,
  *              double sig):
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stats_1Gaussian, NULL, __pyx_n_s_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_5stats_1Gaussian, NULL, __pyx_n_s_nfwfitter_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_Gaussian, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stats.pyx":52
+  /* "nfwfitter/stats.pyx":52
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
  *              double mu,
  *              double sig):
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stats_3LogSumGaussian, NULL, __pyx_n_s_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_5stats_3LogSumGaussian, NULL, __pyx_n_s_nfwfitter_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_LogSumGaussian, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stats.pyx":72
+  /* "nfwfitter/stats.pyx":72
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSum2DGaussian(np.ndarray[np.double_t, ndim=1, mode='c'] samples0,             # <<<<<<<<<<<<<<
  *                      np.ndarray[np.double_t, ndim=1, mode='c'] samples1,
  *                      np.ndarray[np.double_t, ndim=1, mode='c'] weights,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stats_5LogSum2DGaussian, NULL, __pyx_n_s_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_5stats_5LogSum2DGaussian, NULL, __pyx_n_s_nfwfitter_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_LogSum2DGaussian, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stats.pyx":109
+  /* "nfwfitter/stats.pyx":109
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def LogSumLogNormal(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
  *                     np.ndarray[np.double_t, ndim=1, mode='c'] logx,
  *                     double mu,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stats_7LogSumLogNormal, NULL, __pyx_n_s_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_5stats_7LogSumLogNormal, NULL, __pyx_n_s_nfwfitter_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_LogSumLogNormal, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stats.pyx":133
+  /* "nfwfitter/stats.pyx":133
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def kelly_like(np.ndarray[np.double_t, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
  *               np.ndarray[np.double_t, ndim=1, mode='c'] xerr2,
  *               np.ndarray[np.double_t, ndim=1, mode='c'] y,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_5stats_9kelly_like, NULL, __pyx_n_s_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_5stats_9kelly_like, NULL, __pyx_n_s_nfwfitter_stats); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_kelly_like, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "stats.pyx":1
+  /* "nfwfitter/stats.pyx":1
  * ########################             # <<<<<<<<<<<<<<
  * # Common statistics functions that need to run quickly
  * #######################
@@ -5735,12 +5735,12 @@ PyMODINIT_FUNC PyInit_stats(void)
   __Pyx_XDECREF(__pyx_t_4);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init stats", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init nfwfitter.stats", __pyx_clineno, __pyx_lineno, __pyx_filename);
       Py_DECREF(__pyx_d); __pyx_d = 0;
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init stats");
+    PyErr_SetString(PyExc_ImportError, "init nfwfitter.stats");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

@@ -224,8 +224,8 @@ void __Pyx_call_destructor(T* x) {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__voigt_tools
-#define __PYX_HAVE_API__voigt_tools
+#define __PYX_HAVE__nfwfitter__voigt_tools
+#define __PYX_HAVE_API__nfwfitter__voigt_tools
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -436,7 +436,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "voigt_tools.pyx",
+  "nfwfitter/voigt_tools.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -665,14 +665,14 @@ typedef npy_double __pyx_t_5numpy_double_t;
  */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
-/* "voigt_tools.pyx":27
+/* "nfwfitter/voigt_tools.pyx":27
  * 
  * DTYPE = np.double
  * ctypedef np.double_t DTYPE_T             # <<<<<<<<<<<<<<
  * 
  * #######################
  */
-typedef __pyx_t_5numpy_double_t __pyx_t_11voigt_tools_DTYPE_T;
+typedef __pyx_t_5numpy_double_t __pyx_t_9nfwfitter_11voigt_tools_DTYPE_T;
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     typedef ::std::complex< float > __pyx_t_float_complex;
@@ -1079,22 +1079,22 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from 'voigt_tools' */
-static double __pyx_v_11voigt_tools_sqrt2pi;
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T = { "DTYPE_T", NULL, sizeof(__pyx_t_11voigt_tools_DTYPE_T), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "voigt_tools"
-int __pyx_module_is_main_voigt_tools = 0;
+/* Module declarations from 'nfwfitter.voigt_tools' */
+static double __pyx_v_9nfwfitter_11voigt_tools_sqrt2pi;
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T = { "DTYPE_T", NULL, sizeof(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T), { 0 }, 0, 'R', 0, 0 };
+#define __Pyx_MODULE_NAME "nfwfitter.voigt_tools"
+int __pyx_module_is_main_nfwfitter__voigt_tools = 0;
 
-/* Implementation of 'voigt_tools' */
+/* Implementation of 'nfwfitter.voigt_tools' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
-static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_sigma, double __pyx_v_gamma); /* proto */
-static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_sigma, double __pyx_v_gamma, int __pyx_v_size, PyObject *__pyx_v_limits, double __pyx_v_binsize); /* proto */
-static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_gamma); /* proto */
-static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma1, double __pyx_v_sigma2scale, double __pyx_v_alpha); /* proto */
-static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_sigma2scale, double __pyx_v_alpha); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_sigma, double __pyx_v_gamma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_sigma, double __pyx_v_gamma, int __pyx_v_size, PyObject *__pyx_v_limits, double __pyx_v_binsize); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_gamma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma1, double __pyx_v_sigma2scale, double __pyx_v_alpha); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_sigma2scale, double __pyx_v_alpha); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static char __pyx_k_B[] = "B";
@@ -1161,15 +1161,15 @@ static char __pyx_k_likelihood[] = "likelihood";
 static char __pyx_k_doublegauss[] = "doublegauss";
 static char __pyx_k_sigma2scale[] = "sigma2scale";
 static char __pyx_k_tot_logprob[] = "tot_logprob";
-static char __pyx_k_voigt_tools[] = "voigt_tools";
 static char __pyx_k_RuntimeError[] = "RuntimeError";
 static char __pyx_k_searchsorted[] = "searchsorted";
 static char __pyx_k_voigtProfile[] = "voigtProfile";
 static char __pyx_k_voigtSamples[] = "voigtSamples";
+static char __pyx_k_nfwfitter_voigt_tools[] = "nfwfitter.voigt_tools";
 static char __pyx_k_doublegauss_likelihood[] = "doublegauss_likelihood";
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
 static char __pyx_k_Id_voigt_tools_pyx_v_1_5_2011_0[] = "$Id: voigt_tools.pyx,v 1.5 2011-01-19 22:39:44 dapple Exp $";
-static char __pyx_k_Users_dapple_astro_mxxlsims_voi[] = "/Users/dapple/astro/mxxlsims/voigt_tools.pyx";
+static char __pyx_k_Users_dapple_astro_mxxlsims_nfw[] = "/Users/dapple/astro/mxxlsims/nfwfitter/voigt_tools.pyx";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
 static char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte order not supported";
@@ -1181,7 +1181,7 @@ static PyObject *__pyx_kp_u_Format_string_allocated_too_shor_2;
 static PyObject *__pyx_kp_s_Id_voigt_tools_pyx_v_1_5_2011_0;
 static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_s_RuntimeError;
-static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_voi;
+static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_alpha;
 static PyObject *__pyx_n_s_arange;
@@ -1209,6 +1209,7 @@ static PyObject *__pyx_n_s_mu;
 static PyObject *__pyx_n_s_nbins;
 static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
 static PyObject *__pyx_kp_u_ndarray_is_not_Fortran_contiguou;
+static PyObject *__pyx_n_s_nfwfitter_voigt_tools;
 static PyObject *__pyx_n_s_nobjs;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_numpy;
@@ -1234,7 +1235,6 @@ static PyObject *__pyx_n_s_uniform;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
 static PyObject *__pyx_n_s_voigtProfile;
 static PyObject *__pyx_n_s_voigtSamples;
-static PyObject *__pyx_n_s_voigt_tools;
 static PyObject *__pyx_n_s_x;
 static PyObject *__pyx_n_s_xbins;
 static PyObject *__pyx_n_s_zeros;
@@ -1261,7 +1261,7 @@ static PyObject *__pyx_codeobj__15;
 static PyObject *__pyx_codeobj__17;
 static PyObject *__pyx_codeobj__19;
 
-/* "voigt_tools.pyx":31
+/* "nfwfitter/voigt_tools.pyx":31
  * #######################
  * 
  * def voigtProfile(np.ndarray[DTYPE_T, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -1270,9 +1270,9 @@ static PyObject *__pyx_codeobj__19;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11voigt_tools_1voigtProfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11voigt_tools_1voigtProfile = {"voigtProfile", (PyCFunction)__pyx_pw_11voigt_tools_1voigtProfile, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11voigt_tools_1voigtProfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_1voigtProfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_11voigt_tools_1voigtProfile = {"voigtProfile", (PyCFunction)__pyx_pw_9nfwfitter_11voigt_tools_1voigtProfile, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_1voigtProfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_x = 0;
   double __pyx_v_sigma;
   double __pyx_v_gamma;
@@ -1329,12 +1329,12 @@ static PyObject *__pyx_pw_11voigt_tools_1voigtProfile(PyObject *__pyx_self, PyOb
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("voigtProfile", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("voigt_tools.voigtProfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.voigtProfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x), __pyx_ptype_5numpy_ndarray, 1, "x", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_11voigt_tools_voigtProfile(__pyx_self, __pyx_v_x, __pyx_v_sigma, __pyx_v_gamma);
+  __pyx_r = __pyx_pf_9nfwfitter_11voigt_tools_voigtProfile(__pyx_self, __pyx_v_x, __pyx_v_sigma, __pyx_v_gamma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1345,7 +1345,7 @@ static PyObject *__pyx_pw_11voigt_tools_1voigtProfile(PyObject *__pyx_self, PyOb
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_sigma, double __pyx_v_gamma) {
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x, double __pyx_v_sigma, double __pyx_v_gamma) {
   Py_ssize_t __pyx_v_nobjs;
   PyArrayObject *__pyx_v_results = 0;
   int __pyx_v_i;
@@ -1378,11 +1378,11 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
   __pyx_pybuffernd_x.rcbuffer = &__pyx_pybuffer_x;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_x.rcbuffer->pybuffer, (PyObject*)__pyx_v_x, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_x.rcbuffer->pybuffer, (PyObject*)__pyx_v_x, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_pybuffernd_x.diminfo[0].strides = __pyx_pybuffernd_x.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x.diminfo[0].shape = __pyx_pybuffernd_x.rcbuffer->pybuffer.shape[0];
 
-  /* "voigt_tools.pyx":35
+  /* "nfwfitter/voigt_tools.pyx":35
  *           double gamma):
  * 
  *     cdef Py_ssize_t nobjs = x.shape[0]             # <<<<<<<<<<<<<<
@@ -1391,7 +1391,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_nobjs = (__pyx_v_x->dimensions[0]);
 
-  /* "voigt_tools.pyx":36
+  /* "nfwfitter/voigt_tools.pyx":36
  * 
  *     cdef Py_ssize_t nobjs = x.shape[0]
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] results = np.zeros(nobjs)             # <<<<<<<<<<<<<<
@@ -1435,7 +1435,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_results.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_results.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_results = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_results.rcbuffer->pybuffer.buf = NULL;
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     } else {__pyx_pybuffernd_results.diminfo[0].strides = __pyx_pybuffernd_results.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_results.diminfo[0].shape = __pyx_pybuffernd_results.rcbuffer->pybuffer.shape[0];
@@ -1445,7 +1445,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
   __pyx_v_results = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "voigt_tools.pyx":38
+  /* "nfwfitter/voigt_tools.pyx":38
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] results = np.zeros(nobjs)
  * 
  *     cdef int i = nobjs             # <<<<<<<<<<<<<<
@@ -1454,7 +1454,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_i = __pyx_v_nobjs;
 
-  /* "voigt_tools.pyx":39
+  /* "nfwfitter/voigt_tools.pyx":39
  * 
  *     cdef int i = nobjs
  *     for i from nobjs > i >= 0:             # <<<<<<<<<<<<<<
@@ -1463,7 +1463,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
  */
   for (__pyx_v_i = __pyx_v_nobjs-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "voigt_tools.pyx":40
+    /* "nfwfitter/voigt_tools.pyx":40
  *     cdef int i = nobjs
  *     for i from nobjs > i >= 0:
  *         results[i] = voigt(x[i], sigma, gamma)             # <<<<<<<<<<<<<<
@@ -1490,10 +1490,10 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
       __Pyx_RaiseBufferIndexError(__pyx_t_9);
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 40; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    *__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_results.rcbuffer->pybuffer.buf, __pyx_t_8, __pyx_pybuffernd_results.diminfo[0].strides) = voigt((*__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_x.diminfo[0].strides)), __pyx_v_sigma, __pyx_v_gamma);
+    *__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_results.rcbuffer->pybuffer.buf, __pyx_t_8, __pyx_pybuffernd_results.diminfo[0].strides) = voigt((*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_x.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_x.diminfo[0].strides)), __pyx_v_sigma, __pyx_v_gamma);
   }
 
-  /* "voigt_tools.pyx":42
+  /* "nfwfitter/voigt_tools.pyx":42
  *         results[i] = voigt(x[i], sigma, gamma)
  * 
  *     return results             # <<<<<<<<<<<<<<
@@ -1505,7 +1505,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
   __pyx_r = ((PyObject *)__pyx_v_results);
   goto __pyx_L0;
 
-  /* "voigt_tools.pyx":31
+  /* "nfwfitter/voigt_tools.pyx":31
  * #######################
  * 
  * def voigtProfile(np.ndarray[DTYPE_T, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -1525,7 +1525,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_results.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_x.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("voigt_tools.voigtProfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.voigtProfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -1538,7 +1538,7 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "voigt_tools.pyx":46
+/* "nfwfitter/voigt_tools.pyx":46
  * ###############
  * 
  * def voigtSamples(double sigma, double gamma, int size, limits=(-5,5), double binsize = 0.0001):             # <<<<<<<<<<<<<<
@@ -1547,9 +1547,9 @@ static PyObject *__pyx_pf_11voigt_tools_voigtProfile(CYTHON_UNUSED PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11voigt_tools_3voigtSamples(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11voigt_tools_3voigtSamples = {"voigtSamples", (PyCFunction)__pyx_pw_11voigt_tools_3voigtSamples, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11voigt_tools_3voigtSamples(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_3voigtSamples(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_11voigt_tools_3voigtSamples = {"voigtSamples", (PyCFunction)__pyx_pw_9nfwfitter_11voigt_tools_3voigtSamples, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_3voigtSamples(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_sigma;
   double __pyx_v_gamma;
   int __pyx_v_size;
@@ -1631,18 +1631,18 @@ static PyObject *__pyx_pw_11voigt_tools_3voigtSamples(PyObject *__pyx_self, PyOb
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("voigtSamples", 0, 3, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("voigt_tools.voigtSamples", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.voigtSamples", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11voigt_tools_2voigtSamples(__pyx_self, __pyx_v_sigma, __pyx_v_gamma, __pyx_v_size, __pyx_v_limits, __pyx_v_binsize);
+  __pyx_r = __pyx_pf_9nfwfitter_11voigt_tools_2voigtSamples(__pyx_self, __pyx_v_sigma, __pyx_v_gamma, __pyx_v_size, __pyx_v_limits, __pyx_v_binsize);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_sigma, double __pyx_v_gamma, int __pyx_v_size, PyObject *__pyx_v_limits, double __pyx_v_binsize) {
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_sigma, double __pyx_v_gamma, int __pyx_v_size, PyObject *__pyx_v_limits, double __pyx_v_binsize) {
   PyArrayObject *__pyx_v_xbins = 0;
   PyArrayObject *__pyx_v_probs = 0;
   int __pyx_v_nbins;
@@ -1697,7 +1697,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_pybuffernd_picks.data = NULL;
   __pyx_pybuffernd_picks.rcbuffer = &__pyx_pybuffer_picks;
 
-  /* "voigt_tools.pyx":48
+  /* "nfwfitter/voigt_tools.pyx":48
  * def voigtSamples(double sigma, double gamma, int size, limits=(-5,5), double binsize = 0.0001):
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] xbins = np.arange(limits[0], limits[1], binsize)             # <<<<<<<<<<<<<<
@@ -1749,7 +1749,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_t_9 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xbins.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_xbins.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_xbins = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_xbins.rcbuffer->pybuffer.buf = NULL;
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     } else {__pyx_pybuffernd_xbins.diminfo[0].strides = __pyx_pybuffernd_xbins.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_xbins.diminfo[0].shape = __pyx_pybuffernd_xbins.rcbuffer->pybuffer.shape[0];
@@ -1759,7 +1759,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_v_xbins = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "voigt_tools.pyx":50
+  /* "nfwfitter/voigt_tools.pyx":50
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] xbins = np.arange(limits[0], limits[1], binsize)
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] probs = voigtProfile(xbins, sigma, gamma)             # <<<<<<<<<<<<<<
@@ -1806,7 +1806,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_t_10 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_probs.rcbuffer->pybuffer, (PyObject*)__pyx_t_10, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_probs.rcbuffer->pybuffer, (PyObject*)__pyx_t_10, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_probs = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_probs.rcbuffer->pybuffer.buf = NULL;
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     } else {__pyx_pybuffernd_probs.diminfo[0].strides = __pyx_pybuffernd_probs.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_probs.diminfo[0].shape = __pyx_pybuffernd_probs.rcbuffer->pybuffer.shape[0];
@@ -1816,7 +1816,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_v_probs = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "voigt_tools.pyx":51
+  /* "nfwfitter/voigt_tools.pyx":51
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] probs = voigtProfile(xbins, sigma, gamma)
  *     cdef int nbins = len(xbins)             # <<<<<<<<<<<<<<
@@ -1826,7 +1826,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_t_7 = PyObject_Length(((PyObject *)__pyx_v_xbins)); if (unlikely(__pyx_t_7 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_nbins = __pyx_t_7;
 
-  /* "voigt_tools.pyx":53
+  /* "nfwfitter/voigt_tools.pyx":53
  *     cdef int nbins = len(xbins)
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] cdf = np.cumsum(probs)             # <<<<<<<<<<<<<<
@@ -1867,7 +1867,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_t_11 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_cdf = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_cdf.rcbuffer->pybuffer.buf = NULL;
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     } else {__pyx_pybuffernd_cdf.diminfo[0].strides = __pyx_pybuffernd_cdf.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_cdf.diminfo[0].shape = __pyx_pybuffernd_cdf.rcbuffer->pybuffer.shape[0];
@@ -1877,7 +1877,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_v_cdf = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "voigt_tools.pyx":54
+  /* "nfwfitter/voigt_tools.pyx":54
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] cdf = np.cumsum(probs)
  *     cdf = cdf / cdf[nbins - 1]             # <<<<<<<<<<<<<<
@@ -1894,7 +1894,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
     __Pyx_RaiseBufferIndexError(__pyx_t_13);
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_1 = PyFloat_FromDouble((*__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_cdf.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_cdf.diminfo[0].strides))); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyFloat_FromDouble((*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_cdf.rcbuffer->pybuffer.buf, __pyx_t_12, __pyx_pybuffernd_cdf.diminfo[0].strides))); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyNumber_Divide(((PyObject *)__pyx_v_cdf), __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
@@ -1904,10 +1904,10 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer);
-    __pyx_t_13 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
+    __pyx_t_13 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
     if (unlikely(__pyx_t_13 < 0)) {
       PyErr_Fetch(&__pyx_t_14, &__pyx_t_15, &__pyx_t_16);
-      if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer, (PyObject*)__pyx_v_cdf, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+      if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cdf.rcbuffer->pybuffer, (PyObject*)__pyx_v_cdf, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
         Py_XDECREF(__pyx_t_14); Py_XDECREF(__pyx_t_15); Py_XDECREF(__pyx_t_16);
         __Pyx_RaiseBufferFallbackError();
       } else {
@@ -1921,7 +1921,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __Pyx_DECREF_SET(__pyx_v_cdf, ((PyArrayObject *)__pyx_t_2));
   __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":57
+  /* "nfwfitter/voigt_tools.pyx":57
  * 
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] picks = np.random.uniform(size = size)             # <<<<<<<<<<<<<<
@@ -1950,7 +1950,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_t_17 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_picks.rcbuffer->pybuffer, (PyObject*)__pyx_t_17, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_picks.rcbuffer->pybuffer, (PyObject*)__pyx_t_17, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_picks = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_picks.rcbuffer->pybuffer.buf = NULL;
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     } else {__pyx_pybuffernd_picks.diminfo[0].strides = __pyx_pybuffernd_picks.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_picks.diminfo[0].shape = __pyx_pybuffernd_picks.rcbuffer->pybuffer.shape[0];
@@ -1960,7 +1960,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_v_picks = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "voigt_tools.pyx":59
+  /* "nfwfitter/voigt_tools.pyx":59
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] picks = np.random.uniform(size = size)
  * 
  *     positions = np.searchsorted(cdf, picks, side='left')             # <<<<<<<<<<<<<<
@@ -1991,7 +1991,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_v_positions = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "voigt_tools.pyx":61
+  /* "nfwfitter/voigt_tools.pyx":61
  *     positions = np.searchsorted(cdf, picks, side='left')
  * 
  *     return xbins[positions]             # <<<<<<<<<<<<<<
@@ -2005,7 +2005,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "voigt_tools.pyx":46
+  /* "nfwfitter/voigt_tools.pyx":46
  * ###############
  * 
  * def voigtSamples(double sigma, double gamma, int size, limits=(-5,5), double binsize = 0.0001):             # <<<<<<<<<<<<<<
@@ -2029,7 +2029,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_probs.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_xbins.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("voigt_tools.voigtSamples", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.voigtSamples", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2048,7 +2048,7 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
   return __pyx_r;
 }
 
-/* "voigt_tools.pyx":73
+/* "nfwfitter/voigt_tools.pyx":73
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
@@ -2057,9 +2057,9 @@ static PyObject *__pyx_pf_11voigt_tools_2voigtSamples(CYTHON_UNUSED PyObject *__
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11voigt_tools_5likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11voigt_tools_5likelihood = {"likelihood", (PyCFunction)__pyx_pw_11voigt_tools_5likelihood, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11voigt_tools_5likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_5likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_11voigt_tools_5likelihood = {"likelihood", (PyCFunction)__pyx_pw_9nfwfitter_11voigt_tools_5likelihood, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_5likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_g = 0;
   PyArrayObject *__pyx_v_mu = 0;
   double __pyx_v_sigma;
@@ -2125,13 +2125,13 @@ static PyObject *__pyx_pw_11voigt_tools_5likelihood(PyObject *__pyx_self, PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("likelihood", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("voigt_tools.likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_5numpy_ndarray, 0, "g", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mu), __pyx_ptype_5numpy_ndarray, 0, "mu", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_11voigt_tools_4likelihood(__pyx_self, __pyx_v_g, __pyx_v_mu, __pyx_v_sigma, __pyx_v_gamma);
+  __pyx_r = __pyx_pf_9nfwfitter_11voigt_tools_4likelihood(__pyx_self, __pyx_v_g, __pyx_v_mu, __pyx_v_sigma, __pyx_v_gamma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2142,7 +2142,7 @@ static PyObject *__pyx_pw_11voigt_tools_5likelihood(PyObject *__pyx_self, PyObje
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_gamma) {
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_gamma) {
   Py_ssize_t __pyx_v_nobjs;
   double __pyx_v_x;
   double __pyx_v_prob;
@@ -2174,16 +2174,16 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
   __pyx_pybuffernd_mu.rcbuffer = &__pyx_pybuffer_mu;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_g.rcbuffer->pybuffer, (PyObject*)__pyx_v_g, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_g.rcbuffer->pybuffer, (PyObject*)__pyx_v_g, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_pybuffernd_g.diminfo[0].strides = __pyx_pybuffernd_g.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_g.diminfo[0].shape = __pyx_pybuffernd_g.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mu.rcbuffer->pybuffer, (PyObject*)__pyx_v_mu, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mu.rcbuffer->pybuffer, (PyObject*)__pyx_v_mu, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_pybuffernd_mu.diminfo[0].strides = __pyx_pybuffernd_mu.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_mu.diminfo[0].shape = __pyx_pybuffernd_mu.rcbuffer->pybuffer.shape[0];
 
-  /* "voigt_tools.pyx":78
+  /* "nfwfitter/voigt_tools.pyx":78
  *                double gamma):
  * 
  *     cdef Py_ssize_t nobjs = g.shape[0]             # <<<<<<<<<<<<<<
@@ -2192,7 +2192,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_nobjs = (__pyx_v_g->dimensions[0]);
 
-  /* "voigt_tools.pyx":79
+  /* "nfwfitter/voigt_tools.pyx":79
  * 
  *     cdef Py_ssize_t nobjs = g.shape[0]
  *     cdef double x = 0.             # <<<<<<<<<<<<<<
@@ -2201,7 +2201,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_x = 0.;
 
-  /* "voigt_tools.pyx":80
+  /* "nfwfitter/voigt_tools.pyx":80
  *     cdef Py_ssize_t nobjs = g.shape[0]
  *     cdef double x = 0.
  *     cdef double prob = 0.             # <<<<<<<<<<<<<<
@@ -2210,7 +2210,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_prob = 0.;
 
-  /* "voigt_tools.pyx":82
+  /* "nfwfitter/voigt_tools.pyx":82
  *     cdef double prob = 0.
  * 
  *     cdef double tot_logprob = 0.             # <<<<<<<<<<<<<<
@@ -2219,7 +2219,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_tot_logprob = 0.;
 
-  /* "voigt_tools.pyx":83
+  /* "nfwfitter/voigt_tools.pyx":83
  * 
  *     cdef double tot_logprob = 0.
  *     cdef int i = nobjs             # <<<<<<<<<<<<<<
@@ -2228,7 +2228,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_i = __pyx_v_nobjs;
 
-  /* "voigt_tools.pyx":84
+  /* "nfwfitter/voigt_tools.pyx":84
  *     cdef double tot_logprob = 0.
  *     cdef int i = nobjs
  *     for i from nobjs > i >=0:             # <<<<<<<<<<<<<<
@@ -2237,7 +2237,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
   for (__pyx_v_i = __pyx_v_nobjs-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "voigt_tools.pyx":86
+    /* "nfwfitter/voigt_tools.pyx":86
  *     for i from nobjs > i >=0:
  * 
  *         x = g[i] - mu[i]             # <<<<<<<<<<<<<<
@@ -2246,9 +2246,9 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
     __pyx_t_1 = __pyx_v_i;
     __pyx_t_2 = __pyx_v_i;
-    __pyx_v_x = ((*__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_g.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_g.diminfo[0].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_mu.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_mu.diminfo[0].strides)));
+    __pyx_v_x = ((*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_g.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_g.diminfo[0].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_mu.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_mu.diminfo[0].strides)));
 
-    /* "voigt_tools.pyx":87
+    /* "nfwfitter/voigt_tools.pyx":87
  * 
  *         x = g[i] - mu[i]
  *         prob = voigt(x, sigma, gamma)             # <<<<<<<<<<<<<<
@@ -2257,7 +2257,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
     __pyx_v_prob = voigt(__pyx_v_x, __pyx_v_sigma, __pyx_v_gamma);
 
-    /* "voigt_tools.pyx":89
+    /* "nfwfitter/voigt_tools.pyx":89
  *         prob = voigt(x, sigma, gamma)
  * 
  *         if isnan(prob) or prob <= 0:             # <<<<<<<<<<<<<<
@@ -2277,7 +2277,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_3) {
 
-      /* "voigt_tools.pyx":90
+      /* "nfwfitter/voigt_tools.pyx":90
  * 
  *         if isnan(prob) or prob <= 0:
  *             return -np.infty             # <<<<<<<<<<<<<<
@@ -2298,7 +2298,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
       goto __pyx_L0;
     }
 
-    /* "voigt_tools.pyx":92
+    /* "nfwfitter/voigt_tools.pyx":92
  *             return -np.infty
  * 
  *         tot_logprob = tot_logprob + log(prob)             # <<<<<<<<<<<<<<
@@ -2308,7 +2308,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
     __pyx_v_tot_logprob = (__pyx_v_tot_logprob + log(__pyx_v_prob));
   }
 
-  /* "voigt_tools.pyx":95
+  /* "nfwfitter/voigt_tools.pyx":95
  * 
  * 
  *     return tot_logprob             # <<<<<<<<<<<<<<
@@ -2322,7 +2322,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "voigt_tools.pyx":73
+  /* "nfwfitter/voigt_tools.pyx":73
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
@@ -2339,7 +2339,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_g.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_mu.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("voigt_tools.likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2351,7 +2351,7 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
   return __pyx_r;
 }
 
-/* "voigt_tools.pyx":104
+/* "nfwfitter/voigt_tools.pyx":104
  * cdef double sqrt2pi = np.sqrt(2*np.pi)
  * 
  * def gauss(double x, double sigma):             # <<<<<<<<<<<<<<
@@ -2360,9 +2360,9 @@ static PyObject *__pyx_pf_11voigt_tools_4likelihood(CYTHON_UNUSED PyObject *__py
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11voigt_tools_7gauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11voigt_tools_7gauss = {"gauss", (PyCFunction)__pyx_pw_11voigt_tools_7gauss, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11voigt_tools_7gauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_7gauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_11voigt_tools_7gauss = {"gauss", (PyCFunction)__pyx_pw_9nfwfitter_11voigt_tools_7gauss, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_7gauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_x;
   double __pyx_v_sigma;
   int __pyx_lineno = 0;
@@ -2410,18 +2410,18 @@ static PyObject *__pyx_pw_11voigt_tools_7gauss(PyObject *__pyx_self, PyObject *_
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("gauss", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("voigt_tools.gauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.gauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11voigt_tools_6gauss(__pyx_self, __pyx_v_x, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_9nfwfitter_11voigt_tools_6gauss(__pyx_self, __pyx_v_x, __pyx_v_sigma);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma) {
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2434,7 +2434,7 @@ static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_sel
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("gauss", 0);
 
-  /* "voigt_tools.pyx":106
+  /* "nfwfitter/voigt_tools.pyx":106
  * def gauss(double x, double sigma):
  * 
  *     return np.exp(-0.5*(x/sigma)**2)/(sigma*sqrt2pi)             # <<<<<<<<<<<<<<
@@ -2485,7 +2485,7 @@ static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_sel
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyFloat_FromDouble((__pyx_v_sigma * __pyx_v_11voigt_tools_sqrt2pi)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyFloat_FromDouble((__pyx_v_sigma * __pyx_v_9nfwfitter_11voigt_tools_sqrt2pi)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
@@ -2495,7 +2495,7 @@ static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_sel
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "voigt_tools.pyx":104
+  /* "nfwfitter/voigt_tools.pyx":104
  * cdef double sqrt2pi = np.sqrt(2*np.pi)
  * 
  * def gauss(double x, double sigma):             # <<<<<<<<<<<<<<
@@ -2510,7 +2510,7 @@ static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_sel
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("voigt_tools.gauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.gauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2518,7 +2518,7 @@ static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_sel
   return __pyx_r;
 }
 
-/* "voigt_tools.pyx":111
+/* "nfwfitter/voigt_tools.pyx":111
  * ####################
  * 
  * def doublegauss(double x,             # <<<<<<<<<<<<<<
@@ -2527,9 +2527,9 @@ static PyObject *__pyx_pf_11voigt_tools_6gauss(CYTHON_UNUSED PyObject *__pyx_sel
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11voigt_tools_9doublegauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11voigt_tools_9doublegauss = {"doublegauss", (PyCFunction)__pyx_pw_11voigt_tools_9doublegauss, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11voigt_tools_9doublegauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_9doublegauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_11voigt_tools_9doublegauss = {"doublegauss", (PyCFunction)__pyx_pw_9nfwfitter_11voigt_tools_9doublegauss, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_9doublegauss(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_x;
   double __pyx_v_sigma1;
   double __pyx_v_sigma2scale;
@@ -2595,18 +2595,18 @@ static PyObject *__pyx_pw_11voigt_tools_9doublegauss(PyObject *__pyx_self, PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("doublegauss", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("voigt_tools.doublegauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.doublegauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11voigt_tools_8doublegauss(__pyx_self, __pyx_v_x, __pyx_v_sigma1, __pyx_v_sigma2scale, __pyx_v_alpha);
+  __pyx_r = __pyx_pf_9nfwfitter_11voigt_tools_8doublegauss(__pyx_self, __pyx_v_x, __pyx_v_sigma1, __pyx_v_sigma2scale, __pyx_v_alpha);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma1, double __pyx_v_sigma2scale, double __pyx_v_alpha) {
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_sigma1, double __pyx_v_sigma2scale, double __pyx_v_alpha) {
   double __pyx_v_sigma2;
   double __pyx_v_comp_alpha;
   PyObject *__pyx_r = NULL;
@@ -2625,7 +2625,7 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("doublegauss", 0);
 
-  /* "voigt_tools.pyx":118
+  /* "nfwfitter/voigt_tools.pyx":118
  * 
  *     cdef double curx
  *     cdef double sigma2 = sigma1*sigma2scale             # <<<<<<<<<<<<<<
@@ -2634,7 +2634,7 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_sigma2 = (__pyx_v_sigma1 * __pyx_v_sigma2scale);
 
-  /* "voigt_tools.pyx":119
+  /* "nfwfitter/voigt_tools.pyx":119
  *     cdef double curx
  *     cdef double sigma2 = sigma1*sigma2scale
  *     cdef double comp_alpha = 1-alpha             # <<<<<<<<<<<<<<
@@ -2643,7 +2643,7 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
  */
   __pyx_v_comp_alpha = (1.0 - __pyx_v_alpha);
 
-  /* "voigt_tools.pyx":120
+  /* "nfwfitter/voigt_tools.pyx":120
  *     cdef double sigma2 = sigma1*sigma2scale
  *     cdef double comp_alpha = 1-alpha
  *     return comp_alpha*gauss(x, sigma1) + alpha*gauss(x, sigma2)             # <<<<<<<<<<<<<<
@@ -2737,7 +2737,7 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "voigt_tools.pyx":111
+  /* "nfwfitter/voigt_tools.pyx":111
  * ####################
  * 
  * def doublegauss(double x,             # <<<<<<<<<<<<<<
@@ -2755,7 +2755,7 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("voigt_tools.doublegauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.doublegauss", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2763,7 +2763,7 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "voigt_tools.pyx":129
+/* "nfwfitter/voigt_tools.pyx":129
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def doublegauss_likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
@@ -2772,9 +2772,9 @@ static PyObject *__pyx_pf_11voigt_tools_8doublegauss(CYTHON_UNUSED PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11voigt_tools_11doublegauss_likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_11voigt_tools_11doublegauss_likelihood = {"doublegauss_likelihood", (PyCFunction)__pyx_pw_11voigt_tools_11doublegauss_likelihood, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11voigt_tools_11doublegauss_likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_11doublegauss_likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_11voigt_tools_11doublegauss_likelihood = {"doublegauss_likelihood", (PyCFunction)__pyx_pw_9nfwfitter_11voigt_tools_11doublegauss_likelihood, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_11voigt_tools_11doublegauss_likelihood(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_g = 0;
   PyArrayObject *__pyx_v_mu = 0;
   double __pyx_v_sigma;
@@ -2849,13 +2849,13 @@ static PyObject *__pyx_pw_11voigt_tools_11doublegauss_likelihood(PyObject *__pyx
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("doublegauss_likelihood", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("voigt_tools.doublegauss_likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.doublegauss_likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_g), __pyx_ptype_5numpy_ndarray, 0, "g", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_mu), __pyx_ptype_5numpy_ndarray, 0, "mu", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_11voigt_tools_10doublegauss_likelihood(__pyx_self, __pyx_v_g, __pyx_v_mu, __pyx_v_sigma, __pyx_v_sigma2scale, __pyx_v_alpha);
+  __pyx_r = __pyx_pf_9nfwfitter_11voigt_tools_10doublegauss_likelihood(__pyx_self, __pyx_v_g, __pyx_v_mu, __pyx_v_sigma, __pyx_v_sigma2scale, __pyx_v_alpha);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2866,7 +2866,7 @@ static PyObject *__pyx_pw_11voigt_tools_11doublegauss_likelihood(PyObject *__pyx
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_sigma2scale, double __pyx_v_alpha) {
+static PyObject *__pyx_pf_9nfwfitter_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_g, PyArrayObject *__pyx_v_mu, double __pyx_v_sigma, double __pyx_v_sigma2scale, double __pyx_v_alpha) {
   Py_ssize_t __pyx_v_nobjs;
   double __pyx_v_x;
   double __pyx_v_prob;
@@ -2906,16 +2906,16 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
   __pyx_pybuffernd_mu.rcbuffer = &__pyx_pybuffer_mu;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_g.rcbuffer->pybuffer, (PyObject*)__pyx_v_g, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_g.rcbuffer->pybuffer, (PyObject*)__pyx_v_g, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_pybuffernd_g.diminfo[0].strides = __pyx_pybuffernd_g.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_g.diminfo[0].shape = __pyx_pybuffernd_g.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mu.rcbuffer->pybuffer, (PyObject*)__pyx_v_mu, &__Pyx_TypeInfo_nn___pyx_t_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_mu.rcbuffer->pybuffer, (PyObject*)__pyx_v_mu, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_11voigt_tools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_pybuffernd_mu.diminfo[0].strides = __pyx_pybuffernd_mu.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_mu.diminfo[0].shape = __pyx_pybuffernd_mu.rcbuffer->pybuffer.shape[0];
 
-  /* "voigt_tools.pyx":135
+  /* "nfwfitter/voigt_tools.pyx":135
  *                            double alpha):
  * 
  *     cdef Py_ssize_t nobjs = g.shape[0]             # <<<<<<<<<<<<<<
@@ -2924,7 +2924,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
   __pyx_v_nobjs = (__pyx_v_g->dimensions[0]);
 
-  /* "voigt_tools.pyx":136
+  /* "nfwfitter/voigt_tools.pyx":136
  * 
  *     cdef Py_ssize_t nobjs = g.shape[0]
  *     cdef double x = 0.             # <<<<<<<<<<<<<<
@@ -2933,7 +2933,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
   __pyx_v_x = 0.;
 
-  /* "voigt_tools.pyx":137
+  /* "nfwfitter/voigt_tools.pyx":137
  *     cdef Py_ssize_t nobjs = g.shape[0]
  *     cdef double x = 0.
  *     cdef double prob = 0.             # <<<<<<<<<<<<<<
@@ -2942,7 +2942,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
   __pyx_v_prob = 0.;
 
-  /* "voigt_tools.pyx":139
+  /* "nfwfitter/voigt_tools.pyx":139
  *     cdef double prob = 0.
  * 
  *     cdef double tot_logprob = 0.             # <<<<<<<<<<<<<<
@@ -2951,7 +2951,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
   __pyx_v_tot_logprob = 0.;
 
-  /* "voigt_tools.pyx":140
+  /* "nfwfitter/voigt_tools.pyx":140
  * 
  *     cdef double tot_logprob = 0.
  *     cdef int i = nobjs             # <<<<<<<<<<<<<<
@@ -2960,7 +2960,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
   __pyx_v_i = __pyx_v_nobjs;
 
-  /* "voigt_tools.pyx":141
+  /* "nfwfitter/voigt_tools.pyx":141
  *     cdef double tot_logprob = 0.
  *     cdef int i = nobjs
  *     for i from nobjs > i >=0:             # <<<<<<<<<<<<<<
@@ -2969,7 +2969,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
   for (__pyx_v_i = __pyx_v_nobjs-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "voigt_tools.pyx":143
+    /* "nfwfitter/voigt_tools.pyx":143
  *     for i from nobjs > i >=0:
  * 
  *         x = g[i] - mu[i]             # <<<<<<<<<<<<<<
@@ -2978,9 +2978,9 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
  */
     __pyx_t_1 = __pyx_v_i;
     __pyx_t_2 = __pyx_v_i;
-    __pyx_v_x = ((*__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_g.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_g.diminfo[0].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_mu.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_mu.diminfo[0].strides)));
+    __pyx_v_x = ((*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_g.rcbuffer->pybuffer.buf, __pyx_t_1, __pyx_pybuffernd_g.diminfo[0].strides)) - (*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_11voigt_tools_DTYPE_T *, __pyx_pybuffernd_mu.rcbuffer->pybuffer.buf, __pyx_t_2, __pyx_pybuffernd_mu.diminfo[0].strides)));
 
-    /* "voigt_tools.pyx":144
+    /* "nfwfitter/voigt_tools.pyx":144
  * 
  *         x = g[i] - mu[i]
  *         prob = doublegauss(x, sigma, sigma2scale, alpha)             # <<<<<<<<<<<<<<
@@ -3034,7 +3034,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_prob = __pyx_t_12;
 
-    /* "voigt_tools.pyx":146
+    /* "nfwfitter/voigt_tools.pyx":146
  *         prob = doublegauss(x, sigma, sigma2scale, alpha)
  * 
  *         if isnan(prob) or prob <= 0:             # <<<<<<<<<<<<<<
@@ -3054,7 +3054,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_13) {
 
-      /* "voigt_tools.pyx":147
+      /* "nfwfitter/voigt_tools.pyx":147
  * 
  *         if isnan(prob) or prob <= 0:
  *             return -np.infty             # <<<<<<<<<<<<<<
@@ -3075,7 +3075,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
       goto __pyx_L0;
     }
 
-    /* "voigt_tools.pyx":149
+    /* "nfwfitter/voigt_tools.pyx":149
  *             return -np.infty
  * 
  *         tot_logprob = tot_logprob + log(prob)             # <<<<<<<<<<<<<<
@@ -3085,7 +3085,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
     __pyx_v_tot_logprob = (__pyx_v_tot_logprob + log(__pyx_v_prob));
   }
 
-  /* "voigt_tools.pyx":152
+  /* "nfwfitter/voigt_tools.pyx":152
  * 
  * 
  *     return tot_logprob             # <<<<<<<<<<<<<<
@@ -3099,7 +3099,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "voigt_tools.pyx":129
+  /* "nfwfitter/voigt_tools.pyx":129
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def doublegauss_likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
@@ -3122,7 +3122,7 @@ static PyObject *__pyx_pf_11voigt_tools_10doublegauss_likelihood(CYTHON_UNUSED P
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_g.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_mu.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("voigt_tools.doublegauss_likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.voigt_tools.doublegauss_likelihood", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -5177,7 +5177,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Id_voigt_tools_pyx_v_1_5_2011_0, __pyx_k_Id_voigt_tools_pyx_v_1_5_2011_0, sizeof(__pyx_k_Id_voigt_tools_pyx_v_1_5_2011_0), 0, 0, 1, 0},
   {&__pyx_kp_u_Non_native_byte_order_not_suppor, __pyx_k_Non_native_byte_order_not_suppor, sizeof(__pyx_k_Non_native_byte_order_not_suppor), 0, 1, 0, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
-  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_k_Users_dapple_astro_mxxlsims_voi, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_voi), 0, 0, 1, 0},
+  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_k_Users_dapple_astro_mxxlsims_nfw, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_nfw), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_alpha, __pyx_k_alpha, sizeof(__pyx_k_alpha), 0, 0, 1, 1},
   {&__pyx_n_s_arange, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
@@ -5205,6 +5205,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_nbins, __pyx_k_nbins, sizeof(__pyx_k_nbins), 0, 0, 1, 1},
   {&__pyx_kp_u_ndarray_is_not_C_contiguous, __pyx_k_ndarray_is_not_C_contiguous, sizeof(__pyx_k_ndarray_is_not_C_contiguous), 0, 1, 0, 0},
   {&__pyx_kp_u_ndarray_is_not_Fortran_contiguou, __pyx_k_ndarray_is_not_Fortran_contiguou, sizeof(__pyx_k_ndarray_is_not_Fortran_contiguou), 0, 1, 0, 0},
+  {&__pyx_n_s_nfwfitter_voigt_tools, __pyx_k_nfwfitter_voigt_tools, sizeof(__pyx_k_nfwfitter_voigt_tools), 0, 0, 1, 1},
   {&__pyx_n_s_nobjs, __pyx_k_nobjs, sizeof(__pyx_k_nobjs), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
@@ -5230,7 +5231,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_k_unknown_dtype_code_in_numpy_pxd, sizeof(__pyx_k_unknown_dtype_code_in_numpy_pxd), 0, 1, 0, 0},
   {&__pyx_n_s_voigtProfile, __pyx_k_voigtProfile, sizeof(__pyx_k_voigtProfile), 0, 0, 1, 1},
   {&__pyx_n_s_voigtSamples, __pyx_k_voigtSamples, sizeof(__pyx_k_voigtSamples), 0, 0, 1, 1},
-  {&__pyx_n_s_voigt_tools, __pyx_k_voigt_tools, sizeof(__pyx_k_voigt_tools), 0, 0, 1, 1},
   {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
   {&__pyx_n_s_xbins, __pyx_k_xbins, sizeof(__pyx_k_xbins), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
@@ -5249,7 +5249,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "voigt_tools.pyx":46
+  /* "nfwfitter/voigt_tools.pyx":46
  * ###############
  * 
  * def voigtSamples(double sigma, double gamma, int size, limits=(-5,5), double binsize = 0.0001):             # <<<<<<<<<<<<<<
@@ -5326,7 +5326,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "voigt_tools.pyx":31
+  /* "nfwfitter/voigt_tools.pyx":31
  * #######################
  * 
  * def voigtProfile(np.ndarray[DTYPE_T, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
@@ -5336,9 +5336,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__8 = PyTuple_Pack(6, __pyx_n_s_x, __pyx_n_s_sigma, __pyx_n_s_gamma, __pyx_n_s_nobjs, __pyx_n_s_results, __pyx_n_s_i); if (unlikely(!__pyx_tuple__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_n_s_voigtProfile, 31, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_voigtProfile, 31, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "voigt_tools.pyx":46
+  /* "nfwfitter/voigt_tools.pyx":46
  * ###############
  * 
  * def voigtSamples(double sigma, double gamma, int size, limits=(-5,5), double binsize = 0.0001):             # <<<<<<<<<<<<<<
@@ -5348,9 +5348,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__10 = PyTuple_Pack(11, __pyx_n_s_sigma, __pyx_n_s_gamma, __pyx_n_s_size, __pyx_n_s_limits, __pyx_n_s_binsize, __pyx_n_s_xbins, __pyx_n_s_probs, __pyx_n_s_nbins, __pyx_n_s_cdf, __pyx_n_s_picks, __pyx_n_s_positions); if (unlikely(!__pyx_tuple__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(5, 0, 11, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_n_s_voigtSamples, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(5, 0, 11, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_voigtSamples, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "voigt_tools.pyx":73
+  /* "nfwfitter/voigt_tools.pyx":73
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
@@ -5360,9 +5360,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__12 = PyTuple_Pack(9, __pyx_n_s_g, __pyx_n_s_mu, __pyx_n_s_sigma, __pyx_n_s_gamma, __pyx_n_s_nobjs, __pyx_n_s_x, __pyx_n_s_prob, __pyx_n_s_tot_logprob, __pyx_n_s_i); if (unlikely(!__pyx_tuple__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
-  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(4, 0, 9, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_n_s_likelihood, 73, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(4, 0, 9, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_likelihood, 73, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "voigt_tools.pyx":104
+  /* "nfwfitter/voigt_tools.pyx":104
  * cdef double sqrt2pi = np.sqrt(2*np.pi)
  * 
  * def gauss(double x, double sigma):             # <<<<<<<<<<<<<<
@@ -5372,9 +5372,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__14 = PyTuple_Pack(2, __pyx_n_s_x, __pyx_n_s_sigma); if (unlikely(!__pyx_tuple__14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
-  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_n_s_gauss, 104, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_gauss, 104, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "voigt_tools.pyx":111
+  /* "nfwfitter/voigt_tools.pyx":111
  * ####################
  * 
  * def doublegauss(double x,             # <<<<<<<<<<<<<<
@@ -5384,9 +5384,9 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__16 = PyTuple_Pack(7, __pyx_n_s_x, __pyx_n_s_sigma1, __pyx_n_s_sigma2scale, __pyx_n_s_alpha, __pyx_n_s_curx, __pyx_n_s_sigma2, __pyx_n_s_comp_alpha); if (unlikely(!__pyx_tuple__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__16);
   __Pyx_GIVEREF(__pyx_tuple__16);
-  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_n_s_doublegauss, 111, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_doublegauss, 111, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "voigt_tools.pyx":129
+  /* "nfwfitter/voigt_tools.pyx":129
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def doublegauss_likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
@@ -5396,7 +5396,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__18 = PyTuple_Pack(10, __pyx_n_s_g, __pyx_n_s_mu, __pyx_n_s_sigma, __pyx_n_s_sigma2scale, __pyx_n_s_alpha, __pyx_n_s_nobjs, __pyx_n_s_x, __pyx_n_s_prob, __pyx_n_s_tot_logprob, __pyx_n_s_i); if (unlikely(!__pyx_tuple__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
-  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_voi, __pyx_n_s_doublegauss_likelihood, 129, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_doublegauss_likelihood, 129, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5480,14 +5480,14 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_voigt_tools) {
+  if (__pyx_module_is_main_nfwfitter__voigt_tools) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "voigt_tools")) {
-      if (unlikely(PyDict_SetItemString(modules, "voigt_tools", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "nfwfitter.voigt_tools")) {
+      if (unlikely(PyDict_SetItemString(modules, "nfwfitter.voigt_tools", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -5516,7 +5516,7 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "voigt_tools.pyx":8
+  /* "nfwfitter/voigt_tools.pyx":8
  * #
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -5528,7 +5528,7 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "voigt_tools.pyx":22
+  /* "nfwfitter/voigt_tools.pyx":22
  * ######################
  * 
  * __cvs_id__ = "$Id: voigt_tools.pyx,v 1.5 2011-01-19 22:39:44 dapple Exp $"             # <<<<<<<<<<<<<<
@@ -5537,7 +5537,7 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_cvs_id, __pyx_kp_s_Id_voigt_tools_pyx_v_1_5_2011_0) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "voigt_tools.pyx":26
+  /* "nfwfitter/voigt_tools.pyx":26
  * ######################
  * 
  * DTYPE = np.double             # <<<<<<<<<<<<<<
@@ -5552,43 +5552,43 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_DTYPE, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":31
+  /* "nfwfitter/voigt_tools.pyx":31
  * #######################
  * 
  * def voigtProfile(np.ndarray[DTYPE_T, ndim=1, mode='c'] x,             # <<<<<<<<<<<<<<
  *           double sigma,
  *           double gamma):
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11voigt_tools_1voigtProfile, NULL, __pyx_n_s_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_11voigt_tools_1voigtProfile, NULL, __pyx_n_s_nfwfitter_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_voigtProfile, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":46
+  /* "nfwfitter/voigt_tools.pyx":46
  * ###############
  * 
  * def voigtSamples(double sigma, double gamma, int size, limits=(-5,5), double binsize = 0.0001):             # <<<<<<<<<<<<<<
  * 
  *     cdef np.ndarray[DTYPE_T, ndim=1, mode='c'] xbins = np.arange(limits[0], limits[1], binsize)
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11voigt_tools_3voigtSamples, NULL, __pyx_n_s_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_11voigt_tools_3voigtSamples, NULL, __pyx_n_s_nfwfitter_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_voigtSamples, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":73
+  /* "nfwfitter/voigt_tools.pyx":73
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
  *                np.ndarray[DTYPE_T, ndim=1, mode='c'] mu not None,
  *                double sigma,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11voigt_tools_5likelihood, NULL, __pyx_n_s_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_11voigt_tools_5likelihood, NULL, __pyx_n_s_nfwfitter_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_likelihood, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":102
+  /* "nfwfitter/voigt_tools.pyx":102
  * #####################
  * 
  * cdef double sqrt2pi = np.sqrt(2*np.pi)             # <<<<<<<<<<<<<<
@@ -5636,45 +5636,45 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_11voigt_tools_sqrt2pi = __pyx_t_6;
+  __pyx_v_9nfwfitter_11voigt_tools_sqrt2pi = __pyx_t_6;
 
-  /* "voigt_tools.pyx":104
+  /* "nfwfitter/voigt_tools.pyx":104
  * cdef double sqrt2pi = np.sqrt(2*np.pi)
  * 
  * def gauss(double x, double sigma):             # <<<<<<<<<<<<<<
  * 
  *     return np.exp(-0.5*(x/sigma)**2)/(sigma*sqrt2pi)
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11voigt_tools_7gauss, NULL, __pyx_n_s_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_11voigt_tools_7gauss, NULL, __pyx_n_s_nfwfitter_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_gauss, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":111
+  /* "nfwfitter/voigt_tools.pyx":111
  * ####################
  * 
  * def doublegauss(double x,             # <<<<<<<<<<<<<<
  *                 double sigma1,
  *                 double sigma2scale,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11voigt_tools_9doublegauss, NULL, __pyx_n_s_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_11voigt_tools_9doublegauss, NULL, __pyx_n_s_nfwfitter_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_doublegauss, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":129
+  /* "nfwfitter/voigt_tools.pyx":129
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def doublegauss_likelihood(np.ndarray[DTYPE_T, ndim=1, mode='c'] g not None,             # <<<<<<<<<<<<<<
  *                            np.ndarray[DTYPE_T, ndim=1, mode='c'] mu not None,
  *                            double sigma,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_11voigt_tools_11doublegauss_likelihood, NULL, __pyx_n_s_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_11voigt_tools_11doublegauss_likelihood, NULL, __pyx_n_s_nfwfitter_voigt_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_doublegauss_likelihood, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 129; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "voigt_tools.pyx":1
+  /* "nfwfitter/voigt_tools.pyx":1
  * ########             # <<<<<<<<<<<<<<
  * # Wrapper Around Voigt Function defined in C
  * #########
@@ -5703,12 +5703,12 @@ PyMODINIT_FUNC PyInit_voigt_tools(void)
   __Pyx_XDECREF(__pyx_t_5);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init voigt_tools", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init nfwfitter.voigt_tools", __pyx_clineno, __pyx_lineno, __pyx_filename);
       Py_DECREF(__pyx_d); __pyx_d = 0;
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init voigt_tools");
+    PyErr_SetString(PyExc_ImportError, "init nfwfitter.voigt_tools");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

@@ -224,8 +224,8 @@ void __Pyx_call_destructor(T* x) {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__nfwmodeltools
-#define __PYX_HAVE_API__nfwmodeltools
+#define __PYX_HAVE__nfwfitter__nfwmodeltools
+#define __PYX_HAVE_API__nfwfitter__nfwmodeltools
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -435,7 +435,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "nfwmodeltools.pyx",
+  "nfwfitter/nfwmodeltools.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -664,14 +664,14 @@ typedef npy_double __pyx_t_5numpy_double_t;
  */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
-/* "nfwmodeltools.pyx":37
+/* "nfwfitter/nfwmodeltools.pyx":37
  * 
  * DTYPE = np.double
  * ctypedef np.double_t DTYPE_T             # <<<<<<<<<<<<<<
  * 
  * #########################
  */
-typedef __pyx_t_5numpy_double_t __pyx_t_13nfwmodeltools_DTYPE_T;
+typedef __pyx_t_5numpy_double_t __pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T;
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     typedef ::std::complex< float > __pyx_t_float_complex;
@@ -694,7 +694,7 @@ typedef __pyx_t_5numpy_double_t __pyx_t_13nfwmodeltools_DTYPE_T;
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs;
+struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs;
 
 /* "../../anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":762
  * ctypedef npy_longdouble longdouble_t
@@ -731,28 +731,28 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  * cdef inline object PyArray_MultiIterNew1(a):
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
-struct __pyx_opt_args_13nfwmodeltools_deltaC;
+struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC;
 
-/* "nfwmodeltools.pyx":46
+/* "nfwfitter/nfwmodeltools.pyx":46
  * ############################
  * 
  * cdef double deltaC(double c, double delta = 200.):             # <<<<<<<<<<<<<<
  *     return (delta/3.) * c**3 / (log(1+c) - c/(1+c))
  * 
  */
-struct __pyx_opt_args_13nfwmodeltools_deltaC {
+struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC {
   int __pyx_n;
   double delta;
 };
 
-/* "nfwmodeltools.pyx":186
+/* "nfwfitter/nfwmodeltools.pyx":186
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rdelta2rs(double rdelta,             # <<<<<<<<<<<<<<
  *               double c200,
  *               double delta):
  */
-struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs {
+struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs {
   PyObject_HEAD
   double __pyx_v_delta;
   double __pyx_v_delta_c;
@@ -1146,29 +1146,29 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from 'nfwmodeltools' */
-static PyTypeObject *__pyx_ptype_13nfwmodeltools___pyx_scope_struct__rdelta2rs = 0;
-static double __pyx_f_13nfwmodeltools_deltaC(double, struct __pyx_opt_args_13nfwmodeltools_deltaC *__pyx_optional_args); /*proto*/
+/* Module declarations from 'nfwfitter.nfwmodeltools' */
+static PyTypeObject *__pyx_ptype_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs = 0;
+static double __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(double, struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC *__pyx_optional_args); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_double_t = { "double_t", NULL, sizeof(__pyx_t_5numpy_double_t), { 0 }, 0, 'R', 0, 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T = { "DTYPE_T", NULL, sizeof(__pyx_t_13nfwmodeltools_DTYPE_T), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "nfwmodeltools"
-int __pyx_module_is_main_nfwmodeltools = 0;
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T = { "DTYPE_T", NULL, sizeof(__pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T), { 0 }, 0, 'R', 0, 0 };
+#define __Pyx_MODULE_NAME "nfwfitter.nfwmodeltools"
+int __pyx_module_is_main_nfwfitter__nfwmodeltools = 0;
 
-/* Implementation of 'nfwmodeltools' */
+/* Implementation of 'nfwfitter.nfwmodeltools' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
-static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rdelta, double __pyx_v_c200, double __pyx_v_delta); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_c, double __pyx_v_rho_c, double __pyx_v_delta); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rs, double __pyx_v_c, double __pyx_v_R, double __pyx_v_rho_c); /* proto */
-static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_cdelta, PyArrayObject *__pyx_v_bin_r_mpc, PyArrayObject *__pyx_v_bin_shear, PyArrayObject *__pyx_v_bin_shearerr, PyArrayObject *__pyx_v_avebeta, PyArrayObject *__pyx_v_avebeta2, double __pyx_v_rho_c, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_massdelta); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rdelta, double __pyx_v_c200, double __pyx_v_delta); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_c, double __pyx_v_rho_c, double __pyx_v_delta); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rs, double __pyx_v_c, double __pyx_v_R, double __pyx_v_rho_c); /* proto */
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_cdelta, PyArrayObject *__pyx_v_bin_r_mpc, PyArrayObject *__pyx_v_bin_shear, PyArrayObject *__pyx_v_bin_shearerr, PyArrayObject *__pyx_v_avebeta, PyArrayObject *__pyx_v_avebeta2, double __pyx_v_rho_c, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_massdelta); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
-static PyObject *__pyx_tp_new_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static char __pyx_k_B[] = "B";
 static char __pyx_k_H[] = "H";
 static char __pyx_k_I[] = "I";
@@ -1250,15 +1250,15 @@ static char __pyx_k_RuntimeError[] = "RuntimeError";
 static char __pyx_k_bin_shearerr[] = "bin_shearerr";
 static char __pyx_k_rscaleConstM[] = "rscaleConstM";
 static char __pyx_k_concentration[] = "concentration";
-static char __pyx_k_nfwmodeltools[] = "nfwmodeltools";
 static char __pyx_k_scipy_optimize[] = "scipy.optimize";
 static char __pyx_k_aveEnclosedKappa[] = "aveEnclosedKappa";
 static char __pyx_k_shearprofile_like[] = "shearprofile_like";
 static char __pyx_k_rdelta2rs_locals_f[] = "rdelta2rs.<locals>.f";
 static char __pyx_k_rho_c_over_sigma_c[] = "rho_c_over_sigma_c";
+static char __pyx_k_nfwfitter_nfwmodeltools[] = "nfwfitter.nfwmodeltools";
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
 static char __pyx_k_Id_nfwmodeltools_pyx_v_1_5_2011[] = "$Id: nfwmodeltools.pyx,v 1.5 2011-02-09 01:59:14 dapple Exp $";
-static char __pyx_k_Users_dapple_astro_mxxlsims_nfw[] = "/Users/dapple/astro/mxxlsims/nfwmodeltools.pyx";
+static char __pyx_k_Users_dapple_astro_mxxlsims_nfw[] = "/Users/dapple/astro/mxxlsims/nfwfitter/nfwmodeltools.pyx";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
 static char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte order not supported";
@@ -1319,7 +1319,7 @@ static PyObject *__pyx_n_s_modsig;
 static PyObject *__pyx_n_s_nbins;
 static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
 static PyObject *__pyx_kp_u_ndarray_is_not_Fortran_contiguou;
-static PyObject *__pyx_n_s_nfwmodeltools;
+static PyObject *__pyx_n_s_nfwfitter_nfwmodeltools;
 static PyObject *__pyx_n_s_nfwutils;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_npos;
@@ -1376,7 +1376,7 @@ static PyObject *__pyx_codeobj__18;
 static PyObject *__pyx_codeobj__20;
 static PyObject *__pyx_codeobj__22;
 
-/* "nfwmodeltools.pyx":46
+/* "nfwfitter/nfwmodeltools.pyx":46
  * ############################
  * 
  * cdef double deltaC(double c, double delta = 200.):             # <<<<<<<<<<<<<<
@@ -1384,7 +1384,7 @@ static PyObject *__pyx_codeobj__22;
  * 
  */
 
-static double __pyx_f_13nfwmodeltools_deltaC(double __pyx_v_c, struct __pyx_opt_args_13nfwmodeltools_deltaC *__pyx_optional_args) {
+static double __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(double __pyx_v_c, struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC *__pyx_optional_args) {
   double __pyx_v_delta = ((double)200.);
   double __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -1401,7 +1401,7 @@ static double __pyx_f_13nfwmodeltools_deltaC(double __pyx_v_c, struct __pyx_opt_
     }
   }
 
-  /* "nfwmodeltools.pyx":47
+  /* "nfwfitter/nfwmodeltools.pyx":47
  * 
  * cdef double deltaC(double c, double delta = 200.):
  *     return (delta/3.) * c**3 / (log(1+c) - c/(1+c))             # <<<<<<<<<<<<<<
@@ -1434,7 +1434,7 @@ static double __pyx_f_13nfwmodeltools_deltaC(double __pyx_v_c, struct __pyx_opt_
   __pyx_r = (__pyx_t_1 / __pyx_t_3);
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":46
+  /* "nfwfitter/nfwmodeltools.pyx":46
  * ############################
  * 
  * cdef double deltaC(double c, double delta = 200.):             # <<<<<<<<<<<<<<
@@ -1444,14 +1444,14 @@ static double __pyx_f_13nfwmodeltools_deltaC(double __pyx_v_c, struct __pyx_opt_
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("nfwmodeltools.deltaC", __pyx_clineno, __pyx_lineno, __pyx_filename, 0);
+  __Pyx_WriteUnraisable("nfwfitter.nfwmodeltools.deltaC", __pyx_clineno, __pyx_lineno, __pyx_filename, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":54
+/* "nfwfitter/nfwmodeltools.pyx":54
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -1460,9 +1460,9 @@ static double __pyx_f_13nfwmodeltools_deltaC(double __pyx_v_c, struct __pyx_opt_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_1NFWShear(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_1NFWShear = {"NFWShear", (PyCFunction)__pyx_pw_13nfwmodeltools_1NFWShear, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_1NFWShear(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_1NFWShear(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_1NFWShear = {"NFWShear", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_1NFWShear, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_1NFWShear(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_r = 0;
   double __pyx_v_concentration;
   double __pyx_v_rs;
@@ -1543,12 +1543,12 @@ static PyObject *__pyx_pw_13nfwmodeltools_1NFWShear(PyObject *__pyx_self, PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("NFWShear", 0, 4, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.NFWShear", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.NFWShear", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_ptype_5numpy_ndarray, 1, "r", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_13nfwmodeltools_NFWShear(__pyx_self, __pyx_v_r, __pyx_v_concentration, __pyx_v_rs, __pyx_v_rho_c_over_sigma_c, __pyx_v_delta);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_NFWShear(__pyx_self, __pyx_v_r, __pyx_v_concentration, __pyx_v_rs, __pyx_v_rho_c_over_sigma_c, __pyx_v_delta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1559,7 +1559,7 @@ static PyObject *__pyx_pw_13nfwmodeltools_1NFWShear(PyObject *__pyx_self, PyObje
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta) {
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta) {
   double __pyx_v_delta_c;
   double __pyx_v_amp;
   double __pyx_v_x;
@@ -1576,7 +1576,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   double __pyx_t_1;
-  struct __pyx_opt_args_13nfwmodeltools_deltaC __pyx_t_2;
+  struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
@@ -1613,7 +1613,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
 
-  /* "nfwmodeltools.pyx":60
+  /* "nfwfitter/nfwmodeltools.pyx":60
  *              double delta = 200.):
  * 
  *     cdef double delta_c = deltaC(concentration, delta = delta)             # <<<<<<<<<<<<<<
@@ -1622,10 +1622,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.delta = __pyx_v_delta;
-  __pyx_t_1 = __pyx_f_13nfwmodeltools_deltaC(__pyx_v_concentration, &__pyx_t_2); 
+  __pyx_t_1 = __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(__pyx_v_concentration, &__pyx_t_2); 
   __pyx_v_delta_c = __pyx_t_1;
 
-  /* "nfwmodeltools.pyx":61
+  /* "nfwfitter/nfwmodeltools.pyx":61
  * 
  *     cdef double delta_c = deltaC(concentration, delta = delta)
  *     cdef double amp = rs*delta_c*rho_c_over_sigma_c             # <<<<<<<<<<<<<<
@@ -1634,7 +1634,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
   __pyx_v_amp = ((__pyx_v_rs * __pyx_v_delta_c) * __pyx_v_rho_c_over_sigma_c);
 
-  /* "nfwmodeltools.pyx":65
+  /* "nfwfitter/nfwmodeltools.pyx":65
  *     cdef double x,a,b,c
  *     cdef Py_ssize_t i, npos
  *     npos = r.shape[0]             # <<<<<<<<<<<<<<
@@ -1643,7 +1643,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
   __pyx_v_npos = (__pyx_v_r->dimensions[0]);
 
-  /* "nfwmodeltools.pyx":66
+  /* "nfwfitter/nfwmodeltools.pyx":66
  *     cdef Py_ssize_t i, npos
  *     npos = r.shape[0]
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] g = np.zeros(r.shape[0], dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -1690,7 +1690,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
   __pyx_v_g = ((PyArrayObject *)__pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "nfwmodeltools.pyx":68
+  /* "nfwfitter/nfwmodeltools.pyx":68
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] g = np.zeros(r.shape[0], dtype=np.float64)
  * 
  *     for i from npos > i >= 0:             # <<<<<<<<<<<<<<
@@ -1699,7 +1699,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
   for (__pyx_v_i = __pyx_v_npos-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "nfwmodeltools.pyx":70
+    /* "nfwfitter/nfwmodeltools.pyx":70
  *     for i from npos > i >= 0:
  * 
  *         x = r[i]/rs             # <<<<<<<<<<<<<<
@@ -1720,7 +1720,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
     }
     __pyx_v_x = (__pyx_t_10 / __pyx_v_rs);
 
-    /* "nfwmodeltools.pyx":72
+    /* "nfwfitter/nfwmodeltools.pyx":72
  *         x = r[i]/rs
  * 
  *         if x < 1:             # <<<<<<<<<<<<<<
@@ -1730,7 +1730,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
     __pyx_t_11 = ((__pyx_v_x < 1.0) != 0);
     if (__pyx_t_11) {
 
-      /* "nfwmodeltools.pyx":74
+      /* "nfwfitter/nfwmodeltools.pyx":74
  *         if x < 1:
  * 
  *             a = atanh(sqrt((1-x)/(1+x)))             # <<<<<<<<<<<<<<
@@ -1751,7 +1751,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
       }
       __pyx_v_a = atanh(sqrt((__pyx_t_1 / __pyx_t_12)));
 
-      /* "nfwmodeltools.pyx":75
+      /* "nfwfitter/nfwmodeltools.pyx":75
  * 
  *             a = atanh(sqrt((1-x)/(1+x)))
  *             b = sqrt(1-x**2)             # <<<<<<<<<<<<<<
@@ -1760,7 +1760,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
       __pyx_v_b = sqrt((1.0 - pow(__pyx_v_x, 2.0)));
 
-      /* "nfwmodeltools.pyx":76
+      /* "nfwfitter/nfwmodeltools.pyx":76
  *             a = atanh(sqrt((1-x)/(1+x)))
  *             b = sqrt(1-x**2)
  *             c = (x**2) - 1             # <<<<<<<<<<<<<<
@@ -1769,7 +1769,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
       __pyx_v_c = (pow(__pyx_v_x, 2.0) - 1.0);
 
-      /* "nfwmodeltools.pyx":78
+      /* "nfwfitter/nfwmodeltools.pyx":78
  *             c = (x**2) - 1
  * 
  *             g[i] = 8*a/(b*x**2) + 4*log(x/2)/x**2 - 2/c + 4*a/(b*c)             # <<<<<<<<<<<<<<
@@ -1827,7 +1827,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
       goto __pyx_L5;
     }
 
-    /* "nfwmodeltools.pyx":80
+    /* "nfwfitter/nfwmodeltools.pyx":80
  *             g[i] = 8*a/(b*x**2) + 4*log(x/2)/x**2 - 2/c + 4*a/(b*c)
  * 
  *         elif x > 1:             # <<<<<<<<<<<<<<
@@ -1837,7 +1837,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
     __pyx_t_11 = ((__pyx_v_x > 1.0) != 0);
     if (__pyx_t_11) {
 
-      /* "nfwmodeltools.pyx":82
+      /* "nfwfitter/nfwmodeltools.pyx":82
  *         elif x > 1:
  * 
  *             a = atan(sqrt((x-1)/(1+x)))             # <<<<<<<<<<<<<<
@@ -1858,7 +1858,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
       }
       __pyx_v_a = atan(sqrt((__pyx_t_16 / __pyx_t_15)));
 
-      /* "nfwmodeltools.pyx":83
+      /* "nfwfitter/nfwmodeltools.pyx":83
  * 
  *             a = atan(sqrt((x-1)/(1+x)))
  *             b = sqrt(x**2-1)             # <<<<<<<<<<<<<<
@@ -1867,7 +1867,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
       __pyx_v_b = sqrt((pow(__pyx_v_x, 2.0) - 1.0));
 
-      /* "nfwmodeltools.pyx":85
+      /* "nfwfitter/nfwmodeltools.pyx":85
  *             b = sqrt(x**2-1)
  * 
  *             g[i] = 8*a/(b*x**2) + 4*log(x/2)/x**2 - 2/b**2 + 4*a/b**3             # <<<<<<<<<<<<<<
@@ -1927,7 +1927,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
     }
     /*else*/ {
 
-      /* "nfwmodeltools.pyx":89
+      /* "nfwfitter/nfwmodeltools.pyx":89
  *         else:
  * 
  *             g[i] = 10./3 + 4*log(.5)             # <<<<<<<<<<<<<<
@@ -1940,7 +1940,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
     __pyx_L5:;
   }
 
-  /* "nfwmodeltools.pyx":91
+  /* "nfwfitter/nfwmodeltools.pyx":91
  *             g[i] = 10./3 + 4*log(.5)
  * 
  *     return amp*g             # <<<<<<<<<<<<<<
@@ -1957,7 +1957,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":54
+  /* "nfwfitter/nfwmodeltools.pyx":54
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -1977,7 +1977,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_g.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("nfwmodeltools.NFWShear", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.NFWShear", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -1990,7 +1990,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":97
+/* "nfwfitter/nfwmodeltools.pyx":97
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -1999,9 +1999,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_NFWShear(CYTHON_UNUSED PyObject *__pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_3NFWKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_3NFWKappa = {"NFWKappa", (PyCFunction)__pyx_pw_13nfwmodeltools_3NFWKappa, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_3NFWKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_3NFWKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_3NFWKappa = {"NFWKappa", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_3NFWKappa, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_3NFWKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_r = 0;
   double __pyx_v_concentration;
   double __pyx_v_rs;
@@ -2082,12 +2082,12 @@ static PyObject *__pyx_pw_13nfwmodeltools_3NFWKappa(PyObject *__pyx_self, PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("NFWKappa", 0, 4, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.NFWKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.NFWKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_ptype_5numpy_ndarray, 1, "r", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_13nfwmodeltools_2NFWKappa(__pyx_self, __pyx_v_r, __pyx_v_concentration, __pyx_v_rs, __pyx_v_rho_c_over_sigma_c, __pyx_v_delta);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_2NFWKappa(__pyx_self, __pyx_v_r, __pyx_v_concentration, __pyx_v_rs, __pyx_v_rho_c_over_sigma_c, __pyx_v_delta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2098,7 +2098,7 @@ static PyObject *__pyx_pw_13nfwmodeltools_3NFWKappa(PyObject *__pyx_self, PyObje
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta) {
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta) {
   double __pyx_v_delta_c;
   double __pyx_v_amp;
   Py_ssize_t __pyx_v_i;
@@ -2115,7 +2115,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   double __pyx_t_1;
-  struct __pyx_opt_args_13nfwmodeltools_deltaC __pyx_t_2;
+  struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
@@ -2147,7 +2147,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
 
-  /* "nfwmodeltools.pyx":104
+  /* "nfwfitter/nfwmodeltools.pyx":104
  * 
  * 
  *     cdef double delta_c = deltaC(concentration, delta = delta)             # <<<<<<<<<<<<<<
@@ -2156,10 +2156,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.delta = __pyx_v_delta;
-  __pyx_t_1 = __pyx_f_13nfwmodeltools_deltaC(__pyx_v_concentration, &__pyx_t_2); 
+  __pyx_t_1 = __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(__pyx_v_concentration, &__pyx_t_2); 
   __pyx_v_delta_c = __pyx_t_1;
 
-  /* "nfwmodeltools.pyx":105
+  /* "nfwfitter/nfwmodeltools.pyx":105
  * 
  *     cdef double delta_c = deltaC(concentration, delta = delta)
  *     cdef double amp = 2*rs*delta_c*rho_c_over_sigma_c             # <<<<<<<<<<<<<<
@@ -2168,7 +2168,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_amp = (((2.0 * __pyx_v_rs) * __pyx_v_delta_c) * __pyx_v_rho_c_over_sigma_c);
 
-  /* "nfwmodeltools.pyx":108
+  /* "nfwfitter/nfwmodeltools.pyx":108
  * 
  *     cdef Py_ssize_t i, npos
  *     npos = r.shape[0]             # <<<<<<<<<<<<<<
@@ -2177,7 +2177,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
   __pyx_v_npos = (__pyx_v_r->dimensions[0]);
 
-  /* "nfwmodeltools.pyx":109
+  /* "nfwfitter/nfwmodeltools.pyx":109
  *     cdef Py_ssize_t i, npos
  *     npos = r.shape[0]
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] kappa = np.zeros(npos, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -2224,7 +2224,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
   __pyx_v_kappa = ((PyArrayObject *)__pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "nfwmodeltools.pyx":113
+  /* "nfwfitter/nfwmodeltools.pyx":113
  *     cdef double x, a,b,c
  * 
  *     for i from npos > i >= 0:             # <<<<<<<<<<<<<<
@@ -2233,7 +2233,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
   for (__pyx_v_i = __pyx_v_npos-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "nfwmodeltools.pyx":115
+    /* "nfwfitter/nfwmodeltools.pyx":115
  *     for i from npos > i >= 0:
  * 
  *         x = r[i]/rs             # <<<<<<<<<<<<<<
@@ -2254,7 +2254,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
     }
     __pyx_v_x = (__pyx_t_10 / __pyx_v_rs);
 
-    /* "nfwmodeltools.pyx":117
+    /* "nfwfitter/nfwmodeltools.pyx":117
  *         x = r[i]/rs
  * 
  *         if x < 1:             # <<<<<<<<<<<<<<
@@ -2264,7 +2264,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
     __pyx_t_11 = ((__pyx_v_x < 1.0) != 0);
     if (__pyx_t_11) {
 
-      /* "nfwmodeltools.pyx":119
+      /* "nfwfitter/nfwmodeltools.pyx":119
  *         if x < 1:
  * 
  *             a = atanh(sqrt((1-x)/(1+x)))             # <<<<<<<<<<<<<<
@@ -2285,7 +2285,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
       }
       __pyx_v_a = atanh(sqrt((__pyx_t_1 / __pyx_t_12)));
 
-      /* "nfwmodeltools.pyx":120
+      /* "nfwfitter/nfwmodeltools.pyx":120
  * 
  *             a = atanh(sqrt((1-x)/(1+x)))
  *             b = sqrt(1-x**2)             # <<<<<<<<<<<<<<
@@ -2294,7 +2294,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
       __pyx_v_b = sqrt((1.0 - pow(__pyx_v_x, 2.0)));
 
-      /* "nfwmodeltools.pyx":121
+      /* "nfwfitter/nfwmodeltools.pyx":121
  *             a = atanh(sqrt((1-x)/(1+x)))
  *             b = sqrt(1-x**2)
  *             c = 1./(x**2 - 1)             # <<<<<<<<<<<<<<
@@ -2314,7 +2314,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
       }
       __pyx_v_c = (1. / __pyx_t_12);
 
-      /* "nfwmodeltools.pyx":122
+      /* "nfwfitter/nfwmodeltools.pyx":122
  *             b = sqrt(1-x**2)
  *             c = 1./(x**2 - 1)
  *             kappa[i] = c*(1 - 2.*a/b)             # <<<<<<<<<<<<<<
@@ -2337,7 +2337,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
       goto __pyx_L5;
     }
 
-    /* "nfwmodeltools.pyx":124
+    /* "nfwfitter/nfwmodeltools.pyx":124
  *             kappa[i] = c*(1 - 2.*a/b)
  * 
  *         elif x > 1:             # <<<<<<<<<<<<<<
@@ -2347,7 +2347,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
     __pyx_t_11 = ((__pyx_v_x > 1.0) != 0);
     if (__pyx_t_11) {
 
-      /* "nfwmodeltools.pyx":125
+      /* "nfwfitter/nfwmodeltools.pyx":125
  * 
  *         elif x > 1:
  *             a = atan(sqrt((x-1)/(1+x)))             # <<<<<<<<<<<<<<
@@ -2368,7 +2368,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
       }
       __pyx_v_a = atan(sqrt((__pyx_t_12 / __pyx_t_1)));
 
-      /* "nfwmodeltools.pyx":126
+      /* "nfwfitter/nfwmodeltools.pyx":126
  *         elif x > 1:
  *             a = atan(sqrt((x-1)/(1+x)))
  *             b = sqrt(x**2-1)             # <<<<<<<<<<<<<<
@@ -2377,7 +2377,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
       __pyx_v_b = sqrt((pow(__pyx_v_x, 2.0) - 1.0));
 
-      /* "nfwmodeltools.pyx":127
+      /* "nfwfitter/nfwmodeltools.pyx":127
  *             a = atan(sqrt((x-1)/(1+x)))
  *             b = sqrt(x**2-1)
  *             c = 1./(x**2 - 1)             # <<<<<<<<<<<<<<
@@ -2397,7 +2397,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
       }
       __pyx_v_c = (1. / __pyx_t_1);
 
-      /* "nfwmodeltools.pyx":128
+      /* "nfwfitter/nfwmodeltools.pyx":128
  *             b = sqrt(x**2-1)
  *             c = 1./(x**2 - 1)
  *             kappa[i] = c*(1 - 2.*a/b)             # <<<<<<<<<<<<<<
@@ -2421,7 +2421,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
     }
     /*else*/ {
 
-      /* "nfwmodeltools.pyx":131
+      /* "nfwfitter/nfwmodeltools.pyx":131
  * 
  *         else:
  *             kappa[i] = 1./3.             # <<<<<<<<<<<<<<
@@ -2434,7 +2434,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
     __pyx_L5:;
   }
 
-  /* "nfwmodeltools.pyx":133
+  /* "nfwfitter/nfwmodeltools.pyx":133
  *             kappa[i] = 1./3.
  * 
  *     return kappa*amp             # <<<<<<<<<<<<<<
@@ -2451,7 +2451,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":97
+  /* "nfwfitter/nfwmodeltools.pyx":97
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -2471,7 +2471,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_kappa.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("nfwmodeltools.NFWKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.NFWKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2484,7 +2484,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":140
+/* "nfwfitter/nfwmodeltools.pyx":140
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -2493,9 +2493,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_2NFWKappa(CYTHON_UNUSED PyObject *__py
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_5aveEnclosedKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_5aveEnclosedKappa = {"aveEnclosedKappa", (PyCFunction)__pyx_pw_13nfwmodeltools_5aveEnclosedKappa, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_5aveEnclosedKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_5aveEnclosedKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_5aveEnclosedKappa = {"aveEnclosedKappa", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_5aveEnclosedKappa, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_5aveEnclosedKappa(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_r = 0;
   double __pyx_v_concentration;
   double __pyx_v_rs;
@@ -2576,12 +2576,12 @@ static PyObject *__pyx_pw_13nfwmodeltools_5aveEnclosedKappa(PyObject *__pyx_self
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("aveEnclosedKappa", 0, 4, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.aveEnclosedKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.aveEnclosedKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_r), __pyx_ptype_5numpy_ndarray, 1, "r", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_13nfwmodeltools_4aveEnclosedKappa(__pyx_self, __pyx_v_r, __pyx_v_concentration, __pyx_v_rs, __pyx_v_rho_c_over_sigma_c, __pyx_v_delta);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_4aveEnclosedKappa(__pyx_self, __pyx_v_r, __pyx_v_concentration, __pyx_v_rs, __pyx_v_rho_c_over_sigma_c, __pyx_v_delta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2592,7 +2592,7 @@ static PyObject *__pyx_pw_13nfwmodeltools_5aveEnclosedKappa(PyObject *__pyx_self
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta) {
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_r, double __pyx_v_concentration, double __pyx_v_rs, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_delta) {
   double __pyx_v_delta_c;
   double __pyx_v_amp;
   Py_ssize_t __pyx_v_i;
@@ -2609,7 +2609,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   double __pyx_t_1;
-  struct __pyx_opt_args_13nfwmodeltools_deltaC __pyx_t_2;
+  struct __pyx_opt_args_9nfwfitter_13nfwmodeltools_deltaC __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
@@ -2641,7 +2641,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
 
-  /* "nfwmodeltools.pyx":146
+  /* "nfwfitter/nfwmodeltools.pyx":146
  *                      double delta = 200.):
  * 
  *     cdef double delta_c = deltaC(concentration, delta = delta)             # <<<<<<<<<<<<<<
@@ -2650,10 +2650,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.delta = __pyx_v_delta;
-  __pyx_t_1 = __pyx_f_13nfwmodeltools_deltaC(__pyx_v_concentration, &__pyx_t_2); 
+  __pyx_t_1 = __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(__pyx_v_concentration, &__pyx_t_2); 
   __pyx_v_delta_c = __pyx_t_1;
 
-  /* "nfwmodeltools.pyx":147
+  /* "nfwfitter/nfwmodeltools.pyx":147
  * 
  *     cdef double delta_c = deltaC(concentration, delta = delta)
  *     cdef double amp = 4*rs*delta_c*rho_c_over_sigma_c             # <<<<<<<<<<<<<<
@@ -2662,7 +2662,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
   __pyx_v_amp = (((4.0 * __pyx_v_rs) * __pyx_v_delta_c) * __pyx_v_rho_c_over_sigma_c);
 
-  /* "nfwmodeltools.pyx":150
+  /* "nfwfitter/nfwmodeltools.pyx":150
  * 
  *     cdef Py_ssize_t i, npos
  *     npos = r.shape[0]             # <<<<<<<<<<<<<<
@@ -2671,7 +2671,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
   __pyx_v_npos = (__pyx_v_r->dimensions[0]);
 
-  /* "nfwmodeltools.pyx":151
+  /* "nfwfitter/nfwmodeltools.pyx":151
  *     cdef Py_ssize_t i, npos
  *     npos = r.shape[0]
  *     cdef np.ndarray[np.double_t, ndim=1, mode='c'] avekappa = np.zeros(npos, dtype=np.float64)             # <<<<<<<<<<<<<<
@@ -2718,7 +2718,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
   __pyx_v_avekappa = ((PyArrayObject *)__pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "nfwmodeltools.pyx":155
+  /* "nfwfitter/nfwmodeltools.pyx":155
  *     cdef double x, a,b,c
  * 
  *     for i from npos > i >= 0:             # <<<<<<<<<<<<<<
@@ -2727,7 +2727,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
   for (__pyx_v_i = __pyx_v_npos-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "nfwmodeltools.pyx":157
+    /* "nfwfitter/nfwmodeltools.pyx":157
  *     for i from npos > i >= 0:
  * 
  *         x = r[i]/rs             # <<<<<<<<<<<<<<
@@ -2748,7 +2748,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
     }
     __pyx_v_x = (__pyx_t_10 / __pyx_v_rs);
 
-    /* "nfwmodeltools.pyx":159
+    /* "nfwfitter/nfwmodeltools.pyx":159
  *         x = r[i]/rs
  * 
  *         if x < 1:             # <<<<<<<<<<<<<<
@@ -2758,7 +2758,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
     __pyx_t_11 = ((__pyx_v_x < 1.0) != 0);
     if (__pyx_t_11) {
 
-      /* "nfwmodeltools.pyx":161
+      /* "nfwfitter/nfwmodeltools.pyx":161
  *         if x < 1:
  * 
  *             a = atanh(sqrt((1-x)/(1+x)))             # <<<<<<<<<<<<<<
@@ -2779,7 +2779,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
       }
       __pyx_v_a = atanh(sqrt((__pyx_t_1 / __pyx_t_12)));
 
-      /* "nfwmodeltools.pyx":162
+      /* "nfwfitter/nfwmodeltools.pyx":162
  * 
  *             a = atanh(sqrt((1-x)/(1+x)))
  *             b = sqrt(1-x**2)             # <<<<<<<<<<<<<<
@@ -2788,7 +2788,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
       __pyx_v_b = sqrt((1.0 - pow(__pyx_v_x, 2.0)));
 
-      /* "nfwmodeltools.pyx":163
+      /* "nfwfitter/nfwmodeltools.pyx":163
  *             a = atanh(sqrt((1-x)/(1+x)))
  *             b = sqrt(1-x**2)
  *             c = log(x/2.)             # <<<<<<<<<<<<<<
@@ -2797,7 +2797,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
       __pyx_v_c = log((__pyx_v_x / 2.));
 
-      /* "nfwmodeltools.pyx":164
+      /* "nfwfitter/nfwmodeltools.pyx":164
  *             b = sqrt(1-x**2)
  *             c = log(x/2.)
  *             avekappa[i] = (2*a/b + c)/(x**2)             # <<<<<<<<<<<<<<
@@ -2832,7 +2832,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
       goto __pyx_L5;
     }
 
-    /* "nfwmodeltools.pyx":166
+    /* "nfwfitter/nfwmodeltools.pyx":166
  *             avekappa[i] = (2*a/b + c)/(x**2)
  * 
  *         elif x > 1:             # <<<<<<<<<<<<<<
@@ -2842,7 +2842,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
     __pyx_t_11 = ((__pyx_v_x > 1.0) != 0);
     if (__pyx_t_11) {
 
-      /* "nfwmodeltools.pyx":167
+      /* "nfwfitter/nfwmodeltools.pyx":167
  * 
  *         elif x > 1:
  *             a = atan(sqrt((x-1)/(1+x)))             # <<<<<<<<<<<<<<
@@ -2863,7 +2863,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
       }
       __pyx_v_a = atan(sqrt((__pyx_t_12 / __pyx_t_1)));
 
-      /* "nfwmodeltools.pyx":168
+      /* "nfwfitter/nfwmodeltools.pyx":168
  *         elif x > 1:
  *             a = atan(sqrt((x-1)/(1+x)))
  *             b = sqrt(x**2-1)             # <<<<<<<<<<<<<<
@@ -2872,7 +2872,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
       __pyx_v_b = sqrt((pow(__pyx_v_x, 2.0) - 1.0));
 
-      /* "nfwmodeltools.pyx":169
+      /* "nfwfitter/nfwmodeltools.pyx":169
  *             a = atan(sqrt((x-1)/(1+x)))
  *             b = sqrt(x**2-1)
  *             c = log(x/2.)             # <<<<<<<<<<<<<<
@@ -2881,7 +2881,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
       __pyx_v_c = log((__pyx_v_x / 2.));
 
-      /* "nfwmodeltools.pyx":170
+      /* "nfwfitter/nfwmodeltools.pyx":170
  *             b = sqrt(x**2-1)
  *             c = log(x/2.)
  *             avekappa[i] = (2*a/b + c)/(x**2)             # <<<<<<<<<<<<<<
@@ -2917,7 +2917,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
     }
     /*else*/ {
 
-      /* "nfwmodeltools.pyx":173
+      /* "nfwfitter/nfwmodeltools.pyx":173
  * 
  *         else:
  *             avekappa[i] = 1 + log(0.5)             # <<<<<<<<<<<<<<
@@ -2930,7 +2930,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
     __pyx_L5:;
   }
 
-  /* "nfwmodeltools.pyx":175
+  /* "nfwfitter/nfwmodeltools.pyx":175
  *             avekappa[i] = 1 + log(0.5)
  * 
  *     return avekappa*amp             # <<<<<<<<<<<<<<
@@ -2947,7 +2947,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":140
+  /* "nfwfitter/nfwmodeltools.pyx":140
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -2967,7 +2967,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_avekappa.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_r.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("nfwmodeltools.aveEnclosedKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.aveEnclosedKappa", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -2980,7 +2980,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":186
+/* "nfwfitter/nfwmodeltools.pyx":186
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rdelta2rs(double rdelta,             # <<<<<<<<<<<<<<
@@ -2989,9 +2989,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_4aveEnclosedKappa(CYTHON_UNUSED PyObje
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_7rdelta2rs(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_7rdelta2rs = {"rdelta2rs", (PyCFunction)__pyx_pw_13nfwmodeltools_7rdelta2rs, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_7rdelta2rs(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_7rdelta2rs(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_7rdelta2rs = {"rdelta2rs", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_7rdelta2rs, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_7rdelta2rs(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_rdelta;
   double __pyx_v_c200;
   double __pyx_v_delta;
@@ -3048,18 +3048,18 @@ static PyObject *__pyx_pw_13nfwmodeltools_7rdelta2rs(PyObject *__pyx_self, PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rdelta2rs", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.rdelta2rs", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.rdelta2rs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13nfwmodeltools_6rdelta2rs(__pyx_self, __pyx_v_rdelta, __pyx_v_c200, __pyx_v_delta);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_6rdelta2rs(__pyx_self, __pyx_v_rdelta, __pyx_v_c200, __pyx_v_delta);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":193
+/* "nfwfitter/nfwmodeltools.pyx":193
  * 
  *     # x = r_delta / rs
  *     def f(x):             # <<<<<<<<<<<<<<
@@ -3068,22 +3068,22 @@ static PyObject *__pyx_pw_13nfwmodeltools_7rdelta2rs(PyObject *__pyx_self, PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_9rdelta2rs_1f(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_9rdelta2rs_1f = {"f", (PyCFunction)__pyx_pw_13nfwmodeltools_9rdelta2rs_1f, METH_O, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_9rdelta2rs_1f(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_9rdelta2rs_1f(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_9rdelta2rs_1f = {"f", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_9rdelta2rs_1f, METH_O, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_9rdelta2rs_1f(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("f (wrapper)", 0);
-  __pyx_r = __pyx_pf_13nfwmodeltools_9rdelta2rs_f(__pyx_self, ((PyObject *)__pyx_v_x));
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_9rdelta2rs_f(__pyx_self, ((PyObject *)__pyx_v_x));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyObject *__pyx_v_x) {
-  struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_cur_scope;
-  struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_outer_scope;
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+  struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_cur_scope;
+  struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_outer_scope;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3095,10 +3095,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyO
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("f", 0);
-  __pyx_outer_scope = (struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *) __Pyx_CyFunction_GetClosure(__pyx_self);
+  __pyx_outer_scope = (struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "nfwmodeltools.pyx":195
+  /* "nfwfitter/nfwmodeltools.pyx":195
  *     def f(x):
  * 
  *         return 3*delta_c*(log(1+x) - (x/(1+x)))/x**3 - delta             # <<<<<<<<<<<<<<
@@ -3143,7 +3143,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyO
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":193
+  /* "nfwfitter/nfwmodeltools.pyx":193
  * 
  *     # x = r_delta / rs
  *     def f(x):             # <<<<<<<<<<<<<<
@@ -3157,7 +3157,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyO
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("nfwmodeltools.rdelta2rs.f", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.rdelta2rs.f", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3165,7 +3165,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyO
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":186
+/* "nfwfitter/nfwmodeltools.pyx":186
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rdelta2rs(double rdelta,             # <<<<<<<<<<<<<<
@@ -3173,8 +3173,8 @@ static PyObject *__pyx_pf_13nfwmodeltools_9rdelta2rs_f(PyObject *__pyx_self, PyO
  *               double delta):
  */
 
-static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rdelta, double __pyx_v_c200, double __pyx_v_delta) {
-  struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_cur_scope;
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rdelta, double __pyx_v_c200, double __pyx_v_delta) {
+  struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_cur_scope;
   PyObject *__pyx_v_f = 0;
   PyObject *__pyx_v_x0 = NULL;
   double __pyx_v_rs;
@@ -3190,7 +3190,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("rdelta2rs", 0);
-  __pyx_cur_scope = (struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *)__pyx_tp_new_13nfwmodeltools___pyx_scope_struct__rdelta2rs(__pyx_ptype_13nfwmodeltools___pyx_scope_struct__rdelta2rs, __pyx_empty_tuple, NULL);
+  __pyx_cur_scope = (struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *)__pyx_tp_new_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs(__pyx_ptype_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs, __pyx_empty_tuple, NULL);
   if (unlikely(!__pyx_cur_scope)) {
     __Pyx_RefNannyFinishContext();
     return NULL;
@@ -3198,28 +3198,28 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   __Pyx_GOTREF(__pyx_cur_scope);
   __pyx_cur_scope->__pyx_v_delta = __pyx_v_delta;
 
-  /* "nfwmodeltools.pyx":190
+  /* "nfwfitter/nfwmodeltools.pyx":190
  *               double delta):
  * 
  *     cdef double delta_c = deltaC(c200)             # <<<<<<<<<<<<<<
  * 
  *     # x = r_delta / rs
  */
-  __pyx_cur_scope->__pyx_v_delta_c = __pyx_f_13nfwmodeltools_deltaC(__pyx_v_c200, NULL);
+  __pyx_cur_scope->__pyx_v_delta_c = __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(__pyx_v_c200, NULL);
 
-  /* "nfwmodeltools.pyx":193
+  /* "nfwfitter/nfwmodeltools.pyx":193
  * 
  *     # x = r_delta / rs
  *     def f(x):             # <<<<<<<<<<<<<<
  * 
  *         return 3*delta_c*(log(1+x) - (x/(1+x)))/x**3 - delta
  */
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13nfwmodeltools_9rdelta2rs_1f, 0, __pyx_n_s_rdelta2rs_locals_f, ((PyObject*)__pyx_cur_scope), __pyx_n_s_nfwmodeltools, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_9rdelta2rs_1f, 0, __pyx_n_s_rdelta2rs_locals_f, ((PyObject*)__pyx_cur_scope), __pyx_n_s_nfwfitter_nfwmodeltools, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_f = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "nfwmodeltools.pyx":198
+  /* "nfwfitter/nfwmodeltools.pyx":198
  * 
  * 
  *     x0 = scipy.optimize.brenth(f, 0.1, 20)             # <<<<<<<<<<<<<<
@@ -3267,7 +3267,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   __pyx_v_x0 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "nfwmodeltools.pyx":200
+  /* "nfwfitter/nfwmodeltools.pyx":200
  *     x0 = scipy.optimize.brenth(f, 0.1, 20)
  * 
  *     cdef double rs = rdelta / x0             # <<<<<<<<<<<<<<
@@ -3283,7 +3283,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_rs = __pyx_t_6;
 
-  /* "nfwmodeltools.pyx":202
+  /* "nfwfitter/nfwmodeltools.pyx":202
  *     cdef double rs = rdelta / x0
  * 
  *     return rs             # <<<<<<<<<<<<<<
@@ -3297,7 +3297,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":186
+  /* "nfwfitter/nfwmodeltools.pyx":186
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rdelta2rs(double rdelta,             # <<<<<<<<<<<<<<
@@ -3311,7 +3311,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("nfwmodeltools.rdelta2rs", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.rdelta2rs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_f);
@@ -3322,7 +3322,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":209
+/* "nfwfitter/nfwmodeltools.pyx":209
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rscaleConstM(double mdelta,             # <<<<<<<<<<<<<<
@@ -3331,9 +3331,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_6rdelta2rs(CYTHON_UNUSED PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_9rscaleConstM(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_9rscaleConstM = {"rscaleConstM", (PyCFunction)__pyx_pw_13nfwmodeltools_9rscaleConstM, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_9rscaleConstM(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_9rscaleConstM(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_9rscaleConstM = {"rscaleConstM", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_9rscaleConstM, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_9rscaleConstM(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_mdelta;
   double __pyx_v_c;
   double __pyx_v_rho_c;
@@ -3399,18 +3399,18 @@ static PyObject *__pyx_pw_13nfwmodeltools_9rscaleConstM(PyObject *__pyx_self, Py
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("rscaleConstM", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 209; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.rscaleConstM", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.rscaleConstM", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13nfwmodeltools_8rscaleConstM(__pyx_self, __pyx_v_mdelta, __pyx_v_c, __pyx_v_rho_c, __pyx_v_delta);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_8rscaleConstM(__pyx_self, __pyx_v_mdelta, __pyx_v_c, __pyx_v_rho_c, __pyx_v_delta);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_c, double __pyx_v_rho_c, double __pyx_v_delta) {
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_c, double __pyx_v_rho_c, double __pyx_v_delta) {
   double __pyx_v_rdelta;
   double __pyx_v_rs;
   PyObject *__pyx_r = NULL;
@@ -3429,7 +3429,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("rscaleConstM", 0);
 
-  /* "nfwmodeltools.pyx":214
+  /* "nfwfitter/nfwmodeltools.pyx":214
  *                  double delta):
  * 
  *     cdef double rdelta = (3*mdelta/(4*delta*np.pi*rho_c))**(1./3.)             # <<<<<<<<<<<<<<
@@ -3469,7 +3469,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_rdelta = __pyx_t_5;
 
-  /* "nfwmodeltools.pyx":216
+  /* "nfwfitter/nfwmodeltools.pyx":216
  *     cdef double rdelta = (3*mdelta/(4*delta*np.pi*rho_c))**(1./3.)
  * 
  *     cdef double rs = rdelta2rs(rdelta, c, delta)             # <<<<<<<<<<<<<<
@@ -3518,7 +3518,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_rs = __pyx_t_5;
 
-  /* "nfwmodeltools.pyx":218
+  /* "nfwfitter/nfwmodeltools.pyx":218
  *     cdef double rs = rdelta2rs(rdelta, c, delta)
  * 
  *     return rs             # <<<<<<<<<<<<<<
@@ -3532,7 +3532,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":209
+  /* "nfwfitter/nfwmodeltools.pyx":209
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rscaleConstM(double mdelta,             # <<<<<<<<<<<<<<
@@ -3549,7 +3549,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("nfwmodeltools.rscaleConstM", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.rscaleConstM", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3557,7 +3557,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":225
+/* "nfwfitter/nfwmodeltools.pyx":225
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def massInsideR(double rs,             # <<<<<<<<<<<<<<
@@ -3566,9 +3566,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_8rscaleConstM(CYTHON_UNUSED PyObject *
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_11massInsideR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_11massInsideR = {"massInsideR", (PyCFunction)__pyx_pw_13nfwmodeltools_11massInsideR, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_11massInsideR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_11massInsideR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_11massInsideR = {"massInsideR", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_11massInsideR, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_11massInsideR(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_rs;
   double __pyx_v_c;
   double __pyx_v_R;
@@ -3634,18 +3634,18 @@ static PyObject *__pyx_pw_13nfwmodeltools_11massInsideR(PyObject *__pyx_self, Py
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("massInsideR", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.massInsideR", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.massInsideR", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_13nfwmodeltools_10massInsideR(__pyx_self, __pyx_v_rs, __pyx_v_c, __pyx_v_R, __pyx_v_rho_c);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_10massInsideR(__pyx_self, __pyx_v_rs, __pyx_v_c, __pyx_v_R, __pyx_v_rho_c);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rs, double __pyx_v_c, double __pyx_v_R, double __pyx_v_rho_c) {
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_rs, double __pyx_v_c, double __pyx_v_R, double __pyx_v_rho_c) {
   double __pyx_v_x;
   double __pyx_v_delta_c;
   double __pyx_v_massInsideR;
@@ -3660,7 +3660,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("massInsideR", 0);
 
-  /* "nfwmodeltools.pyx":230
+  /* "nfwfitter/nfwmodeltools.pyx":230
  *                 double rho_c):
  * 
  *     cdef double x = R/rs             # <<<<<<<<<<<<<<
@@ -3679,16 +3679,16 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
   }
   __pyx_v_x = (__pyx_v_R / __pyx_v_rs);
 
-  /* "nfwmodeltools.pyx":231
+  /* "nfwfitter/nfwmodeltools.pyx":231
  * 
  *     cdef double x = R/rs
  *     cdef double delta_c = deltaC(c)             # <<<<<<<<<<<<<<
  * 
  *     cdef double massInsideR = (log(1+x) - (x/(1+x)))*4*np.pi*delta_c*rho_c*rs**3
  */
-  __pyx_v_delta_c = __pyx_f_13nfwmodeltools_deltaC(__pyx_v_c, NULL);
+  __pyx_v_delta_c = __pyx_f_9nfwfitter_13nfwmodeltools_deltaC(__pyx_v_c, NULL);
 
-  /* "nfwmodeltools.pyx":233
+  /* "nfwfitter/nfwmodeltools.pyx":233
  *     cdef double delta_c = deltaC(c)
  * 
  *     cdef double massInsideR = (log(1+x) - (x/(1+x)))*4*np.pi*delta_c*rho_c*rs**3             # <<<<<<<<<<<<<<
@@ -3739,7 +3739,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_massInsideR = __pyx_t_1;
 
-  /* "nfwmodeltools.pyx":236
+  /* "nfwfitter/nfwmodeltools.pyx":236
  * 
  * 
  *     return massInsideR             # <<<<<<<<<<<<<<
@@ -3753,7 +3753,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":225
+  /* "nfwfitter/nfwmodeltools.pyx":225
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def massInsideR(double rs,             # <<<<<<<<<<<<<<
@@ -3766,7 +3766,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("nfwmodeltools.massInsideR", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.massInsideR", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3774,7 +3774,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
   return __pyx_r;
 }
 
-/* "nfwmodeltools.pyx":246
+/* "nfwfitter/nfwmodeltools.pyx":246
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def shearprofile_like(double mdelta,             # <<<<<<<<<<<<<<
@@ -3783,9 +3783,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_10massInsideR(CYTHON_UNUSED PyObject *
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_13nfwmodeltools_13shearprofile_like = {"shearprofile_like", (PyCFunction)__pyx_pw_13nfwmodeltools_13shearprofile_like, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_9nfwfitter_13nfwmodeltools_13shearprofile_like = {"shearprofile_like", (PyCFunction)__pyx_pw_9nfwfitter_13nfwmodeltools_13shearprofile_like, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_9nfwfitter_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_mdelta;
   double __pyx_v_cdelta;
   PyArrayObject *__pyx_v_bin_r_mpc = 0;
@@ -3905,7 +3905,7 @@ static PyObject *__pyx_pw_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("shearprofile_like", 1, 10, 10, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 246; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("nfwmodeltools.shearprofile_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.shearprofile_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -3914,7 +3914,7 @@ static PyObject *__pyx_pw_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_se
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_bin_shearerr), __pyx_ptype_5numpy_ndarray, 0, "bin_shearerr", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 250; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_avebeta), __pyx_ptype_5numpy_ndarray, 1, "avebeta", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_avebeta2), __pyx_ptype_5numpy_ndarray, 1, "avebeta2", 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_r = __pyx_pf_13nfwmodeltools_12shearprofile_like(__pyx_self, __pyx_v_mdelta, __pyx_v_cdelta, __pyx_v_bin_r_mpc, __pyx_v_bin_shear, __pyx_v_bin_shearerr, __pyx_v_avebeta, __pyx_v_avebeta2, __pyx_v_rho_c, __pyx_v_rho_c_over_sigma_c, __pyx_v_massdelta);
+  __pyx_r = __pyx_pf_9nfwfitter_13nfwmodeltools_12shearprofile_like(__pyx_self, __pyx_v_mdelta, __pyx_v_cdelta, __pyx_v_bin_r_mpc, __pyx_v_bin_shear, __pyx_v_bin_shearerr, __pyx_v_avebeta, __pyx_v_avebeta2, __pyx_v_rho_c, __pyx_v_rho_c_over_sigma_c, __pyx_v_massdelta);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3925,7 +3925,7 @@ static PyObject *__pyx_pw_13nfwmodeltools_13shearprofile_like(PyObject *__pyx_se
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_cdelta, PyArrayObject *__pyx_v_bin_r_mpc, PyArrayObject *__pyx_v_bin_shear, PyArrayObject *__pyx_v_bin_shearerr, PyArrayObject *__pyx_v_avebeta, PyArrayObject *__pyx_v_avebeta2, double __pyx_v_rho_c, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_massdelta) {
+static PyObject *__pyx_pf_9nfwfitter_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_mdelta, double __pyx_v_cdelta, PyArrayObject *__pyx_v_bin_r_mpc, PyArrayObject *__pyx_v_bin_shear, PyArrayObject *__pyx_v_bin_shearerr, PyArrayObject *__pyx_v_avebeta, PyArrayObject *__pyx_v_avebeta2, double __pyx_v_rho_c, double __pyx_v_rho_c_over_sigma_c, double __pyx_v_massdelta) {
   Py_ssize_t __pyx_v_nbins;
   PyArrayObject *__pyx_v_gamma_inf = 0;
   PyArrayObject *__pyx_v_kappa_inf = 0;
@@ -3937,7 +3937,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   double __pyx_v_modelg;
   PyObject *__pyx_v_modsig = 0;
   Py_ssize_t __pyx_v_i;
-  __pyx_t_13nfwmodeltools_DTYPE_T __pyx_v_logProb;
+  __pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T __pyx_v_logProb;
   double __pyx_v_betaratio;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_avebeta;
   __Pyx_Buffer __pyx_pybuffer_avebeta;
@@ -3974,9 +3974,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   __pyx_t_5numpy_double_t __pyx_t_17;
   Py_ssize_t __pyx_t_18;
   Py_ssize_t __pyx_t_19;
-  __pyx_t_13nfwmodeltools_DTYPE_T __pyx_t_20;
+  __pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T __pyx_t_20;
   Py_ssize_t __pyx_t_21;
-  __pyx_t_13nfwmodeltools_DTYPE_T __pyx_t_22;
+  __pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T __pyx_t_22;
   Py_ssize_t __pyx_t_23;
   Py_ssize_t __pyx_t_24;
   int __pyx_lineno = 0;
@@ -4037,7 +4037,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   }
   __pyx_pybuffernd_avebeta2.diminfo[0].strides = __pyx_pybuffernd_avebeta2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_avebeta2.diminfo[0].shape = __pyx_pybuffernd_avebeta2.rcbuffer->pybuffer.shape[0];
 
-  /* "nfwmodeltools.pyx":258
+  /* "nfwfitter/nfwmodeltools.pyx":258
  * 
  * 
  *     cdef Py_ssize_t nbins = bin_r_mpc.shape[0]             # <<<<<<<<<<<<<<
@@ -4046,7 +4046,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   __pyx_v_nbins = (__pyx_v_bin_r_mpc->dimensions[0]);
 
-  /* "nfwmodeltools.pyx":264
+  /* "nfwfitter/nfwmodeltools.pyx":264
  *     cdef double rscale
  * 
  *     if mdelta == 0:             # <<<<<<<<<<<<<<
@@ -4056,7 +4056,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   __pyx_t_1 = ((__pyx_v_mdelta == 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "nfwmodeltools.pyx":265
+    /* "nfwfitter/nfwmodeltools.pyx":265
  * 
  *     if mdelta == 0:
  *         gamma_inf = np.zeros(nbins)             # <<<<<<<<<<<<<<
@@ -4101,10 +4101,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer);
-      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
+      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
       if (unlikely(__pyx_t_8 < 0)) {
         PyErr_Fetch(&__pyx_t_9, &__pyx_t_10, &__pyx_t_11);
-        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_gamma_inf, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_gamma_inf, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
           Py_XDECREF(__pyx_t_9); Py_XDECREF(__pyx_t_10); Py_XDECREF(__pyx_t_11);
           __Pyx_RaiseBufferFallbackError();
         } else {
@@ -4118,7 +4118,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __pyx_v_gamma_inf = ((PyArrayObject *)__pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "nfwmodeltools.pyx":266
+    /* "nfwfitter/nfwmodeltools.pyx":266
  *     if mdelta == 0:
  *         gamma_inf = np.zeros(nbins)
  *         kappa_inf = np.zeros(nbins)             # <<<<<<<<<<<<<<
@@ -4163,10 +4163,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer);
-      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_12, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
+      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_12, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
       if (unlikely(__pyx_t_8 < 0)) {
         PyErr_Fetch(&__pyx_t_11, &__pyx_t_10, &__pyx_t_9);
-        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_kappa_inf, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_kappa_inf, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
           Py_XDECREF(__pyx_t_11); Py_XDECREF(__pyx_t_10); Py_XDECREF(__pyx_t_9);
           __Pyx_RaiseBufferFallbackError();
         } else {
@@ -4183,7 +4183,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   }
   /*else*/ {
 
-    /* "nfwmodeltools.pyx":269
+    /* "nfwfitter/nfwmodeltools.pyx":269
  *     else:
  * 
  *         rdelta = (3*abs(mdelta)/(4*massdelta*np.pi*rho_c))**(1./3.)             # <<<<<<<<<<<<<<
@@ -4222,7 +4222,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __pyx_v_rdelta = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "nfwmodeltools.pyx":270
+    /* "nfwfitter/nfwmodeltools.pyx":270
  * 
  *         rdelta = (3*abs(mdelta)/(4*massdelta*np.pi*rho_c))**(1./3.)
  *         rscale = rdelta / cdelta             # <<<<<<<<<<<<<<
@@ -4238,7 +4238,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_rscale = __pyx_t_13;
 
-    /* "nfwmodeltools.pyx":272
+    /* "nfwfitter/nfwmodeltools.pyx":272
  *         rscale = rdelta / cdelta
  * 
  *         gamma_inf = NFWShear(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)             # <<<<<<<<<<<<<<
@@ -4283,10 +4283,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer);
-      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
+      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
       if (unlikely(__pyx_t_8 < 0)) {
         PyErr_Fetch(&__pyx_t_9, &__pyx_t_10, &__pyx_t_11);
-        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_gamma_inf, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_gamma_inf, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
           Py_XDECREF(__pyx_t_9); Py_XDECREF(__pyx_t_10); Py_XDECREF(__pyx_t_11);
           __Pyx_RaiseBufferFallbackError();
         } else {
@@ -4300,7 +4300,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __pyx_v_gamma_inf = ((PyArrayObject *)__pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "nfwmodeltools.pyx":273
+    /* "nfwfitter/nfwmodeltools.pyx":273
  * 
  *         gamma_inf = NFWShear(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)
  *         kappa_inf = NFWKappa(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)             # <<<<<<<<<<<<<<
@@ -4345,10 +4345,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer);
-      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_12, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
+      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_12, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
       if (unlikely(__pyx_t_8 < 0)) {
         PyErr_Fetch(&__pyx_t_11, &__pyx_t_10, &__pyx_t_9);
-        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_kappa_inf, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_kappa_inf, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
           Py_XDECREF(__pyx_t_11); Py_XDECREF(__pyx_t_10); Py_XDECREF(__pyx_t_9);
           __Pyx_RaiseBufferFallbackError();
         } else {
@@ -4364,7 +4364,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   }
   __pyx_L3:;
 
-  /* "nfwmodeltools.pyx":275
+  /* "nfwfitter/nfwmodeltools.pyx":275
  *         kappa_inf = NFWKappa(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)
  * 
  *     if mdelta < 0.:             # <<<<<<<<<<<<<<
@@ -4374,7 +4374,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   __pyx_t_1 = ((__pyx_v_mdelta < 0.) != 0);
   if (__pyx_t_1) {
 
-    /* "nfwmodeltools.pyx":276
+    /* "nfwfitter/nfwmodeltools.pyx":276
  * 
  *     if mdelta < 0.:
  *         gamma_inf = -gamma_inf             # <<<<<<<<<<<<<<
@@ -4388,10 +4388,10 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer);
-      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
+      __pyx_t_8 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack);
       if (unlikely(__pyx_t_8 < 0)) {
         PyErr_Fetch(&__pyx_t_9, &__pyx_t_10, &__pyx_t_11);
-        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_gamma_inf, &__Pyx_TypeInfo_nn___pyx_t_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
+        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer, (PyObject*)__pyx_v_gamma_inf, &__Pyx_TypeInfo_nn___pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) {
           Py_XDECREF(__pyx_t_9); Py_XDECREF(__pyx_t_10); Py_XDECREF(__pyx_t_11);
           __Pyx_RaiseBufferFallbackError();
         } else {
@@ -4408,7 +4408,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   }
   __pyx_L4:;
 
-  /* "nfwmodeltools.pyx":279
+  /* "nfwfitter/nfwmodeltools.pyx":279
  * 
  * 
  *     cdef int curbin = 0             # <<<<<<<<<<<<<<
@@ -4417,7 +4417,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   __pyx_v_curbin = 0;
 
-  /* "nfwmodeltools.pyx":280
+  /* "nfwfitter/nfwmodeltools.pyx":280
  * 
  *     cdef int curbin = 0
  *     cdef double gtilde = 0.             # <<<<<<<<<<<<<<
@@ -4426,7 +4426,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   __pyx_v_gtilde = 0.;
 
-  /* "nfwmodeltools.pyx":281
+  /* "nfwfitter/nfwmodeltools.pyx":281
  *     cdef int curbin = 0
  *     cdef double gtilde = 0.
  *     cdef double delta = 0.             # <<<<<<<<<<<<<<
@@ -4435,7 +4435,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   __pyx_v_delta = 0.;
 
-  /* "nfwmodeltools.pyx":282
+  /* "nfwfitter/nfwmodeltools.pyx":282
  *     cdef double gtilde = 0.
  *     cdef double delta = 0.
  *     cdef double modelg = 0.             # <<<<<<<<<<<<<<
@@ -4444,7 +4444,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   __pyx_v_modelg = 0.;
 
-  /* "nfwmodeltools.pyx":283
+  /* "nfwfitter/nfwmodeltools.pyx":283
  *     cdef double delta = 0.
  *     cdef double modelg = 0.
  *     cdef modsig = 0.             # <<<<<<<<<<<<<<
@@ -4454,7 +4454,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   __Pyx_INCREF(__pyx_float_0_);
   __pyx_v_modsig = __pyx_float_0_;
 
-  /* "nfwmodeltools.pyx":286
+  /* "nfwfitter/nfwmodeltools.pyx":286
  * 
  *     cdef Py_ssize_t i, j, s
  *     cdef DTYPE_T logProb = 0.             # <<<<<<<<<<<<<<
@@ -4463,7 +4463,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   __pyx_v_logProb = 0.;
 
-  /* "nfwmodeltools.pyx":292
+  /* "nfwfitter/nfwmodeltools.pyx":292
  * 
  *     #calculate logprob
  *     for i from nbins > i >= 0:             # <<<<<<<<<<<<<<
@@ -4472,7 +4472,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
   for (__pyx_v_i = __pyx_v_nbins-1; __pyx_v_i >= 0; __pyx_v_i--) {
 
-    /* "nfwmodeltools.pyx":294
+    /* "nfwfitter/nfwmodeltools.pyx":294
  *     for i from nbins > i >= 0:
  * 
  *         betaratio = avebeta2[i]/avebeta[i]             # <<<<<<<<<<<<<<
@@ -4495,7 +4495,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     }
     __pyx_v_betaratio = (__pyx_t_15 / __pyx_t_17);
 
-    /* "nfwmodeltools.pyx":296
+    /* "nfwfitter/nfwmodeltools.pyx":296
  *         betaratio = avebeta2[i]/avebeta[i]
  * 
  *         modelg = (avebeta[i]*gamma_inf[i] / (1 - betaratio*kappa_inf[i]))             # <<<<<<<<<<<<<<
@@ -4504,9 +4504,9 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
  */
     __pyx_t_18 = __pyx_v_i;
     __pyx_t_19 = __pyx_v_i;
-    __pyx_t_20 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_avebeta.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_avebeta.diminfo[0].strides)) * (*__Pyx_BufPtrCContig1d(__pyx_t_13nfwmodeltools_DTYPE_T *, __pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_gamma_inf.diminfo[0].strides)));
+    __pyx_t_20 = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_avebeta.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_avebeta.diminfo[0].strides)) * (*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T *, __pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_gamma_inf.diminfo[0].strides)));
     __pyx_t_21 = __pyx_v_i;
-    __pyx_t_22 = (1.0 - (__pyx_v_betaratio * (*__Pyx_BufPtrCContig1d(__pyx_t_13nfwmodeltools_DTYPE_T *, __pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_kappa_inf.diminfo[0].strides))));
+    __pyx_t_22 = (1.0 - (__pyx_v_betaratio * (*__Pyx_BufPtrCContig1d(__pyx_t_9nfwfitter_13nfwmodeltools_DTYPE_T *, __pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_kappa_inf.diminfo[0].strides))));
     if (unlikely(__pyx_t_22 == 0)) {
       #ifdef WITH_THREAD
       PyGILState_STATE __pyx_gilstate_save = PyGILState_Ensure();
@@ -4519,7 +4519,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     }
     __pyx_v_modelg = (__pyx_t_20 / __pyx_t_22);
 
-    /* "nfwmodeltools.pyx":298
+    /* "nfwfitter/nfwmodeltools.pyx":298
  *         modelg = (avebeta[i]*gamma_inf[i] / (1 - betaratio*kappa_inf[i]))
  * 
  *         delta = bin_shear[i] - modelg             # <<<<<<<<<<<<<<
@@ -4529,7 +4529,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __pyx_t_23 = __pyx_v_i;
     __pyx_v_delta = ((*__Pyx_BufPtrCContig1d(__pyx_t_5numpy_double_t *, __pyx_pybuffernd_bin_shear.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_bin_shear.diminfo[0].strides)) - __pyx_v_modelg);
 
-    /* "nfwmodeltools.pyx":300
+    /* "nfwfitter/nfwmodeltools.pyx":300
  *         delta = bin_shear[i] - modelg
  * 
  *         modsig = bin_shearerr[i]             # <<<<<<<<<<<<<<
@@ -4542,7 +4542,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __Pyx_DECREF_SET(__pyx_v_modsig, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "nfwmodeltools.pyx":302
+    /* "nfwfitter/nfwmodeltools.pyx":302
  *         modsig = bin_shearerr[i]
  * 
  *         logProb = logProb -.5*(delta/modsig)**2  - logsqrt2pi - log(modsig)             # <<<<<<<<<<<<<<
@@ -4584,7 +4584,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __pyx_v_logProb = __pyx_t_22;
   }
 
-  /* "nfwmodeltools.pyx":305
+  /* "nfwfitter/nfwmodeltools.pyx":305
  * 
  * 
  *     return logProb             # <<<<<<<<<<<<<<
@@ -4598,7 +4598,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
   __pyx_t_6 = 0;
   goto __pyx_L0;
 
-  /* "nfwmodeltools.pyx":246
+  /* "nfwfitter/nfwmodeltools.pyx":246
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def shearprofile_like(double mdelta,             # <<<<<<<<<<<<<<
@@ -4623,7 +4623,7 @@ static PyObject *__pyx_pf_13nfwmodeltools_12shearprofile_like(CYTHON_UNUSED PyOb
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_gamma_inf.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_kappa_inf.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("nfwmodeltools.shearprofile_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("nfwfitter.nfwmodeltools.shearprofile_like", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -6658,14 +6658,14 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   return __pyx_r;
 }
 
-static struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_freelist_13nfwmodeltools___pyx_scope_struct__rdelta2rs[8];
-static int __pyx_freecount_13nfwmodeltools___pyx_scope_struct__rdelta2rs = 0;
+static struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *__pyx_freelist_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs[8];
+static int __pyx_freecount_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs = 0;
 
-static PyObject *__pyx_tp_new_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
   PyObject *o;
-  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_13nfwmodeltools___pyx_scope_struct__rdelta2rs > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs)))) {
-    o = (PyObject*)__pyx_freelist_13nfwmodeltools___pyx_scope_struct__rdelta2rs[--__pyx_freecount_13nfwmodeltools___pyx_scope_struct__rdelta2rs];
-    memset(o, 0, sizeof(struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs));
+  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs)))) {
+    o = (PyObject*)__pyx_freelist_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs[--__pyx_freecount_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs];
+    memset(o, 0, sizeof(struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs));
     (void) PyObject_INIT(o, t);
   } else {
     o = (*t->tp_alloc)(t, 0);
@@ -6674,20 +6674,20 @@ static PyObject *__pyx_tp_new_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyTy
   return o;
 }
 
-static void __pyx_tp_dealloc_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyObject *o) {
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_13nfwmodeltools___pyx_scope_struct__rdelta2rs < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs)))) {
-    __pyx_freelist_13nfwmodeltools___pyx_scope_struct__rdelta2rs[__pyx_freecount_13nfwmodeltools___pyx_scope_struct__rdelta2rs++] = ((struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs *)o);
+static void __pyx_tp_dealloc_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs(PyObject *o) {
+  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs)))) {
+    __pyx_freelist_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs[__pyx_freecount_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs++] = ((struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs *)o);
   } else {
     (*Py_TYPE(o)->tp_free)(o);
   }
 }
 
-static PyTypeObject __pyx_type_13nfwmodeltools___pyx_scope_struct__rdelta2rs = {
+static PyTypeObject __pyx_type_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs = {
   PyVarObject_HEAD_INIT(0, 0)
-  "nfwmodeltools.__pyx_scope_struct__rdelta2rs", /*tp_name*/
-  sizeof(struct __pyx_obj_13nfwmodeltools___pyx_scope_struct__rdelta2rs), /*tp_basicsize*/
+  "nfwfitter.nfwmodeltools.__pyx_scope_struct__rdelta2rs", /*tp_name*/
+  sizeof(struct __pyx_obj_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_13nfwmodeltools___pyx_scope_struct__rdelta2rs, /*tp_dealloc*/
+  __pyx_tp_dealloc_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -6724,7 +6724,7 @@ static PyTypeObject __pyx_type_13nfwmodeltools___pyx_scope_struct__rdelta2rs = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_13nfwmodeltools___pyx_scope_struct__rdelta2rs, /*tp_new*/
+  __pyx_tp_new_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -6817,7 +6817,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_nbins, __pyx_k_nbins, sizeof(__pyx_k_nbins), 0, 0, 1, 1},
   {&__pyx_kp_u_ndarray_is_not_C_contiguous, __pyx_k_ndarray_is_not_C_contiguous, sizeof(__pyx_k_ndarray_is_not_C_contiguous), 0, 1, 0, 0},
   {&__pyx_kp_u_ndarray_is_not_Fortran_contiguou, __pyx_k_ndarray_is_not_Fortran_contiguou, sizeof(__pyx_k_ndarray_is_not_Fortran_contiguou), 0, 1, 0, 0},
-  {&__pyx_n_s_nfwmodeltools, __pyx_k_nfwmodeltools, sizeof(__pyx_k_nfwmodeltools), 0, 0, 1, 1},
+  {&__pyx_n_s_nfwfitter_nfwmodeltools, __pyx_k_nfwfitter_nfwmodeltools, sizeof(__pyx_k_nfwfitter_nfwmodeltools), 0, 0, 1, 1},
   {&__pyx_n_s_nfwutils, __pyx_k_nfwutils, sizeof(__pyx_k_nfwutils), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_npos, __pyx_k_npos, sizeof(__pyx_k_npos), 0, 0, 1, 1},
@@ -6859,7 +6859,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "nfwmodeltools.pyx":193
+  /* "nfwfitter/nfwmodeltools.pyx":193
  * 
  *     # x = r_delta / rs
  *     def f(x):             # <<<<<<<<<<<<<<
@@ -6937,7 +6937,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
-  /* "nfwmodeltools.pyx":54
+  /* "nfwfitter/nfwmodeltools.pyx":54
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -6949,7 +6949,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__9);
   __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(5, 0, 14, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_NFWShear, 54, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":97
+  /* "nfwfitter/nfwmodeltools.pyx":97
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -6961,7 +6961,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__11);
   __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(5, 0, 14, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_NFWKappa, 97, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":140
+  /* "nfwfitter/nfwmodeltools.pyx":140
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
@@ -6973,7 +6973,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__13);
   __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(5, 0, 14, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_aveEnclosedKappa, 140, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":186
+  /* "nfwfitter/nfwmodeltools.pyx":186
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rdelta2rs(double rdelta,             # <<<<<<<<<<<<<<
@@ -6985,7 +6985,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__15);
   __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(3, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_rdelta2rs, 186, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":209
+  /* "nfwfitter/nfwmodeltools.pyx":209
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rscaleConstM(double mdelta,             # <<<<<<<<<<<<<<
@@ -6997,7 +6997,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__17);
   __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(4, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_rscaleConstM, 209, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":225
+  /* "nfwfitter/nfwmodeltools.pyx":225
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def massInsideR(double rs,             # <<<<<<<<<<<<<<
@@ -7009,7 +7009,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__19);
   __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(4, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_massInsideR, 225, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":246
+  /* "nfwfitter/nfwmodeltools.pyx":246
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def shearprofile_like(double mdelta,             # <<<<<<<<<<<<<<
@@ -7108,14 +7108,14 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_nfwmodeltools) {
+  if (__pyx_module_is_main_nfwfitter__nfwmodeltools) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "nfwmodeltools")) {
-      if (unlikely(PyDict_SetItemString(modules, "nfwmodeltools", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "nfwfitter.nfwmodeltools")) {
+      if (unlikely(PyDict_SetItemString(modules, "nfwfitter.nfwmodeltools", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -7127,9 +7127,9 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_13nfwmodeltools___pyx_scope_struct__rdelta2rs) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_type_13nfwmodeltools___pyx_scope_struct__rdelta2rs.tp_print = 0;
-  __pyx_ptype_13nfwmodeltools___pyx_scope_struct__rdelta2rs = &__pyx_type_13nfwmodeltools___pyx_scope_struct__rdelta2rs;
+  if (PyType_Ready(&__pyx_type_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs.tp_print = 0;
+  __pyx_ptype_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs = &__pyx_type_9nfwfitter_13nfwmodeltools___pyx_scope_struct__rdelta2rs;
   /*--- Type import code ---*/
   __pyx_ptype_7cpython_4type_type = __Pyx_ImportType(__Pyx_BUILTIN_MODULE_NAME, "type", 
   #if CYTHON_COMPILING_IN_PYPY
@@ -7147,7 +7147,7 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "nfwmodeltools.pyx":11
+  /* "nfwfitter/nfwmodeltools.pyx":11
  * # cython: profile=False
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -7159,7 +7159,7 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "nfwmodeltools.pyx":15
+  /* "nfwfitter/nfwmodeltools.pyx":15
  * cimport cython
  * 
  * import scipy.optimize             # <<<<<<<<<<<<<<
@@ -7171,7 +7171,7 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_scipy, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "nfwmodeltools.pyx":17
+  /* "nfwfitter/nfwmodeltools.pyx":17
  * import scipy.optimize
  * 
  * import nfwutils             # <<<<<<<<<<<<<<
@@ -7183,7 +7183,7 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_nfwutils, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "nfwmodeltools.pyx":30
+  /* "nfwfitter/nfwmodeltools.pyx":30
  * ########################
  * 
  * __cvs_id__ = "$Id: nfwmodeltools.pyx,v 1.5 2011-02-09 01:59:14 dapple Exp $"             # <<<<<<<<<<<<<<
@@ -7192,7 +7192,7 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_cvs_id, __pyx_kp_s_Id_nfwmodeltools_pyx_v_1_5_2011) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "nfwmodeltools.pyx":34
+  /* "nfwfitter/nfwmodeltools.pyx":34
  * #########################
  * 
  * logsqrt2pi = np.log(np.sqrt(2*np.pi))             # <<<<<<<<<<<<<<
@@ -7272,7 +7272,7 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_logsqrt2pi, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "nfwmodeltools.pyx":36
+  /* "nfwfitter/nfwmodeltools.pyx":36
  * logsqrt2pi = np.log(np.sqrt(2*np.pi))
  * 
  * DTYPE = np.double             # <<<<<<<<<<<<<<
@@ -7287,91 +7287,91 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_DTYPE, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":54
+  /* "nfwfitter/nfwmodeltools.pyx":54
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWShear(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
  *               double concentration,
  *               double rs,
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_1NFWShear, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_1NFWShear, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_NFWShear, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":97
+  /* "nfwfitter/nfwmodeltools.pyx":97
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def NFWKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
  *               double concentration,
  *               double rs,
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_3NFWKappa, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_3NFWKappa, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_NFWKappa, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":140
+  /* "nfwfitter/nfwmodeltools.pyx":140
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def aveEnclosedKappa(np.ndarray[np.double_t, ndim=1, mode='c'] r,             # <<<<<<<<<<<<<<
  *                      double concentration,
  *                      double rs,
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_5aveEnclosedKappa, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_5aveEnclosedKappa, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_aveEnclosedKappa, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":186
+  /* "nfwfitter/nfwmodeltools.pyx":186
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rdelta2rs(double rdelta,             # <<<<<<<<<<<<<<
  *               double c200,
  *               double delta):
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_7rdelta2rs, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_7rdelta2rs, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rdelta2rs, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":209
+  /* "nfwfitter/nfwmodeltools.pyx":209
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def rscaleConstM(double mdelta,             # <<<<<<<<<<<<<<
  *                  double c,
  *                  double rho_c,
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_9rscaleConstM, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_9rscaleConstM, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_rscaleConstM, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":225
+  /* "nfwfitter/nfwmodeltools.pyx":225
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def massInsideR(double rs,             # <<<<<<<<<<<<<<
  *                 double c,
  *                 double R,
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_11massInsideR, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_11massInsideR, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_massInsideR, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 225; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":246
+  /* "nfwfitter/nfwmodeltools.pyx":246
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * def shearprofile_like(double mdelta,             # <<<<<<<<<<<<<<
  *                       double cdelta,
  *                       np.ndarray[np.double_t, ndim=1, mode='c'] bin_r_mpc not None,
  */
-  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_13nfwmodeltools_13shearprofile_like, NULL, __pyx_n_s_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 246; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyCFunction_NewEx(&__pyx_mdef_9nfwfitter_13nfwmodeltools_13shearprofile_like, NULL, __pyx_n_s_nfwfitter_nfwmodeltools); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 246; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_shearprofile_like, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 246; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "nfwmodeltools.pyx":1
+  /* "nfwfitter/nfwmodeltools.pyx":1
  * ##########################             # <<<<<<<<<<<<<<
  * # Implements an NFW model for investigation
  * # of redshift and contamination effects
@@ -7402,12 +7402,12 @@ PyMODINIT_FUNC PyInit_nfwmodeltools(void)
   __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init nfwmodeltools", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init nfwfitter.nfwmodeltools", __pyx_clineno, __pyx_lineno, __pyx_filename);
       Py_DECREF(__pyx_d); __pyx_d = 0;
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init nfwmodeltools");
+    PyErr_SetString(PyExc_ImportError, "init nfwfitter.nfwmodeltools");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
