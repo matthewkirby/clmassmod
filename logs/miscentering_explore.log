@@ -1,0 +1,412 @@
+# IPython log file
+
+get_ipython().magic(u'pylab')
+with open('run7consolidated/mxxlsnap41.c4-r8-n0_0_corenone.pkl', 'rb') as input:
+    consol = cPickle.load(input)
+    
+import cPickle
+with open('run7consolidated/mxxlsnap41.c4-r8-n0_0_corenone.pkl', 'rb') as input:
+    consol = cPickle.load(input)
+    
+consol.keys()
+hist(consol['measured_m500s'] - consol['true_m500s'], bins=50)
+clf()
+hist(consol['measured_m500s'] /consol['true_m500s'], bins=50)
+clf()
+hist(consol['measured_m500s'] - consol['true_m500s'], bins=50)
+clf()
+hist(np.log(consol['measured_m500s']) - np.log(consol['true_m500s']), bins=50)
+clf()
+np.min(consol['true_m500s']
+)
+np.max(consol['true_m500s']
+)
+np.linspace(np.min(consol['true_m500s']) np.max(consol['true_m500s']), 8)
+np.linspace(np.min(consol['true_m500s']), np.max(consol['true_m500s']), 8)
+np.linspace(np.min(consol['true_m500s']), np.max(consol['true_m500s']), 9)
+massedges = np.linspace(np.min(consol['true_m500s']), np.max(consol['true_m500s']), 9)
+massedges = np.logspace(np.min(consol['true_m500s']), np.max(consol['true_m500s']), 9)
+massedges = np.logspace(np.log10(np.min(consol['true_m500s'])), np.log10(np.max(consol['true_m500s'])), 9)
+massedges
+logmassedges = np.log10(massedges)
+logmasscenters = (logmassedges[:-1] + logmassedges[1:])/2.
+masscenters = 10**logmasscenters
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, ignorebins = np.hist((consol['measured_m500s'] - consol['true_m500s'])[inbin], bins=massedges)
+    plot(logmasscenters, hist, label=str(i))
+    
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, ignorebins = np.histogram((consol['measured_m500s'] - consol['true_m500s'])[inbin], bins=massedges)
+    plot(logmasscenters, hist, label=str(i))
+    
+legend()
+clf()
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, ignorebins = np.histogram((np.log(consol['measured_m500s']) - np.log(consol['true_m500s']))[inbin], bins=massedges)
+    plot(logmasscenters, hist, label=str(i))
+    
+clf()
+logratio = np.log(consol['measured_m500s']/consol['true_m500s'])
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, histbins = np.histogram(logratio[inbin], bins=50)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    plot(histcenters, hist, label=str(logmasscenters[i]))
+    
+clf()
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, histbins = np.histogram(logratio[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    plot(histcenters, hist, label=str(logmasscenters[i]))
+    
+legend()
+clf()
+ratio = consol['measured_m500s']/consol['true_m500s']
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, histbins = np.histogram(ratio[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    semilogx(histcenters, hist, label=str(logmasscenters[i]))
+    
+clf()
+hist(consol['true_m500s'], bins=50)
+get_ipython().magic(u'pylab')
+hist(consol['true_m500s'], bins=50)
+clf()
+hist(np.log10(consol['true_m500s']), bins=50)
+get_ipython().magic(u'history ')
+for mass in logmassedges:
+    axvline(mass, c='r')
+    
+clf()
+for i in range(3,7):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, histbins = np.histogram(ratio[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    semilogx(histcenters, hist, label=str(logmasscenters[i]))
+    
+clf()
+for i in range(3,6):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    hist, histbins = np.histogram(ratio[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    semilogx(histcenters, hist, label=str(logmasscenters[i]))
+    
+legend()
+xlabel('Ratio', fontsize=16)
+ylabel('P(Ratio)', fontsize=16
+)
+title('MXXL Snap 41 M500')
+tight_layout()
+get_ipython().magic(u'pinfo xticks')
+savefig('mxxlsnap41_m500_ratio_massbins.png')
+clf()
+for i in range(3,6):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    logmean = np.mean(logratio[inbin])
+    logstd = np.std(logratio[inbin])
+    logpull = (logratio[inbin] - logmean)/logstd
+    histo, histobins = np.histogram(logpull, bins=35)
+    histocenters = (histobins[:-1] + histobins[1:])/2.
+    plot(histocenters, histo, label=logmasscenters[i])
+    
+clf()
+for i in range(3,6):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    logmean = np.mean(logratio[inbin])
+    logstd = np.std(logratio[inbin])
+    logpull = (logratio[inbin] - logmean)/logstd
+    histo, histobins = np.histogram(logpull, bins=35, normed=True)
+    histocenters = (histobins[:-1] + histobins[1:])/2.
+    plot(histocenters, histo, label=logmasscenters[i])
+    
+xlabel('Pull', fontsize=16)
+ylabel('P(pull)', fontsize=16)
+legend()
+title('MXXL Snap 41 M500')
+savefig('mxxlsnap41_m500_lognorm_pull_massbins.png')
+clf()
+for i in range(3,6):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    logmean = np.mean(logratio[inbin])
+    logstd = np.std(logratio[inbin])
+    logpull = (logratio[inbin] - logmean)/logstd
+    print logmasscenters[i], np.mean(logpull), np.std(logpull)
+    
+for i in range(3,6):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    logmean = np.mean(logratio[inbin])
+    logstd = np.std(logratio[inbin])
+    logpull = (logratio[inbin] - logmean)/logstd
+    histo, histobins = np.histogram(logpull, bins=35, normed=True)
+    histocenters = (histobins[:-1] + histobins[1:])/2.
+    plot(histocenters, histo, label=logmasscenters[i])
+    
+for i in range(3,6):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    logmean = np.mean(logratio[inbin])
+    logstd = np.std(logratio[inbin])
+    logpull = (logratio[inbin] - logmean)/logstd
+    print logmasscenters[i], np.median(logpull)
+    
+get_ipython().magic(u'logstart miscentering_explore.log')
+with open('run7consolidated/bk11snap141.c4-r8-n0_0_corenone.pkl', 'rb') as input:
+    consol = cPickle.load(input)
+    
+consol.keys()
+hist(np.log10(consol['true_m500s']), bins=50)
+get_ipython().magic(u'pylab')
+hist(np.log10(consol['true_m500s']), bins=50)
+massedges = np.logspace(np.log10(np.min(consol['true_m500s'])), np.log10(np.max(consol['true_m500s'])), 9)
+logmassedges = np.log10(massedges)
+logmasscenters = (logmassedges[:-1] + logmassedges[1:])/2.
+for mass in logmassedges:
+    axvline(mass, c='r')
+    
+ratio = consol['measured_m500s']/consol['true_m500s']
+logratio = np.log(consol['measured_m500s']/consol['true_m500s'])
+clf()
+for i in range(4):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    logmean = np.mean(logratio[inbin])
+    logstd = np.std(logratio[inbin])
+    logpull = (logratio[inbin] - logmean)/logstd
+    histo, histobins = np.histogram(logpull, bins=35, normed=True)
+    histocenters = (histobins[:-1] + histobins[1:])/2.
+    plot(histocenters, histo, label=logmasscenters[i])
+    
+xlabel('Pull', fontsize=16)
+ylabel('P(pull)', fontsize=16)
+title('BK11 Snap 141 M500')
+savefig('bk11snap141_m500_lognorm_pull_massbins.png')
+clf()
+for i in range(5):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    histo, histbins = np.histogram(ratio[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    semilogx(histcenters, histo, label=str(logmasscenters[i]))
+    
+clf()
+for i in range(4):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    histo, histbins = np.histogram(ratio[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    semilogx(histcenters, histo, label=str(logmasscenters[i]))
+    
+legend()
+xlabel('Pull', fontsize=16)
+ylabel('P(pull)', fontsize=16)
+xlabel('Ratio', fontsize=16)
+ylabel('P(Ratio)', fontsize=16
+)
+title('BK11 Snap 141 M500')
+savefig('bk11snap141_m500_ratio_massbins.png')
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    print logmasscenters[i], np.mean(logratio[inbn]), np.std(logratio[inbin])/np.sqrt(len(logratio[inbin]))
+    
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    print logmasscenters[i], np.mean(logratio[inbin]), np.std(logratio[inbin])/np.sqrt(len(logratio[inbin]))
+    
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    print logmasscenters[i], np.median(logratio[inbin]), np.std(logratio[inbin])/np.sqrt(len(logratio[inbin]))
+    
+for i in range(len(masscenters)):
+    inbin = np.logical_and(consol['true_m500s'] >= massedges[i], consol['true_m500s'] < massedges[i+1])
+    print logmasscenters[i], np.exp(np.median(logratio[inbin])), np.std(logratio[inbin])/np.sqrt(len(logratio[inbin]))
+    
+random1 = 0.2*np.random.standard_normal(size=50000)
+random2 = 0.05*np.random.standard_normal(size=50000)
+clf()
+hist(np.log(random1/random2), bins=50)
+random1/random2
+np.log(random1/random2)
+clf()
+hist(np.log((1+random1)/(1+random2)), bins=50)
+clf()
+hist(np.log((0.9+random1)/(1+random2)), bins=50)
+clf()
+histo, histobins = np.histogram((0.9+random1)/(1+random2), bins=50)
+histocenters = (histobins[:-1] + histobins[1:])/2.
+semilogx(histocenters, histo)
+clf()
+hist(np.log((0.9+random2)/(1+random1)), bins=50)
+clf()
+hist(np.log((1.0+random2)/(1+random1)), bins=50)
+clf()
+random1 = 0.05*np.random.standard_normal(size=50000)
+random2 = 0.01*np.random.standard_normal(size=50000)
+hist(np.log((1.0+random2)/(1+random1)), bins=50)
+clf()
+ratio200 = consol['measured_m200ss']/consol['true_m200s']
+ratio200 = consol['measured_m200s']/consol['true_m200s']
+logratio200 = np.log(ratio200)
+massedges200 = np.logspace(np.log10(np.min(consol['true_m200s'])), np.log10(np.max(consol['true_m200s'])), 9)
+logmassedges200 = np.log10(massedges200)
+logmasscenters200 = (logmassedges200[:-1] + logmassedges200[1:])/2.
+hist(np.log10(consol['true_m200s']), bins=50)
+for edge in logmassedges200:
+    axvline(edge, c='r')
+    
+clf()
+for i in range(1,5):
+    inbin = np.logical_and(consol['true_m200s'] >= massedges200[i], consol['true_m200s'] < massedges200[i+1])
+    histo, histbins = np.histogram(ratio200[inbin], bins=50, normed=True)
+    histcenters = (histbins[:-1] + histbins[1:])/2.
+    semilogx(histcenters, histo, label=str(logmasscenters200[i]))
+    
+get_ipython().magic(u'pinfo xticks')
+xticks(np.arange(0.5, 1.0, 0.1), ['%1.1' % x for x in np.arange(0.5, 1.0, 0.1)])
+xticks(np.arange(0.5, 1.0, 0.1), ['%1.1f' % x for x in np.arange(0.5, 1.0, 0.1)])
+xticks(np.arange(0.5, 2.05, 0.1), ['%1.1f' % x for x in np.arange(0.5, 2.05, 0.1)])
+clf()
+get_ipython().magic(u'pinfo errorbar')
+meanfig = figure()
+stdfig = figure()
+log10massedges = np.logpsace(14., 15., 6)
+log10massedges = np.logspace(14., 15., 6)
+log10massedges
+get_ipython().magic(u'ls run7consolidated/')
+close('all')
+import plotsimdistros as psd
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+fig = figure()
+get_ipython().magic(u'pinfo fig.get_axes')
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+get_ipython().magic(u'debug')
+get_ipython().magic(u'pinfo fig.axes')
+get_ipython().magic(u'pinfo fig.add_axes')
+get_ipython().magic(u'pinfo fig.add_axes')
+ax = fig.add_axes(0.05, 0.05, 0.9, 0.9)
+ax = fig.add_axes([0.05, 0.05, 0.9, 0.9])
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+close('all')
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+close('all')
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+mfig.show()
+sfig.show()
+reload(psd)
+reload(psd)
+close('all')
+mfig.show()
+mfig, sfig = psd.plotRadiusMXXL()
+mfig.show()
+close('all')
+fig = figure()
+ax = fig.add_axes([0.05, 0.05, 0.9, 0.9])
+get_ipython().magic(u'pinfo ax.set_xscale')
+get_ipython().magic(u'pinfo ax.set_xscale')
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+get_ipython().magic(u'pinfo ax.set_xlabel')
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+mfig.show()
+close('all')
+get_ipython().magic(u'ls -tr')
+fig = figure()
+ax  = fig.add_axes([0.05, 0.05, 0.9, 0.9])
+get_ipython().magic(u'pinfo ax.errorbar')
+get_ipython().magic(u'pinfo fig.update')
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+fig = figure()
+get_ipython().magic(u'pinfo fig.add_subplot')
+reload(psd)
+close('all')
+mfig, sfig = psd.plotRadiusMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+figure(1)
+tight_layout()
+figure(2)
+tight_layout()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotRadiusMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+reload(psd)
+close('all')
+mfig, sfig = psd.plotNoiseMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+C
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotNoiseMXXL()
+reload(psd)
+close('all')
+mfig, sfig = psd.plotNoiseMXXL()
+with open('run7consolidated/mxxlsnap41.c4-r5-n4_3_corenone.pkl', 'rb') as input:
+    consol = cPickle.load(input)
+    
+consol['true_m500s']
+np.isfinite(consol['true_m500s']).all()
+np.isfinite(consol['measured_m500s']).all()
+consol['measured_m500s']
+len(consol['measured_m500s'][np.logical_not(np.isfinite(consol['measured_m500s']))])
+close('all')
+close('all')
+reload(psd)
+reload(psd)
+mfig, sfig = psd.plotCoreMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotCoreMXXL()
+get_ipython().magic(u'ls -tr')
+savefig('coremxxl_mean.png')
+close('all')
+reload(psd)
+mfig, sfig = psd.plotCoreMXXL()
+close('all')
+reload(psd)
+mfig, sfig = psd.plotCoreMXXL()
