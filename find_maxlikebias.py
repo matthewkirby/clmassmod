@@ -23,8 +23,12 @@ def run(simtype, chaindir, outfile, delta, massbin=0):
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
     model = config['model']
 
-    selectors = rundln.defineMassEdges(simtype, delta)
-    selector = selectors[massbin]
+    if massbin == -1:
+        selector = rundln.takeAllMasses(simtype, delta)[0]
+    else:
+        selectors = rundln.defineMassEdges(simtype, delta)
+        selector = selectors[massbin]
+
 
 
     isPDF = True

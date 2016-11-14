@@ -53,6 +53,34 @@ class SZSimOffset(object):
         return newoffsetx, newoffsety
 
 
+class SZSimOffsetCoreIgnored(object):
+
+    def __init__(self):
+
+        szsim_offsetcat = asciireader.read('{}/SPT_SN_offset.dat'.format(globalconfig.offsetdistro_dir))
+
+        self.szsim_offsetcat = szsim_offsetcat[szsim_offsetcat['SN'] >= 5]
+
+    def configure(self, config):
+
+        pass
+
+    def __call__(self, sim):
+
+        selectedsim = np.random.uniform(0, len(self.szsim_offsetcat))
+
+        offsetx = (self.szsim_offsetcat['peak_xpix[arcmin]'] - self.szsim_offsetcat['cluster_xpix'])[selectedsim]  #arcmin
+        offsety = (self.szsim_offsetcat['peak_ypix'] - self.szsim_offsetcat['cluster_ypix'])[selectedsim]
+
+
+        offset_phi = np.random.uniform(0, 2*np.pi)
+
+        newoffsetx = offsetx*np.cos(offset_phi) - offsety*np.sin(offset_phi)
+        newoffsety = offsetx*np.sin(offset_phi) + offsety*np.cos(offset_phi)
+
+        return newoffsetx, newoffsety
+
+
 #######
 
 
