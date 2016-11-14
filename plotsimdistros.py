@@ -158,8 +158,12 @@ def gatherChainFiles(chaindir, delta, binnum = None):
 
     if binnum is None:
 
-        #may 2015 style
-        chainfiles = glob.glob('%s/rundln*.%d.[0-9].chain.0' % (chaindir, delta))
+        #june2016 style
+        chainfiles = glob.glob('%s/rundln*.%d.[0-9]' % (chaindir, delta))
+
+        if len(chainfiles) == 0:
+            #may 2015 style
+            chainfiles = glob.glob('%s/rundln*.%d.[0-9].chain.0' % (chaindir, delta))
 
         if len(chainfiles) == 0:
             chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
@@ -172,7 +176,7 @@ def gatherChainFiles(chaindir, delta, binnum = None):
         
 
 
-#    print chainfiles
+    print chainfiles
 
 
     return sorted(chainfiles)
@@ -2932,7 +2936,8 @@ def plotHST_MXXL_BK11_Summary(outputdir, binnum = None):
 
 
                                     
-                                except AssertionError, IOError:
+                                except (AssertionError, IOError) as the_error:
+                                    print the_error
                                     print 'Skipping BK11 %s' % clustername
 
 
