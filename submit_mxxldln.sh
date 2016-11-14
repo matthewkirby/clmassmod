@@ -13,10 +13,10 @@ outputdir=/vol/euclid1/euclid1_2/dapple/rundlns/mxxlsnap$snap/
 
 jobfile=$jobdir/rundln$snap.$delta.condor.submit
 
-if [ -e $jobfile ]; then
-    rm $jobfile
-fi
-
+#if [ -e $jobfile ]; then
+#    rm $jobfile
+#fi
+#
 startbin=0
 if [ "$nbins" -eq "-1" ]; then
     startbin=-1
