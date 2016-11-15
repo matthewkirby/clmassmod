@@ -8,6 +8,7 @@ import yaml
 
 import nfwutils
 import catalog
+import colossusMassCon as cmc
 
 import colossus.cosmology.cosmology as cCosmo
 import colossus.halo.concentration as chc
@@ -37,6 +38,9 @@ class AnalyticSimReader(object):
     #########
 
     def load(self, filebase):
+
+        nfwutils.global_cosmology.set_cosmology(self.getCosmology())
+        cmc.matchCosmo()
 
         if self._sim is None or self._filebase != filebase:
             self._sim = AnalyticSim(filebase)
