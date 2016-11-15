@@ -12,4 +12,5 @@ megacam_sim_plots*/*
 hst_sim_plots*/*
 build*
 nfwfitter.egg-info
+data/analyticsims
 

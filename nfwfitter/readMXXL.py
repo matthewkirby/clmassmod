@@ -3,10 +3,12 @@
 #######################
 
 import numpy as np
-import binaryutils
-import nfwutils
 import astropy.io.ascii as asciireader
+import binaryutils
+
+import nfwutils
 import catalog
+
 
 #######################
 

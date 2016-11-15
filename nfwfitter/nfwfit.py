@@ -11,7 +11,6 @@ import astropy.io.fits as pyfits
 import nfwutils, bashreader, ldac
 import nfwmodeltools as tools
 import varcontainer
-import fitmodel
 import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
@@ -334,32 +333,6 @@ class MCMCFitter(object):
 
 ##########
 
-
-class MinChisqFitter(object):
-
-    def configure(self, config):
-
-        self.model = config['model']
-        
-    def __call__(self, profile, guess = [], useSimplex=False):
-
-        if guess == []:
-            guess = self.model.guess()
-
-        print 'GUESS: %f' % guess[0]
-
-        self.model.setData(profile.beta_s, profile.beta_s2, profile.zcluster, zlens = profile.zlens)
-
-        fitter = fitmodel.FitModel(profile.r_mpc, profile.ghat, profile.sigma_ghat, self.model,
-                                   guess = guess)
-        fitter.m.limits = self.model.paramLimits()
-        fitter.fit(useSimplex = useSimplex)
-        if fitter.have_fit:
-
-            uncert = fitter.uncert()
-            
-            return fitter.par_vals, fitter.par_err
-        return None
 
 
 #######

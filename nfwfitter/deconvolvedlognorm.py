@@ -12,8 +12,8 @@ import deconvolvedlognormtools as dlntools
 import varcontainer
 import pymc_mymcmc_adapter as pma
 import scipy.stats
-import nfwutils, nfwfit, nfwnoise
-import fitmodel
+import nfwutils, nfwfit
+
 
 ########################
 
@@ -135,74 +135,74 @@ def loadPosteriors(pdfdir, simtype, simreader, delta, selector,
 
 #######################
 
-def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masses=np.arange(-5e14, 5e15, 1e13), beta = 0.28):
-
-    if config.binspacing == 'linear':
-        binedges = np.linspace(config.minradii, config.maxradii, config.nbins+1)
-    else:
-        binedges = np.logspace(np.log10(config.minradii), np.log10(config.maxradii), config.nbins+1)
-    
-
-    fitter = nfwfit.buildFitter(config)
-    fitter.model.setData(beta, beta**2, config.targetz)
-
-    if masses is None:
-        doMaxlike=True
-        maxlikes = np.zeros((nclusters, nmlsamples))
-    else:
-        doMaxlike = False
-        nmasses = len(masses)
-        pdfs = np.zeros((nclusters, nmlsamples, nmasses))
-
-    nclusters = len(mtrues)
-
-    for i in range(nclusters):
-        mls = np.exp(logmu + np.log(mtrues[i]) + np.exp(logsigma)*np.random.standard_normal(nmlsamples))
-        profile_rmpcs, shearprofiles, shearerrprofiles = nfwnoise.createClusterSet(config,
-                                                                                   mls,
-                                                                                   config.targetz,
-                                                                                   binedges,
-                                                                                   beta,
-                                                                                   config.nperarcmin,
-                                                                                   config.shapenoise,
-                                                                                   concens = 4.*np.ones(nmlsamples))
-
-        for j in range(nmlsamples):
-
-            if doMaxlike is True:
-                maxlikes[i,j] = modelfitter.minChisqMethod(profile_rmpcs[j], 
-                                                           shearprofiles[j], 
-                                                           shearerrprofiles[j], 
-                                                           beta, beta**2, config.targetz)[0]*fitter.model.massScale
-
-            else:
-
-
-                modelfitter = fitmodel.FitModel(profile_rmpcs[j], 
-                                                shearprofiles[j], 
-                                                shearerrprofiles[j], 
-                                                fitter.model,
-                                                guess = fitter.model.guess())
-
-
-                for k, mass in enumerate(masses):
-                
-                    pdfs[i,j,k] = modelfitter.statfunc(modelfitter.ydata,
-                                                       modelfitter.yerr,
-                                                       modelfitter.model(modelfitter.xdata,
-                                                                         mass / fitter.model.massScale))
-
-
-
-    if doMaxlike:
-        return maxlikes
-    else:
-        pdfs = np.exp(pdfs - np.max(pdfs))
-        return pdfs
-    
-                
-#####################
-
+#def posteriorPredictivePDFs(logmu, logsigma, mtrues, config, nmlsamples=5, masses=np.arange(-5e14, 5e15, 1e13), beta = 0.28):
+#
+#    if config.binspacing == 'linear':
+#        binedges = np.linspace(config.minradii, config.maxradii, config.nbins+1)
+#    else:
+#        binedges = np.logspace(np.log10(config.minradii), np.log10(config.maxradii), config.nbins+1)
+#    
+#
+#    fitter = nfwfit.buildFitter(config)
+#    fitter.model.setData(beta, beta**2, config.targetz)
+#
+#    if masses is None:
+#        doMaxlike=True
+#        maxlikes = np.zeros((nclusters, nmlsamples))
+#    else:
+#        doMaxlike = False
+#        nmasses = len(masses)
+#        pdfs = np.zeros((nclusters, nmlsamples, nmasses))
+#
+#    nclusters = len(mtrues)
+#
+#    for i in range(nclusters):
+#        mls = np.exp(logmu + np.log(mtrues[i]) + np.exp(logsigma)*np.random.standard_normal(nmlsamples))
+#        profile_rmpcs, shearprofiles, shearerrprofiles = nfwnoise.createClusterSet(config,
+#                                                                                   mls,
+#                                                                                   config.targetz,
+#                                                                                   binedges,
+#                                                                                   beta,
+#                                                                                   config.nperarcmin,
+#                                                                                   config.shapenoise,
+#                                                                                   concens = 4.*np.ones(nmlsamples))
+#
+#        for j in range(nmlsamples):
+#
+#            if doMaxlike is True:
+#                maxlikes[i,j] = modelfitter.minChisqMethod(profile_rmpcs[j], 
+#                                                           shearprofiles[j], 
+#                                                           shearerrprofiles[j], 
+#                                                           beta, beta**2, config.targetz)[0]*fitter.model.massScale
+#
+#            else:
+#
+#
+#                modelfitter = fitmodel.FitModel(profile_rmpcs[j], 
+#                                                shearprofiles[j], 
+#                                                shearerrprofiles[j], 
+#                                                fitter.model,
+#                                                guess = fitter.model.guess())
+#
+#
+#                for k, mass in enumerate(masses):
+#                
+#                    pdfs[i,j,k] = modelfitter.statfunc(modelfitter.ydata,
+#                                                       modelfitter.yerr,
+#                                                       modelfitter.model(modelfitter.xdata,
+#                                                                         mass / fitter.model.massScale))
+#
+#
+#
+#    if doMaxlike:
+#        return maxlikes
+#    else:
+#        pdfs = np.exp(pdfs - np.max(pdfs))
+#        return pdfs
+#    
+#                
+######################
+#
 #####################
 
 def evalGaussModel(xs, chain, ngauss, index):
