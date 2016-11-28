@@ -5,7 +5,7 @@ import galaxypicker
 galaxypicker=galaxypicker.AllGalaxyPicker()
 
 import betacalcer
-betacalcer=betacalcer.InfiniteRedshift()
+betacalcer=betacalcer.FixedBeta()
 
 import shearnoiser
 shearnoiser=shearnoiser.NoNoise()

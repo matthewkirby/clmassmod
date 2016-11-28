@@ -158,8 +158,12 @@ def gatherChainFiles(chaindir, delta, binnum = None):
 
     if binnum is None:
 
-        #may 2015 style
-        chainfiles = glob.glob('%s/rundln*.%d.[0-9].chain.0' % (chaindir, delta))
+        #june2016 style
+        chainfiles = glob.glob('%s/rundln*.%d.[0-9]' % (chaindir, delta))
+
+        if len(chainfiles) == 0:
+            #may 2015 style
+            chainfiles = glob.glob('%s/rundln*.%d.[0-9].chain.0' % (chaindir, delta))
 
         if len(chainfiles) == 0:
             chainfiles = glob.glob('%s/dln_*.%d.chain.0' % (chaindir, delta))
@@ -172,7 +176,7 @@ def gatherChainFiles(chaindir, delta, binnum = None):
         
 
 
-#    print chainfiles
+    print chainfiles
 
 
     return sorted(chainfiles)
@@ -2582,14 +2586,14 @@ def plotMega_MXXL_BK11_Summary(outputdir, binnum = None):
 
 
     
-    deltas = [200]
+    deltas = [200, 500]
 
     rss = ['r9']
 
-    mcs = ['c4']
-
+    mcs = 'c4 diemer15 c3 c5'.split()
+    centers = 'xrayNONE xraymag szmag szanalytic'.split()
     
-    centers = ['xrayNONE'] # xraymag szmag szanalytic'.split()
+
 
 
 
@@ -2598,7 +2602,7 @@ def plotMega_MXXL_BK11_Summary(outputdir, binnum = None):
     bk11snaps = [124, 141]
     bk11redshifts = ['z=0.5', 'z=0.25']
 
-    config = 'mega-{mc}-{rs}-{curcenter}-{clustername}-feb2016'
+    config = 'mega-{mc}-{rs}-{curcenter}-{clustername}-june2016'
 
 
     datafile = asciireader.read('configfiles/megacam_siminput.list')
@@ -2932,7 +2936,8 @@ def plotHST_MXXL_BK11_Summary(outputdir, binnum = None):
 
 
                                     
-                                except AssertionError, IOError:
+                                except (AssertionError, IOError) as the_error:
+                                    print the_error
                                     print 'Skipping BK11 %s' % clustername
 
 
@@ -3379,4 +3384,4 @@ if __name__ == '__main__':
         binnum = int(sys.argv[2])
         print 'Bin Number:', binnum
 
-    plotHST_MXXL_BK11_Summary(outputdir, binnum = binnum)
+    plotMega_MXXL_BK11_Summary(outputdir, binnum = binnum)
