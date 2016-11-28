@@ -39,7 +39,7 @@ class SZSimOffset(object):
 
         offsetingcoresize = self.szsim_offsetcat[self.szsim_offsetcat['coresize[arcmin]'] == self.coresize]
 
-        selectedsim =np.random.uniform(0, len(offsetingcoresize))
+        selectedsim =np.random.randint(0, len(offsetingcoresize))
 
         offsetx = (offsetingcoresize['peak_xpix[arcmin]'] - offsetingcoresize['cluster_xpix'])[selectedsim]  #arcmin
         offsety = (offsetingcoresize['peak_ypix'] - offsetingcoresize['cluster_ypix'])[selectedsim]
@@ -67,7 +67,7 @@ class SZSimOffsetCoreIgnored(object):
 
     def __call__(self, sim):
 
-        selectedsim = np.random.uniform(0, len(self.szsim_offsetcat))
+        selectedsim = np.random.randint(0, len(self.szsim_offsetcat))
 
         offsetx = (self.szsim_offsetcat['peak_xpix[arcmin]'] - self.szsim_offsetcat['cluster_xpix'])[selectedsim]  #arcmin
         offsety = (self.szsim_offsetcat['peak_ypix'] - self.szsim_offsetcat['cluster_ypix'])[selectedsim]
