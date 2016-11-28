@@ -2,7 +2,7 @@
 
 import os
 
-batch_header = '''#!/bin/bash
+aifa_batch_header = '''#!/bin/bash
 
 export HOME=/home/dapple
 export PATH=/vol/aibn218/data1/dapple/anaconda/bin:/home/dapple/bin:/vol/software/software/astro/theli/THELI//theli/gui/:/vol/software/software/astro/theli/THELI//theli/bin/Linux_64/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
@@ -10,9 +10,16 @@ export LD_LIBRARY_PATH=/home/dapple/lib
 export SRCLOC=/vol/euclid1/euclid1_raid1/dapple/mxxlsims
 '''
 
+midway_batch_header = '''#!/bin/bash
+
+export HOME=/home/dapple
+export PATH=/home/dapple/anaconda2/bin:/software/slurm-current-el6-x86_64/bin:/software/gnuplot-4.6-el6-x86_64/bin:/software/xpdf-3.04-el6-x86_64/bin:/software/tkdiff-4.2
+export LD_LIBRARY_PATH=/home/dapple/lib
+'''
 
 
-def batchNFWFitJobs(jobs, outputdir, nrunners=128):
+
+def batchNFWFitJobs(jobs, outputdir, nrunners=128, batch_header = aifa_batch_header):
 
     if not os.path.exists(outputdir):
         os.mkdir(outputdir)
