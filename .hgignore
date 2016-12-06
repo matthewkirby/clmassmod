@@ -13,4 +13,4 @@ hst_sim_plots*/*
 build*
 nfwfitter.egg-info
 data/analyticsims
-
+output/*
