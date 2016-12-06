@@ -192,7 +192,7 @@ def weightedaverage(means, errs):
 
     return mu, sig
 
-def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0.8, biaslabel = True, xoffset = 1.0, binnum=None):
+def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1.0, biaslabel = True, xoffset = 1.0, binnum=None, marker='None'):
 
 
 
@@ -277,8 +277,8 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         print '!!!', mu, muerr, sig, sigerr
 
 
-        meanax.errorbar([x_center], [mu], [[muerr[0]], [muerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
-        stdax.errorbar([x_center], [sig], [[sigerr[0]], [sigerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+        meanax.errorbar([x_center], [mu], [[muerr[0]], [muerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker=marker, alpha = alpha, linestyle='None', elinewidth=2.)
+        stdax.errorbar([x_center], [sig], [[sigerr[0]], [sigerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker=marker, alpha=alpha, linestyle='None', elinewidth=2.)
 
 
 #        meanax.fill_between([massbinlow, massbinhigh], 

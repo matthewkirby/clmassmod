@@ -483,7 +483,7 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200])
         stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
         stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
         stdax.set_xlim(1e14, 5e15)
-        stdax.set_ylim(0.0, 0.5)
+        stdax.set_ylim(0.0, 0.6)
         stdax.set_xticks([1e15])
         stdax.set_xticklabels(['10'])
         stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
@@ -499,6 +499,95 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200])
 
 
 ##########
+
+markers = ['o', '^', 's']
+
+def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200]):
+    '''Refactored plot code'''
+
+    for delta in deltas:
+
+        meansfig = pylab.figure()
+        meansax = meansfig.add_subplot(1,1,1)
+        
+        stdsfig = pylab.figure()
+        stdax = stdsfig.add_subplot(1,1,1)
+
+        majorpatches = []
+        minorpatches = []
+
+        for curmajor, chaindirset in enumerate(chaindirs):
+
+            alpha = 1.
+            if curmajor > 0:
+                alpha = 0.5
+
+            for curminor, chaindir in enumerate(chaindirset):
+
+                patch, summary = psd.precomputedLogNormDistro(chaindir, 
+                                                              delta,
+                                                              meansax,
+                                                              stdax,
+                                                              colorindex = curmajor,
+                                                              biaslabel = False,
+                                                              marker = markers[curminor]
+                                                              alpha = alpha,
+                                                              xoffset = xoffsets[curmajor])
+
+
+                if curmajor == 0:
+                    minorpatches.append(patch)
+
+                if curminor == 0:
+                    majorpatches.append(patch)
+
+
+
+
+        allpatches = majorpatches + minorpatches
+        alllabels = labels[0] + labels[1]
+        
+        
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(1e14, 5e15)
+        meansax.set_ylim(0.5, 1.3)
+        meansax.set_xticks([1e15])
+        meansax.set_xticklabels(['10'])
+        meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        meansax.legend(allpatches[::-1], alllabels[::-1], loc='lower left', numpoints=1, ncol=2)
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        filebase = 'docs/figures/{}_bias.delta{}'.format(outputname, delta)
+        meansfig.savefig('{}.png'.format(filebase))
+        meansfig.savefig('{}.pdf'.format(filebase))
+        meansfig.savefig('{}.ps'.format(filebase))
+        meansfig.savefig('{}.eps'.format(filebase))
+        
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+        stdax.set_xlim(1e14, 5e15)
+        stdax.set_ylim(0.0, 0.6)
+        stdax.set_xticks([1e15])
+        stdax.set_xticklabels(['10'])
+        stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        stdax.legend(allpatches[::-1], alllabels[::-1], loc='lower left', numpoints=1, ncol=2)
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        filebase = 'docs/figures/{}_sigma.delta{}'.format(outputname, delta)
+        stdsfig.savefig('{}.png'.format(filebase))
+        stdsfig.savefig('{}.pdf'.format(filebase))
+        stdsfig.savefig('{}.ps'.format(filebase))
+        stdsfig.savefig('{}.eps'.format(filebase))
+
+
+##########
+
 
 def compareInnerFitRadius():
     '''Compare bias levels when MC and centering as good as can be, for varying inner radial fit limits'''
@@ -542,6 +631,34 @@ def compareOuterFitRadius():
     outputname = 'compare_nfw_outerfitrange'
 
     compareSimPlot(outputname, chaindirs, labels, xoffsets)
+
+
+    ##########
+
+def compareMCRelation_RadialRange():
+    '''Compare bias levels using different MC relations, but no miscentering, with different fit ranges'''
+
+    mxxlsnap=54
+
+    configtemplate = 'general-{mc}-r{r}-xrayNONE-n2_4-nov2016'
+    radialranges = [19, 6, 10]
+    mcs = [c4, diemer15, duffy]
+
+    chaindirs = []
+    for r in radialranges:
+        configs = [configtemplate.format(mc=mc, r=r) for mc in mcs]
+
+        chaindirs.append(['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs])
+    
+
+    labels = [['c=4', 'Diemer15', 'Duffy08'],
+              ['0.1-2.5 Mpc', '0.5-2.5 Mpc', '0.75-3.0 Mpc']]
+
+    xoffsets = [0.98, 1.0, 1.02]
+
+    outputname = 'compare_nfw_mc_radial'
+
+    compare2DimSimPlot(outputname, chaindirs, labels, xoffsets)
 
 
 
