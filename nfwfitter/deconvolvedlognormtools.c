@@ -1154,7 +1154,7 @@ static char __pyx_k_mcmcloglinearlike[] = "mcmcloglinearlike";
 static char __pyx_k_outlier_delta_logmls[] = "outlier_delta_logmls";
 static char __pyx_k_outlierloglinearlike[] = "outlierloglinearlike";
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
-static char __pyx_k_Users_dapple_astro_mxxlsims_nfw[] = "/Users/dapple/astro/mxxlsims/nfwfitter/deconvolvedlognormtools.pyx";
+static char __pyx_k_vol_aibn218_data1_dapple_astro[] = "/vol/aibn218/data1/dapple/astro/mxxlsims/nfwfitter/deconvolvedlognormtools.pyx";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
 static char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte order not supported";
@@ -1165,7 +1165,6 @@ static PyObject *__pyx_kp_u_Format_string_allocated_too_shor;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor_2;
 static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_s_RuntimeError;
-static PyObject *__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_altintegral;
 static PyObject *__pyx_n_s_cdf;
@@ -1239,6 +1238,7 @@ static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_thesum;
 static PyObject *__pyx_n_s_twopi;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
+static PyObject *__pyx_kp_s_vol_aibn218_data1_dapple_astro;
 static PyObject *__pyx_n_s_zeroboundrenorm;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_float_0_;
@@ -6830,7 +6830,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_Format_string_allocated_too_shor_2, __pyx_k_Format_string_allocated_too_shor_2, sizeof(__pyx_k_Format_string_allocated_too_shor_2), 0, 1, 0, 0},
   {&__pyx_kp_u_Non_native_byte_order_not_suppor, __pyx_k_Non_native_byte_order_not_suppor, sizeof(__pyx_k_Non_native_byte_order_not_suppor), 0, 1, 0, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
-  {&__pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_k_Users_dapple_astro_mxxlsims_nfw, sizeof(__pyx_k_Users_dapple_astro_mxxlsims_nfw), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_altintegral, __pyx_k_altintegral, sizeof(__pyx_k_altintegral), 0, 0, 1, 1},
   {&__pyx_n_s_cdf, __pyx_k_cdf, sizeof(__pyx_k_cdf), 0, 0, 1, 1},
@@ -6904,6 +6903,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_thesum, __pyx_k_thesum, sizeof(__pyx_k_thesum), 0, 0, 1, 1},
   {&__pyx_n_s_twopi, __pyx_k_twopi, sizeof(__pyx_k_twopi), 0, 0, 1, 1},
   {&__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_k_unknown_dtype_code_in_numpy_pxd, sizeof(__pyx_k_unknown_dtype_code_in_numpy_pxd), 0, 1, 0, 0},
+  {&__pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_k_vol_aibn218_data1_dapple_astro, sizeof(__pyx_k_vol_aibn218_data1_dapple_astro), 0, 0, 1, 0},
   {&__pyx_n_s_zeroboundrenorm, __pyx_k_zeroboundrenorm, sizeof(__pyx_k_zeroboundrenorm), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
@@ -7085,7 +7085,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__15 = PyTuple_Pack(12, __pyx_n_s_mlens, __pyx_n_s_merr, __pyx_n_s_mtrue, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nsamples, __pyx_n_s_randomdeviates, __pyx_n_s_thesum, __pyx_n_s_logmtrue, __pyx_n_s_ml_int, __pyx_n_s_normpart); if (unlikely(!__pyx_tuple__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__15);
   __Pyx_GIVEREF(__pyx_tuple__15);
-  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_integral, 37, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__16 = (PyObject*)__Pyx_PyCode_New(5, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__15, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_integral, 37, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 37; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":67
  * @cython.boundscheck(False)
@@ -7097,7 +7097,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__17 = PyTuple_Pack(11, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nsamples, __pyx_n_s_thesum, __pyx_n_s_lognormpart, __pyx_n_s_sigma2, __pyx_n_s_sigmasqrt2pi, __pyx_n_s_neg2sigma2); if (unlikely(!__pyx_tuple__17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__17);
   __Pyx_GIVEREF(__pyx_tuple__17);
-  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(4, 0, 11, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_altintegral, 67, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(4, 0, 11, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_altintegral, 67, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":96
  * @cython.boundscheck(False)
@@ -7109,7 +7109,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__19 = PyTuple_Pack(13, __pyx_n_s_ml_ints, __pyx_n_s_deltamasses, __pyx_n_s_delta_logmls, __pyx_n_s_pdf, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nsamples, __pyx_n_s_thesum, __pyx_n_s_sigma2, __pyx_n_s_sigmasqrt2pi, __pyx_n_s_neg2sigma2, __pyx_n_s_lognormpart); if (unlikely(!__pyx_tuple__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(6, 0, 13, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_pdfintegral, 96, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(6, 0, 13, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_pdfintegral, 96, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":137
  * @cython.boundscheck(False)
@@ -7121,7 +7121,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__21 = PyTuple_Pack(8, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_sumlogprob, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__21)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_loglinearlike, 137, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_loglinearlike, 137, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":170
  * @cython.boundscheck(False)
@@ -7133,7 +7133,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__23 = PyTuple_Pack(10, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_ngoodsamples, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_nsamples, __pyx_n_s_sumlogprob, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__23)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__23);
   __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_mcmcloglinearlike, 170, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(5, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_mcmcloglinearlike, 170, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":206
  * @cython.boundscheck(False)
@@ -7145,7 +7145,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__25 = PyTuple_Pack(10, __pyx_n_s_ml_ints, __pyx_n_s_deltamasses, __pyx_n_s_delta_logmls, __pyx_n_s_pdfs, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_sumlogprob, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__25)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_pdfloglinearlike, 206, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(6, 0, 10, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_pdfloglinearlike, 206, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 206; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":243
  * @cython.boundscheck(False)
@@ -7157,7 +7157,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__27 = PyTuple_Pack(12, __pyx_n_s_ml_ints, __pyx_n_s_delta_logmls, __pyx_n_s_outlier_ml_ints, __pyx_n_s_outlier_delta_logmls, __pyx_n_s_logmu, __pyx_n_s_sigma, __pyx_n_s_fracoutliers, __pyx_n_s_i, __pyx_n_s_nclusters, __pyx_n_s_sumlogprob, __pyx_n_s_prob, __pyx_n_s_outlierprob); if (unlikely(!__pyx_tuple__27)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(7, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_outlierloglinearlike, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(7, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_outlierloglinearlike, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 243; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "nfwfitter/deconvolvedlognormtools.pyx":286
  * @cython.boundscheck(False)
@@ -7169,7 +7169,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__29 = PyTuple_Pack(20, __pyx_n_s_delta_mls, __pyx_n_s_delta_masses, __pyx_n_s_pdfs, __pyx_n_s_pis, __pyx_n_s_mus, __pyx_n_s_tau2, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_nclusters, __pyx_n_s_ngauss, __pyx_n_s_nmasses, __pyx_n_s_norms, __pyx_n_s_zeroboundrenorm, __pyx_n_s_tau, __pyx_n_s_sumlogprob, __pyx_n_s_deltamass_mu2, __pyx_n_s_gausseval, __pyx_n_s_integrand, __pyx_n_s_k, __pyx_n_s_prob); if (unlikely(!__pyx_tuple__29)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(6, 0, 20, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_dapple_astro_mxxlsims_nfw, __pyx_n_s_pdfGaussMix1D, 286, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(6, 0, 20, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_vol_aibn218_data1_dapple_astro, __pyx_n_s_pdfGaussMix1D, 286, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
