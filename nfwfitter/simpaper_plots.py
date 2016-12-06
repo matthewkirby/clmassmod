@@ -431,7 +431,7 @@ def compareNoiseProfiles(data = None):
 def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200]):
     '''Refactored plot code'''
 
-        for delta in deltas:
+    for delta in deltas:
 
         meansfig = pylab.figure()
         meansax = meansfig.add_subplot(1,1,1)
@@ -539,7 +539,7 @@ def compareOuterFitRadius():
 
     xoffsets = [0.97, 0.99, 1.01, 1.03]
 
-    outputname = 'compare_nfw_innerfitrange'
+    outputname = 'compare_nfw_outerfitrange'
 
     compareSimPlot(outputname, chaindirs, labels, xoffsets)
 
