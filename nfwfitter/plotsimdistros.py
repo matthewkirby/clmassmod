@@ -266,7 +266,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         ystdhighs.append(std_high)
         ystdhighs.append(std_high)
 
-        x_center = (massbinlow + massbinhigh)/2. + xoffset*(massbinhigh - massbinlow)
+        x_center = (massbinlow + massbinhigh)/2. + (xoffset-1.)*(massbinhigh - massbinlow)
         mu_center = (mu_high + mu_low)/2.
         mu_err = (mu_high - mu_low)/2.
         std_center = (std_high + std_low)/2.
