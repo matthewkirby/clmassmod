@@ -274,9 +274,11 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
 
         print mu_center, mu_err
 
+        print '!!!', mu, muerr, sig, sigerr
 
-        meanax.errorbar([x_center], [mu], [mu_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
-        stdax.errorbar([x_center], [sig], [sigerr], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+
+        meanax.errorbar([x_center], [mu], [[muerr[0]], [muerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+        stdax.errorbar([x_center], [sig], [[sigerr[0]], [sigerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
 
 
 #        meanax.fill_between([massbinlow, massbinhigh], 
