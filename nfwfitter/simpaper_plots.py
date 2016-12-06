@@ -428,24 +428,10 @@ def compareNoiseProfiles(data = None):
 ## Simulation results based on changing obs setup
 #############
 
-def compareInnerFitRadius():
-    '''Compare bias levels when MC and centering as good as can be, for varying inner radial fit limits'''
+def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200]):
+    '''Refactored plot code'''
 
-    mxxlsnap=54
-    deltas = [500, 200]
-
-    configtemplate = 'general-diemer15-r{}-xrayNONE-n2_4-nov2016'
-    radialranges = [19, 3, 6, 9]
-    configs = [configtemplate.format(r) for r in radialranges]
-
-    chaindirs = ['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs]
-    
-
-    labels = ['100kpc', '250kpc', '500kpc', '750kpc']
-
-    xoffsets = [0.97, 0.99, 1.01, 1.03]
-    
-    for delta in deltas:
+        for delta in deltas:
 
         meansfig = pylab.figure()
         meansax = meansfig.add_subplot(1,1,1)
@@ -487,7 +473,7 @@ def compareInnerFitRadius():
         meansax.legend(patches[::-1], labels[::-1], loc='lower left')
         meansfig.canvas.draw()
         meansfig.tight_layout()
-        filebase = 'docs/figures/compare_nfw_innerfitrange_bias.delta{}'.format(delta)
+        filebase = 'docs/figures/{}_bias.delta{}'.format(outputname, delta)
         meansfig.savefig('{}.png'.format(filebase))
         meansfig.savefig('{}.pdf'.format(filebase))
         meansfig.savefig('{}.ps'.format(filebase))
@@ -505,11 +491,57 @@ def compareInnerFitRadius():
         stdax.legend(patches[::-1], labels[::-1], loc='upper left')
         stdsfig.canvas.draw()
         stdsfig.tight_layout()
-        filebase = 'docs/figures/compare_nfw_innerfitrange_sigma.delta{}'.format(delta)
+        filebase = 'docs/figures/{}_sigma.delta{}'.format(outputname, delta)
         stdsfig.savefig('{}.png'.format(filebase))
         stdsfig.savefig('{}.pdf'.format(filebase))
         stdsfig.savefig('{}.ps'.format(filebase))
         stdsfig.savefig('{}.eps'.format(filebase))
+
+
+##########
+
+def compareInnerFitRadius():
+    '''Compare bias levels when MC and centering as good as can be, for varying inner radial fit limits'''
+
+    mxxlsnap=54
+
+    configtemplate = 'general-diemer15-r{}-xrayNONE-n2_4-nov2016'
+    radialranges = [19, 3, 6, 9]
+    configs = [configtemplate.format(r) for r in radialranges]
+
+    chaindirs = ['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs]
+    
+
+    labels = ['100kpc', '250kpc', '500kpc', '750kpc']
+
+    xoffsets = [0.97, 0.99, 1.01, 1.03]
+
+    outputname = 'compare_nfw_innerfitrange'
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets)
+
+
+    ##########
+
+def compareOuterFitRadius():
+    '''Compare bias levels when MC and centering as good as can be, for varying outer radial fit limits'''
+
+    mxxlsnap=54
+
+    configtemplate = 'general-diemer15-r{}-xrayNONE-n2_4-nov2016'
+    radialranges = [5, 20, 6, 7]
+    configs = [configtemplate.format(r) for r in radialranges]
+
+    chaindirs = ['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs]
+    
+
+    labels = ['100kpc', '250kpc', '500kpc', '750kpc']
+
+    xoffsets = [0.97, 0.99, 1.01, 1.03]
+
+    outputname = 'compare_nfw_innerfitrange'
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets)
 
 
 
