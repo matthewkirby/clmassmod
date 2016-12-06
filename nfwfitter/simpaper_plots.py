@@ -530,7 +530,7 @@ def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 2
                                                               stdax,
                                                               colorindex = curmajor,
                                                               biaslabel = False,
-                                                              marker = markers[curminor]
+                                                              marker = markers[curminor],
                                                               alpha = alpha,
                                                               xoffset = xoffsets[curmajor])
 
@@ -642,7 +642,7 @@ def compareMCRelation_RadialRange():
 
     configtemplate = 'general-{mc}-r{r}-xrayNONE-n2_4-nov2016'
     radialranges = [19, 6, 10]
-    mcs = [c4, diemer15, duffy]
+    mcs = ['c4', 'diemer15', 'duffy']
 
     chaindirs = []
     for r in radialranges:
