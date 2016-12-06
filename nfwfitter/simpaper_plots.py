@@ -535,7 +535,7 @@ def compareOuterFitRadius():
     chaindirs = ['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs]
     
 
-    labels = ['100kpc', '250kpc', '500kpc', '750kpc']
+    labels = ['1.5 Mpc', '2.0 Mpc', '2.5 Mpc', '3.0 Mpc']
 
     xoffsets = [0.97, 0.99, 1.01, 1.03]
 
