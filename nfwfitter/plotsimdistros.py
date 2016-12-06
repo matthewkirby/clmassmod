@@ -198,7 +198,8 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
 
     ylows = []
     yhighs = []
-    xpoints = []    
+    xpoints = []
+
 
     ave = []
     aveerr = []
@@ -243,6 +244,11 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
         sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
 
+        mus.append(mu)
+        mu_errs.append(muerr)
+        sigs.append(sig)
+        sig_errs.append(sigerr)
+
         ave.append(np.mean(np.exp(chain['logmu'][0,1000::3])))
         aveerr.append(np.std(np.exp(chain['logmu'][0,1000::3])))
         stdev.append(np.mean(np.exp(chain['logsigma'][0,1000::3])))
@@ -265,7 +271,7 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         ystdhighs.append(std_high)
         ystdhighs.append(std_high)
 
-        x_center = xoffset*(massbinlow + massbinhigh)/2.
+        x_center = (massbinlow + massbinhigh)/2. + xoffset*(massbinhigh - massbinlow)
         mu_center = (mu_high + mu_low)/2.
         mu_err = (mu_high - mu_low)/2.
         std_center = (std_high + std_low)/2.
@@ -274,8 +280,8 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         print mu_center, mu_err
 
 
-        meanax.errorbar([x_center], [mu_center], [mu_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
-        stdax.errorbar([x_center], [std_center], [std_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+        meanax.errorbar([x_center], [mu], [mu_err], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
+        stdax.errorbar([x_center], [sig], [sigerr], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker='None', linestyle='None', elinewidth=2.)
 
 
 #        meanax.fill_between([massbinlow, massbinhigh], 
