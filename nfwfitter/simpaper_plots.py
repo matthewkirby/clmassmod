@@ -16,9 +16,12 @@ import deconvolvedlognorm
 import pymc
 import fitmodel
 import confidenceinterval as ci
+import plotsimdistros as psd
 
 
-############
+################
+## Statistics & Noise Section
+################
 
 
 def likelihoodPlots():
@@ -420,5 +423,97 @@ def compareNoiseProfiles(data = None):
 
 
     return fig, data
+
+###########################
+## Simulation results based on changing obs setup
+#############
+
+def compareInnerFitRadius():
+    '''Compare bias levels when MC and centering as good as can be, for varying inner radial fit limits'''
+
+    mxxlsnap=54
+    deltas = [500, 200]
+
+    configtemplate = 'general-diemer15-r{}-xrayNONE-n2_4-nov2016'
+    radialranges = [19, 3, 6, 9]
+    configs = [configtemplate.format(r) for r in radialranges]
+
+    chaindirs = ['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs]
+    
+
+    labels = ['100kpc', '250kpc', '500kpc', '750kpc']
+
+    xoffsets = [0.97, 0.99, 1.01, 1.03]
+    
+    for delta in deltas:
+
+        meansfig = pylab.figure()
+        meansax = meansfig.add_subplot(1,1,1)
+        
+        stdsfig = pylab.figure()
+        stdax = stdsfig.add_subplot(1,1,1)
+
+        patches = []
+
+        for curentry, chaindir in enumerate(chaindirs):
+
+            patch, summary = psd.precomputedLogNormDistro(chaindir, 
+                                                          delta,
+                                                          meansax,
+                                                          stdax,
+                                                          colorindex = curentry,
+                                                          biaslabel = False,
+                                                          alpha = 1.0,
+                                                          xoffset = xoffsets[curentry])
+
+
+            patches.append(patch)
+
+
+
+
+        
+        
+        meansax.set_xscale('log')
+        meansax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
+        meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
+        meansax.set_xlim(1e14, 4e15)
+        meansax.set_ylim(0.5, 1.3)
+        meansax.set_xticks([1e15])
+        meansax.set_xticklabels(['10'])
+        meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        meansax.legend(patches[::-1], labels[::-1], loc='lower left')
+        meansfig.canvas.draw()
+        meansfig.tight_layout()
+        filebase = 'docs/figures/compare_nfw_innerfitrange_bias.delta{}'.format(delta)
+        meansfig.savefig('{}.png'.format(filebase))
+        meansfig.savefig('{}.pdf'.format(filebase))
+        meansfig.savefig('{}.ps'.format(filebase))
+        meansfig.savefig('{}.eps'.format(filebase))
+        
+        stdax.set_xscale('log')
+        stdax.set_xlabel(r'Mass $M_{%d} [10^{14} M_{\odot}]$' % delta, fontsize=16)
+        stdax.set_ylabel(r'Noise Magnitude $\sigma$', fontsize=16)
+        stdax.set_xlim(1e14, 4e15)
+        stdax.set_ylim(0.0, 0.5)
+        stdax.set_xticks([1e15])
+        stdax.set_xticklabels(['10'])
+        stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
+        stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
+        stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+        stdsfig.canvas.draw()
+        stdsfig.tight_layout()
+        filebase = 'docs/figures/compare_nfw_innerfitrange_sigma.delta{}'.format(delta)
+        stdsfig.savefig('{}.png'.format(filebase))
+        stdsfig.savefig('{}.pdf'.format(filebase))
+        stdsfig.savefig('{}.ps'.format(filebase))
+        stdsfig.savefig('{}.eps'.format(filebase))
+
+
+
+
+
 
     
