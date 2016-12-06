@@ -244,11 +244,6 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=0
         mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
         sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
 
-        mus.append(mu)
-        mu_errs.append(muerr)
-        sigs.append(sig)
-        sig_errs.append(sigerr)
-
         ave.append(np.mean(np.exp(chain['logmu'][0,1000::3])))
         aveerr.append(np.std(np.exp(chain['logmu'][0,1000::3])))
         stdev.append(np.mean(np.exp(chain['logsigma'][0,1000::3])))
