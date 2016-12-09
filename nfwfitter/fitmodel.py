@@ -7,7 +7,7 @@
 ###################################
 
 import numpy
-import minuit
+import iminuit as minuit
 import math, inspect
 import scipy.stats as stats
 

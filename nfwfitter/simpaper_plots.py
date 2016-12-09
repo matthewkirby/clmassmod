@@ -2,21 +2,30 @@
 # Plots for the sims paper
 #############
 
+import copy
 import pylab
 import numpy as np
 import cPickle
+
 
 import nfwnoise
 import nfwutils
 import nfwfit
 import varcontainer
-import publication_plots as pp
+#import publication_plots as pp
 import basicMassCon
 import deconvolvedlognorm
 import pymc
 import fitmodel
 import confidenceinterval as ci
 import plotsimdistros as psd
+
+
+#####
+
+outputdir = '/Users/dapple/astro/mxxlsims/output'
+
+#####
 
 
 ################
@@ -428,7 +437,7 @@ def compareNoiseProfiles(data = None):
 ## Simulation results based on changing obs setup
 #############
 
-def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200]):
+def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200], metalabel = None):
     '''Refactored plot code'''
 
     for delta in deltas:
@@ -471,6 +480,10 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200])
         meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
         meansax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
         meansax.legend(patches[::-1], labels[::-1], loc='lower left')
+
+        if metalabel is not None:
+            meansax.text(2e15, 1.2, metalabel)
+        
         meansfig.canvas.draw()
         meansfig.tight_layout()
         filebase = 'docs/figures/{}_bias.delta{}'.format(outputname, delta)
@@ -489,6 +502,10 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200])
         stdax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
         stdax.set_xticklabels(['', '4', '', '6', '', '8', '', '20', '', '40'], minor=True)
         stdax.legend(patches[::-1], labels[::-1], loc='upper left')
+
+        if metalabel is not None:
+            stdax.text(2e15, 1.2, metalabel)
+
         stdsfig.canvas.draw()
         stdsfig.tight_layout()
         filebase = 'docs/figures/{}_sigma.delta{}'.format(outputname, delta)
@@ -502,7 +519,7 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200])
 
 markers = ['o', '^', 's']
 
-def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200]):
+def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200], biasylim = (0.5, 1.3)):
     '''Refactored plot code'''
 
     for delta in deltas:
@@ -518,11 +535,16 @@ def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 2
 
         for curmajor, chaindirset in enumerate(chaindirs):
 
-            alpha = 1.
-            if curmajor > 0:
-                alpha = 0.5
+
 
             for curminor, chaindir in enumerate(chaindirset):
+
+                alpha = 1.0
+                suppressXerr = False
+                if curminor > 0:
+                    alpha = 0.5
+
+
 
                 patch, summary = psd.precomputedLogNormDistro(chaindir, 
                                                               delta,
@@ -532,11 +554,15 @@ def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 2
                                                               biaslabel = False,
                                                               marker = markers[curminor],
                                                               alpha = alpha,
-                                                              xoffset = xoffsets[curmajor])
+                                                              xoffset = xoffsets[curmajor],
+                                                              suppressXerr = suppressXerr,
+                                                              patchAsRect = False)
 
 
                 if curmajor == 0:
-                    minorpatches.append(patch)
+                    patchcopy = copy.copy(patch)
+                    patchcopy.set_markerfacecolor('k')
+                    minorpatches.append(patchcopy)
 
                 if curminor == 0:
                     majorpatches.append(patch)
@@ -553,7 +579,7 @@ def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 2
         meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
         meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
         meansax.set_xlim(1e14, 5e15)
-        meansax.set_ylim(0.5, 1.3)
+        meansax.set_ylim(*biasylim)
         meansax.set_xticks([1e15])
         meansax.set_xticklabels(['10'])
         meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
@@ -643,24 +669,126 @@ def compareMCRelation_RadialRange():
     configtemplate = 'general-{mc}-r{r}-xrayNONE-n2_4-nov2016'
     radialranges = [19, 6, 10]
     mcs = ['c4', 'diemer15', 'duffy']
-
-    chaindirs = []
-    for r in radialranges:
-        configs = [configtemplate.format(mc=mc, r=r) for mc in mcs]
-
-        chaindirs.append(['/users/dapple/euclid1_2/rundlns/mxxlsnap{}/{}'.format(mxxlsnap, config) for config in configs])
-    
-
-    labels = [['c=4', 'Diemer15', 'Duffy08'],
-              ['0.1-2.5 Mpc', '0.5-2.5 Mpc', '0.75-3.0 Mpc']]
-
+    radiallabels = ['0.1-2.5 Mpc', '0.5-2.5 Mpc', '0.75-3.0 Mpc']
+    labels = ['c=4', 'Diemer15', 'Duffy08']
     xoffsets = [0.98, 1.0, 1.02]
 
-    outputname = 'compare_nfw_mc_radial'
 
-    compare2DimSimPlot(outputname, chaindirs, labels, xoffsets)
+    for curr, r in enumerate(radialranges):
+
+        outputname = 'compare_nfw_mc_radial_r{}'.format(r)
+
+        configs = [configtemplate.format(mc=mc, r=r) for mc in mcs]
+        chaindirs = ['{}/rundlns/mxxlsnap{}/{}'.format(outputdir, mxxlsnap, config) for config in configs]
 
 
+        compareSimPlot(outputname, chaindirs, labels, xoffsets, metalabel = radiallabels[curr])
+
+
+
+#############
+
+def compareMCRelation_Redshift():
+    '''Compare bias levels using different MC relations, but no miscentering, with different fit ranges'''
+
+    mxxlsnaps=[54, 41]
+
+    configtemplate = 'general-{mc}-r{r}-xrayNONE-n2_4-nov2016'
+    radialrange = 6
+    mcs = ['c4', 'diemer15', 'duffy']
+    redshiftlabels = ['z=0.25', 'z=1.0']
+    mclabels = ['c=4', 'Diemer15', 'Duffy08']
+    xoffsets = [0.99, 1.01]
+
+    for curmc_index, curmc in enumerate(mcs):
+
+        outputname = 'compare_nfw_{mc}_redshift'.format(mc = curmc)
+
+        config = configtemplate.format(mc=curmc, r=radialrange)
+        
+        chaindirs = ['{}/rundlns/mxxlsnap{}/{}'.format(outputdir, mxxlsnap, config) for mxxlsnap in mxxlsnaps]
+
+
+        compareSimPlot(outputname, chaindirs, redshiftlabels, xoffsets, metalabel = mclabels[curmc_index])
+
+
+#############
+
+def compareMCRelation_Cosmo():
+    '''Compare bias levels using different MC relations, but no miscentering, with different cosmologies'''
+    
+    snaps = ['mxxlsnap54', 'bk11snap141']
+
+    configtemplate = 'general-{mc}-r{r}-xrayNONE-n2_4-nov2016'
+    radialrange = 6
+    mcs = ['c4', 'diemer15', 'duffy']
+    cosmolabels = ['MXXL', 'BK11']
+    mclabels = ['c=4', 'Diemer15', 'Duffy08']
+    xoffsets = [0.99, 1.01]
+
+    for curmc_index, curmc in enumerate(mcs):
+
+        outputname = 'compare_nfw_{mc}_cosmo'.format(mc = curmc)
+
+        config = configtemplate.format(mc=curmc, r=radialrange)
+        
+        chaindirs = ['{}/rundlns/{}/{}'.format(outputdir, snap, config) for snap in snaps]
+
+
+        compareSimPlot(outputname, chaindirs, cosmolabels, xoffsets, metalabel = mclabels[curmc_index])
+
+
+###########
+
+def compareMiscentering():
+    '''Compare bias levels using different miscentering'''
+
+    mxxlsnap=54
+
+    configtemplate = 'general-diemer15-r6-{}-n2_4-nov2016'
+    centers = ['xrayNONE', 'szmag', 'xraymag']
+    labels = ['Perfect Centers', 'SZ Centers', 'X-ray Centers']
+    xoffsets = [0.98, 1.0, 1.02]
+
+    outputname = 'compare_nfw_centers'
+
+    configs = [configtemplate.format(center) for center in centers]
+    chaindirs = ['{}/rundlns/mxxlsnap{}/{}'.format(outputdir, mxxlsnap, config) for config in configs]
+
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets)
+
+
+
+#############
+
+def compareMiscentering_SZRedshift():
+    '''Compare bias levels using different miscentering'''
+
+    mxxlsnaps=[54, 41]
+    radialranges = [6, 19]
+    configtemplate = 'general-diemer15-r{r}-szmag-n2_4-nov2016'
+    redshiftlabels = ['z=0.25', 'z=1.0']
+    radiallabels = ['0.5-2.5Mpc', '0.1-2.5 Mpc']
+    xoffsets = [0.99, 1.01]
+
+    outputname = 'compare_nfw_centers_szredshift'
+
+    chaindirs = []
+    for mxxlsnap in mxxlsnaps:
+        majorvar = []
+        for r in radialranges:
+            config = configtemplate.format(r=r)
+            chaindir = '{}/rundlns/mxxlsnap{}/{}'.format(outputdir, mxxlsnap, config)
+            majorvar.append(chaindir)
+        chaindirs.append(majorvar)
+
+
+    compare2DimSimPlot(outputname, chaindirs, [redshiftlabels, radiallabels], xoffsets, biasylim=(0.25, 1.1))
+
+
+
+#############
 
 
 

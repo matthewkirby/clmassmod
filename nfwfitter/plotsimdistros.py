@@ -1,4 +1,4 @@
-import publication_plots as pp
+#import publication_plots as pp
 import pylab
 import numpy as np
 import cPickle
@@ -192,7 +192,7 @@ def weightedaverage(means, errs):
 
     return mu, sig
 
-def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1.0, biaslabel = True, xoffset = 1.0, binnum=None, marker='None'):
+def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1.0, biaslabel = True, xoffset = 1.0, binnum=None, marker='None', suppressXerr = False, patchAsRect = True):
 
 
 
@@ -276,9 +276,16 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1
 
         print '!!!', mu, muerr, sig, sigerr
 
+        if suppressXerr is False:
 
-        meanax.errorbar([x_center], [mu], [[muerr[0]], [muerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker=marker, alpha = alpha, linestyle='None', elinewidth=2.)
-        stdax.errorbar([x_center], [sig], [[sigerr[0]], [sigerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker=marker, alpha=alpha, linestyle='None', elinewidth=2.)
+            plotline, capline, barline = meanax.errorbar([x_center], [mu], [[muerr[0]], [muerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker=marker, alpha = alpha, linestyle='None', elinewidth=2.)
+            stdax.errorbar([x_center], [sig], [[sigerr[0]], [sigerr[1]]], [[x_center - massbinlow], [massbinhigh - x_center]], color = c[colorindex], marker=marker, alpha=alpha, linestyle='None', elinewidth=2.)
+
+        else:
+
+            plotline, capline, barline = meanax.errorbar([x_center], [mu], [[muerr[0]], [muerr[1]]], color = c[colorindex], marker=marker, alpha = alpha, linestyle='None', elinewidth=2.)
+            stdax.errorbar([x_center], [sig], [[sigerr[0]], [sigerr[1]]], color = c[colorindex], marker=marker, alpha=alpha, linestyle='None', elinewidth=2.)
+            
 
 
 #        meanax.fill_between([massbinlow, massbinhigh], 
@@ -306,7 +313,10 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1
     if biaslabel is True:
         meanax.text(2.5e14, 0.75 + float(colorindex)/10., '%1.2f +/- %1.2f' % (summary[0][0], summary[0][1]))
 
-    patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=alpha, hatch = None)
+    if patchAsRect is True:
+        patch = pylab.Rectangle((0, 0), 1, 1, fc=c[colorindex], alpha=alpha, hatch = None)
+    else:
+        patch = plotline
 
     return patch, summary
         

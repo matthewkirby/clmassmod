@@ -14,11 +14,12 @@ fig_height = fig_width*golden_mean
 fig_size = [fig_width,fig_height]
 
 
+
 params = {'text.usetex' : True,
           'ps.usedistiller' : 'xpdf',
           'ps.distiller.res' : 6000,
           'axes.labelsize' : 16,
-          'text.fontsize' : 16,
+          'font.size' : 16,
           'legend.fontsize' : 14,
           'xtick.labelsize' : 14,
           'ytick.labelsize' : 14,
