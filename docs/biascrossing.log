@@ -1,0 +1,232 @@
+# IPython log file
+
+get_ipython().magic(u'pylab')
+import nfwfitter/basicMassCon as bmc
+import nfwfitter.basicMassCon as bmc
+duffy = bmc.Duffy()
+myduffy = bmc.Duffy()
+import nfwfitter.colossusMassCon as cmc
+diemerduffy = cmc.ColossusMC()
+diemerduffy.configure(dict(colossusmcname='duffy08'))
+m500s = np.arange(1e14, 1e16, 2e13)
+zs = np.arange(0.0, 2.0, 0.1)
+m500grid, zgrid = np.meshgrid(m500s, zs, indexing='ij')
+myc200s = np.zeros_like(m500grid)
+diemerc200s = np.zeros_like(m500grid)
+for curm in range(len(m500s)):
+    for curz in range(len(zs)):
+        myc200s[curm,curz] = myduffy(m500s[curm], zs[curz], 500)
+        diemerc200s[curm,curz] = diemerduffy(m500s[curm], zs[curz], 500)
+        
+diemerc200s/myc200s
+((diemerc200s/myc200s) == 1.).all()
+c200s = np.zeros_like(m500s)
+m200s = np.zeros_like(m500s)
+m200grid = np.zeros_like(m500grid)
+recheckc200grid = np.zeros_like(m500grid)
+for curm in range(len(m500s)):
+    for curz in range(len(zs)):
+        rscale =  nfwutils.rscaleConstM(m500s[curm], myc200s[curm,curz], zs[curz], 500.)
+        m200grid[curm, curz] =  nfwutils.Mdelta(rscale, myc200s[curm,curz], zs[curz], 200)
+        recheckc200grid[curm,curz] = myduffy(m200grid[curm,curz], zs[curz], 200)
+        
+i,port nfwfitter.nfwutils as nfwutils
+import nfwfitter.nfwutils as nfwutils
+for curm in range(len(m500s)):
+    for curz in range(len(zs)):
+        rscale =  nfwutils.rscaleConstM(m500s[curm], myc200s[curm,curz], zs[curz], 500.)
+        m200grid[curm, curz] =  nfwutils.Mdelta(rscale, myc200s[curm,curz], zs[curz], 200)
+        recheckc200grid[curm,curz] = myduffy(m200grid[curm,curz], zs[curz], 200)
+        
+recheckc200grid - myc200s
+np.mean(recheckc200grid - myc200s)
+np.mean(recheckc200grid/myc200s)
+zs
+for curz in range(len(zs))[::3]:
+    plot(m500s, myc200s[:,curz], label=zs[curz])
+    
+clf()
+for curz in range(len(zs))[::3]:
+    semilogx(m500s, myc200s[:,curz], label=zs[curz])
+    
+legend()
+deltas = np.arange(200, 2500, 100)
+deltas
+deltas = np.arange(200., 2500., 100.)
+deltas
+get_ipython().set_next_input(u'duffy_rscale = nfwutils.rscaleConstM');get_ipython().magic(u'pinfo nfwutils.rscaleConstM')
+duffy_rscale = nfwutils.rscaleConstM(1e15, myduffy(1e15, 0.1, 200), 0.1, 200)
+duffy_rscalke
+duffy_rscale
+get_ipython().set_next_input(u'plot(deltas, nfwutils.Mdelta');get_ipython().magic(u'pinfo nfwutils.Mdelta')
+plot(deltas, nfwutils.Mdelta(duffy_rscale, myduffy(1e15, 0.1, 200), 0.1, deltas))
+plot(deltas, [nfwutils.Mdelta(duffy_rscale, myduffy(1e15, 0.1, 200), 0.1, delta)) for delta in deltas])
+clf()
+plot(deltas, [nfwutils.Mdelta(duffy_rscale, myduffy(1e15, 0.1, 200), 0.1, delta) for delta in deltas])
+c4_rscale = nfwutils.rscaleConstM(1e15, 4., 0.1, 200)
+plot(deltas, [nfwutils.Mdelta(c4_rscale, 4., 0.1, delta) for delta in deltas], 'r-')
+duffy_rscale = nfwutils.rscaleConstM(1e15, myduffy(1e15, 1.0, 200), 1.0, 200)
+plot(deltas, [nfwutils.Mdelta(duffy_rscale, myduffy(1e15, 1.0, 200), 1.0, delta) for delta in deltas], 'b--')
+c4_rscale = nfwutils.rscaleConstM(1e15, 4., 1.0, 200)
+plot(deltas, [nfwutils.Mdelta(c4_rscale, 4., 1.0, delta) for delta in deltas], 'b-')
+clf()
+duffy_rscale = nfwutils.rscaleConstM(1e15, myduffy(1e15, 0.1, 200), 0.1, 200)
+plot(deltas, [nfwutils.Mdelta(duffy_rscale, myduffy(1e15, 0.1, 200), 0.1, delta) for delta in deltas])
+duffy_rscale = nfwutils.rscaleConstM(1e15, myduffy(1e15, 1.0, 200), 1.0, 200)
+plot(deltas, [nfwutils.Mdelta(duffy_rscale, myduffy(1e15, 1.0, 200), 1.0, delta) for delta in deltas], 'b--')
+c4_rscale = nfwutils.rscaleConstM(1e15, 4., 0.1, 200)
+plot(deltas, [nfwutils.Mdelta(c4_rscale, 4., 0.1, delta) for delta in deltas], 'r-')
+c4_rscale = nfwutils.rscaleConstM(1e15, 4., 1.0, 200)
+plot(deltas, [nfwutils.Mdelta(c4_rscale, 4., 1.0, delta) for delta in deltas], 'r--')
+plot(deltas, [nfwutils.Mdelta(c4_rscale, 4., 1.0, delta) for delta in deltas], 'k--')
+def findmass(r_mpc, shear, zcluster, mcrelation):
+    rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+    def target(mass):
+        c200 = mcrelation(mass, zcluster, 200.)
+        rdelta = (3*abs(mass)/(4*200.*np.pi*rho_c))**(1./3.)
+        rscale = rdelta / c200
+        modelshear = tools.NFWShear(r_mpc, c200, rscale, rho_c_over_sigma_c)
+        return modelshear - shear
+    
+get_ipython().magic(u'edit')
+def findmass(r_mpc, shear, zcluster, mcrelation):
+        rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        def target(mass):
+                c200 = mcrelation(mass, zcluster, 200.)
+                rdelta = (3*abs(mass)/(4*200.*np.pi*rho_c))**(1./3.)
+                rscale = rdelta / c200
+                modelshear = tools.NFWShear(r_mpc, c200, rscale, rho_c_over_sigma_c)
+                return modelshear - shear
+        return scipy.optimize.brentq(target, 1., 20.)
+def findmass(r_mpc, shear, zcluster, mcrelation):
+        rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        def target(mass):
+                c200 = mcrelation(mass*1e14, zcluster, 200.)
+                rdelta = (3*abs(mass*1e14)/(4*200.*np.pi*rho_c))**(1./3.)
+                rscale = rdelta / c200
+                modelshear = tools.NFWShear(r_mpc, c200, rscale, rho_c_over_sigma_c)
+                return modelshear - shear
+        return scipy.optimize.brentq(target, 1., 20.)
+findmass(np.array([0.9,]), 0.01, 0.5, myduffy)
+import scipy.optimize
+def findmass(r_mpc, shear, zcluster, mcrelation):
+        rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        def target(mass):
+                c200 = mcrelation(mass*1e14, zcluster, 200.)
+                rdelta = (3*abs(mass*1e14)/(4*200.*np.pi*rho_c))**(1./3.)
+                rscale = rdelta / c200
+                modelshear = tools.NFWShear(r_mpc, c200, rscale, rho_c_over_sigma_c)
+                return modelshear - shear
+        return scipy.optimize.brentq(target, 1., 20.)
+findmass(np.array([0.9,]), 0.01, 0.5, myduffy)
+def findmass(r_mpc, shear, zcluster, mcrelation):
+        rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        def target(mass):
+                c200 = mcrelation(mass*1e14, zcluster, 200.)
+                rdelta = (3*abs(mass*1e14)/(4*200.*np.pi*nfwutils.global_cosmology.rho_crit(zcluster)))**(1./3.)
+                rscale = rdelta / c200
+                modelshear = tools.NFWShear(r_mpc, c200, rscale, rho_c_over_sigma_c)
+                return modelshear - shear
+        return scipy.optimize.brentq(target, 1., 20.)
+findmass(np.array([0.9,]), 0.01, 0.5, myduffy)
+import nfwfitter.nfwmodeltools as tools
+def findmass(r_mpc, shear, zcluster, mcrelation):
+        rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+        def target(mass):
+                c200 = mcrelation(mass*1e14, zcluster, 200.)
+                rdelta = (3*abs(mass*1e14)/(4*200.*np.pi*nfwutils.global_cosmology.rho_crit(zcluster)))**(1./3.)
+                rscale = rdelta / c200
+                modelshear = tools.NFWShear(r_mpc, c200, rscale, rho_c_over_sigma_c)
+                return modelshear - shear
+        return scipy.optimize.brentq(target, 1., 20.)
+import nfwfitter.nfwmodeltools as tools
+import nfwfitter.nfwmodeltools as tools
+findmass(np.array([0.9,]), 0.01, 0.5, myduffy)
+get_ipython().magic(u'debug')
+myduffy = bmc.constant
+get_ipython().magic(u'pinfo2 bmc.constant')
+myduffy
+myduffy = bmc.Duffy()
+myc4 = bmc.constant()
+myc4.configure(dict(concentration=4.))
+rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+zcluster = 0.5
+rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+rho_c_over_sigma_c
+get_ipython().set_next_input(u'rscale = nfwutils.rscaleConstM');get_ipython().magic(u'pinfo nfwutils.rscaleConstM')
+rscale = nfwutils.rscaleConstM(1e15, 4., 0.5, 200)
+rscale
+get_ipython().set_next_input(u'shear = tools.NFWShear');get_ipython().magic(u'pinfo tools.NFWShear')
+shear = tools.NFWShear(np.array([0.9,]), 4., rscale, rho_c_over_sigma_c)
+shear
+nfwutils.global_cosmology.beta_s([1.], 0.5)
+rscale
+shear*nfwutils.global_cosmology.beta_s([1.], 0.5)
+rscale = nfwutils.rscaleConstM(5e14, 4., 0.5, 200)
+rscale
+shear = nfwutils.global_cosmology.beta_s([1.], 0.5)*tools.NFWShear(np.array([0.9,]), 4., rscale, rho_c_over_sigma_c)
+shear
+shear = tools.NFWShear(np.array([0.9,]), 4., rscale, rho_c_over_sigma_c)
+findmass(np.array([0.9,]), shear, 0.5, myc4)
+findmass(np.array([0.9,]), shear, 0.5, myduffy)
+rscale_duffy = nfwutils.rscaleConstM(5.665e14, myduffy(5.665e14, 0.5, 200.), 0.5, 200)
+rscale_duffy
+rscale
+get_ipython().magic(u'pinfo nfwutils.Mdelta')
+nfwutils.Mdelta(rscale, 4., 0.5, 500.)
+nfwutils.Mdelta(rscale, 4., 0.5, 500.)/1e14
+nfwutils.Mdelta(rscale_duffy, myduffy(5.665e14, 0.5, 200.), 0.5, 500.)/1e14
+zcluster = 1.0
+rscale = nfwutils.rscaleConstM(5e14, 4., zcluster, 200)
+rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+shear = tools.NFWShear(np.array([0.9,]), 4., rscale, rho_c_over_sigma_c)
+shear
+findmass(np.array([0.9,]), shear, zcluster, myc4)
+duffym200 = findmass(np.array([0.9,]), shear, zcluster, myduffy)
+duffym200
+rscale_duffy = nfwutils.rscaleConstM(duffym200*1e14, myduffy(duffym200*1e14, zcluster, 200.), zcluster, 200)
+rscale_duffy
+nfwutils.Mdelta(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), zcluster, 500.)/1e14
+get_ipython().magic(u'pinfo nfwutils.rdelta')
+nfwutils.rdelta(rscale, 4.0, 500.)
+nfwutils.rdelta(rscale, 4.0, 200.)
+nfwutils.rdelta(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), 500.)
+nfwutils.rdelta(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), 200.)
+clf()
+plot(deltas, [nfwutils.Mdelta(rscale, 4., 1.0, delta) for delta in deltas], 'r-')
+plot(deltas, [nfwutils.Mdelta(rscale, myduffy(duffym200*1e14, zcluster, 200.), 1.0, delta) for delta in deltas], 'b-')
+clf()
+plot(deltas, [nfwutils.Mdelta(rscale, 4., 1.0, delta) for delta in deltas], 'r-')
+plot(deltas, [nfwutils.Mdelta(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), 1.0, delta) for delta in deltas], 'b-')
+xlabel('Delta', textsize=16)
+xlabel('Delta', fontsize=16)
+ylabel('M_{\mathrm{delta}}', fontsize=16)
+ylabel('M_delta', fontsize=16)
+legend()
+clf()
+plot(deltas, [nfwutils.Mdelta(rscale, 4., 1.0, delta) for delta in deltas], 'r-', label='c4')
+plot(deltas, [nfwutils.Mdelta(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), 1.0, delta) for delta in deltas], 'b-', label='Duffy08')
+xlabel('Delta', fontsize=16)
+ylabel('M_delta', fontsize=16)
+legend()
+zcluster = 0.2
+rscale = nfwutils.rscaleConstM(5e14, 4., zcluster, 200)
+rho_c_over_sigma_c =  1.5 * nfwutils.global_cosmology.angulardist(zcluster) * nfwutils.global_cosmology.beta([1e6], zcluster)[0] * nfwutils.global_cosmology.hubble2(zcluster) / nfwutils.global_cosmology.v_c**2
+shear = tools.NFWShear(np.array([0.9,]), 4., rscale, rho_c_over_sigma_c)
+findmass(np.array([0.9,]), shear, zcluster, myc4)
+duffym200 = findmass(np.array([0.9,]), shear, zcluster, myduffy)
+duffym200
+rscale_duffy = nfwutils.rscaleConstM(duffym200*1e14, myduffy(duffym200*1e14, zcluster, 200.), zcluster, 200)
+plot(deltas, [nfwutils.Mdelta(rscale, 4., zcluster, delta) for delta in deltas], 'r:')
+plot(deltas, [nfwutils.Mdelta(rscale, 4., zcluster, delta) for delta in deltas], 'k:')
+plot(deltas, [nfwutils.Mdelta(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), zcluster, delta) for delta in deltas], 'b:')
+savefig('bias_crossing.png')
+get_ipython().magic(u'logstart biascrossing.log')
+figure()
+r_mpcs = np.arange(0.1, 3.0, 0.02)
+get_ipython().set_next_input(u'semilogx(r_mpcs, [nfwutils.massInsideR');get_ipython().magic(u'pinfo nfwutils.massInsideR')
+semilogx(r_mpcs, [nfwutils.massInsideR(rscale, 4.0, zclsuter, R) for R in r_mpcs], 'r-')
+semilogx(r_mpcs, [nfwutils.massInsideR(rscale, 4.0, zcluster, R) for R in r_mpcs], 'r-')
+semilogx(r_mpcs, [nfwutils.massInsideR(rscale_duffy, myduffy(duffym200*1e14, zcluster, 200.), zcluster, R) for R in r_mpcs], 'b-')
+axvline(0.9, c='k')
+axvline(0.7*0.9, c='k')
