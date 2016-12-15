@@ -1,3 +1,3 @@
-import nfwfitter.nfwfitter.readAnalytic as nfwfitter.readAnalytic
-simreader=nfwfitter.readAnalytic.AnalyticSimReader()
+import nfwfitter.readAnalytic as readAnalytic
+simreader=readAnalytic.AnalyticSimReader()
 
