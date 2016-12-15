@@ -13,6 +13,35 @@ import sys, os, json, argparse, glob, stat
 
 ####################
 
+def setupGeneric_Analytic(configs, jobdir, jobname, simdir,
+                          outputdir = None):
+
+    if not os.path.exists(jobdir):
+        os.mkdir(jobdir)
+
+    if outputdir is None:
+        outputdir = simdir
+
+    configfiles = ['{0}/{1}/config.py'.format(outputdir, config) for config in configs]
+
+    simfiles = glob.glob('{0}/analytic*.yaml'.format(simdir))
+
+    for j, catname in enumerate(simfiles):
+
+        inputfiles = [catname]
+
+        jobparams = createJobParams(catname,
+                                    configfiles,
+                                    inputfiles = inputfiles,
+                                    stripCatExt = True)
+        writeJobfile(jobparams, '{0}/{1}.{2}.job'.format(jobdir, jobname, j))
+
+
+    
+
+
+####################
+
 def setupCondor_MB(configs, jobdir, jobname, simdir = '/vol/braid1/vol1/dapple/mxxl/measurebias_fakedata/highsn'):
     
     if not os.path.exists(jobdir):
