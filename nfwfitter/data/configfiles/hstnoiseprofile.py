@@ -1,16 +1,16 @@
-import rescalecluster
+import nfwfitter.rescalecluster as rescalecluster
 rescalecluster=rescalecluster.RedshiftRescaler()
 
-import galaxypicker
+import nfwfitter.galaxypicker as galaxypicker
 galaxypicker=galaxypicker.AllGalaxyPicker()
 
-import betacalcer
+import nfwfitter.betacalcer as betacalcer
 betacalcer=betacalcer.FixedBeta()
 
-import shearnoiser
+import nfwfitter.shearnoiser as shearnoiser
 shearnoiser=shearnoiser.NoNoise()
 
-import hstnoiseBinning
+import nfwfitter.hstnoiseBinning as hstnoiseBinning
 hstbinning = hstnoiseBinning.HSTBinning()
 binwidth=0.1
 profilecol='r_mpc'

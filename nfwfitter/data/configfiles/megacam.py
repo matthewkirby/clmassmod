@@ -1,24 +1,24 @@
-import profilebuilder
+import nfwfitter.profilebuilder as profilebuilder
 profilebuilder=profilebuilder.ProfileBuilder()
 
 
 massprior='linear'
-import rescalecluster
+import nfwfitter.rescalecluster as rescalecluster
 rescalecluster=rescalecluster.RedshiftRescaler()
 
-import galaxypicker
+import nfwfitter.galaxypicker as galaxypicker
 galaxypicker=galaxypicker.DensityPicker()
-import betacalcer
+import nfwfitter.betacalcer as betacalcer
 betacalcer=betacalcer.FixedBeta()
-import shearnoiser
+import nfwfitter.shearnoiser as shearnoiser
 shearnoiser=shearnoiser.GaussianShapeNoise()
 
-import basicBinning
+import nfwfitter.basicBinning as basicBinning
 binner=basicBinning.GaussianFixedBins()
 profilecol='r_mpc'
 binspacing='linear'
 nbins=12
 
-import binnoiser
+import nfwfitter.binnoiser as binnoiser
 binnoiser=binnoiser.NoBinNoise()
 

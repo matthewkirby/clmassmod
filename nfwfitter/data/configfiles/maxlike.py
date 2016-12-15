@@ -1,3 +1,3 @@
-import nfwfit
+import nfwfitter.nfwfit as nfwfit
 fitter=nfwfit.MinChisqFitter()
 

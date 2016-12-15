@@ -1,4 +1,4 @@
-import basicBinning
+import nfwfitter.basicBinning as basicBinning
 binner=basicBinning.GaussianFixedBins()
 profilecol='r_mpc'
 binspacing='linear'

@@ -1,6 +1,6 @@
-import nfwfit
+import nfwfitter.nfwfit as nfwfit
 model=nfwfit.NFW_MC_Model()
 
-import colossusMassCon
+import nfwfitter.colossusMassCon as colossusMassCon
 massconRelation=colossusMassCon.ColossusMC()
 colossusmcname='bhattacharya13'

@@ -1,2 +1,2 @@
-import rescalecluster
+import nfwfitter.rescalecluster as rescalecluster
 rescalecluster=rescalecluster.NoRedshiftRescaling()
