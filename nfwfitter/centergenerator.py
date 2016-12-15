@@ -5,12 +5,12 @@ Distributions of where the profile center lands
 #############
 
 import numpy as np
+import pkg_resources
 
 import astropy.io.ascii as asciireader
 import readtxtfile
 import nfwutils
 import voigt_tools as vt
-import globalconfig
 import nfwutils
 
 #############
@@ -27,7 +27,7 @@ class SZSimOffset(object):
 
     def __init__(self):
 
-        szsim_offsetcat = asciireader.read('{}/SPT_SN_offset.dat'.format(globalconfig.offsetdistro_dir))
+        szsim_offsetcat = asciireader.read(pkg_resources.resource_stream('nfwfitter', '../data/SPT_SN_offset.dat'))
 
         self.szsim_offsetcat = szsim_offsetcat[szsim_offsetcat['SN'] >= 5]
 
@@ -57,7 +57,8 @@ class SZSimOffsetCoreIgnored(object):
 
     def __init__(self):
 
-        szsim_offsetcat = asciireader.read('{}/SPT_SN_offset.dat'.format(globalconfig.offsetdistro_dir))
+        szsim_offsetcat = asciireader.read(pkg_resources.resource_stream('nfwfitter', '../data/SPT_SN_offset.dat'))
+
 
         self.szsim_offsetcat = szsim_offsetcat[szsim_offsetcat['SN'] >= 5]
 
@@ -124,7 +125,7 @@ class SZXVPBCGOffset(object):
 
     def __init__(self):
 
-        self.sz_xvp_bcg_offsets_deg = readtxtfile.readtxtfile('{}/sptxvp_bcgsz'.format(self.config['offsetdistro_dir']))[:,1]
+        self.sz_xvp_bcg_offsets_deg = readtxtfile.readtxtfile(pkg_resources.resource_filename('nfwfitter', '../data/sptxvp_bcgsz'))[:,1]
 
 
     def __call__(self, sim):
@@ -176,7 +177,7 @@ class XrayWTGOffset(object):
 
     def __init__(self):
 
-        self.wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile('{}/wtg_offsets.dat'.format(globalconfig.offsetdistro_dir))]
+        self.wtg_offsets_mpc = [x[0] for x in readtxtfile.readtxtfile(pkg_resources.resource_filename('nfwfitter', '../data/wtg_offsets.dat'))]
 
 
     def __call__(self, sim):
@@ -218,7 +219,7 @@ class XrayXVPOffset(object):
 
     def __init__(self):
 
-        self.xvp_offsets_mpc = readtxtfile.readtxtfile('{}/sptxvp_bcgxray'.format(globalconfig.offsetdistro_dir))[:,0]
+        self.xvp_offsets_mpc = readtxtfile.readtxtfile(pkg_resources.resource_filename('nfwfitter', '../data/sptxvp_bcgxray'))[:,0]
 
 
     def __call__(self, sim):
@@ -243,7 +244,7 @@ class XrayCCCPOffset(object):
 
     def __init__(self):
 
-        self.offsets_kpc = [x[0] for x in readtxtfile.readtxtfile('{}/cccp_offsets.dat'.format(globalconfig.offsetdistro_dir))]
+        self.offsets_kpc = [x[0] for x in readtxtfile.readtxtfile(pkg_resources.resource_filename('nfwfitter', '../data/cccp_offsets.dat'))]
 
     def __call__(self, sim):
 
@@ -299,7 +300,7 @@ class XrayMagneticumOffset(object):
 
     def __init__(self):
 
-        self.xray_magneticum_distro = asciireader.read('{}/xray_offsets_may2016.txt'.format(globalconfig.offsetdistro_dir))
+        self.xray_magneticum_distro = asciireader.read(pkg_resources.resource_filename('nfwfitter', '../data/xray_offsets_may2016.txt'))
 
 
     def __call__(self, sim):
