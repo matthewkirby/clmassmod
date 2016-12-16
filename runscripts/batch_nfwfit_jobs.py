@@ -66,11 +66,11 @@ queue {nrunners}
 #############
 
 
-def buildDLNArgsets(chainbase, configs, simsnap, delta, outdir):
+def buildDLNArgsets(chainbase, configs, simtype, delta, outdir):
 
     #number of bins
 
-    massbins = rundln.defineMassEdges(simsnap, delta)
+    massbins = rundln.defineMassEdges(simtype, delta)
     nbins = len(massbins)
 
     #loop over configs and bins to build arglist
@@ -79,12 +79,14 @@ def buildDLNArgsets(chainbase, configs, simsnap, delta, outdir):
     for config in configs:
         chaindir = '{}/{}'.format(chainbase, config)
         for massbin in range(nbins):
-            outfile = '{outdir}/{config}/rundln{simsnap}.{delta}.{massbin}'.format(outdir = outdir,
-                                                                                   config = config,
-                                                                                   simsnap = simsnap,
-                                                                                   delta = delta,
-                                                                                   massbin = massbin)
-            argsets.append([simsnap, chaindir, outfile, delta, 'pdf', massbin])
+            workdir = '{outdir}/{config}'.format(outdir = outdir, config = config)
+            if not os.path.exists(workdir):
+                os.mkdir(workdir)
+            outfile = '{workdir}/rundln{simtype}.{delta}.{massbin}'.format(workdir = workdir,
+                                                                           simtype = simtype,
+                                                                           delta = delta,
+                                                                           massbin = massbin)
+            argsets.append([simtype, chaindir, outfile, delta, 'pdf', massbin])
 
     return argsets
 
@@ -99,6 +101,7 @@ def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch', batc
 
     nsets = len(argsets)
     nperrunner = int(float(nsets)/nrunners)
+    timeest = 10*nperrunner
 
     for currunner in range(nrunners):
         curargsets = argsets[currunner::nrunners]
@@ -106,10 +109,10 @@ def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch', batc
         cmds_to_run = []
         for argset in curargsets:
 
-            cmds_to_run.append('python mxxlsims/rundln.py {argset}\n'.format(argset = ' '.join(map(str, argset))))
+            cmds_to_run.append('python nfwfitter/rundln.py {argset}\n'.format(argset = ' '.join(map(str, argset))))
 
         with open('{}/{}_{}.sh'.format(outputdir, prefix, currunner), 'w') as output:
-            output.write(batch_header.format(jobdir = outputdir, jobname = 'batchrundln', runner=currunner, time='05:00:00'))
+            output.write(batch_header.format(jobdir = outputdir, jobname = 'batchrundln', runner=currunner, time=timeest))
             for cmd in cmds_to_run:
                 output.write(cmd)
 

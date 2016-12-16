@@ -3,7 +3,7 @@
 # Run dln fit for one mass bin of one noise sim
 ###########################
 
-import sys
+import sys, re
 import random
 import deconvolvedlognorm as dln
 import nfwfit
@@ -160,6 +160,11 @@ def takeAllMasses(simtype, delta):
 ###
 
 def defineMassEdges(simtype, delta):
+
+    match = re.match('analytic_(.+)', simtype)
+    if match is not None:
+        simtype = match.group(1)
+        
 
     if simtype == 'bk11snap124':
         if delta == 500:

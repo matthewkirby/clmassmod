@@ -4,7 +4,7 @@
 
 
 
-import glob, cPickle, os, shutil, tempfile
+import glob, cPickle, os, shutil, tempfile, pkg_resources
 import numpy as np
 import pymc
 import consolidate_fits
@@ -83,7 +83,7 @@ def loadPosteriors(pdfdir, simtype, simreader, delta, selector,
 
     idpattern = consolidate_fits.idpatterns[simtype]
 
-    answers = cPickle.load(open('/vol/euclid1/euclid1_raid1/dapple/mxxlsims/{0}_answers.pkl'.format(simtype), 'rb'))
+    answers = cPickle.load(pkg_resources.resource_stream('nfwfitter', 'data/{0}_answers.pkl'.format(simtype)))
 
         
     halos = []
