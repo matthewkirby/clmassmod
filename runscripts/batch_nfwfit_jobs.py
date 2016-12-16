@@ -2,6 +2,8 @@
 
 import os
 
+import nfwfitter.rundln as rundln
+
 aifa_batch_header = '''#!/bin/bash
 
 export HOME=/home/dapple
@@ -12,9 +14,15 @@ export SRCLOC=/vol/euclid1/euclid1_raid1/dapple/mxxlsims
 
 midway_batch_header = '''#!/bin/bash
 
-export HOME=/home/dapple
-export PATH=/home/dapple/anaconda2/bin:/software/slurm-current-el6-x86_64/bin:/software/gnuplot-4.6-el6-x86_64/bin:/software/xpdf-3.04-el6-x86_64/bin:/software/tkdiff-4.2
-export LD_LIBRARY_PATH=/home/dapple/lib
+#SBATCH --job-name={jobname}
+#SBATCH --output={jobdir}/{jobname}_{runner}.out
+#SBATCH --partition=kicp
+#SBATCH --account=kicp
+#SBATCH --nodes=1
+#SBATCH --time {time}
+
+echo $SLURM_JOB_ID starting execution `date` on `hostname`
+
 '''
 
 
@@ -34,10 +42,10 @@ def batchNFWFitJobs(jobs, outputdir, nrunners=128, batch_header = aifa_batch_hea
         for job in curjobs:
             jobbase, jobext = os.path.splitext(job)
 
-            cmds_to_run.append('python /vol/euclid1/euclid1_raid1/dapple/mxxlsims/multiconfig_nfwfit.py {jobfile} 1>{jobbase}.stdout 2>{jobbase}.stderr\n'.format(jobfile=job, jobbase=jobbase))
+            cmds_to_run.append('python nfwfitter/multiconfig_nfwfit.py {jobfile} 1>{jobbase}.stdout 2>{jobbase}.stderr\n'.format(jobfile=job, jobbase=jobbase))
 
         with open('{}/nfwfitbatch_{}.sh'.format(outputdir, currunner), 'w') as output:
-            output.write(batch_header)
+            output.write(batch_header.format(jobdir = outputdir, jobname = 'batchnfwfit', runner=currunner, time='02:00:00'))
             for cmd in cmds_to_run:
                 output.write(cmd)
 
@@ -58,10 +66,33 @@ queue {nrunners}
 #############
 
 
+def buildDLNArgsets(chainbase, configs, simsnap, delta, outdir):
+
+    #number of bins
+
+    massbins = rundln.defineMassEdges(simsnap, delta)
+    nbins = len(massbins)
+
+    #loop over configs and bins to build arglist
+
+    argsets = []
+    for config in configs:
+        chaindir = '{}/{}'.format(chainbase, config)
+        for massbin in range(nbins):
+            outfile = '{outdir}/{config}/rundln{simsnap}.{delta}.{massbin}'.format(outdir = outdir,
+                                                                                   config = config,
+                                                                                   simsnap = simsnap,
+                                                                                   delta = delta,
+                                                                                   massbin = massbin)
+            argsets.append([simsnap, chaindir, outfile, delta, 'pdf', massbin])
+
+    return argsets
+
+
 #############
                                
 
-def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch'):
+def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch', batch_header = midway_batch_header):
 
     if not os.path.exists(outputdir):
         os.mkdir(outputdir)
@@ -75,10 +106,10 @@ def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch'):
         cmds_to_run = []
         for argset in curargsets:
 
-            cmds_to_run.append('python /vol/euclid1/euclid1_raid1/dapple/mxxlsims/rundln.py {argset}\n'.format(argset = ' '.join(argset)))
+            cmds_to_run.append('python mxxlsims/rundln.py {argset}\n'.format(argset = ' '.join(map(str, argset))))
 
         with open('{}/{}_{}.sh'.format(outputdir, prefix, currunner), 'w') as output:
-            output.write(batch_header)
+            output.write(batch_header.format(jobdir = outputdir, jobname = 'batchrundln', runner=currunner, time='05:00:00'))
             for cmd in cmds_to_run:
                 output.write(cmd)
 
