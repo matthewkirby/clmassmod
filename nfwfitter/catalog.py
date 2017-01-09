@@ -34,7 +34,10 @@ class Catalog(object):
         if name in header:
             return header[name]
         table = Catalog.__getattribute__(self, 'table')
-        return table[name]
+        try:
+            return table[name]
+        except KeyError:
+            raise AttributeError(name)
 
     def __setattr__(self, name, val):
         
