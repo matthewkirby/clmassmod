@@ -32,8 +32,7 @@ answers = {
 
 ########
 
-
-def plotSDProfile(ax, halobase):
+def computeSDProfiles(halobase, mcmodel='diemer15'):
 
     #read 2D profile
     simprofile = readMXXLProfile.MXXLProfile('{}.radial_profile.txt'.format(halobase))
@@ -57,14 +56,27 @@ def plotSDProfile(ax, halobase):
     
     m200 = answers[simid][haloid]['m200'] #M_sol/h
     zcluster = answers[simid][haloid]['redshift']
-    c200 = chc.concentration(m200, '200c', zcluster, model='diemer15')
+    c200 = chc.concentration(m200, '200c', zcluster, model=mcmodel)
 
     diemer_profile = dk14prof.getDK14ProfileWithOuterTerms(M = m200, c = c200, z = zcluster, mdef = '200c')
     surfacedensity_func, deltaSigma_func = readAnalytic.calcLensingTerms(diemer_profile, np.max(r_kpch))
     convert_units = 1./(curcosmo.h*1e6) #M_sol / Mpc^2 -> diemer units
     diemer_surfacedensity = surfacedensity_func(r_kpch)/convert_units
 
+    return dict(radius=r_mpc,
+                simprofile=simdensity,
+                diemerprofile=diemer_surfacedensity)
     
+
+########
+
+
+def plotSDProfile(ax, halobase):
+
+    profiles = computeSDProfiles(halobase)
+    r_mpc = profiles['radius']
+    simdensity = profiles['simprofile']
+    diemer_surfacedensity = profiles['diemerprofile']
 
     #and plot results
 
@@ -72,5 +84,20 @@ def plotSDProfile(ax, halobase):
     ax.loglog(r_mpc, diemer_surfacedensity, 'b-')
     ax.axvline(3., c='k', linewidth=3, linestyle='--')
 
+
+#######
+
+def plotAvgProfile(ax, halobases, mcmodel='diemer15'):
+
     
-    
+    profiles = [computeSDProfiles(halo, mcmodel=mcmodel) for halo in halobases]
+
+
+    #average up the profiles
+    averadius = np.mean(np.row_stack([x['radius'] for x in profiles]), axis=0)
+    avesimprofile = np.mean(np.row_stack([x['simprofile'] for x in profiles]), axis=0)
+    avediemerprofile = np.mean(np.row_stack([x['diemerprofile'] for x in profiles]), axis=0)
+
+    ax.loglog(averadius, avesimprofile, 'ko', markersize=5)
+    ax.loglog(averadius, avediemerprofile, 'b-')
+    ax.axvline(3., c='k', linewidth=3, linestyle='--')
