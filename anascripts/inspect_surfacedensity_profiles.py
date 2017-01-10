@@ -87,10 +87,10 @@ def plotSDProfile(ax, halobase):
 
 #######
 
-def plotAvgProfile(ax, halobases, mcmodel='diemer15'):
+def plotAvgProfile(ax, halobases, mcmodel='diemer15', profilefunc=computeSDProfiles):
 
     
-    profiles = [computeSDProfiles(halo, mcmodel=mcmodel) for halo in halobases]
+    profiles = [profilefunc(halo, mcmodel=mcmodel) for halo in halobases]
 
 
     #average up the profiles
@@ -101,3 +101,46 @@ def plotAvgProfile(ax, halobases, mcmodel='diemer15'):
     ax.loglog(averadius, avesimprofile, 'ko', markersize=5)
     ax.loglog(averadius, avediemerprofile, 'b-')
     ax.axvline(3., c='k', linewidth=3, linestyle='--')
+
+
+########
+
+
+def compute3DProfile(halobase, mcmodel='diemer15'):
+
+    #read 3D profile
+    simprofile = readMXXLProfile.MXXLProfile('{}.radial_profile_3D.txt'.format(halobase))
+    simvolume = (4./3.)*np.pi*(simprofile.outer_radius**3 - simprofile.inner_radius**3)
+    simdensity = simprofile.diff_mass / simvolume  #M_sol / Mpc**3
+    r_mpc = simprofile.median_radius
+
+    #read halo mass
+    sim_and_haloid = os.path.basename(halobase)
+    tokens = sim_and_haloid.split('_')
+    simid = '_'.join(tokens[:2])
+    haloid = '{}_0'.format(tokens[2])
+
+    #make sure cosmology always matches
+    curcosmo = readMXXLProfile.cosmo
+    nfwutils.global_cosmology.set_cosmology(curcosmo)
+    cmc.matchCosmo()
+
+    #compute Diemer SD prediction
+    r_kpch = (r_mpc*1000*curcosmo.h)
+    
+    m200 = answers[simid][haloid]['m200'] #M_sol/h
+    zcluster = answers[simid][haloid]['redshift']
+    c200 = chc.concentration(m200, '200c', zcluster, model=mcmodel)
+
+    diemer_profile = dk14prof.getDK14ProfileWithOuterTerms(M = m200, c = c200, z = zcluster, mdef = '200c')
+    #density is returned with units M_solh^2/kpc^3. 
+    convert_units = 1e9*curcosmo.h**2  # converts to M_sol/Mpc^3
+
+    diemer_density = diemer_profile.density(r_kpch)*convert_units
+
+    return dict(radius=r_mpc,
+                simprofile=simdensity,
+                diemerprofile=diemer_density)
+    
+
+########
