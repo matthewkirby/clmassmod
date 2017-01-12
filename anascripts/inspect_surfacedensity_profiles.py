@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import cPickle
 import pkg_resources
 
-
+import astropy.cosmology as astrocosmo
+import astropy.units as units
 
 import colossus.cosmology.cosmology as cCosmo
 import colossus.halo.concentration as chc
@@ -29,6 +30,9 @@ answers = {
     'halo_54' : cPickle.load(pkg_resources.resource_stream('nfwfitter',
                                                            'data/mxxlsnap54_answers.pkl'))
 }
+
+
+
 
 ########
 
@@ -62,6 +66,18 @@ def computeSDProfiles(halobase, mcmodel='diemer15'):
     surfacedensity_func, deltaSigma_func = readAnalytic.calcLensingTerms(diemer_profile, np.max(r_kpch))
     convert_units = 1./(curcosmo.h*1e6) #M_sol / Mpc^2 -> diemer units
     diemer_surfacedensity = surfacedensity_func(r_kpch)/convert_units
+
+
+    #add mean background density to Diemer prediction
+    acosmo = astrocosmo.FlatLambdaCDM(curcosmo.H0, curcosmo.omega_m)
+    density_units_3d = units.solMass / units.Mpc**3
+    density_units_2d = units.solMass / units.Mpc**2
+    back_density = (acosmo.Om(zcluster)*acosmo.critical_density(zcluster)).to(density_units_3d)
+    print back_density
+    back_sd_contrib = back_density*(200.*units.Mpc/curcosmo.h)
+    print back_sd_contrib
+#    simdensity = simdensity*density_units_2d - back_sd_contrib
+    diemer_surfacedensity += back_sd_contrib
 
     return dict(radius=r_mpc,
                 simprofile=simdensity,
