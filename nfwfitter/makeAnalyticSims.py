@@ -40,8 +40,7 @@ def createSims(bins, nperbin, zcluster, basedir, simgroup, idstart, cosmology):
                       gridlength = 1024.,
                       zcluster = zcluster,
                       m200 = float(m200s[i]),
-                      c200 = float(c200s[i]),
-                      profile='diemer')
+                      c200 = float(c200s[i]))
 
         with open('{}/analytic_{}.yaml'.format(outputdir, id), 'w') as output:
             yaml.dump(config, output)
