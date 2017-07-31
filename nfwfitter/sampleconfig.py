@@ -30,7 +30,7 @@ galaxypicker = simutils.Composite(densitypicker,fovpicker)
 
 import betacalcer
 betacalcer = betacalcer.FixedBeta()
-beta_s = 0.3
+beta = 0.3
 
 
 import shearnoiser
@@ -46,8 +46,8 @@ sz_xi=8.1
 
 import basicBinning
 binner = basicBinning.GaussianFixedBins()
-profilemax = 1.5
-profilemin = 0.5
+profileMax = 1.5
+profileMin = 0.5
 binspacing = 'linear'
 nbins = 12
 profilecol = 'r_mpc'

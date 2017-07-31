@@ -146,11 +146,17 @@ class MXXLSim(catalog.Catalog):
 
         beta_inf = nfwutils.global_cosmology.beta([1e6], self.zcluster)
 
-
-        self.gamma1_inf = beta_inf*gamma1.data.flatten()
-        self.gamma2_inf = beta_inf*gamma2.data.flatten()
+        # Three components that I can plot
+        self.gamma1_inf = beta_inf*gamma1.data.flatten() # Shear wrt x axis
+        self.gamma2_inf = beta_inf*gamma2.data.flatten() # Shear wrt 45 deg
         self.kappa_inf = beta_inf*kappa.data.flatten()
 
+    def reshape_components(self) :
+        import numpy as np
+        for component in [ self.gamma1_inf, self.gamma2_inf, self.kappa_inf ] :
+            component_shape = int(np.sqrt(component.shape))
+
+            component = component.reshape((component_shape, component_shape))
 
 
         

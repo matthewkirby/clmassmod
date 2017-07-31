@@ -50,6 +50,7 @@ class ProfileBuilder(object):
         deltay_mpc = (delta_y * dL * np.pi)/(180.*60)
         r_mpc = np.sqrt(deltax_mpc**2 + deltay_mpc**2)
 
+        # Convert gamma1 and gamma2 to tangential and cross shear terms
         cosphi = deltax_mpc / r_mpc
         sinphi = deltay_mpc / r_mpc
         sin2phi = 2.0*sinphi*cosphi

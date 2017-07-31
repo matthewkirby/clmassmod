@@ -10,3 +10,5 @@ Projects for the DESC Hack Day, 17 Feb 2017!
 
 2.) Daisuke Nagai & Erwin Lau, Nick Battaglia, and Stefan Hilbert & the Magneticum team have offered lensing maps produced from hydro simulations for analysis. Each simulation needs a reader that will bring the lensing information to a common format for CLMASSMOD use. We need to write that wrapper. We might also need to write an algorithm that coverts 2D mass maps to shear maps.
 
+
+python setup.py develop
