@@ -254,6 +254,11 @@ def shearprofile_like(double mdelta,
                       double rho_c_over_sigma_c,
                       double massdelta):
 
+    '''Likelihood function - e.g. m200c, c200c, note: beta=D_ls/D_s is
+lensing quantity describing geometry, sigma_c is the critical density
+for lensing
+
+    '''
 
     cdef Py_ssize_t nbins = bin_r_mpc.shape[0]
 
@@ -268,7 +273,7 @@ def shearprofile_like(double mdelta,
 
         rdelta = (3*abs(mdelta)/(4*massdelta*np.pi*rho_c))**(1./3.)
         rscale = rdelta / cdelta
-
+        # Expected gamma for source at infinite redshift
         gamma_inf = NFWShear(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)
         kappa_inf = NFWKappa(bin_r_mpc, cdelta, rscale, rho_c_over_sigma_c, delta = massdelta)
 
@@ -288,17 +293,17 @@ def shearprofile_like(double mdelta,
     cdef double betaratio
 
         
-    #calculate logprob
+    # calculate logprob, which we want to maximize (same as minimizing chi squared)
     for i from nbins > i >= 0:
 
         betaratio = avebeta2[i]/avebeta[i]
-       
+        # Model prediction of shear
         modelg = (avebeta[i]*gamma_inf[i] / (1 - betaratio*kappa_inf[i]))
 
         delta = bin_shear[i] - modelg
 
         modsig = bin_shearerr[i]
-
+        # Log of a gaussian prob: Chi squared term plus normalization term
         logProb = logProb -.5*(delta/modsig)**2  - logsqrt2pi - log(modsig)
 
         
