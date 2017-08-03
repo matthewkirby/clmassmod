@@ -1,0 +1,8 @@
+*pyc
+*so
+*~
+build/*
+.DS_Store
+*egg-info
+*.ipynb_checkpoints
+
