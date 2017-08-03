@@ -1,2 +1,8 @@
+*pyc
+*so
 *~
-*.pyc
+build/*
+.DS_Store
+*egg-info
+*.ipynb_checkpoints
+

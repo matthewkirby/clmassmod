@@ -287,7 +287,7 @@ class Likelihood(object):
     def __init__(self, config):
 
         self.config = config
-        self.model = nfwfit.buildModel(config)
+        self.model = config['model']
 
     ###
 

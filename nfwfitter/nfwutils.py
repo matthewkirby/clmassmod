@@ -108,6 +108,10 @@ class Cosmology(object):
 
         return 3.*self.hubble2(z)/(8*np.pi*self.G)
 
+    def rho_m(self, z):
+
+        return self.rho_crit(0.) * self.omega_m * (1.0 + z)**3
+
 
     def angulardist(self, z, z2 = None):
 
@@ -300,6 +304,28 @@ def rdelta(rs, c, delta):
     x0 = scipy.optimize.brenth(f, 0.1, 20)
 
     return x0*rs
+
+####
+
+def rdelta_m(rs, c, z, delta):
+
+    delta_c = deltaC(c)
+    rho_crit = global_cosmology.rho_crit(z)
+    rho_m = global_cosmology.rho_m(z)
+    
+    # x = r_delta / rs
+    def f(x):
+        
+        return 3*delta_c*rho_crit*(np.log(1+x) - (x/(1+x)))/x**3 - delta*rho_m
+
+
+    
+    x0 = scipy.optimize.brenth(f, 0.1, 20)
+
+    return x0*rs
+
+####################################
+
 
 ####################################
 

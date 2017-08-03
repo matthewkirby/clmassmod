@@ -19,6 +19,7 @@ import pymc
 #import fitmodel
 import confidenceinterval as ci
 import plotsimdistros as psd
+import simutils
 
 
 #####
@@ -54,7 +55,7 @@ def likelihoodPlots():
         r_mpc = (r_mpc_edges[1:] + r_mpc_edges[:-1])/2.
         zcluster = 0.415 #median of megacam
 
-        duffy = basicMassCon.Duffy(None)
+        duffy = basicMassCon.Duffy()
         c_duff = duffy(true_mass * nfwutils.global_cosmology.h, zcluster, 200.)
 
 
@@ -75,10 +76,12 @@ def likelihoodPlots():
 
         #calcualte pdf for duffy
 
-        config = varcontainer.VarContainer()
-        config.massconmodule = 'basicMassCon'
+        config = {}
+        config['model'] = nfwfit.NFW_MC_Model()
+        config['massconRelation'] = basicMassCon.Duffy()
+        simutils.runConfigure(config)
 
-        config.massconrelation = 'Duffy'
+
         likelihood = nfwnoise.Likelihood(config)
         likelihood.bindData(r_mpc, g_truth, g_err, beta_s, zcluster)
 
@@ -122,9 +125,9 @@ def likelihoodPlots():
 
     linfig.tight_layout()
 
-    linfig.savefig('figures/likelihood_shape.png')
-    linfig.savefig('figures/likelihood_shape.eps')
-    linfig.savefig('figures/likelihood_shape.pdf')
+    linfig.savefig('docs/figures/likelihood_shape.png')
+    linfig.savefig('docs/figures/likelihood_shape.eps')
+    linfig.savefig('docs/figures/likelihood_shape.pdf')
 
 
     logax.legend(loc='upper left')
@@ -132,9 +135,9 @@ def likelihoodPlots():
     logax.set_ylabel(r'Likelihood($\mathrm{log}_{10}M_{200}$)', fontsize=18)
     logax.set_xlim(np.log10(np.min(m200s[posmass])), np.log10(2.5e15))
     logfig.tight_layout()
-    logfig.savefig('figures/likelihood_logshape.png')
-    logfig.savefig('figures/likelihood_logshape.eps')
-    logfig.savefig('figures/likelihood_logshape.pdf')
+    logfig.savefig('docs/figures/likelihood_logshape.png')
+    logfig.savefig('docs/figures/likelihood_logshape.eps')
+    logfig.savefig('docs/figures/likelihood_logshape.pdf')
 
     return figs
 
