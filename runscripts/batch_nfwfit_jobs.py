@@ -45,7 +45,7 @@ def batchNFWFitJobs(jobs, outputdir, nrunners=128, batch_header = aifa_batch_hea
             cmds_to_run.append('python nfwfitter/multiconfig_nfwfit.py {jobfile} 1>{jobbase}.stdout 2>{jobbase}.stderr\n'.format(jobfile=job, jobbase=jobbase))
 
         with open('{}/nfwfitbatch_{}.sh'.format(outputdir, currunner), 'w') as output:
-            output.write(batch_header.format(jobdir = outputdir, jobname = 'batchnfwfit', runner=currunner, time='02:00:00'))
+            output.write(batch_header.format(jobdir = outputdir, jobname = 'batchnfwfit', runner=currunner, time='48:00:00'))
             for cmd in cmds_to_run:
                 output.write(cmd)
 
@@ -101,7 +101,7 @@ def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch', batc
 
     nsets = len(argsets)
     nperrunner = int(float(nsets)/nrunners)
-    timeest = 10*nperrunner
+    timeest = 60*nperrunner
 
     for currunner in range(nrunners):
         curargsets = argsets[currunner::nrunners]

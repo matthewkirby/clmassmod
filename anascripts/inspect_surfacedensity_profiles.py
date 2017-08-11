@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import cPickle
 import pkg_resources
 
+
 import astropy.cosmology as astrocosmo
 import astropy.units as units
 
@@ -20,6 +21,8 @@ import nfwfitter.nfwutils as nfwutils
 import nfwfitter.colossusMassCon as cmc
 import nfwfitter.readMXXLProfile as readMXXLProfile
 import nfwfitter.readAnalytic as readAnalytic
+import nfwfitter.readMXXL as readMXXL
+
 
 ########
 # mass tables
@@ -160,3 +163,67 @@ def compute3DProfile(halobase, mcmodel='diemer15'):
     
 
 ########
+
+class ProfileSet(object):
+
+    def __init__(self):
+        self.r_mpc = None
+        self.beta_s = None
+        self.beta_s2 = None
+        self.zcluster = None
+        self._ghats = []
+
+    def __add__(self, profile):
+
+        if self.r_mpc is None:
+            self.r_mpc = profile.r_mpc
+            self.beta_s = profile.beta_s
+            self.beta_s2 = profile.beta_s2
+            self.zcluster = profile.zcluster
+#        else:
+            #all halos at same redshift with same radial range:
+            #    -> r_mpc, beta_s, zcluster all same across halos
+#            assert((profile.r_mpc == self.r_mpc).all() and \
+#               profile.beta_s == self.beta_s and \
+#               profile.beta_s2 == self.beta_s2 and \
+#               profile.zcluster == self.zcluster)
+
+
+        self._ghats.append(profile.ghat)
+
+        return self
+
+    @property
+    def ghats(self):
+        return np.row_stack(self._ghats)
+
+    def todict(self):
+        return dict(r_mpc = self.r_mpc,
+                    beta_s = self.beta_s,
+                    beta_s2 = self.beta_s2,
+                    zcluster = self.zcluster,
+                    ghats = self.ghats)
+
+
+def computeStackedShearProfile(halobases, config):
+
+    profilebuilder = config['profilebuilder']
+
+    simreader = config['simreader']
+
+
+    def mapProfile(halobase):
+        sim = simreader.load(halobase)
+        profile = profilebuilder(sim)
+        return profile
+
+    reduceProfiles = lambda profileset, profile: profileset + profile    
+
+
+    profiles = map(mapProfile, halobases)
+    profileset = reduce(reduceProfiles, profiles, ProfileSet())
+
+    return profileset
+    
+
+
