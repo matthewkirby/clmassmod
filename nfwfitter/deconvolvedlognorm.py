@@ -383,6 +383,8 @@ def buildPDFModel(halos, sigmapriors = None):
         delta_logmls[i,:] = np.log(posmasses) - np.log(halos[i]['true_mass'])
         rawpdf = halos[i]['pdf'][masses>0]
         pdfs[i,:] = rawpdf / scipy.integrate.trapz(rawpdf, posmasses)
+        if not (pdfs[i,:] > 0).any():
+            print 'WARNING: Halo {} has zero probability'.format(halos[i]['id'])
 
     
 

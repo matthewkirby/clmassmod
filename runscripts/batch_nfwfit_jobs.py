@@ -106,7 +106,7 @@ def batchRunDLNJobs(argsets, outputdir, nrunners=64, prefix='rundlnbatch', batch
 
     nsets = len(argsets)
     nperrunner = int(float(nsets)/nrunners)
-    timeest = max(10*nperrunner,10)
+    timeest = max(60*nperrunner,60)
 
     for currunner in range(nrunners):
         curargsets = argsets[currunner::nrunners]

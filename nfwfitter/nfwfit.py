@@ -438,9 +438,26 @@ def convertLikelihoodScan(model, delta, masses, pdf200, zcluster):
     return targetpdf
 
     
-    
-    
+########################
 
+class FailedFitException(Exception): pass
+
+def verifyfit(sim, profile, fitvals, outputname):
+    '''Raises FailedFitException and dumps intermediates to pkl file if verify failes'''
+
+    masses, pdfs = fitvals
+
+    for delta in pdfs.keys():
+        if np.argmax(pdfs[delta]) == 0:
+            dump(sim, profile, fitvals, outputname)
+            raise FailedFitException
+
+    return True
+
+def dump(sim, profile, fitvals, outputname):
+    
+    with open('{}.err.pkl'.format(outputname), 'wb') as output:
+        cPickle.dump((sim, profile, fitvals), output, -1)
 
 
 ########################
@@ -475,6 +492,8 @@ def preloadNFWFit(configname):
 
 ###########################
 
+
+
 def runNFWFit_Preloaded(simreader, catalogname, config, outputname):
 
     sim = simreader.load(catalogname)
@@ -485,6 +504,8 @@ def runNFWFit_Preloaded(simreader, catalogname, config, outputname):
     profile = profilebuilder(sim)
 
     fitvals = fitter(profile)
+
+    verifyfit(config, sim, profile, fitvals, outputname)
 
     savefit(fitvals, outputname)
 
