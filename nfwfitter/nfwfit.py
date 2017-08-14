@@ -440,21 +440,24 @@ def convertLikelihoodScan(model, delta, masses, pdf200, zcluster):
     
 ########################
 
-class FailedFitException(Exception): Pass
+class FailedFitException(Exception): pass
 
-def verifyfit(config, sim, profile, fitvals, outputname):
+def verifyfit(sim, profile, fitvals, outputname):
+    '''Raises FailedFitException and dumps intermediates to pkl file if verify failes'''
 
     masses, pdfs = fitvals
 
     for delta in pdfs.keys():
-        if np.argmax(fitvals[delta]) == 0:
-            dump(config, sim, profile, fitvals, outputname)
+        if np.argmax(pdfs[delta]) == 0:
+            dump(sim, profile, fitvals, outputname)
             raise FailedFitException
 
-def dump(config, sim, profile, fitvals, outputname):
+    return True
+
+def dump(sim, profile, fitvals, outputname):
     
     with open('{}.err.pkl'.format(outputname), 'wb') as output:
-        cPickle.dump((config, sim, profile, fitvals), output, -1)
+        cPickle.dump((sim, profile, fitvals), output, -1)
 
 
 ########################
