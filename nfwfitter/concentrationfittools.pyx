@@ -61,7 +61,7 @@ def altintegral_mc(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
     for i from nsamples > i >= 0:
 
         lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
-        lognormpart_c = exp((cl_ints[i]-logmu_c)**2/neg2sigma2_c)/(sigmasqrt2pi_c*cl_ints[i])
+        lognormpart_c = exp((np.log(cl_ints[i])-logmu_c)**2/neg2sigma2_c)/(sigmasqrt2pi_c*cl_ints[i])
 
         thesum += lognormpart * lognormpart_c
 

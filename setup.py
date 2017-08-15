@@ -16,6 +16,9 @@ extensions = [
     Extension("nfwfitter.deconvolvedlognormtools", ["nfwfitter/deconvolvedlognormtools.pyx"],
               include_dirs = [numpy.get_include()]
               ),    
+    Extension("nfwfitter.concentrationfittools", ["nfwfitter/concentrationfittools.pyx"],
+              include_dirs = [numpy.get_include()]
+              ),
     ]
 
 setup(

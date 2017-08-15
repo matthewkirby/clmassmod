@@ -272,6 +272,11 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
 
     success = False
     for i in range(20):
+        # Occasionally, the pymc initialization is so far off that the
+        # probability of the model is essentially zero.  Typically,
+        # just trying again will allow pymc to find a reasonable set
+        # of initial parameters to start with.  If it doesn't find it
+        # within 20, something else is wrong in the model.
 
         try:
             

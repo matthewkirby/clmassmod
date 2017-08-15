@@ -9,7 +9,7 @@ def buildMCMCModel_mc(halos, maxsamples = 2000):
 
     halos is a list of dictionaries corresponding to each halo
     
-    id
+    id 
     true_mass
     mass_samples
     concentration_samples
@@ -88,3 +88,52 @@ def buildMCMCModel_mc(halos, maxsamples = 2000):
     return parts
 
 
+def generate_mock_data(muM, sigM, muc, sigc, sigMmeasured, sigcmeasured, num_halos=100, num_samples_per_halo=2000) :
+    '''
+    Inputs are the parent nodes of the bayesian chain.
+
+    sigMmeasured and sigcmeasured are from the noisy shear measurements.
+
+    Needs to return a list of halos, each halo is a dictionary with:
+    id                                                                                                                        
+    true_mass                                                                                                                 
+    mass_samples                                                                                                              
+    concentration_samples
+    '''
+    halos = []
+    import numpy as np
+    
+    for ihalo in range(num_halos) :
+        halo_dict = {}
+        halo_dict['id'] = ihalo
+
+        # True mass between 1e14 to 3e15
+        halo_dict['true_mass'] = np.exp(np.random.uniform( np.log(1e14),np.log(3e15) ))
+
+        # Bias comes from line of sight, triaxiality, uncertainties in mass model, etc.
+        avg_lens_mass = halo_dict['true_mass'] * muM
+        
+        halo_dict['mass_drawn'], halo_dict['mass_samples'] = draw_samples(avg_lens_mass, sigM,
+                                                                          sigMmeasured, num_samples_per_halo)
+        halo_dict['concentration_drawn'], halo_dict['concentration_samples'] = draw_samples(muc, sigc,
+                                                                                            sigcmeasured, num_samples_per_halo)
+
+        halos.append(halo_dict)
+    return halos
+
+def draw_samples(mu, sig, sigmeasured, num_samples_per_halo) :
+    '''Log normal distributed (intrinsic scatter), and on top is the gaussian scatter for measurement noise'''
+
+    import numpy as np
+
+    # We draw the "true" lensing mass or concentration from a lognormal distribution.  
+    true_lens_param = np.random.lognormal(np.log(mu), sig)
+
+    # We draw i samples for the mock MCMC from the halo
+    lens_param_i = true_lens_param + sigmeasured*np.random.standard_normal(size=num_samples_per_halo)
+
+    return true_lens_param, lens_param_i
+
+
+    
+    

@@ -147,10 +147,11 @@ def checkRunDlnOutput(bashfiles):
             lines = input.readlines()
 
         for line in lines:
-
             try:
                 tokens = line.split()
                 outfile = tokens[4]
+                if tokens[2] == 'starting' :
+                    continue
 
                 if not os.path.exists(outfile):
 
