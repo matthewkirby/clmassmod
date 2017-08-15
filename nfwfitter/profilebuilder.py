@@ -7,6 +7,12 @@ import nfwutils
 
 #########################
 
+def verifyShear(cat, col = 'gamma1_inf', thresh = 1.):
+
+    assert(np.max(np.abs(cat[col])) < thresh)
+
+#####
+
 
 class ProfileBuilder(object):
 
@@ -23,18 +29,41 @@ class ProfileBuilder(object):
 
     def __call__(self, sim):
 
+        verifyShear(sim, 'gamma1_inf')
+        verifyShear(sim, 'gamma2_inf')
+
         rescaledsim = self.rescalecluster(sim)
+
+        verifyShear(rescaledsim, 'gamma1_inf')
+        verifyShear(rescaledsim, 'gamma2_inf')
+
 
         galaxies = self.galaxypicker(rescaledsim)
 
+        verifyShear(galaxies, 'gamma1_inf')
+        verifyShear(galaxies, 'gamma2_inf')
+
+
         galaxies3d = self.betacalcer(galaxies)
+
+        verifyShear(galaxies3d, 'gamma1_inf')
+        verifyShear(galaxies3d, 'gamma2_inf')
+
         
         betas = galaxies3d.beta_s
         kappa = betas*galaxies3d.kappa_inf
         galaxies3d.g1 = betas*galaxies3d.gamma1_inf/(1 - kappa)
         galaxies3d.g2 = betas*galaxies3d.gamma2_inf/(1 - kappa)
+
+        verifyShear(galaxies3d, 'g1')
+        verifyShear(galaxies3d, 'g2')
+
         
         noisygalaxies = self.shearnoiser(galaxies3d)
+
+        verifyShear(noisygalaxies, 'g1')
+        verifyShear(noisygalaxies, 'g2')
+
 
         centeroffsetx, centeroffsety = self.centergenerator(noisygalaxies)
         print 'Center Offset:', centeroffsetx, centeroffsety
@@ -69,16 +98,25 @@ class ProfileBuilder(object):
         noisygalaxies.r_mpc = r_mpc
         noisygalaxies.ghat = E
         noisygalaxies.gcross = B
+
+        verifyShear(noisygalaxies, 'ghat')
+        verifyShear(noisygalaxies, 'gcross')
+
         
         
         profile = self.binner(noisygalaxies)
-        clean = profile.sigma_ghat > 0
 
+        verifyShear(noisygalaxies, 'ghat')
+
+
+        clean = profile.sigma_ghat > 0
         cleanprofile = profile.filter(clean)
         cleanprofile.zcluster = noisygalaxies.zcluster
         cleanprofile.zlens = noisygalaxies.zlens
 
         noisyprofile = self.binnoiser(cleanprofile)
+
+        verifyShear(noisyprofile, 'ghat')
 
         return noisyprofile
         
