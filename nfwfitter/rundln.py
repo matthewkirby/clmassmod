@@ -230,8 +230,16 @@ def defineMassEdges(simtype, delta):
 
     
 
-def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = None):
-
+def run(simtype, chaindir, outfile, delta, pdftype, modelname, massbin=0, sigmapriorfile = None):
+    '''
+    simtype: something like mxxl41, 
+    chaindir: output from nfwfit
+    outfile: output of the map step, 
+    delta: overdensity (e.g. 200)
+    pdftype: either 'pdf' or 'mcmc' --> format of output of map step
+    modelname: function name of model, e.g. buildMCMCModel
+    massbin: the index of the massbin that we are running (bins are defined above), depends on mass range, simtype, and overdensity 
+    '''
     config = simutils.readConfiguration('%s/config.py' % chaindir)
     simreader = config['simreader']
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
@@ -260,6 +268,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
         sys.exit(0)
 
     if len(halos) > 1000:
+        # Should be sufficient - some mass bins have ~7000.
         print 'Down sampling'
         halos = random.sample(halos, 1000)
 
@@ -279,11 +288,8 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
         # within 20, something else is wrong in the model.
 
         try:
-            
-            if isPDF == True:
-                parts = dln.buildPDFModel(halos, sigmapriors = sigmapriors)
-            else:
-                parts = dln.buildMCMCModel(halos)
+            buildmodel = getattr(dln, modelname)
+            parts = buildmodel(halos, sigmapriors = sigmapriors)
 
             model = pymc.Model(parts)
             assert(np.isfinite(model.logp))
@@ -320,17 +326,17 @@ if __name__ == '__main__':
     outfile=sys.argv[3]
     delta=int(sys.argv[4])
     pdftype=sys.argv[5]
-    if len(sys.argv) > 6:
-        massbin=int(sys.argv[6])
+    modelname=sys.argv[6]
     if len(sys.argv) > 7:
-        sigmaprior = sys.argv[7]
-
-    print 'Called with:', dict(simtype=simtype, chaindir=chaindir, 
+        massbin=int(sys.argv[7])
+    if len(sys.argv) > 8:
+        sigmaprior = sys.argv[8]
+    print 'Called with:', dict(modelname=modelname, simtype=simtype, chaindir=chaindir, 
                                outfile=outfile, delta=delta, 
                                pdftype = pdftype,
                                massbin=massbin,
                                sigmapriorfile = sigmaprior)
 
     
-    run(simtype, chaindir, outfile, delta, pdftype, massbin, sigmaprior)
+    run(simtype, chaindir, outfile, delta, pdftype, modelname, massbin, sigmaprior)
         
