@@ -7,6 +7,12 @@ import nfwutils
 
 #########################
 
+def verifyShear(cat, col = 'gamma1_inf', thresh = 5.):
+
+    assert(np.max(np.abs(cat.table[col])) < thresh)
+
+#####
+
 
 class ProfileBuilder(object):
 
@@ -27,14 +33,26 @@ class ProfileBuilder(object):
 
         galaxies = self.galaxypicker(rescaledsim)
 
+
         galaxies3d = self.betacalcer(galaxies)
+
+
+
         
         betas = galaxies3d.beta_s
         kappa = betas*galaxies3d.kappa_inf
         galaxies3d.g1 = betas*galaxies3d.gamma1_inf/(1 - kappa)
         galaxies3d.g2 = betas*galaxies3d.gamma2_inf/(1 - kappa)
+        g = np.sqrt(galaxies3d.g1**2 + galaxies3d.g2**2)
+        no_arcs = np.abs(g) < 5
+        galaxies_noarcs = galaxies3d.filter(no_arcs)
+
+        verifyShear(galaxies_noarcs, 'g1')
+        verifyShear(galaxies_noarcs, 'g2')
+
         
-        noisygalaxies = self.shearnoiser(galaxies3d)
+        noisygalaxies = self.shearnoiser(galaxies_noarcs)
+
 
         centeroffsetx, centeroffsety = self.centergenerator(noisygalaxies)
         print 'Center Offset:', centeroffsetx, centeroffsety
@@ -70,16 +88,22 @@ class ProfileBuilder(object):
         noisygalaxies.r_mpc = r_mpc
         noisygalaxies.ghat = E
         noisygalaxies.gcross = B
+
         
         
         profile = self.binner(noisygalaxies)
-        clean = profile.sigma_ghat > 0
 
+
+
+
+        clean = profile.sigma_ghat > 0
         cleanprofile = profile.filter(clean)
         cleanprofile.zcluster = noisygalaxies.zcluster
         cleanprofile.zlens = noisygalaxies.zlens
 
         noisyprofile = self.binnoiser(cleanprofile)
+
+
 
         return noisyprofile
         
