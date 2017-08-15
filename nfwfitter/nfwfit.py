@@ -440,14 +440,14 @@ def convertLikelihoodScan(model, delta, masses, pdf200, zcluster):
     
 ########################
 
-class FailedFitException(Exception): Pass
+class FailedFitException(Exception): pass
 
 def verifyfit(config, sim, profile, fitvals, outputname):
 
     masses, pdfs = fitvals
 
     for delta in pdfs.keys():
-        if np.argmax(fitvals[delta]) == 0:
+        if np.argmax(pdfs[delta]) == 0:
             dump(config, sim, profile, fitvals, outputname)
             raise FailedFitException
 

@@ -7,9 +7,9 @@ import nfwutils
 
 #########################
 
-def verifyShear(cat, col = 'gamma1_inf', thresh = 1.):
+def verifyShear(cat, col = 'gamma1_inf', thresh = 5.):
 
-    assert(np.max(np.abs(cat[col])) < thresh)
+    assert(np.max(np.abs(cat.table[col])) < thresh)
 
 #####
 
@@ -29,40 +29,29 @@ class ProfileBuilder(object):
 
     def __call__(self, sim):
 
-        verifyShear(sim, 'gamma1_inf')
-        verifyShear(sim, 'gamma2_inf')
-
         rescaledsim = self.rescalecluster(sim)
 
-        verifyShear(rescaledsim, 'gamma1_inf')
-        verifyShear(rescaledsim, 'gamma2_inf')
-
-
         galaxies = self.galaxypicker(rescaledsim)
-
-        verifyShear(galaxies, 'gamma1_inf')
-        verifyShear(galaxies, 'gamma2_inf')
 
 
         galaxies3d = self.betacalcer(galaxies)
 
-        verifyShear(galaxies3d, 'gamma1_inf')
-        verifyShear(galaxies3d, 'gamma2_inf')
+
 
         
         betas = galaxies3d.beta_s
         kappa = betas*galaxies3d.kappa_inf
         galaxies3d.g1 = betas*galaxies3d.gamma1_inf/(1 - kappa)
         galaxies3d.g2 = betas*galaxies3d.gamma2_inf/(1 - kappa)
+        g = np.sqrt(galaxies3d.g1**2 + galaxies3d.g2**2)
+        no_arcs = np.abs(g) < 5
+        galaxies_noarcs = galaxies3d.filter(no_arcs)
 
-        verifyShear(galaxies3d, 'g1')
-        verifyShear(galaxies3d, 'g2')
+        verifyShear(galaxies_noarcs, 'g1')
+        verifyShear(galaxies_noarcs, 'g2')
 
         
-        noisygalaxies = self.shearnoiser(galaxies3d)
-
-        verifyShear(noisygalaxies, 'g1')
-        verifyShear(noisygalaxies, 'g2')
+        noisygalaxies = self.shearnoiser(galaxies_noarcs)
 
 
         centeroffsetx, centeroffsety = self.centergenerator(noisygalaxies)
@@ -99,14 +88,11 @@ class ProfileBuilder(object):
         noisygalaxies.ghat = E
         noisygalaxies.gcross = B
 
-        verifyShear(noisygalaxies, 'ghat')
-        verifyShear(noisygalaxies, 'gcross')
-
         
         
         profile = self.binner(noisygalaxies)
 
-        verifyShear(noisygalaxies, 'ghat')
+
 
 
         clean = profile.sigma_ghat > 0
@@ -116,7 +102,7 @@ class ProfileBuilder(object):
 
         noisyprofile = self.binnoiser(cleanprofile)
 
-        verifyShear(noisyprofile, 'ghat')
+
 
         return noisyprofile
         
