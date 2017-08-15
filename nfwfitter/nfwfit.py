@@ -449,6 +449,7 @@ def verifyfit(sim, profile, fitvals, outputname):
 
     for delta in pdfs.keys():
         if np.argmax(pdfs[delta]) == 0:
+
             dump(sim, profile, fitvals, outputname)
             raise FailedFitException
 
