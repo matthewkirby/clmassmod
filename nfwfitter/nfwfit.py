@@ -448,7 +448,8 @@ def verifyfit(sim, profile, fitvals, outputname, raiseException = True):
     masses, pdfs = fitvals
 
     for delta in pdfs.keys():
-        if np.argmax(pdfs[delta]) == 0:
+        maxpos = np.argmax(pdfs[delta])
+        if maxpos == 0 or maxpos == (len(masses)-1):
             
             if raiseException:
                 dump(sim, profile, fitvals, outputname)
