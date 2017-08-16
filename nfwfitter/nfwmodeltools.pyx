@@ -258,6 +258,7 @@ def shearprofile_like(double mdelta,
 lensing quantity describing geometry, sigma_c is the critical density
 for lensing
 
+    Note: whatever we set massdelta to be, c will be the corresponding overdensity
     '''
 
     cdef Py_ssize_t nbins = bin_r_mpc.shape[0]
