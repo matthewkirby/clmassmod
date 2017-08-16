@@ -80,7 +80,16 @@ queue {njobs}
 #########################################################
 
 def setupCondor_MXXL(configs, jobdir, jobname, simdir = '/vol/euclid1/euclid1_raid1/dapple/mxxl_lensing/mxxlsnap41', outputdir=None, simfiles = None):
-    
+    '''
+    This creates one job per halo (for the MCMC fit)
+
+    configs: This is the list read in from the file generated when creating the configurations for a given run
+                  e.g. nfwfitter/data/run26mxxl41
+    jobdir: is where the output of this function goes, e.g. /project/kicp/avestruz/storage/rundirs/mxxlrun26/
+    jobname: is normally called the run name: e.g. mxxlrun26
+    simdir: where the simulation snapshots are stored, e.g. /project/kicp/dapple/mxxlsims/mxxlsnap41/
+    outputdir: is the top levelwhere the folders containing the config.py 
+'''
     if not os.path.exists(jobdir):
         os.mkdir(jobdir)
 

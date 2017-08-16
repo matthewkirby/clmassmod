@@ -8,7 +8,7 @@ import numpy as np
 import cPickle
 
 
-import nfwnoise
+# import nfwnoise
 import nfwutils
 import nfwfit
 import varcontainer
@@ -16,7 +16,7 @@ import varcontainer
 import basicMassCon
 import deconvolvedlognorm
 import pymc
-import fitmodel
+#import fitmodel
 import confidenceinterval as ci
 import plotsimdistros as psd
 import simutils
@@ -691,7 +691,7 @@ def compareMCRelation_RadialRange():
 
 #############
 
-def compareMCRelation_Redshift():
+def compareMCRelation_Redshift(outputdir):
     '''Compare bias levels using different MC relations, but no miscentering, with different fit ranges'''
 
     mxxlsnaps=[54, 41]

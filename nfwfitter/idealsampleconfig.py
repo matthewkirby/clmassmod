@@ -17,16 +17,8 @@ rescalecluster = rescalecluster.RedshiftRescaler()
 targetz=0.9
 
 import galaxypicker
-densitypicker = galaxypicker.DensityPicker()
-nperarcmin=50.
+galaxypicker = galaxypicker.AllGalaxyPicker()
 
-
-import galaxypicker
-fovpicker = galaxypicker.SquareMosaic()
-
-
-import simutils
-galaxypicker = simutils.Composite(densitypicker,fovpicker)
 
 import betacalcer
 betacalcer = betacalcer.FixedBeta()
@@ -34,18 +26,14 @@ beta = 0.3
 
 
 import shearnoiser
-shearnoiser = shearnoiser.GaussianShapeNoise()
-shapenoise = 0.02
+shearnoiser = shearnoiser.NoNoise()
 
 import centergenerator
-centergenerator = centergenerator.SZAnalytic()
-szbeam=1.3
-coresize=1.25
-sz_xi=8.1
+centergenerator = centergenerator.NoOffset()
 
 
 import basicBinning
-binner = basicBinning.GaussianFixedBins()
+binner = basicBinning.BootstrapFixedBins()
 profileMax = 1.5
 profileMin = 0.5
 binspacing = 'linear'

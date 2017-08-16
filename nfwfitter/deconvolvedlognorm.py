@@ -22,22 +22,25 @@ class BadPDFException(Exception): pass
 
 #######################
 
-def MCMCReader(inputfile, halo, delta, truth, thin=1, cprior = None):
+def MCMCReader(inputfile, halo, delta, truth, thin=1, cprior = None, burn=200):
 
 
     with open(inputfile, 'rb') as input:
         masschains = cPickle.load(input)
 
-
-    msamples = np.array(masschains[delta]['mdelta'][200::thin])*nfwutils.global_cosmology.h
-
+    # Burns first 200 samples from the chains
+    msamples = np.array(masschains[delta]['mdelta'][burn::thin])*nfwutils.global_cosmology.h
+    csamples = np.array(masschains[delta]['cdelta'][burn::thin])
+    
     if cprior is not None:
-        cfilter = masschains[delta]['cdelta'][200::thin] < cprior
-        msamples = msamples[cfilter]
+        cfilter = csamples < cprior
 
+        msamples = msamples[cfilter]
+        csamples = csamples[cfilter]
 
     halo['mass_samples'] = msamples
-    
+    halo['concentration_samples'] = csamples
+
     return halo
 
 ###

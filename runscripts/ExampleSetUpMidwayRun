@@ -1,0 +1,24 @@
+# IPython log file
+
+get_ipython().magic(u'logstart ExampleSetUpMidwayRun')
+import batch_nfwfit_jobs as bnj
+configs = [ line for line in open('../nfwfitter/data/run25mxxl54','r') ]
+configs
+configs = [ line.strip() for line in open('../nfwfitter/data/run25mxxl54','r') ]
+argsets = bnj.buildDLNArgsets('/project/kicp/dapple/mxxlsims/mxxlsnap54/', configs, 'mxxlsnap54', 200, '/project/kicp/avestruz/storage/rundlns/')
+argsets[0]
+argsets[1]
+len(argsets)
+# Length of argsets is the number of mass bins * configurations
+bnj.batchRunDLNJobs(argsets, '/project/kicp/avestruz/storage/rundirs/mxxlrun25',nrunners=64)
+get_ipython().magic(u'ls ')
+from nfwfitter.write_multiconfig_jobfile import setupCondor_MXXL
+configs = [ line for line in open('../nfwfitter/data/run26mxxl41','r') ]
+setupCondor_MXXL(configs, '/project/kicp/avestruz/storage/rundirs/mxxlrun26/','mxxlrun26',simdir='/project/kicp/dapple/mxxlsims/mxxlsnap41/',outputdir='/project/kicp/avestruz/storage/mxxlsims/mxxlsnap41/')
+configs = [ line.strip() for line in open('../nfwfitter/data/run26mxxl41','r') ]
+setupCondor_MXXL(configs, '/project/kicp/avestruz/storage/rundirs/mxxlrun26/','mxxlrun26',simdir='/project/kicp/dapple/mxxlsims/mxxlsnap41/',outputdir='/project/kicp/avestruz/storage/mxxlsims/mxxlsnap41/')
+configs = [ line.strip() for line in open('../nfwfitter/data/run26mxxl41','r') ]
+setupCondor_MXXL(configs, '/project/kicp/avestruz/storage/rundirs/mxxlrun26/','mxxlrun26',simdir='/project/kicp/dapple/mxxlsims/mxxlsnap41/',outputdir='/project/kicp/avestruz/storage/mxxlsims/mxxlsnap41/')
+from glob import glob
+bnj.batchNFWFitJobs(glob('/project/kicp/avestruz/storage/rundirs/mxxlrun26/*.job'), '/project/kicp/avestruz/storage/rundirs/mxxlrun26/', nrunners=64, batch_header = midway_batch_header)
+bnj.batchNFWFitJobs(glob('/project/kicp/avestruz/storage/rundirs/mxxlrun26/*.job'), '/project/kicp/avestruz/storage/rundirs/mxxlrun26/', nrunners=64, batch_header = bnj.midway_batch_header)

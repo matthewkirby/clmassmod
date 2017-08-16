@@ -160,7 +160,8 @@ def takeAllMasses(simtype, delta):
 ###
 
 def defineMassEdges(simtype, delta):
-
+    '''The edges of mass bins were pre-defined for each simulation.  Can
+    be changed.'''
     match = re.match('analytic_(.+)', simtype)
     if match is not None:
         simtype = match.group(1)
@@ -271,6 +272,11 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
 
     success = False
     for i in range(20):
+        # Occasionally, the pymc initialization is so far off that the
+        # probability of the model is essentially zero.  Typically,
+        # just trying again will allow pymc to find a reasonable set
+        # of initial parameters to start with.  If it doesn't find it
+        # within 20, something else is wrong in the model.
 
         try:
             
@@ -296,7 +302,9 @@ def run(simtype, chaindir, outfile, delta, pdftype, massbin=0, sigmapriorfile = 
 
     with open('%s.massrange' % outfile, 'w') as output:
         output.write('%f\n%f\n' % (selector.masslow, selector.masshigh))
-                
+
+        # Note: This output corresponds to one data point/errorbar
+        # point on the bias plot.
     dln.memsample(model, 10000, outputFile = outfile)
 
 

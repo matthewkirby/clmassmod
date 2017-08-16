@@ -28,12 +28,11 @@ echo $SLURM_JOB_ID starting execution `date` on `hostname`
 
 
 def batchNFWFitJobs(jobs, outputdir, nrunners=128, batch_header = aifa_batch_header):
-
+    '''Maximum allowed time on kicp midway is 48:00:00.'''
     if not os.path.exists(outputdir):
         os.mkdir(outputdir)
 
     njobs = len(jobs)
-    nperrunner = int(float(njobs)/nrunners)
 
     for currunner in range(nrunners):
         curjobs = jobs[currunner::nrunners]
@@ -67,7 +66,13 @@ queue {nrunners}
 
 
 def buildDLNArgsets(chainbase, configs, simtype, delta, outdir):
-
+    '''chainbase : where the MCMC chains are stored
+    configs : list from text file like run25mxxl54
+    simtype : e.g. mxxlsnap54
+    delta : 200 or 500 in critical
+    outdir : where the output goes  
+    Note - the length of argsets is the number of mass bins * the number of configurations
+    '''
     #number of bins
 
     massbins = rundln.defineMassEdges(simtype, delta)
@@ -94,14 +99,14 @@ def buildDLNArgsets(chainbase, configs, simtype, delta, outdir):
 #############
                                
 
-def batchRunDLNJobs(argsets, outputdir, nrunners=128, prefix='rundlnbatch', batch_header = midway_batch_header):
-
+def batchRunDLNJobs(argsets, outputdir, nrunners=64, prefix='rundlnbatch', batch_header = midway_batch_header):
+    '''nrunners should be 64 in Midway (number of simultaneous jobs)'''
     if not os.path.exists(outputdir):
         os.mkdir(outputdir)
 
     nsets = len(argsets)
     nperrunner = int(float(nsets)/nrunners)
-    timeest = 60*nperrunner
+    timeest = max(60*nperrunner,60)
 
     for currunner in range(nrunners):
         curargsets = argsets[currunner::nrunners]
@@ -142,10 +147,11 @@ def checkRunDlnOutput(bashfiles):
             lines = input.readlines()
 
         for line in lines:
-
             try:
                 tokens = line.split()
                 outfile = tokens[4]
+                if tokens[2] == 'starting' :
+                    continue
 
                 if not os.path.exists(outfile):
 
