@@ -20,7 +20,8 @@ import pymc
 import confidenceinterval as ci
 import plotsimdistros as psd
 import simutils
-
+import load_chains
+import readtxtfile
 
 #####
 
@@ -793,7 +794,148 @@ def compareMiscentering_SZRedshift():
 
 #############
 
+def summarizeChains(chaindirs, binnum, delta):
 
+    mus = []
+    globalmassbinlow = None
+    globalmassbinhigh = None
+
+    chainfiles = [psd.gatherChainFiles(chaindir, delta, binnum = binnum)[0] \
+                  for chaindir in chaindirs]
+
+    assert(len(chainfiles) > 0)
+
+    for chainfile in chainfiles:
+
+
+
+
+        chain = load_chains.loadChains([chainfile], trim=True)
+
+        print chainfile, len(chain['logmu'])
+        if len(chain['logmu'][0,:]) < 5000:
+            print 'Skipping'
+            continue
+
+        split = int((chain['logmu'].shape[1] + 1000)/2.)
+        splitlen = split - 1000
+        c1mean = np.mean(chain['logmu'][0,1000:split])
+        c1err = np.std(chain['logmu'][0,1000:split]) / np.sqrt(splitlen)
+        c2mean = np.mean(chain['logmu'][0,split:])
+        c2err = np.std(chain['logmu'][0,split:]) / np.sqrt(splitlen)
+        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 5.)
+
+
+        massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % chainfile)]
+
+        if globalmassbinlow is None:
+            globalmassbinlow = massbinlow
+            globalmassbinhigh = massbinhigh
+
+        assert(massbinlow == globalmassbinlow and massbinhigh == globalmassbinhigh)
+
+
+        mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
+
+        mus.append(mu)
+
+
+    return np.array(mus)
+
+
+########
+
+def MCSensitivityVsRadius(chainbase, massbin, mcuncert = 0.2, delta = 500):
+
+    radii = '3 5 6 7 9 10 19 20'.split()
+    radii_idx = {}
+    for idx in np.arange(len(radii)):
+        radii_idx[radii[idx]] = idx
+        
+    configs = []
+    for cur_radii in radii:
+        for concen in [3,4,5]:
+            configs.append('{}/general-c{}-r{}-xrayNONE-n2_4-nov2016'.format(chainbase,
+                                                                             concen,
+                                                                             cur_radii))
+
+    configs = np.array(configs)
+
+    bias = summarizeChains(configs, massbin, delta).reshape((len(radii), 3))
+
+    print bias
+
+    derivative = (bias[:,2] - bias[:,0])/2.
+
+    frac_mass_err = mcuncert*np.abs(derivative)/bias[:,1]
+
+    continuous_2p5mpc = (np.array([.1, .25, .5, .75]),
+                         frac_mass_err[[radii_idx[x] for x in '19 3 6 9'.split()]])
+    continuous_3mpc = (np.array([.5, .75]),
+                       frac_mass_err[[radii_idx[x] for x in '7 10'.split()]])
+    hst = ([.5], [frac_mass_err[radii_idx['5']]])
+
+    return continuous_2p5mpc, continuous_3mpc, hst
+
+###############
+
+def MiscenteringSensitivityVsRadius(chainbase, massbin, scalefactor = 0.5, delta = 500):
+
+    radii = '3 5 6 7 9 10 19 20'.split()
+    radii_idx = {}
+    for idx in np.arange(len(radii)):
+        radii_idx[radii[idx]] = idx
+        
+    configs = []
+    for cur_radii in radii:
+        for center in 'xrayNONE xraymag'.split():
+            configs.append('{}/general-c4-r{}-{}-n2_4-nov2016'.format(chainbase,
+                                                                      cur_radii,
+                                                                      center))
+
+    configs = np.array(configs)
+
+
+
+    bias = summarizeChains(configs, massbin, delta).reshape((len(radii), 2))
+
+
+
+    delta = (bias[:,1] - bias[:,0])
+
+    frac_mass_err = scalefactor*np.abs(delta)/bias[:,0]
+
+    continuous_2p5mpc = (np.array([.1, .25, .5, .75]),
+                         frac_mass_err[[radii_idx[x] for x in '19 3 6 9'.split()]])
+    continuous_3mpc = (np.array([.5, .75]),
+                       frac_mass_err[[radii_idx[x] for x in '7 10'.split()]])
+    hst = ([.5], [frac_mass_err[radii_idx['5']]])
+
+    return continuous_2p5mpc, continuous_3mpc, hst
+
+##########
+
+
+#def plotBiasvsRadius(chainbase, outdir):
+
+ #only plot for most massive bin? Higher uncertainty at lower mass bins   ?
+    
+                               
+    
+
+                                        
+
+    
+
+
+    
+
+
+
+
+    
+
+    
 
 
     
