@@ -823,7 +823,7 @@ def summarizeChains(chaindirs, binnum, delta):
         c1err = np.std(chain['logmu'][0,1000:split]) / np.sqrt(splitlen)
         c2mean = np.mean(chain['logmu'][0,split:])
         c2err = np.std(chain['logmu'][0,split:]) / np.sqrt(splitlen)
-        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 5.)
+#        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 5.)
 
 
         massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % chainfile)]
@@ -845,13 +845,8 @@ def summarizeChains(chaindirs, binnum, delta):
 
 ########
 
-def MCSensitivityVsRadius(chainbase, massbin, mcuncert = 0.2, delta = 500):
+def MCSensitivityVsRadius(chainbase, massbin, radii, mcuncert = 0.2, delta = 500):
 
-    radii = '3 5 6 7 9 10 19 20'.split()
-    radii_idx = {}
-    for idx in np.arange(len(radii)):
-        radii_idx[radii[idx]] = idx
-        
     configs = []
     for cur_radii in radii:
         for concen in [3,4,5]:
@@ -869,23 +864,12 @@ def MCSensitivityVsRadius(chainbase, massbin, mcuncert = 0.2, delta = 500):
 
     frac_mass_err = mcuncert*np.abs(derivative)/bias[:,1]
 
-    continuous_2p5mpc = (np.array([.1, .25, .5, .75]),
-                         frac_mass_err[[radii_idx[x] for x in '19 3 6 9'.split()]])
-    continuous_3mpc = (np.array([.5, .75]),
-                       frac_mass_err[[radii_idx[x] for x in '7 10'.split()]])
-    hst = ([.5], [frac_mass_err[radii_idx['5']]])
-
-    return continuous_2p5mpc, continuous_3mpc, hst
+    return frac_mass_err
 
 ###############
 
-def MiscenteringSensitivityVsRadius(chainbase, massbin, scalefactor = 0.5, delta = 500):
+def MiscenteringSensitivityVsRadius(chainbase, massbin, radii, scalefactor = 0.5, delta = 500):
 
-    radii = '3 5 6 7 9 10 19 20'.split()
-    radii_idx = {}
-    for idx in np.arange(len(radii)):
-        radii_idx[radii[idx]] = idx
-        
     configs = []
     for cur_radii in radii:
         for center in 'xrayNONE xraymag'.split():
@@ -905,27 +889,151 @@ def MiscenteringSensitivityVsRadius(chainbase, massbin, scalefactor = 0.5, delta
 
     frac_mass_err = scalefactor*np.abs(delta)/bias[:,0]
 
-    continuous_2p5mpc = (np.array([.1, .25, .5, .75]),
-                         frac_mass_err[[radii_idx[x] for x in '19 3 6 9'.split()]])
-    continuous_3mpc = (np.array([.5, .75]),
-                       frac_mass_err[[radii_idx[x] for x in '7 10'.split()]])
-    hst = ([.5], [frac_mass_err[radii_idx['5']]])
-
-    return continuous_2p5mpc, continuous_3mpc, hst
+    return frac_mass_err
 
 ##########
 
 
-#def plotBiasvsRadius(chainbase, outdir):
+def plotSensitivityvsInnerRadius(chainbase, outdir):
 
- #only plot for most massive bin? Higher uncertainty at lower mass bins   ?
-    
-                               
-    
+    figs = []
+
+    deltas_massbins = [(200, (0, 7)), (500, (0, 6))]
+
+    radii =  np.array([.1, .25, .5, .75])
+    radii_ids = '19 3 6 9'.split()
+
+    linestyles = ['--', ':', '-']
+    colors = psd.c[0:2] + ['k']
+    thicknesses = [1, 1, 3]
+    labels = ['Mass-Concentration', 'Miscentering', 'Total']
+
+
+
+    for delta, massbins in deltas_massbins:
+
+        fig = pylab.figure()
+        figs.append(fig)
+
+        labelsApplied = False
+        for massbin, color in zip(massbins, colors):
+
+            
+            mc_sensitivity = MCSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            miscentering_sensitivity = MiscenteringSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            total_sensitivity = np.sqrt(mc_sensitivity**2 + miscentering_sensitivity**2)
+
+            sensitivities = [mc_sensitivity, miscentering_sensitivity, total_sensitivity]
+
+
+
+            for sensitivity, linestyle, thickness, label in zip(sensitivities,
+                                                                linestyles,
+                                                                thicknesses,
+                                                                labels):
+
+                uselabel = None
+                if not labelsApplied:
+                    uselabel = label
+
+
+                pylab.plot(radii, sensitivity, linestyle=linestyle,
+                           color = color, linewidth = thickness, label = uselabel, marker = 'None')
+
+
+            labelsApplied = True
+
+
+        pylab.legend()
+        pylab.xlabel('Inner Fit Radius [Mpc]', fontsize=16)
+        pylab.ylabel('Fractional Systematic Uncertainty in $M_{{{delta}}}$'.format(delta = delta), fontsize=16)
+        pylab.tight_layout()
+        
+        filebase = '{}/deltab_v_radius_{}'.format(outdir, delta)
+        pylab.savefig('{}.png'.format(filebase))
+        pylab.savefig('{}.pdf'.format(filebase))
+        pylab.savefig('{}.ps'.format(filebase))
+        pylab.savefig('{}.eps'.format(filebase))
+
+    return figs
 
                                         
 
-    
+##########
+
+
+def plotSensitivityvsOuterRadius(chainbase, outdir):
+
+    figs = []
+
+    deltas_massbins = [(200, (0, 7)), (500, (0, 6))]
+
+    radii =  np.array([1.5, 2.0, 2.5, 3.0])
+    radii_ids = '5 20 6 7'.split()
+
+    linestyles = ['--', ':', '-']
+    colors = psd.c[0:2] + ['k']
+    thicknesses = [1, 1, 3]
+    labels = ['Mass-Concentration', 'Miscentering', 'Total']
+
+
+
+    for delta, massbins in deltas_massbins:
+
+        fig = pylab.figure()
+        figs.append(fig)
+
+        labelsApplied = False
+        for massbin, color in zip(massbins, colors):
+
+            
+            mc_sensitivity = MCSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            miscentering_sensitivity = MiscenteringSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            total_sensitivity = np.sqrt(mc_sensitivity**2 + miscentering_sensitivity**2)
+
+            sensitivities = [mc_sensitivity, miscentering_sensitivity, total_sensitivity]
+
+
+
+            for sensitivity, linestyle, thickness, label in zip(sensitivities,
+                                                                linestyles,
+                                                                thicknesses,
+                                                                labels):
+
+                uselabel = None
+                if not labelsApplied:
+                    uselabel = label
+
+
+                pylab.plot(radii, sensitivity, linestyle=linestyle,
+                           color = color, linewidth = thickness, label = uselabel, marker = 'None')
+
+
+            labelsApplied = True
+
+
+        ax = pylab.gca()
+        ax.set_ylim(0.0, 0.07)
+        pylab.legend(loc='upper left', ncol=3)
+        pylab.xlabel('Outer Fit Radius [Mpc]', fontsize=16)
+        pylab.ylabel('Fractional Systematic Uncertainty in $M_{{{delta}}}$'.format(delta = delta), fontsize=16)
+        pylab.tight_layout()
+        
+        filebase = '{}/deltab_v_outerradius_{}'.format(outdir, delta)
+        pylab.savefig('{}.png'.format(filebase))
+        pylab.savefig('{}.pdf'.format(filebase))
+        pylab.savefig('{}.ps'.format(filebase))
+        pylab.savefig('{}.eps'.format(filebase))
+
+    return figs
+
+                                        
+
+
 
 
     
