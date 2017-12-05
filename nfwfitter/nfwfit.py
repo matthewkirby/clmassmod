@@ -476,6 +476,23 @@ def convertLikelihoodScan(model, delta, masses, pdf200, zcluster):
 
 class FailedFitException(Exception): pass
 
+def verifyfit(sim, profile, fitvals, outputname, raiseException = True):
+    '''Raises FailedFitException and dumps intermediates to pkl file if verify failes'''
+
+    masses, pdfs = fitvals
+
+    for delta in pdfs.keys():
+        maxpos = np.argmax(pdfs[delta])
+        if maxpos == 0 or maxpos == (len(masses)-1):
+            
+            if raiseException:
+                dump(sim, profile, fitvals, outputname)
+                raise FailedFitException
+            return False
+
+    return True
+
+
 def dump(sim, profile, fitvals, outputname):
     
     with open('{}.err.pkl'.format(outputname), 'wb') as output:

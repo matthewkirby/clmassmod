@@ -20,7 +20,8 @@ import pymc
 import confidenceinterval as ci
 import plotsimdistros as psd
 import simutils
-
+import load_chains
+import readtxtfile
 
 #####
 
@@ -793,7 +794,246 @@ def compareMiscentering_SZRedshift():
 
 #############
 
+def summarizeChains(chaindirs, binnum, delta):
 
+    mus = []
+    globalmassbinlow = None
+    globalmassbinhigh = None
+
+    chainfiles = [psd.gatherChainFiles(chaindir, delta, binnum = binnum)[0] \
+                  for chaindir in chaindirs]
+
+    assert(len(chainfiles) > 0)
+
+    for chainfile in chainfiles:
+
+
+
+
+        chain = load_chains.loadChains([chainfile], trim=True)
+
+        print chainfile, len(chain['logmu'])
+        if len(chain['logmu'][0,:]) < 5000:
+            print 'Skipping'
+            continue
+
+        split = int((chain['logmu'].shape[1] + 1000)/2.)
+        splitlen = split - 1000
+        c1mean = np.mean(chain['logmu'][0,1000:split])
+        c1err = np.std(chain['logmu'][0,1000:split]) / np.sqrt(splitlen)
+        c2mean = np.mean(chain['logmu'][0,split:])
+        c2err = np.std(chain['logmu'][0,split:]) / np.sqrt(splitlen)
+#        assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 5.)
+
+
+        massbinlow, massbinhigh = [x[0] for x in readtxtfile.readtxtfile('%s.massrange' % chainfile)]
+
+        if globalmassbinlow is None:
+            globalmassbinlow = massbinlow
+            globalmassbinhigh = massbinhigh
+
+        assert(massbinlow == globalmassbinlow and massbinhigh == globalmassbinhigh)
+
+
+        mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
+
+        mus.append(mu)
+
+
+    return np.array(mus)
+
+
+########
+
+def MCSensitivityVsRadius(chainbase, massbin, radii, mcuncert = 0.2, delta = 500):
+
+    configs = []
+    for cur_radii in radii:
+        for concen in [3,4,5]:
+            configs.append('{}/general-c{}-r{}-xrayNONE-n2_4-nov2016'.format(chainbase,
+                                                                             concen,
+                                                                             cur_radii))
+
+    configs = np.array(configs)
+
+    bias = summarizeChains(configs, massbin, delta).reshape((len(radii), 3))
+
+    print bias
+
+    derivative = (bias[:,2] - bias[:,0])/2.
+
+    frac_mass_err = mcuncert*np.abs(derivative)/bias[:,1]
+
+    return frac_mass_err
+
+###############
+
+def MiscenteringSensitivityVsRadius(chainbase, massbin, radii, scalefactor = 0.5, delta = 500):
+
+    configs = []
+    for cur_radii in radii:
+        for center in 'xrayNONE xraymag'.split():
+            configs.append('{}/general-c4-r{}-{}-n2_4-nov2016'.format(chainbase,
+                                                                      cur_radii,
+                                                                      center))
+
+    configs = np.array(configs)
+
+
+
+    bias = summarizeChains(configs, massbin, delta).reshape((len(radii), 2))
+
+
+
+    delta = (bias[:,1] - bias[:,0])
+
+    frac_mass_err = scalefactor*np.abs(delta)/bias[:,0]
+
+    return frac_mass_err
+
+##########
+
+
+def plotSensitivityvsInnerRadius(chainbase, outdir):
+
+    figs = []
+
+    deltas_massbins = [(200, (0, 7)), (500, (0, 6))]
+
+    radii =  np.array([.1, .25, .5, .75])
+    radii_ids = '19 3 6 9'.split()
+
+    linestyles = ['--', ':', '-']
+    colors = psd.c[0:2] + ['k']
+    thicknesses = [1, 1, 3]
+    labels = ['Mass-Concentration', 'Miscentering', 'Total']
+
+
+
+    for delta, massbins in deltas_massbins:
+
+        fig = pylab.figure()
+        figs.append(fig)
+
+        labelsApplied = False
+        for massbin, color in zip(massbins, colors):
+
+            
+            mc_sensitivity = MCSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            miscentering_sensitivity = MiscenteringSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            total_sensitivity = np.sqrt(mc_sensitivity**2 + miscentering_sensitivity**2)
+
+            sensitivities = [mc_sensitivity, miscentering_sensitivity, total_sensitivity]
+
+
+
+            for sensitivity, linestyle, thickness, label in zip(sensitivities,
+                                                                linestyles,
+                                                                thicknesses,
+                                                                labels):
+
+                uselabel = None
+                if not labelsApplied:
+                    uselabel = label
+
+
+                pylab.plot(radii, sensitivity, linestyle=linestyle,
+                           color = color, linewidth = thickness, label = uselabel, marker = 'None')
+
+
+            labelsApplied = True
+
+
+        pylab.legend()
+        pylab.xlabel('Inner Fit Radius [Mpc]', fontsize=16)
+        pylab.ylabel('Fractional Systematic Uncertainty in $M_{{{delta}}}$'.format(delta = delta), fontsize=16)
+        pylab.tight_layout()
+        
+        filebase = '{}/deltab_v_radius_{}'.format(outdir, delta)
+        pylab.savefig('{}.png'.format(filebase))
+        pylab.savefig('{}.pdf'.format(filebase))
+        pylab.savefig('{}.ps'.format(filebase))
+        pylab.savefig('{}.eps'.format(filebase))
+
+    return figs
+
+                                        
+
+##########
+
+
+def plotSensitivityvsOuterRadius(chainbase, outdir):
+
+    figs = []
+
+    deltas_massbins = [(200, (0, 7)), (500, (0, 6))]
+
+    radii =  np.array([1.5, 2.0, 2.5, 3.0])
+    radii_ids = '5 20 6 7'.split()
+
+    linestyles = ['--', ':', '-']
+    colors = psd.c[0:2] + ['k']
+    thicknesses = [1, 1, 3]
+    labels = ['Mass-Concentration', 'Miscentering', 'Total']
+
+
+
+    for delta, massbins in deltas_massbins:
+
+        fig = pylab.figure()
+        figs.append(fig)
+
+        labelsApplied = False
+        for massbin, color in zip(massbins, colors):
+
+            
+            mc_sensitivity = MCSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            miscentering_sensitivity = MiscenteringSensitivityVsRadius(chainbase, massbin, radii_ids, delta = delta)
+
+            total_sensitivity = np.sqrt(mc_sensitivity**2 + miscentering_sensitivity**2)
+
+            sensitivities = [mc_sensitivity, miscentering_sensitivity, total_sensitivity]
+
+
+
+            for sensitivity, linestyle, thickness, label in zip(sensitivities,
+                                                                linestyles,
+                                                                thicknesses,
+                                                                labels):
+
+                uselabel = None
+                if not labelsApplied:
+                    uselabel = label
+
+
+                pylab.plot(radii, sensitivity, linestyle=linestyle,
+                           color = color, linewidth = thickness, label = uselabel, marker = 'None')
+
+
+            labelsApplied = True
+
+
+        ax = pylab.gca()
+        ax.set_ylim(0.0, 0.07)
+        pylab.legend(loc='upper left', ncol=3)
+        pylab.xlabel('Outer Fit Radius [Mpc]', fontsize=16)
+        pylab.ylabel('Fractional Systematic Uncertainty in $M_{{{delta}}}$'.format(delta = delta), fontsize=16)
+        pylab.tight_layout()
+        
+        filebase = '{}/deltab_v_outerradius_{}'.format(outdir, delta)
+        pylab.savefig('{}.png'.format(filebase))
+        pylab.savefig('{}.pdf'.format(filebase))
+        pylab.savefig('{}.ps'.format(filebase))
+        pylab.savefig('{}.eps'.format(filebase))
+
+    return figs
+
+                                        
+
+    
 def compareACSMiscentering(chainoutdir):
     '''Compare bias levels using different miscentering'''
 
@@ -897,6 +1137,3 @@ def compareACSvsA10perfectcenters(chainoutdir):
 
     compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas=[200,500])
 
-
-
-    
