@@ -1,5 +1,11 @@
 # CLMassMod
 
+## Code of Conduct
+
+* We welcome all contributions from the community, and ask that
+  behavior and interactions follow the LSST-DESC code of conduct:
+  http://lsst-desc.org/sites/default/files/DESCProfessionalConductPolicies-2.pdf
+  
 ## Getting started: 
 python setup.py develop
 
@@ -25,6 +31,10 @@ simulated lensing maps from n-body simulations.
 * Map out modules for the code (e.g. readers, observing strategies,
  M-c relations, (mis-)centering options and implementations, model
  profile to fit for mass (NFW, Diemer+, etc.), etc.
+
+* Figure out how/where we can integrate with CCL and Tom M.'s
+  cluster_toolkit package:
+  https://github.com/tmcclintock/cluster_toolkit
 
 * Map out steps to integrate SPHINX for documentation (Note - this
   should be done in parallel with refactoring):

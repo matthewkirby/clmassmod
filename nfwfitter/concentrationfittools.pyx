@@ -23,8 +23,8 @@ cdef extern from "math.h":
     double log(double)
     double sqrt(double)
 
-sqrt2pi = sqrt(2*np.pi)
-twopi = 2*np.pi
+cdef double sqrt2pi = sqrt(2*np.pi)
+cdef double twopi = 2*np.pi
 
 
 
@@ -33,7 +33,7 @@ twopi = 2*np.pi
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def altintegral_mc(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
+cdef altintegral_mc(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
                 np.ndarray[np.double_t, ndim=1, mode='c'] delta_logmls,
               double logmu, 
                 double sigma,
@@ -45,7 +45,7 @@ def altintegral_mc(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
     cdef Py_ssize_t i, nsamples
     nsamples = ml_ints.shape[0]
 
-    cdef double thesum, lognormpart
+    cdef double thesum, lognormpart, lognormpart_c
     thesum = 0.
 
     cdef double neg2sigma2, sigmasqrt2pi
@@ -61,7 +61,7 @@ def altintegral_mc(np.ndarray[np.double_t, ndim=1, mode='c'] ml_ints,
     for i from nsamples > i >= 0:
 
         lognormpart = exp((delta_logmls[i]-logmu)**2/neg2sigma2)/(sigmasqrt2pi*ml_ints[i])
-        lognormpart_c = exp((np.log(cl_ints[i])-logmu_c)**2/neg2sigma2_c)/(sigmasqrt2pi_c*cl_ints[i])
+        lognormpart_c = exp((log(cl_ints[i])-logmu_c)**2/neg2sigma2_c)/(sigmasqrt2pi_c*cl_ints[i])
 
         thesum += lognormpart * lognormpart_c
 
