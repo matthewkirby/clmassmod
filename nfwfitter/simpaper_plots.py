@@ -24,8 +24,8 @@ import simutils
 
 #####
 
-outputdir = '/Users/dapple/astro/mxxlsims/output'
-
+#outputdir = '/Users/dapple/astro/mxxlsims/output'
+outputdir= '/project/kicp/avestruz/storage/'
 #####
 
 
@@ -454,7 +454,7 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200],
         patches = []
 
         for curentry, chaindir in enumerate(chaindirs):
-
+            
             patch, summary = psd.precomputedLogNormDistro(chaindir, 
                                                           delta,
                                                           meansax,
@@ -477,7 +477,7 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200],
         meansax.set_ylabel(r'Mean Bias in $Ln(M_{%d})$' % delta, fontsize=16)
         meansax.axhline(1.0, c='k', linewidth=3, linestyle='--')
         meansax.set_xlim(1e14, 5e15)
-        meansax.set_ylim(0.5, 1.3)
+        # meansax.set_ylim(0.5, 1.3)
         meansax.set_xticks([1e15])
         meansax.set_xticklabels(['10'])
         meansax.set_xticks([3e14, 4e14, 5e14, 6e14, 7e14, 8e14, 9e14, 2e15, 3e15, 4e15], minor=True)
@@ -523,7 +523,7 @@ def compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200],
 markers = ['o', '^', 's']
 
 def compare2DimSimPlot(outputname, chaindirs, labels, xoffsets, deltas = [500, 200], biasylim = (0.5, 1.3)):
-    '''Refactored plot code'''
+    '''Refactored plot code ---> Too many things in here'''
 
     for delta in deltas:
 
@@ -793,6 +793,109 @@ def compareMiscentering_SZRedshift():
 
 #############
 
+
+def compareACSMiscentering(chainoutdir):
+    '''Compare bias levels using different miscentering'''
+
+    mxxlsnap=41
+
+    configtemplate = 'acs-diemer15-r_run26-{}-n2_4-aug2017'  
+    centers = ['xraymagneticum', 'szmagneticum_ignorecore', 'core_none']
+    labels = ['X-ray Centers', 'SZ Centers', 'Perfect Centers',  ]
+    xoffsets = [0.98, 1.0, 1.02]
+
+    outputname = 'compare_acsnfw_centers'
+
+    configs = [configtemplate.format(center) for center in centers]
+    chaindirs = ['{}/rundlns/{}'.format(chainoutdir, config) for config in configs]
+    print chaindirs
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas=[200])
+
+
+
+#############
+
+def compareACSconcentration(chainoutdir):
+    '''Compare bias levels using different M-c assumptions'''
+
+    mxxlsnap=41
+
+    configtemplate = 'acs-{}-r_run26-core_none-n2_4-aug2017'  
+    concentration = ['c3', 'c4', 'c5', 'diemer15']
+    labels = concentration
+    xoffsets = [0.98, 1.0, 1.02, 1.04]
+
+    outputname = 'compare_acsnfw_concentration_perfectcenter'
+
+    configs = [configtemplate.format(c) for c in concentration]
+    chaindirs = ['{}/rundlns/{}'.format(chainoutdir, config) for config in configs]
+    print chaindirs
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas=[200])
+
+
+
+#############
+def compareACStestmassconcentrationfits(chainoutdir):
+    '''Compare bias levels with fitting concentration'''
+    #acs-cfree-r_run26-core_none-n2_4-samplemcmc-aug2017/
+    
+    mxxlsnap=41
+
+    configtemplate = 'acs-{}-r_run26-core_none-n2_4-{}aug2017'  
+    concentration = ['c3', 'c4', 'c5', 'diemer15', 'cfree']
+    #concentration = ['cfree']
+    chaintype = ['','','','','samplemcmc-']
+    #chaintype = ['samplemcmc-']
+    labels = concentration
+    xoffsets = [0.96, 0.98, 1.0, 1.02, 1.04]
+    #xoffsets = [1.0]
+    outputname = 'compare_acsnfw_concentration_fitting_perfectcenter'
+
+    configs = [configtemplate.format(c, ct) for c,ct in zip(concentration,chaintype)]
+    chaindirs = ['{}/rundlns/{}'.format(chainoutdir, config) for config in configs]
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas=[200])
+
+
+
+#############
+def compareACSjustDiemer(chainoutdir):
+    '''just the diemer fit for testing'''
+    # acs-diemer15-r_run26-core_none-n2_4-aug2017
+    
+    mxxlsnap=41
+
+    configtemplate = 'acs-{}-r_run26-core_none-n2_4-{}aug2017'  
+    #concentration = ['c3', 'c4', 'c5', 'diemer15', 'cfree']
+    concentration = ['cfree','diemer15']
+    #chaintype = ['','','','','samplemcmc-']
+    chaintype = ['samplemcmc-','']
+    labels = concentration
+    #xoffsets = [0.96, 0.98, 1.0, 1.02, 1.04]
+    xoffsets = [1.0,1.02]
+    outputname = 'compare_acsnfw_Diemer_cfree'
+
+    configs = [configtemplate.format(c, ct) for c,ct in zip(concentration,chaintype)]
+    chaindirs = ['{}/rundlns/{}'.format(chainoutdir, config) for config in configs]
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas=[200])
+#############
+def compareACSvsA10perfectcenters(chainoutdir):
+    '''Check if bias changes with fit size'''
+    # acs-diemer15-r_run26-core_none-n2_4-aug2017
+    
+    mxxlsnap=54 # Redshift 0.25 to first check
+    #xoffsets = [0.96, 0.98, 1.0, 1.02, 1.04]
+    xoffsets = [1.0,1.02]
+    outputname = 'compare_perfect_centers_fitrange_cfree'
+
+    configs = ['acs-cfree-rACS-core_none-n2_4-samplemcmc-aug2017','acs-cfree-r10-core_none-n2_4-samplemcmc-aug2017']
+    labels = ['r=0.25-0.8 Mpc','r=0.75-3 Mpc']
+    chaindirs = ['{}/rundlns/{}'.format(chainoutdir, config) for config in configs]
+
+    compareSimPlot(outputname, chaindirs, labels, xoffsets, deltas=[200,500])
 
 
 

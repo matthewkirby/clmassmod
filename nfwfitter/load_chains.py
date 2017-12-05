@@ -8,7 +8,7 @@ import numpy as np
 def loadChains(chainfilenames, trim=False):
 
     chainfiles = [readtxtfile.readtxtfile(x) for x in chainfilenames]
-
+    print [chainfile[0] for chainfile in chainfiles]
     takelength = len(chainfiles[0])
     if trim is True:
         takelength = np.min(np.array([len(chainfile) for chainfile in chainfiles]))

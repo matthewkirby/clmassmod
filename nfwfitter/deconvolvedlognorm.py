@@ -1,3 +1,4 @@
+
 #######################
 # Fit a model which is lognorm intrinsic scatter and linear norm noise
 ########################
@@ -22,13 +23,13 @@ class BadPDFException(Exception): pass
 
 #######################
 
-def MCMCReader(inputfile, halo, delta, truth, thin=1, cprior = None, burn=200):
+def MCMCReader(inputfile, halo, delta, truth, thin=1, cprior = None, burn=500):
 
 
     with open(inputfile, 'rb') as input:
         masschains = cPickle.load(input)
 
-    # Burns first 200 samples from the chains
+    # Burns first 500 samples from the chains
     msamples = np.array(masschains[delta]['mdelta'][burn::thin])*nfwutils.global_cosmology.h
     csamples = np.array(masschains[delta]['cdelta'][burn::thin])
     
@@ -578,9 +579,12 @@ def runFit(parts):
 
 #######################################
 
-def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singlecore = False):
-
-    tempoutputdir = tempfile.mkdtemp()
+def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singlecore = False, tempoutputdir=None, init_with_MAP=True):
+    '''This function saves to disk the samples from the chain as they're drawn. '''
+    del_tempoutdir = False
+    if tempoutputdir is None :
+        tempoutputdir = tempfile.mkdtemp()
+        del_tempoutdir = True
     outputdir, outputbase = os.path.split(outputfile)
 
     options = varcontainer.VarContainer()
@@ -593,8 +597,13 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
 
     manager = varcontainer.VarContainer()
     manager.options = options
-    manager.model = pymc.Model(parts)
-    
+    manager.model = pymc.Model(parts)    
+
+    if init_with_MAP :
+        model_map = pymc.MAP(parts)
+        model_map.fit()
+        print "initialized at: ", model_map.logmu.value, model_map.logmu_c.value
+        
     assert(np.isfinite(manager.model.logp))
 
     runner = pma.MyMCRunner()
@@ -611,7 +620,8 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
             if os.path.exists(destination_output):
                 os.remove(destination_output)
             shutil.copyfile(curoutputfile, destination_output)
-        shutil.rmtree(tempoutputdir)
+        if del_tempoutdir:
+            shutil.rmtree(tempoutputdir)
 
 
 
@@ -619,7 +629,7 @@ def sample(parts, outputfile, samples, adaptevery = 100, adaptafter = 100, singl
 ##############################
 
 def memsample(model, samples, adaptevery = 100, adaptafter = 100, outputFile = None):
-
+    '''This function keeps the samples in memory before saving to disk. '''
     options = varcontainer.VarContainer()
     options.singlecore = True
     options.nsamples = samples

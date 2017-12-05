@@ -39,7 +39,7 @@ class NFW_Model(object):
             self.m200_high = 1e17
         else:
             self.massprior = 'linear'
-            self.m200_low = -1e16
+            self.m200_low = 1e12
             self.m200_high = 1e16
 
 
@@ -280,13 +280,21 @@ class NFW_MC_Model(NFW_Model):
 
 class MCMCFitter(object):
 
+    def __init__( self ) :
+        self.output_type = 'mcmc'
+    
     def configure(self, config):
 
         self.model = config['model']
         self.deltas = [200, 500, 2500]
-        self.nsamples = 30000
+        self.nsamples = 10000
         if 'nsamples' in config:
             self.nsamples = config['nsamples']
+
+    def verifyfit(self, sim, profile, fitvals, outputname, raiseException = True):
+        '''Not implemented yet for MCMCs - see PDFScanner for the version in 1-d'''
+
+        return True
 
         
 
@@ -306,7 +314,10 @@ class MCMCFitter(object):
                     pass
             if mcmc_model is None:
                 raise pymc.ZeroProbability
-
+            # This sets up Adam Mantz's version of an MCMC sampler for production code calculations.
+            # This is stored in mymcmc_adapter.py (converts to talk with other MCMC code)
+            # Imported as pma above.
+            
             manager = varcontainer.VarContainer()
             options = varcontainer.VarContainer()
             manager.options = options
@@ -341,6 +352,11 @@ class BadPDFException(Exception): pass
 
 class PDFScanner(object):
 
+    def __init__(self) :
+
+        self.output_type = 'pdf'
+
+        
     def configure(self, config):
 
         self.model = config['model']
@@ -350,7 +366,25 @@ class PDFScanner(object):
         if 'scanpdf_minmass' in config:
             self.masses = np.arange(config['scanpdf_minmass'], config['scanpdf_maxmass'], config['scanpdf_massstep'])
 
+    def verifyfit(self, sim, profile, fitvals, outputname, raiseException = True):
+        '''Raises FailedFitException and dumps intermediates to pkl file if verify failes'''
 
+        masses, pdfs = fitvals
+
+        for delta in pdfs.keys():
+            maxpos = np.argmax(pdfs[delta])
+            if maxpos == 0 or maxpos == (len(masses)-1):
+            
+                if raiseException:
+                    dump(sim, profile, fitvals, outputname)
+                    raise FailedFitException
+                return False
+
+        return True
+
+
+
+            
 
     def __call__(self, profile):
 
@@ -442,21 +476,6 @@ def convertLikelihoodScan(model, delta, masses, pdf200, zcluster):
 
 class FailedFitException(Exception): pass
 
-def verifyfit(sim, profile, fitvals, outputname, raiseException = True):
-    '''Raises FailedFitException and dumps intermediates to pkl file if verify failes'''
-
-    masses, pdfs = fitvals
-
-    for delta in pdfs.keys():
-        if np.argmax(pdfs[delta]) == 0:
-            
-            if raiseException:
-                dump(sim, profile, fitvals, outputname)
-                raise FailedFitException
-            return False
-
-    return True
-
 def dump(sim, profile, fitvals, outputname):
     
     with open('{}.err.pkl'.format(outputname), 'wb') as output:
@@ -508,7 +527,7 @@ def runNFWFit_Preloaded(simreader, catalogname, config, outputname):
 
     fitvals = fitter(profile)
 
-    verifyfit(config, sim, profile, fitvals, outputname)
+    fitter.verifyfit(sim, profile, fitvals, outputname)
 
     savefit(fitvals, outputname)
 

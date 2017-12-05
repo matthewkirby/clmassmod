@@ -1,54 +1,57 @@
-#!/usr/bin/env python
+#pp!/usr/bin/env python
 #####################
 # Identify halos that have bad pdfs, as defined by nfwfitter.nfwfit.verifyfit. Rerun them.
 ######
 
 import sys, glob, os.path
 import nfwfitter.nfwfit as nfwfit
-import readtxtfile
-
+import cPickle
 #######
 
-def verifyOutput(outfile):
-
-    with open(pdffile, 'rb') as input:
+def verifyOutput(outfile, simdatadir):
+    print outfile
+    
+    with open(outfile, 'rb') as input:
         fitvals = cPickle.load(input)
 
+    pdfscanner = nfwfit.PDFScanner()
+        
     #verify pdfs
-    isGood = nfwfit.verifyfit(None, None, fitvals, None, raiseException = False)
+    isGood = pdfscanner.verifyfit(None, None, fitvals, None, raiseException = False)
     
     #if any fail, initiate rerun
 
     if not isGood:
 
         print 'Reprocessing {}'.format(outfile)
-
+        
         configdir, outputbase = os.path.split(outfile)
         haloid, outext = os.path.splitext(outputbase)
 
-        nfwfit.runNFWFit('{}/../{}'.format(configdir, haloid),
+        nfwfit.runNFWFit('{}/{}'.format(simdatadir, haloid),
                          '{}/config.py'.format(configdir),
                          outfile)
 
 
 
-def scanConfigs(simdir, configs):
+def scanConfigs(outputdir, configs, simdatadir):
 
     for config in configs:
 
-        configdir = '{}/{}'.format(simdir, config)
-        outfiles = glob.glob('{}/*.out')
+        configdir = '{}/{}'.format(outputdir, config)
+        outfiles = glob.glob('{}/*.out'.format(configdir))
         for outfile in outfiles:
-            verifyOutput(outfile)
+            verifyOutput(outfile, simdatadir)
         
 
 
 
 if __name__ == '__main__':
 
-    simdir = sys.argv[1]
+    outputdir = sys.argv[1]
     configlist = sys.argv[2]
-
-    configs = [x[0] for x in readtxtfile.readtxtfile(configlist)]
-
-    scanConfigs(simdir, configs)
+    simdatadir = sys.argv[3]
+    
+    configs = [x.strip() for x in open(configlist,'r')]
+    print configs
+    scanConfigs(outputdir, configs, simdatadir)

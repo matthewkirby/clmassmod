@@ -171,10 +171,16 @@ def gatherChainFiles(chaindir, delta, binnum = None):
         if len(chainfiles) == 0:
             chainfiles = glob.glob('%s/dln_*.chain.0' % chaindir)
 
+        if len(chainfiles) == 0:
+            chainfiles = glob.glob('%s/rundln*.chain.0' % chaindir)
+        print 'chaindir: ',chaindir
     else:
         chainfiles = glob.glob('%s/rundln*.%d.%d' % (chaindir, delta, binnum))
-        
 
+    print chainfiles
+    print chaindir
+    assert(len(chainfiles) > 0)
+        
 
     print chainfiles
 
@@ -193,9 +199,7 @@ def weightedaverage(means, errs):
     return mu, sig
 
 def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1.0, biaslabel = True, xoffset = 1.0, binnum=None, marker='None', suppressXerr = False, patchAsRect = True):
-
-
-
+    
     ylows = []
     yhighs = []
     xpoints = []
@@ -214,23 +218,25 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1
     assert(len(chainfiles) > 0)
 
     for chainfile in chainfiles:
-
+        print "Iterating over chainfiles at chainfile: ", chainfile
         fileroot = chainfile.split('.chain')[0]
 
-
+        fileroot = fileroot.split('.debug')[0]
+        print "fileroot: ", fileroot
             
 
         chain = load_chains.loadChains([chainfile], trim=True)
-
-        print chainfile, len(chain['logmu'])
-        if len(chain['logmu'][0,:]) < 5000:
-            print 'Skipping'
+        
+        ichainstart = 500# 1000
+        
+        if len(chain['logmu'][0,:]) < 500:  # Was 5000 - why was this?
+            print 'Skipping, length of chain logmu: ', len(chain['logmu'][0,:])
             continue
-
-        split = int((chain['logmu'].shape[1] + 1000)/2.)
-        splitlen = split - 1000
-        c1mean = np.mean(chain['logmu'][0,1000:split])
-        c1err = np.std(chain['logmu'][0,1000:split])
+        print "splitting by: ", chain['logmu'].shape[1]
+        split = int((chain['logmu'].shape[1] + ichainstart)/2.)
+        splitlen = split - ichainstart
+        c1mean = np.mean(chain['logmu'][0,ichainstart:split])
+        c1err = np.std(chain['logmu'][0,ichainstart:split])
         c2mean = np.mean(chain['logmu'][0,split:])
         c2err = np.std(chain['logmu'][0,split:])
         assert(np.abs(c1mean - c2mean)/np.sqrt(c1err**2 + c2err**2) < 3.)
@@ -241,13 +247,13 @@ def precomputedLogNormDistro(chaindir, delta, meanax, stdax, colorindex, alpha=1
         xpoints.append(massbinlow)
         xpoints.append(massbinhigh)
 
-        mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,1000::3]))
-        sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,1000::3]))
+        mu, muerr = ci.maxDensityConfidenceRegion(np.exp(chain['logmu'][0,ichainstart::3]))
+        sig, sigerr = ci.maxDensityConfidenceRegion(np.exp(chain['logsigma'][0,ichainstart::3]))
 
-        ave.append(np.mean(np.exp(chain['logmu'][0,1000::3])))
-        aveerr.append(np.std(np.exp(chain['logmu'][0,1000::3])))
-        stdev.append(np.mean(np.exp(chain['logsigma'][0,1000::3])))
-        stdeverr.append(np.std(np.exp(chain['logsigma'][0,1000::3])))
+        ave.append(np.mean(np.exp(chain['logmu'][0,ichainstart::3])))
+        aveerr.append(np.std(np.exp(chain['logmu'][0,ichainstart::3])))
+        stdev.append(np.mean(np.exp(chain['logsigma'][0,ichainstart::3])))
+        stdeverr.append(np.std(np.exp(chain['logsigma'][0,ichainstart::3])))
 
 
         

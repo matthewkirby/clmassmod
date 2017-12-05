@@ -65,11 +65,12 @@ queue {nrunners}
 #############
 
 
-def buildDLNArgsets(chainbase, configs, simtype, delta, outdir):
+def buildDLNArgsets(chainbase, configs, simtype, delta, massmodel, outdir):
     '''chainbase : where the MCMC chains are stored
     configs : list from text file like run25mxxl54
     simtype : e.g. mxxlsnap54
     delta : 200 or 500 in critical
+    massmodel : function name of model, e.g. buildMCMCModel_massconcentration
     outdir : where the output goes  
     Note - the length of argsets is the number of mass bins * the number of configurations
     '''
@@ -87,11 +88,12 @@ def buildDLNArgsets(chainbase, configs, simtype, delta, outdir):
             workdir = '{outdir}/{config}'.format(outdir = outdir, config = config)
             if not os.path.exists(workdir):
                 os.mkdir(workdir)
-            outfile = '{workdir}/rundln{simtype}.{delta}.{massbin}'.format(workdir = workdir,
-                                                                           simtype = simtype,
-                                                                           delta = delta,
-                                                                           massbin = massbin)
-            argsets.append([simtype, chaindir, outfile, delta, 'pdf', massbin])
+            outfile = '{workdir}/rundln{simtype}.{massmodel}.{delta}.{massbin}'.format(workdir = workdir,
+                                                                                       simtype = simtype,
+                                                                                       massmodel = massmodel,
+                                                                                       delta = delta,
+                                                                                       massbin = massbin)
+            argsets.append([simtype, chaindir, outfile, delta, massmodel, massbin])
 
     return argsets
 

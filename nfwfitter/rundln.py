@@ -230,22 +230,25 @@ def defineMassEdges(simtype, delta):
 
     
 
-def run(simtype, chaindir, outfile, delta, pdftype, modelname, massbin=0, sigmapriorfile = None):
+def run(simtype, chaindir, outfile, delta, modelname, massbin=0, sigmapriorfile = None):
     '''
     simtype: something like mxxl41, 
     chaindir: output from nfwfit
     outfile: output of the map step, 
     delta: overdensity (e.g. 200)
-    pdftype: either 'pdf' or 'mcmc' --> format of output of map step
     modelname: function name of model, e.g. buildMCMCModel
     massbin: the index of the massbin that we are running (bins are defined above), depends on mass range, simtype, and overdensity 
+
+    Note - pdftype: either 'pdf' or 'mcmc' --> format of output of map step determined in config file
+
     '''
     config = simutils.readConfiguration('%s/config.py' % chaindir)
     simreader = config['simreader']
     nfwutils.global_cosmology.set_cosmology(simreader.getCosmology())
     model = config['model']
 
-
+    pdftype = config['fitter'].output_type
+    
     if massbin == -1:
         selector = takeAllMasses(simtype, delta)[0]
     else:
@@ -253,6 +256,7 @@ def run(simtype, chaindir, outfile, delta, pdftype, modelname, massbin=0, sigmap
         selector = selectors[massbin]
 
     isPDF = False
+
     if pdftype == 'pdf':
         isPDF = True
         halos = dln.loadPosteriors(chaindir, simtype, simreader, delta, selector,
@@ -311,8 +315,9 @@ def run(simtype, chaindir, outfile, delta, pdftype, modelname, massbin=0, sigmap
 
         # Note: This output corresponds to one data point/errorbar
         # point on the bias plot.
-    dln.memsample(model, 10000, outputFile = outfile)
-
+    # dln.memsample(model, num_samples, out)
+    #dln.memsample(model, 10000, outputFile = outfile)
+    dln.sample(model, outfile+'.debug', 1000, tempoutputdir='./debug/', singlecore=True)
 
 
 
@@ -325,18 +330,16 @@ if __name__ == '__main__':
     chaindir=sys.argv[2]
     outfile=sys.argv[3]
     delta=int(sys.argv[4])
-    pdftype=sys.argv[5]
-    modelname=sys.argv[6]
+    modelname=sys.argv[5]
+    if len(sys.argv) > 6:
+        massbin=int(sys.argv[6])
     if len(sys.argv) > 7:
-        massbin=int(sys.argv[7])
-    if len(sys.argv) > 8:
-        sigmaprior = sys.argv[8]
+        sigmaprior = sys.argv[7]
     print 'Called with:', dict(modelname=modelname, simtype=simtype, chaindir=chaindir, 
                                outfile=outfile, delta=delta, 
-                               pdftype = pdftype,
                                massbin=massbin,
                                sigmapriorfile = sigmaprior)
 
     
-    run(simtype, chaindir, outfile, delta, pdftype, modelname, massbin, sigmaprior)
+    run(simtype, chaindir, outfile, delta, modelname, massbin, sigmaprior)
         
