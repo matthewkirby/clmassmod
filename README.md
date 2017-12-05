@@ -17,7 +17,7 @@ work focuses on emulating actual observations and mimicing procedures
 used by weak lensing observers. Mock observations are based on
 simulated lensing maps from n-body simulations.
 
-## Set of to-do's from LSST-DESC sprint week's planning session
+## Set of to-do's for LSST-DESC sprint week's planning session
 
 * Create a template for an ideal "config file" that the general user
  could modify
