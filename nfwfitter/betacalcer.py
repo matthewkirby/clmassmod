@@ -4,7 +4,7 @@ Assign betas and redshifts to galaxies, and assign appropriately.
 
 ##########
 
-import simutils
+import utils.simutils as simutils
 import numpy as np
 import nfwutils
 

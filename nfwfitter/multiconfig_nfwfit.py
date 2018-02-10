@@ -6,7 +6,7 @@
 
 import sys, json, os, shutil, glob
 import nfwfit
-import simutils
+import utils.simutils as simutils
 
 
 def runMultiConfigs(jobparams, jobname=''):

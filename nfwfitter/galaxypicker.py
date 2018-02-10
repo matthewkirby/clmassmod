@@ -6,7 +6,7 @@ Select Galaxies from a simulation for analysis
 
 import numpy as np
 
-import simutils
+import utils.simutils as simutils
 import nfwutils
 
 ###########

@@ -13,6 +13,7 @@ def readConfiguration(configname):
     if 'currentconfig' in sys.modules:
         del sys.modules['currentconfig']
 
+    print configname
     configmodule = imp.load_source('currentconfig', configname)
 
     config = configmodule.__dict__

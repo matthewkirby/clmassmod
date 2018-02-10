@@ -15,7 +15,7 @@ import pymc
 import pymc_mymcmc_adapter as pma
 import scipy.integrate
 import profilebuilder
-import simutils
+import utils.simutils as simutils
 
 
 #######################
@@ -537,8 +537,8 @@ def runNFWFit_Preloaded(simreader, catalogname, config, outputname):
 
     sim = simreader.load(catalogname)
 
-    profilebuilder = config['profilebuilder']
-    fitter = config['fitter']
+    profilebuilder = config['profilebuilder'] # profilebuilder=profilebuilder.ProfileBuilder() for example
+    fitter = config['fitter'] # fitter=nfwfit.MCMCFitter() for example
 
     profile = profilebuilder(sim)
 
